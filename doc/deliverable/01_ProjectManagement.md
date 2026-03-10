@@ -20,6 +20,15 @@
 | I8 |   Backup  |      |    |
 | I9 |   Servizio Mail (Resend)  |      |    |
 | I10 |   Docker Kubernetes  |      |    |
+| D1 |   Documento di visione, scopo… |      |    |
+| D2 |   Documento dei requisiti |      |    |
+| D3 |  Architettura  |      |    |
+| D4 |   Documentazione API (Swagger)|      |    |
+| D5 |   Strategia di test  |      |    |
+| D6 |  Manualistica di Deploy / Utilizzo  |      |    |
+| D7 |  Guida Utente  |      |    |
+| D8 |  Sicurezza & Privacy & Legale  |      |    |
+| D9 |  Pianificazione Progetto  |      |    |
 
 
 ---
