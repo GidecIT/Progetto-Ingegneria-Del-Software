@@ -44,10 +44,10 @@
 |1|Project Management|D1,D9|
 |2|Requirement Elicitation|D1,D2|
 |3|Architettura, User Experience & API Design|S5,D3,D4|
-|4|Cloud Development||
+|4|Cloud Development|I1, I2, I10|
 |5|API + scheletro backend|S2, S5, I4||
-|6| Sviluppo Backend||
-|7|Sviluppo Frontend||
+|6| Sviluppo Backend|S3.1, S7, S8, S8.1|
+|7|Sviluppo Frontend|S1, S2, S3|
 |7.a|Frontend Utente||
 |7.b|Frontend Amministratore||
 |8|Media Storage|I3,I6,I7|
@@ -72,17 +72,17 @@ Finestra temporale assunta: 36 settimane (circa 8 mesi)
 | A3 |Architettura, User Experience & API Design|4 sett|A2|S6|S9|**Sì**|
 | A4 |Cloud Development|4 sett|A2|S6|S9|**Sì**||
 | A5 |API + scheletro backend|6 sett|A3,A4|S10|S15|**Sì**||
-| A6 |Sviluppo Backend|6 sett|A2|S16|S22|**Sì**||
-| A7 |Sviluppo Frontend|5 sett|A2|S16|S20|**No**||
+| A6 |Sviluppo Backend|6 sett|A2,A5|S16|S22|**Sì**||
+| A7 |Sviluppo Frontend|5 sett|A2,A5|S16|S20|**No**||
 | A7.a|Frontend Utente|3 sett|A2|S16|S18|**Sì**||
 | A7.b|Frontend Amministratore|2 sett|A2|S19|S21|**Sì**||
 | A8 |Media Storage|6 sett|A3,A4|S10|S16|**No**||
-| A9 |Integrazione Open Street Map e SMTP|2 sett||S23|S24|**No**||
-| A10|Gestione sistema di notifica|2 sett||S25|S26|**No**||
-| A11|System Integration & functional testing|4 sett||S25|S29|**Sì**||
-| A12|Non functional Validation|3 sett||S30|S32|**Sì**||
-| A13|Gestione del rilascio |3 sett||S32|S34|**Sì**||
-| A14|Finalizzazione documenti |2 sett||S35|S36|**Sì**||
+| A9 |Integrazione Open Street Map e SMTP|2 sett|A5|S23|S24|**No**||
+| A10|Gestione sistema di notifica|2 sett|A5|S25|S26|**No**||
+| A11|System Integration & functional testing|4 sett|A5,A6,A7|S25|S29|**Sì**||
+| A12|Non functional Validation|3 sett|A11|S30|S32|**Sì**||
+| A13|Gestione del rilascio |3 sett|A12|S32|S34|**Sì**||
+| A14|Finalizzazione documenti |2 sett|A13|S35|S36|**Sì**||
 
 
 ## Critical path
