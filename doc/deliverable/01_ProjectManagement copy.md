@@ -67,11 +67,11 @@ Finestra temporale assunta: 36 settimane (circa 8 mesi)
 ## Activity table
 | ID | Activity | Duration | Dependencies | Start | End | Critical | Milestone |
 |:---|:---------|:---------|:-------------|:------|:----|:------|:---------|
-| A1 |Project Management|2 sett| - | S1 | S2 | **Sì** |
-| A2 |Requirement Elicitation|3 sett|A1|S3|S5|**Sì**|
-| A3 |Architettura, User Experience & API Design|4 sett|A2|S6|S9|**Sì**|
+| A1 |Project Management|2 sett| - | S1 | S2 | **Sì** |**Sì** |
+| A2 |Requirement Elicitation|3 sett|A1|S3|S5|**Sì**|**Sì** |
+| A3 |Architettura, User Experience & API Design|4 sett|A2|S6|S9|**Sì**|**Sì** |
 | A4 |Cloud Development|4 sett|A2|S6|S9|**Sì**||
-| A5 |API + scheletro backend|6 sett|A3,A4|S10|S15|**Sì**||
+| A5 |API + scheletro backend|6 sett|A3,A4|S10|S15|**Sì**|**Sì** |
 | A6 |Sviluppo Backend|6 sett|A2,A5|S16|S22|**Sì**||
 | A7 |Sviluppo Frontend|5 sett|A2,A5|S16|S20|**No**||
 | A7.a|Frontend Utente|3 sett|A2|S16|S18|**Sì**||
@@ -79,10 +79,10 @@ Finestra temporale assunta: 36 settimane (circa 8 mesi)
 | A8 |Media Storage|6 sett|A3,A4|S10|S16|**No**||
 | A9 |Integrazione Open Street Map e SMTP|2 sett|A5|S23|S24|**No**||
 | A10|Gestione sistema di notifica|2 sett|A5|S25|S26|**No**||
-| A11|System Integration & functional testing|4 sett|A5,A6,A7|S25|S29|**Sì**||
-| A12|Non functional Validation|3 sett|A11|S30|S32|**Sì**||
-| A13|Gestione del rilascio |3 sett|A12|S32|S34|**Sì**||
-| A14|Finalizzazione documenti |2 sett|A13|S35|S36|**Sì**||
+| A11|System Integration & functional testing|4 sett|A5,A6,A7|S25|S29|**Sì**|**Sì** |
+| A12|Non functional Validation|3 sett|A11|S30|S32|**Sì**|**Sì** |
+| A13|Gestione del rilascio |3 sett|A12|S32|S34|**Sì**|**Sì** |
+| A14|Finalizzazione documenti |2 sett|A13|S35|S36|**Sì**|**Sì** |
 
 
 ## Critical path
