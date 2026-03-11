@@ -41,7 +41,22 @@
 ### WBS with traceability to PBS
 | ID  | Work package | Traced PBS outputs (IDs) |
 |:----|:-------------|:--------------------------|
-| #.# |              |                           |
+|1|Project Management|D1,D9|
+|2|Requirement Elicitation|D1,D2|
+|3|Architettura, User Experience & API Design|S5,D3,D4|
+|4|Cloud Development||
+|5| Sviluppo Backend||
+|6|Sviluppo Frontend||
+|6.a|Frontend Cittadino||
+|6.b|Frontend Amministratore||
+|7|Media Storage|I3,I6,I7|
+|8|Integrazione Open Street Map|S6,I5|
+|9|Implementazione WebApp|S1|
+|10|Gestione sistema di notifica|S4,I9|
+|11|System Integration & functional testing|D5|
+|12|Non functional Validation|D5,D8|
+|13|Gestione del rilascio |D6,D7|
+|14|Finalizzazione documenti |D3,D4,D6,D7,D8,D9|
 
 
 ---
