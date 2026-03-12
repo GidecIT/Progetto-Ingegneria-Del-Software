@@ -41,18 +41,18 @@
 ### WBS with traceability to PBS
 | ID  | Work package | Traced PBS outputs (IDs) |
 |:----|:-------------|:--------------------------|
-|1|Project Management|D1,D9|
-|2|Requirement Elicitation|D1,D2|
+|1|Project Management|D1, D9|
+|2|Requirement Elicitation|D1, D2|
 |3|Architettura, User Experience & API Design|S5,D3,D4|
 |4|Cloud Development|I1, I2, I7, I8, I10|
 |5|API + scheletro backend|S2, S5, I4||
-|6| Sviluppo Backend|S2, S3.1, S4, S8, S8.1, I5|
-|7|Sviluppo Frontend|S1, S2, S3, S4, S8, I5|
-|7.a|Frontend Utente|S1, S2, S4, S8|
+|6| Sviluppo Backend|S2, S3.1, S4, S8, S8.1, I5, I7|
+|7|Sviluppo Frontend|S1, S2, S3, S4, S7, S8, I5|
+|7.a|Frontend Utente|S1, S2, S4, S7, S8|
 |7.b|Frontend Amministratore|S1, S2, S3, S4, S8|
-|8|Media Storage|I3,I6,I7|
-|9|Integrazione Open Street Map e SMTP|S6,I5|
-|10|Gestione sistema di notifica|S4,I9|
+|8|Media Storage|S7, I3, I6|
+|9|Integrazione Open Street Map|S6, I5|
+|10|Gestione sistema di notifica e mail|S4,I9|
 |11|System Integration & functional testing|D5|
 |12|Non functional Validation|D5,D8|
 |13|Gestione del rilascio |D6,D7|
@@ -77,8 +77,8 @@ Finestra temporale assunta: 36 settimane (circa 8 mesi)
 | A7.a|Frontend Utente|3 sett|A2|S16|S18|**Sì**||
 | A7.b|Frontend Amministratore|2 sett|A2|S19|S20|**Sì**||
 | A8 |Media Storage|6 sett|A3,A4|S10|S16|**No**||
-| A9 |Integrazione Open Street Map e SMTP|2 sett|A5|S23|S24|**No**||
-| A10|Gestione sistema di notifica|2 sett|A5|S25|S26|**No**||
+| A9 |Integrazione Open Street Map|2 sett|A5|S23|S24|**No**||
+| A10|Gestione sistema di notifica e mail|2 sett|A5|S25|S26|**No**||
 | A11|System Integration & functional testing|4 sett|A5,A6,A7|S25|S29|**Sì**|**Sì** |
 | A12|Non functional Validation|3 sett|A11|S30|S32|**Sì**|**Sì** |
 | A13|Gestione del rilascio |3 sett|A12|S32|S34|**Sì**|**Sì** |
