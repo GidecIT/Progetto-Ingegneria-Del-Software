@@ -1,39 +1,39 @@
 # Product Breakdown Structure (PBS)
 
-| ID | Deliverable | Type  | Notes |
-|:---|:------------|:--------------------------------------------------|:------|
+| ID | Deliverable | Type  | Notes                                                                                      |
+|:---|:------------|:--------------------------------------------------|:-------------------------------------------------------------------------------------------|
 | **SOFTWARE** | 
-| S1 | Applicazione Web (UI + Client) | Software | Frontend per l'interazione utente. |
-| S2 | Area Riservata Utente | Software | Registrazione, login, gestione profilo e preferenze personali. |
-| S3 | Dashboard gestionale Amministratori | Software | Pannello di controllo e visualizzazione statistiche per amministratori. |
-| S3.1 | Modulo Statistiche Amministratore | Software | Visualizzazione statistiche e reportistica. |
-| S4 | Servizio Notifiche e Messaggistica | Software | Email, notifiche e messaggi in piattaforma. |
-| S5 | API Gateway / BFF | Software | - |
+| S1 | Applicazione Web (UI + Client) | Software | Frontend per l'interazione utente.                                                         |
+| S2 | Area Riservata Utente | Software | Registrazione, login, gestione profilo e preferenze personali.                             |
+| S3 | Dashboard gestionale Amministratori | Software | Pannello di controllo e visualizzazione statistiche per amministratori.                    |
+| S3.1 | Modulo Statistiche Amministratore | Software | Visualizzazione statistiche e reportistica.                                                |
+| S4 | Servizio Notifiche e Messaggistica | Software | Email, notifiche e messaggi in piattaforma.                                                |
+| S5 | API Gateway / BFF | Software | Interfaccia API per frontend e integrazione servizi.                                       |
 | S6 | Servizio di Geolocalizzazione | Software | Mappa integrata nella applicazione.Funzioni di ricerca, filtri geografici e tracciabilità. |
-| S7 | Servizio di Segnalazione | Software | Creazione e invio delle segnalazioni. |
-| S8 | Consultazione e Monitoraggio | Software | Consultazione pubblica delle segnalazioni, include la funzione "Follow". |
-| S8.1 | Esportazione CSV | Software | Export dei dati a partire dalla visualizzazione tabellare. |
+| S7 | Servizio di Segnalazione | Software | Creazione e invio delle segnalazioni.                                                      |
+| S8 | Consultazione e Monitoraggio | Software | Consultazione pubblica delle segnalazioni, include la funzione "Follow".                   |
+| S8.1 | Esportazione CSV | Software | Export dei dati a partire dalla visualizzazione tabellare.                                 |
 | **INFRASTRUTTURA** |
-| I1 | Cloud Account | Infrastruttura | Setup ambienti cloud. |
-| I2 | Pipeline CI / CD & Repo GIT | Infrastruttura | - |
-| I3 | Object Storage | Infrastruttura | Archiviazione delle immagini. |
-| I4 | Database PostgreSQL | Infrastruttura | Progettazione del DB relazionale. |
-| I5 | Integrazione OpenStreetMap | Infrastruttura | Integrazione mappa della città. |
-| I6 | Content Delivery Network (CDN) | Infrastruttura | - |
-| I7 | Sistema di Metriche e Log | Infrastruttura | Monitoraggio errori, prestazioni e log. |
-| I8 | Sistema di Backup | Infrastruttura | Procedure di  salvataggio dati e recovery. |
-| I9 | Servizio Mail | Infrastruttura | SMTP per notifiche e messaggi via email. |
-| I10 | Docker Kubernetes | Infrastruttura | Containerizzazione per scalabilità infrastrutturale. |
+| I1 | Cloud Account | Infrastruttura | Setup ambienti cloud.                                                                      |
+| I2 | Pipeline CI / CD & Repo GIT | Infrastruttura | Configurazione pipeline di sviluppo repository.                                            |
+| I3 | Object Storage | Infrastruttura | Archiviazione delle immagini.                                                              |
+| I4 | Database PostgreSQL | Infrastruttura | Progettazione del DB relazionale.                                                          |
+| I5 | Integrazione OpenStreetMap | Infrastruttura | Integrazione mappa della città.                                                            |
+| I6 | Content Delivery Network (CDN) | Infrastruttura | Configurazione CDN per distribuzione di contenuti.                                         |
+| I7 | Sistema di Metriche e Log | Infrastruttura | Monitoraggio errori, prestazioni e log.                                                    |
+| I8 | Sistema di Backup | Infrastruttura | Procedure di  salvataggio dati e recovery.                                                 |
+| I9 | Servizio Mail | Infrastruttura | SMTP per notifiche e messaggi via email.                                                   |
+| I10 | Docker Kubernetes | Infrastruttura | Containerizzazione per scalabilità infrastrutturale.                                       |
 | **DOCUMENTAZIONE** |
-| D1 | Vision & Scope | Documento | Definizione obiettivi, visione e scopo. |
-| D2 | Documento dei Requisiti | Documento | Analisi funzionale dettagliata. |
-| D3 | Architettura | Documento | Schemi logici, fisici e diagrammi di funzionamento del sistema. |
-| D4 | Documentazione API (Swagger) | Documento | - |
-| D5 | Strategia di Test | Documento | Piano di test unit, test d'integrazione e test di accettazione. |
-| D6 | Manualistica di Deploy / Utilizzo | Documento | Istruzioni per installazione e manutenzione. |
-| D7 | Guida Utente | Documento | Manuale d'uso per utenti. |
-| D8 | Sicurezza, Privacy & Legale | Documento | Termini d'uso e sicurezza. |
-| D9 | Pianificazione Progetto | Documento | - |
+| D1 | Vision & Scope | Documento | Definizione obiettivi, visione e scopo.                                                    |
+| D2 | Documento dei Requisiti | Documento | Analisi funzionale dettagliata.                                                            |
+| D3 | Architettura | Documento | Schemi logici, fisici e diagrammi di funzionamento del sistema.                            |
+| D4 | Documentazione API (Swagger) | Documento | Specifiche API ed endpoint.                                                                |
+| D5 | Strategia di Test | Documento | Piano di test unit, test d'integrazione e test di accettazione.                            |
+| D6 | Manualistica di Deploy / Utilizzo | Documento | Istruzioni per installazione e manutenzione.                                               |
+| D7 | Guida Utente | Documento | Manuale d'uso per utenti.                                                                  |
+| D8 | Sicurezza, Privacy & Legale | Documento | Termini d'uso e sicurezza.                                                                 |
+| D9 | Pianificazione Progetto | Documento | Pianificazione e gestione del progetto.                                                    |
 ---
 
 # Work Breakdown Structure (WBS)
