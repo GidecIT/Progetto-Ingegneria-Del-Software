@@ -6,7 +6,7 @@
 | S1 | Applicazione Web (UI + Client) | Software | Frontend per l'interazione utente. |
 | S2 | Area Riservata Utente | Software | Registrazione, login, gestione profilo e preferenze personali. |
 | S3 | Dashboard gestionale Amministratori | Software | Pannello di controllo e visualizzazione statistiche per amministratori. |
-| S3.1 | Modulo Statistiche | Software | Visualizzazione statistiche e reportistica. |
+| S3.1 | Modulo Statistiche Amministratore | Software | Visualizzazione statistiche e reportistica. |
 | S4 | Servizio Notifiche e Messaggistica | Software | Email, notifiche e messaggi in piattaforma. |
 | S5 | API Gateway / BFF | Software | - |
 | S6 | Servizio di Geolocalizzazione | Software | Mappa integrata nella applicazione.Funzioni di ricerca, filtri geografici e tracciabilità. |
@@ -44,12 +44,12 @@
 |1|Project Management|D1,D9|
 |2|Requirement Elicitation|D1,D2|
 |3|Architettura, User Experience & API Design|S5,D3,D4|
-|4|Cloud Development|I1, I2, I10|
+|4|Cloud Development|I1, I2, I7, I8, I10|
 |5|API + scheletro backend|S2, S5, I4||
-|6| Sviluppo Backend|S3.1, S7, S8, S8.1|
-|7|Sviluppo Frontend|S1, S2, S3|
-|7.a|Frontend Utente||
-|7.b|Frontend Amministratore||
+|6| Sviluppo Backend|S2, S3.1, S4, S8, S8.1, I5|
+|7|Sviluppo Frontend|S1, S2, S3, S4, S8, I5|
+|7.a|Frontend Utente|S1, S2, S4, S8|
+|7.b|Frontend Amministratore|S1, S2, S3, S4, S8|
 |8|Media Storage|I3,I6,I7|
 |9|Integrazione Open Street Map e SMTP|S6,I5|
 |10|Gestione sistema di notifica|S4,I9|
@@ -75,7 +75,7 @@ Finestra temporale assunta: 36 settimane (circa 8 mesi)
 | A6 |Sviluppo Backend|6 sett|A2,A5|S16|S22|**Sì**||
 | A7 |Sviluppo Frontend|5 sett|A2,A5|S16|S20|**No**||
 | A7.a|Frontend Utente|3 sett|A2|S16|S18|**Sì**||
-| A7.b|Frontend Amministratore|2 sett|A2|S19|S21|**Sì**||
+| A7.b|Frontend Amministratore|2 sett|A2|S19|S20|**Sì**||
 | A8 |Media Storage|6 sett|A3,A4|S10|S16|**No**||
 | A9 |Integrazione Open Street Map e SMTP|2 sett|A5|S23|S24|**No**||
 | A10|Gestione sistema di notifica|2 sett|A5|S25|S26|**No**||
@@ -112,6 +112,12 @@ Risk level thresholds (by exposure):
 ## Risks table
 | ID | Risk | Category | P | I | P×I | Level | Mitigation / Response strategy |
 |:---|:-----|:---------|--:|--:|----:|:------|:-------------------------------|
-|  |      |          |   |   |     |       |                                |
-
-
+R01|Cambiamento di requisiti | Requisiti | 4 | 4 | 16 | Alto | MVP chiaro, roadmap definita e approvazione formale dei requisiti. |
+R02|Ritardi nello sviluppo | Sviluppo | 3 | 5 | 15 | Alto | Utilizzare metodologie agili per iterazioni rapide e feedback frequenti, identificare e risolvere i colli di bottiglia tempestivamente. |
+R03|Problemi di integrazione | Integrazione | 3 | 4 | 12 | Medio | Pianificare fasi di integrazione regolari, con test continui e monitoraggio dei problemi. |
+R04|Problemi di risorse | Risorse | 2 | 4 | 8 | Basso | Pianificare le risorse in anticipo, con flessibilità per cambiamenti imprevisti. |
+R05|Problemi di qualità | Qualità | 2 | 5 | 10 | Medio | Controllo qualità periodico, con test e revisione del codice. |
+R06|Costi di storage inattesi | Costi | 2 | 4 | 8 | Medio | Imporre un limite di dimensioni massime delle immagini delle segnalazioni. |
+R07|Problemi di conformità legale | Legale | 1 | 5 | 5 | Basso | Assicurarsi che tutte le normative siano rispettate. |
+R08|Problemi di adozione da parte degli utenti | Progetto | 3 | 4 | 12 | Medio | Coinvolgere gli utenti finali durante lo sviluppo, raccogliendo feedback per migliorare l'esperienza utente. |
+R09|Scarsa qualità della documentazione finale | Documentazione | 2 | 4 | 8 | Basso | Coinvolgere il committente in revisioni parziali dei documenti (D2,D3, D8). |
