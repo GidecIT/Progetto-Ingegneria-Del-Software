@@ -2,35 +2,38 @@
 
 | ID | Deliverable | Type  | Notes |
 |:---|:------------|:--------------------------------------------------|:------|
-| S1 |   Applicazione Web (UI+Client)  |      |    Portale unico per cittadini e operatori   |
-| S2 |   Autenticazione & servizi Utente  |      |  Include: la registrazione con conferma per email, gestione profilo e possibilità di anonimato per segnalazioni. Possibilità di vari ruoli: cittadini, uffici comunali e amministratori e consultazione libera per visitatori (senza login)  |
-| S3 |   API gateway/BFF  |      |   Per separare il pannello cittadini dal pannello degli operatori/admin  |
-| S4 |   Servizio di geolocalizzazione  |      |  Integrazione OpenStreetMap  |
-| S5 |   Servizio di notifiche e messagistica   |      |  Include: le notifiche in piattaforma, l'invio di email (opzionali) ed il canale di messagistica diretta tra cittadini e operatori comunali |
-| S6 |   Servizio di gestione delle segnalazioni  |      |   Gestisce l'inserimento della segnalazione (titolo, descrizione, massimo 3 foto) ed i 6 stati possibili, inoltre comprende la possibilità di: ricercare, filtrare, tracciare segnalazioni ed esportare in CSV|
-| S7 |   Servizio di admin e moderazione  |      |   Comprende i vari strumenti di gestione per gli uffici comunali e gli amministratori |
-| S8 |   Servizio di statistica e reportistica  |      |  Calcolo delle statistiche pubbliche e private  |
-| I1 |   Cloud Account  |      |    |
-| I2 |   Pipeline CI / CD & Repository GIT  |      |    |
-| I3 |   Object Storage   |      |  per salvare le immagini  |
-| I4 |   Database PostgreSQL  |      |  con l'estensione PostGIS per gestire le coordinate geografiche  |
-| I5 |   OpenStreetMap  |      |    |
-| I6 |   Configurazione Content Delivery Network  |      |    |
-| I7 |   Sistema di Metriche e Log  |      |    |
-| I8 |   Backup  |      |    |
-| I9 |   Servizio Mail (Resend)  |      |    |
-| I10 |   Docker Kubernetes  |      |    |
-| D1 |   Documento di visione, scopo… |      |    |
-| D2 |   Documento dei requisiti |      |    |
-| D3 |  Architettura  |      |    |
-| D4 |   Documentazione API (Swagger)|      |    |
-| D5 |   Strategia di test  |      |    |
-| D6 |  Manualistica di Deploy / Utilizzo  |      |    |
-| D7 |  Guida Utente  |      |    |
-| D8 |  Sicurezza & Privacy & Legale  |      |    |
-| D9 |  Pianificazione Progetto  |      |    |
-
-
+| **SOFTWARE** | 
+| S1 | Applicazione Web (UI + Client) | Software | Frontend per l'interazione utente. |
+| S2 | Area Riservata Utente | Software | Registrazione, login, gestione profilo e preferenze personali. |
+| S3 | Dashboard gestionale Amministratori | Software | Pannello di controllo e visualizzazione statistiche per amministratori. |
+| S3.1 | Modulo Statistiche | Software | Visualizzazione statistiche e reportistica. |
+| S4 | Servizio Notifiche e Messaggistica | Software | Email, notifiche e messaggi in piattaforma. |
+| S5 | API Gateway / BFF | Software | - |
+| S6 | Servizio di Geolocalizzazione | Software | Mappa integrata nella applicazione.Funzioni di ricerca, filtri geografici e tracciabilità. |
+| S7 | Servizio di Segnalazione | Software | Creazione e invio delle segnalazioni. |
+| S8 | Consultazione e Monitoraggio | Software | Consultazione pubblica delle segnalazioni, include la funzione "Follow". |
+| S8.1 | Esportazione CSV | Software | Export dei dati a partire dalla visualizzazione tabellare. |
+| **INFRASTRUTTURA** |
+| I1 | Cloud Account | Infrastruttura | Setup ambienti cloud. |
+| I2 | Pipeline CI / CD & Repo GIT | Infrastruttura | - |
+| I3 | Object Storage | Infrastruttura | Archiviazione delle immagini. |
+| I4 | Database PostgreSQL | Infrastruttura | Progettazione del DB relazionale. |
+| I5 | Integrazione OpenStreetMap | Infrastruttura | Integrazione mappa della città. |
+| I6 | Content Delivery Network (CDN) | Infrastruttura | - |
+| I7 | Sistema di Metriche e Log | Infrastruttura | Monitoraggio errori, prestazioni e log. |
+| I8 | Sistema di Backup | Infrastruttura | Procedure di  salvataggio dati e recovery. |
+| I9 | Servizio Mail | Infrastruttura | SMTP per notifiche e messaggi via email. |
+| I10 | Docker Kubernetes | Infrastruttura | Containerizzazione per scalabilità infrastrutturale. |
+| **DOCUMENTAZIONE** |
+| D1 | Vision & Scope | Documento | Definizione obiettivi, visione e scopo. |
+| D2 | Documento dei Requisiti | Documento | Analisi funzionale dettagliata. |
+| D3 | Architettura | Documento | Schemi logici, fisici e diagrammi di funzionamento del sistema. |
+| D4 | Documentazione API (Swagger) | Documento | - |
+| D5 | Strategia di Test | Documento | Piano di test unit, test d'integrazione e test di accettazione. |
+| D6 | Manualistica di Deploy / Utilizzo | Documento | Istruzioni per installazione e manutenzione. |
+| D7 | Guida Utente | Documento | Manuale d'uso per utenti. |
+| D8 | Sicurezza, Privacy & Legale | Documento | Termini d'uso e sicurezza. |
+| D9 | Pianificazione Progetto | Documento | - |
 ---
 
 # Work Breakdown Structure (WBS)
@@ -38,17 +41,48 @@
 ### WBS with traceability to PBS
 | ID  | Work package | Traced PBS outputs (IDs) |
 |:----|:-------------|:--------------------------|
-| #.# |              |                           |
+|1|Project Management|D1,D9|
+|2|Requirement Elicitation|D1,D2|
+|3|Architettura, User Experience & API Design|S5,D3,D4|
+|4|Cloud Development|I1, I2, I10|
+|5|API + scheletro backend|S2, S5, I4||
+|6| Sviluppo Backend|S3.1, S7, S8, S8.1|
+|7|Sviluppo Frontend|S1, S2, S3|
+|7.a|Frontend Utente||
+|7.b|Frontend Amministratore||
+|8|Media Storage|I3,I6,I7|
+|9|Integrazione Open Street Map e SMTP|S6,I5|
+|10|Gestione sistema di notifica|S4,I9|
+|11|System Integration & functional testing|D5|
+|12|Non functional Validation|D5,D8|
+|13|Gestione del rilascio |D6,D7|
+|14|Finalizzazione documenti |D3,D4,D6,D7,D8,D9|
 
 
 ---
 
 # Gantt, dependencies, and critical path
+Finestra temporale assunta: 36 settimane (circa 8 mesi)
 
 ## Activity table
 | ID | Activity | Duration | Dependencies | Start | End | Critical | Milestone |
 |:---|:---------|:---------|:-------------|:------|:----|:------|:---------|
-| R# |          |          |              |       |     |       |          |
+| A1 |Project Management|2 sett| - | S1 | S2 | **Sì** |**Sì** |
+| A2 |Requirement Elicitation|3 sett|A1|S3|S5|**Sì**|**Sì** |
+| A3 |Architettura, User Experience & API Design|4 sett|A2|S6|S9|**Sì**|**Sì** |
+| A4 |Cloud Development|4 sett|A2|S6|S9|**Sì**||
+| A5 |API + scheletro backend|6 sett|A3,A4|S10|S15|**Sì**|**Sì** |
+| A6 |Sviluppo Backend|6 sett|A2,A5|S16|S22|**Sì**||
+| A7 |Sviluppo Frontend|5 sett|A2,A5|S16|S20|**No**||
+| A7.a|Frontend Utente|3 sett|A2|S16|S18|**Sì**||
+| A7.b|Frontend Amministratore|2 sett|A2|S19|S21|**Sì**||
+| A8 |Media Storage|6 sett|A3,A4|S10|S16|**No**||
+| A9 |Integrazione Open Street Map e SMTP|2 sett|A5|S23|S24|**No**||
+| A10|Gestione sistema di notifica|2 sett|A5|S25|S26|**No**||
+| A11|System Integration & functional testing|4 sett|A5,A6,A7|S25|S29|**Sì**|**Sì** |
+| A12|Non functional Validation|3 sett|A11|S30|S32|**Sì**|**Sì** |
+| A13|Gestione del rilascio |3 sett|A12|S32|S34|**Sì**|**Sì** |
+| A14|Finalizzazione documenti |2 sett|A13|S35|S36|**Sì**|**Sì** |
 
 
 ## Critical path
