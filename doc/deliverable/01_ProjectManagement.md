@@ -90,7 +90,7 @@ Finestra temporale assunta: 36 settimane (circa 8 mesi)
 ## Critical path
 `A1 → A2 → (A3||A4) → A5 → (A6||A7) → A11 → A12 → A13 → A14`
 
-
+![Grafo delle dipendenze](../../data/img/grafoDelleDipendenze.png)
 
 ---
 
