@@ -84,6 +84,8 @@ Finestra temporale assunta: 36 settimane (circa 8 mesi)
 | A13|Gestione del rilascio |3 sett|A12|S32|S34|**Sì**|**Sì** |
 | A14|Finalizzazione documenti |2 sett|A13|S35|S36|**Sì**|**Sì** |
 
+![Gantt](../../data/img/gantt.png)
+
 
 ## Critical path
 `X → X → X → ...`
