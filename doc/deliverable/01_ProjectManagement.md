@@ -46,10 +46,10 @@
 |3|Architettura, User Experience & API Design|S5,D3,D4|
 |4|Cloud Development|I1, I2, I7, I8, I10|
 |5|API + scheletro backend|S2, S5, I4||
-|6| Sviluppo Backend|S2, S3.1, S4, S8, S8.1, I5, I7|
-|7|Sviluppo Frontend|S1, S2, S3, S4, S7, S8, I5|
-|7.a|Frontend Utente|S1, S2, S4, S7, S8|
-|7.b|Frontend Amministratore|S1, S2, S3, S4, S8|
+|6|Sviluppo Frontend|S1, S2, S3, S4, S7, S8, I5|
+|6.a|Frontend Utente|S1, S2, S4, S7, S8|
+|6.b|Frontend Amministratore|S1, S2, S3, S4, S8|
+|7| Sviluppo Backend|S2, S3.1, S4, S8, S8.1, I5, I7|
 |8|Media Storage|S7, I3, I6|
 |9|Integrazione Open Street Map|S6, I5|
 |10|Gestione sistema di notifica e mail|S4,I9|
@@ -67,22 +67,22 @@ Finestra temporale assunta: 36 settimane (circa 8 mesi)
 ## Activity table
 | ID | Activity | Duration | Dependencies | Start | End | Critical | Milestone |
 |:---|:---------|:---------|:-------------|:------|:----|:------|:---------|
-| A1 |Project Management|2 sett| - | S1 | S2 | **Sì** |**Sì** |
+| A1 |Project Management|2 sett| - | S1 | S2 | **Sì** | |
 | A2 |Requirement Elicitation|3 sett|A1|S3|S5|**Sì**|**Sì** |
 | A3 |Architettura, User Experience & API Design|4 sett|A2|S6|S9|**Sì**|**Sì** |
 | A4 |Cloud Development|4 sett|A2|S6|S9|**Sì**||
 | A5 |API + scheletro backend|6 sett|A3,A4|S10|S15|**Sì**|**Sì** |
-| A6 |Sviluppo Backend|6 sett|A2,A5|S16|S22|**Sì**||
-| A7 |Sviluppo Frontend|5 sett|A2,A5|S16|S20|**No**||
-| A7.a|Frontend Utente|3 sett|A2|S16|S18|**Sì**||
-| A7.b|Frontend Amministratore|2 sett|A2|S19|S20|**Sì**||
-| A8 |Media Storage|6 sett|A3,A4|S10|S16|**No**||
-| A9 |Integrazione Open Street Map|2 sett|A5|S23|S24|**No**||
-| A10|Gestione sistema di notifica e mail|2 sett|A5|S25|S26|**No**||
-| A11|System Integration & functional testing|4 sett|A5,A6,A7|S25|S29|**Sì**|**Sì** |
-| A12|Non functional Validation|3 sett|A11|S30|S32|**Sì**|**Sì** |
-| A13|Gestione del rilascio |3 sett|A12|S32|S34|**Sì**|**Sì** |
-| A14|Finalizzazione documenti |2 sett|A13|S35|S36|**Sì**|**Sì** |
+| A6 |Sviluppo Frontend|6 sett|A2,A5|S16|S21|**Sì**||
+| A6.a|Frontend Utente|3 sett|A2|S16|S18|**Sì**||
+| A6.b|Frontend Amministratore|3 sett|A2|S19|S21|**Sì**||
+| A7 |Sviluppo Backend|6 sett|A2,A5|S16|S21||**Si**|
+| A8 |Media Storage|6 sett|A3,A4|S10|S16|||
+| A9 |Integrazione Open Street Map|3 sett|A5|S16|S18|||
+| A10|Gestione sistema di notifica e mail|2 sett|A5|S16|S17|||
+| A11|System Integration & functional testing|4 sett|A5,A6,A7|S22|S25|**Sì**|**Sì** |
+| A12|Non functional Validation|3 sett|A11|S26|S28|**Sì**|**Sì** |
+| A13|Gestione del rilascio |3 sett|A12|S29|S31|**Sì**|**Sì** |
+| A14|Finalizzazione documenti |2 sett|A13|S32|S33|**Sì**|**Sì** |
 
 ![Gantt](../../data/img/gantt.png)
 
