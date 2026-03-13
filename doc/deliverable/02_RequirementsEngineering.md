@@ -19,7 +19,7 @@ Attach your context diagram as an image under `../data/img/` and link it here:
 # 3) Interfaces
 
 | ID    | Interface | Actor       | Physical interface | Logical interface |
-|:------|:----------|:------------|:-------------------|:------------------|
+|:----------|:----------|:------------|:-------------------|:------------------|
 | **IF-01** | Web App (Cittadino) | Cittadino / Visitatore | Smartphone/PC con connessione ad Internet | Applicazione web responsive |
 | **IF-02** |Dashboard amministrativa | Operatore Comunale / Amministratori | PC con connessione ad Internet | Dashboard gestionale e di amministrazione |
 | **IF-03** | Map Service API | Servizio OpenStreetMap (I5) | Connessione a Internet | API per geolocalizzazione |
