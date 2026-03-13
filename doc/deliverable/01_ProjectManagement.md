@@ -76,7 +76,7 @@ Finestra temporale assunta: 36 settimane (circa 8 mesi)
 | A6.a|Frontend Utente|3 sett|A2|S16|S18|**Sì**||
 | A6.b|Frontend Amministratore|3 sett|A2|S19|S21|**Sì**||
 | A7 |Sviluppo Backend|6 sett|A2,A5|S16|S21||**Si**|
-| A8 |Media Storage|6 sett|A3,A4|S10|S16|||
+| A8 |Media Storage|6 sett|A3,A4|S10|S15|||
 | A9 |Integrazione Open Street Map|3 sett|A5|S16|S18|||
 | A10|Gestione sistema di notifica e mail|2 sett|A5|S16|S17|||
 | A11|System Integration & functional testing|4 sett|A5,A6,A7|S22|S25|**Sì**|**Sì** |
