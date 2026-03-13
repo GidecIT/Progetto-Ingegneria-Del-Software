@@ -1,0 +1,66 @@
+# 1) Stakeholders
+
+| ID     | Stakeholder name | Description | Role | Main concerns |
+|:-------|:-----------------|:------------|:-----|:--------------|
+| STK-01 |Cittadino         | Utenti finali, risiedono o frequentano la città. | Utilizzatori | Semplicità d'uso, attenzione alla privacy e ai dati personali, efficienza nella comunivazione e nellarisoluzione dei problemi. |
+| STK-02 |Operatori Comunali| Personale degli uffici tecnici incaricato della gestione delle segnalazioni. | Utilizzatori / Gestori | Carico di lavoro, precisione delle segnalazioni, comunicazione con il cittadino. |
+| STK-03 |Amministratori di Sistema| Personale IT che gestisce l'infrastruttura (Cloud, DB, Docker). | Gestori Tecnici | Sicurezza dei dati, scalabilità dell'infrastruttura, monitoraggio di log e metriche. |
+| STK-04 |Comune di Torino   | L'ente pubblico che adotta e finanzia il sistema. | Committente | Efficienza operativa, feedback positivi, conformità legale. |
+---
+
+# 2) Context Diagram
+
+Attach your context diagram as an image under `../data/img/` and link it here:
+
+- `![](../data/img/context-diagram.png)`
+
+---
+
+# 3) Interfaces
+
+| ID    | Interface | Actor       | Physical interface | Logical interface |
+|:------|:----------|:------------|:-------------------|:------------------|
+| **IF-01** | Web App (Cittadino) | Cittadino / Visitatore | Smartphone/PC con connessione ad Internet | Applicazione web responsive |
+| **IF-02** |Dashboard amministrativa | Operatore Comunale / Amministratori | PC con connessione ad Internet | Dashboard gestionale e di amministrazione |
+| **IF-03** | Map Service API | Servizio OpenStreetMap (I5) | Connessione a Internet | API per geolocalizzazione |
+| **IF-04** | Media Storage API | Servizio di archiviazione cloud (I3) | Connessione a Internet | API per upload/download immagini segnalazioni |
+| **IF-05** | Content Delivery Network | CDN (I6) | Connessione a Internet | Interfaccia per distribuzione rapida contenuti |
+| **IF-06** | Servizio mail | Cittadini  | Connessione a Internet | Protocollo SMTP per invio notifiche email |
+| **IF-07** | Servizio di notifiche | Cittadini | Connessione Internet | API per invio notifiche push |
+| **IF-08** | Analytics/Logging Interface | Sistema di Metriche e Log (I7) | Connessione a Internet | API/Dashboard per monitoraggio prestazioni e errori |
+| **IF-09** | Servizio di archiviazione Cloud | Sistema di storage cloud | Connessione Internet | API per upload/download file |
+| **IF-10** | Servizio di autenticazione | Cittadini / Amministratori | Connessione Internet | API REST per login, registrazione e gestione profilo |
+| **IF-11** |Sistema di monitoraggio| Amministratori | Connessione Internet | Dashboard per metriche e log |
+
+---
+
+# 4) Personas
+
+| ID     | Name | Role | Background / Context | Goals | Constraints | Devices / Usage setting | Accessibility / Additional needs |
+|:-------|:-----|:-----|:---------------------|:------|:------------|:------------------------|:---------------------------------|
+| PER-XX |      |      |                      |       |             |                         |                                  |
+
+---
+
+# 5) User Stories
+
+| ID    | Persona/Role | User story (As a… I want… so that…) |
+|:------|:-------------|:------------------------------------|
+| US-XX |              |                                     |
+
+---
+
+# 6) Functional Requirements (FR)
+
+| ID    | Requirement statement (The system shall…) | Priority | User story ID | Notes |
+|:------|:------------------------------------------|:---------|:--------------|:------|
+| FR-XX |                                           |          |               |       |
+
+
+---
+
+# 7) Non-Functional Requirements (NFR)
+
+| ID     | Category | Requirement statement | Metric / Target | Verification                           | Priority | Notes |
+|:-------|:---------|:----------------------|:----------------|:---------------------------------------|:---------|:------|
+| NFR-XX |          |                       |                 |                                        |          |       |
