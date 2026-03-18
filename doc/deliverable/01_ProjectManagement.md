@@ -93,7 +93,8 @@ Finestra temporale assunta: 33 settimane (circa 8 mesi)
 | A13|Gestione del rilascio |3 sett|A12|S29|S31|**Sì**|**Sì** |
 | A14|Finalizzazione documenti |2 sett|A13|S32|S33|**Sì**|**Sì** |
 
-> **Nota sulla criticità del Frontend:** L'attività **Sviluppo Frontend (A6)** è segnata come critica in quanto il suo completamento è un prerequisito fondamentale per l'inizio dell'integrazione di sistema (A11). Tuttavia, le sotto-attività **A6.a (Frontend Utente)** e **A6.b (Frontend Amministratore)** non sono individualmente critiche perchè hanno flessibilità interna: un eventuale ritardo in una delle due può essere compensato o assorbito all'interno della finestra temporale totale di 6 settimane destinata al frontend, senza traslare necessariamente la data di fine di A6.
+### Nota sulla criticità del Frontend
+L'attività **Sviluppo Frontend (A6)** è segnata come critica in quanto il suo completamento è un prerequisito fondamentale per l'inizio dell'integrazione di sistema (A11). Tuttavia, le sotto-attività **A6.a (Frontend Utente)** e **A6.b (Frontend Amministratore)** non sono individualmente critiche perchè hanno flessibilità interna: un eventuale ritardo in una delle due può essere compensato o assorbito all'interno della finestra temporale totale di 6 settimane destinata al frontend, senza traslare necessariamente la data di fine di A6.
 
 ![Gantt](../../data/img/gantt.png)
 
@@ -125,7 +126,6 @@ Risk level thresholds (by exposure):
 |:---|:-----|:---------|--:|--:|----:|:------|:-------------------------------|
 R01| Scalabilità (latenza sistema sotto alto traffico)| Tecnico| 3 |5|15|Alto|Stress test, analisi log di carico, ottimizzazione query e asset| 
 R02|Cambiamento di requisiti | Requisiti | 4 | 4 | 16 | Alto | MVP chiaro, roadmap definita e approvazione formale dei requisiti. |
-
 R03|Ritardi nello sviluppo | Sviluppo | 3 | 5 | 15 | Alto | Utilizzare metodologie agili per iterazioni rapide e feedback frequenti, identificare e risolvere i colli di bottiglia tempestivamente. |
 R04|Problemi di integrazione | Integrazione | 3 | 4 | 12 | Medio | Pianificare fasi di integrazione regolari, con test continui e monitoraggio dei problemi. |
 R05|Problemi di risorse | Risorse | 2 | 4 | 8 | Basso | Pianificare le risorse in anticipo, con flessibilità per cambiamenti imprevisti. |
