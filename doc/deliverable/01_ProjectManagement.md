@@ -39,10 +39,12 @@
 
 L'architettura di **Participium** è progettata per essere scalabile, manutenibile e resiliente. Alcune scelte chiave dell'infrastruttura sono state dettate dalla necessità di garantire l'efficacia del servizio pubblico:
 
-*   **Gestione Notifiche (Resend):** È stato preferito l'uso di **Resend** rispetto a un server SMTP gestito internamente per massimizzare la *deliverability*. I server email auto-ospitati spesso mancano della reputazione necessaria per superare i filtri spam; un servizio gestito assicura che le notifiche di aggiornamento sulle segnalazioni raggiungano tempestivamente i cittadini senza essere bloccate dai provider di posta.
+*   **Gestione Notifiche (Resend):** È stato preferito l'uso di **Resend** rispetto a un server SMTP gestito internamente per fare in modo che tutte le nostre mail vengano ricevute dagli utenti. I server email auto-ospitati spesso mancano della reputazione necessaria per superare i filtri spam, un servizio gestito assicura che le notifiche di aggiornamento sulle segnalazioni raggiungano i cittadini senza essere bloccate dai provider di posta.
 *   **Cartografia (OpenStreetMap):** L'adozione di **OpenStreetMap** riflette l'approccio *open-source* del progetto. Questa scelta permette di integrare mappe dettagliate della città di Torino senza i costi elevati o i vincoli di tracciamento delle API proprietarie (come Google Maps), mantenendo la piena sovranità sui dati geografici.
-*   **Containerizzazione (Docker & Kubernetes):** L'intero sistema è containerizzato per garantire che l'ambiente di sviluppo coincida perfettamente con quello di produzione. L'utilizzo di **Kubernetes** permette al Comune di scalare orizzontalmente i servizi (come il modulo di segnalazione o la dashboard) in caso di carichi improvvisi, garantendo la disponibilità del portale anche durante picchi di utilizzo.
-*   **Storage Distribuito (Object Storage & CDN):** Le immagini caricate dai cittadini sono archiviate in un **Object Storage** dedicato e distribuite tramite **CDN**. Questo approccio riduce il carico sui server applicativi, accelera il caricamento delle pagine di dettaglio delle segnalazioni e facilita le operazioni di backup e disaster recovery.
+*   **Containerizzazione (Docker & Kubernetes):** L'intero sistema è containerizzato per garantire che l'ambiente di sviluppo coincida perfettamente con quello di produzione. L'utilizzo di **Kubernetes** ci permette di scalare i servizi (come il modulo di segnalazione o la dashboard) in caso di carichi improvvisi, garantendo la disponibilità del portale anche durante picchi di utilizzo.
+*   **Storage Distribuito (Object Storage & CDN):** Le immagini caricate dai cittadini sono archiviate in un **Object Storage** dedicato e distribuite tramite **CDN**. Questo approccio riduce il carico sui server applicativi, accelera il caricamento delle pagine di dettaglio delle segnalazioni e facilita le operazioni di backup e recovery.
+
+---
 
 # Work Breakdown Structure (WBS)
 
@@ -65,7 +67,6 @@ L'architettura di **Participium** è progettata per essere scalabile, manutenibi
 |12|Non functional Validation|D5,D8|
 |13|Gestione del rilascio |D6,D7|
 |14|Finalizzazione documenti |D3,D4,D6,D7,D8,D9|
-
 
 ---
 
