@@ -51,4 +51,4 @@ Attach your context diagram as an image under `../data/img/` and link it here:
 
 | ID     | Category | Requirement statement | Metric / Target | Verification                           | Priority | Notes |
 |:-------|:---------|:----------------------|:----------------|:---------------------------------------|:---------|:------|
-| NFR-XX |          |                       |                 |                                        |          |       |
+| NFR-01 |Usabilità |L'applicazione web deve essere respon sive per l'uso da mobile                      |Il layout si adatta senza scrolling orizzontale su schermi da minimo 320 pixel di larghezza                 |Ispezione visiva e UI test automatici su emulatori                                        | Alta         |    Essenziale poichè la maggior parte delle segnalazioni avvengono direttamente in strada   |
