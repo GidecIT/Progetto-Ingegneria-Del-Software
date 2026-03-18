@@ -82,8 +82,8 @@ Finestra temporale assunta: 33 settimane (circa 8 mesi)
 | A4 |Cloud Development|4 sett|A2|S6|S9|**Sì**||
 | A5 |API + scheletro backend|6 sett|A3, A4|S10|S15|**Sì**|**Sì** |
 | A6 |Sviluppo Frontend|6 sett|A2, A5|S16|S21|**Sì**||
-| A6.a|Frontend Utente|3 sett|A2, A5|S16|S18|AGGIUNGERE NOTA|
-| A6.b|Frontend Amministratore|3 sett|A2, A5|S19|S21||
+| A6.a|Frontend Utente|3 sett|A2, A5|S16|S18|||
+| A6.b|Frontend Amministratore|3 sett|A2, A5|S19|S21|||
 | A7 |Sviluppo Backend|6 sett|A2, A5|S16|S21|**Sì**|**Si**|
 | A8 |Media Storage|6 sett|A3, A4|S10|S15|||
 | A9 |Integrazione Open Street Map|3 sett|A5|S16|S18|||
@@ -92,6 +92,8 @@ Finestra temporale assunta: 33 settimane (circa 8 mesi)
 | A12|Non functional Validation|3 sett|A11|S26|S28|**Sì**|**Sì** |
 | A13|Gestione del rilascio |3 sett|A12|S29|S31|**Sì**|**Sì** |
 | A14|Finalizzazione documenti |2 sett|A13|S32|S33|**Sì**|**Sì** |
+
+> **Nota sulla criticità del Frontend:** L'attività **Sviluppo Frontend (A6)** è segnata come critica in quanto il suo completamento è un prerequisito fondamentale per l'inizio dell'integrazione di sistema (A11). Tuttavia, le sotto-attività **A6.a (Frontend Utente)** e **A6.b (Frontend Amministratore)** non sono individualmente critiche perchè hanno flessibilità interna: un eventuale ritardo in una delle due può essere compensato o assorbito all'interno della finestra temporale totale di 6 settimane destinata al frontend, senza traslare necessariamente la data di fine di A6.
 
 ![Gantt](../../data/img/gantt.png)
 
@@ -121,8 +123,9 @@ Risk level thresholds (by exposure):
 ## Risks table
 | ID | Risk | Category | P | I | P×I | Level | Mitigation / Response strategy |
 |:---|:-----|:---------|--:|--:|----:|:------|:-------------------------------|
-R01| Scalabilità (latenza streaming sotto carico)| Tecnico| 3 |5|15|Alto|Stress test, analisi log di carico| 
+R01| Scalabilità (latenza sistema sotto alto traffico)| Tecnico| 3 |5|15|Alto|Stress test, analisi log di carico, ottimizzazione query e asset| 
 R02|Cambiamento di requisiti | Requisiti | 4 | 4 | 16 | Alto | MVP chiaro, roadmap definita e approvazione formale dei requisiti. |
+
 R03|Ritardi nello sviluppo | Sviluppo | 3 | 5 | 15 | Alto | Utilizzare metodologie agili per iterazioni rapide e feedback frequenti, identificare e risolvere i colli di bottiglia tempestivamente. |
 R04|Problemi di integrazione | Integrazione | 3 | 4 | 12 | Medio | Pianificare fasi di integrazione regolari, con test continui e monitoraggio dei problemi. |
 R05|Problemi di risorse | Risorse | 2 | 4 | 8 | Basso | Pianificare le risorse in anticipo, con flessibilità per cambiamenti imprevisti. |
