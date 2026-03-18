@@ -6,6 +6,12 @@
 | STK-02 |Operatori Comunali| Personale degli uffici tecnici incaricato della gestione delle segnalazioni. | Utilizzatori / Gestori | Carico di lavoro, precisione delle segnalazioni, comunicazione con il cittadino. |
 | STK-03 |Amministratori di Sistema| Personale IT che gestisce l'infrastruttura (Cloud, DB, Docker). | Gestori Tecnici | Sicurezza dei dati, scalabilità dell'infrastruttura, monitoraggio di log e metriche. |
 | STK-04 |Comune di Torino   | L'ente pubblico che adotta e finanzia il sistema. | Committente | Efficienza operativa, feedback positivi, conformità legale. |
+| STK-05 |Sviluppatori | Incaricati dello sviluppo del sistema. | Sviluppatori | Sviluppo delle funzionalità richieste, qualità del codice, tempi di sviluppo. |
+| STK-06 |Analisti  | Personale incaricato dell'analisi dei requisiti e della valutazione delle performance. | Analisti | Analisi dei dati, valutazione delle performance, feedback sugli aspetti funzionali. |
+| STK-07 |Servizi di archiviazione Cloud | Fornitori di servizi cloud per  storage delle immagini. | Sistema Esterno | Disponibilità, performance, costi. |
+| STK-08 |Content Delivery Network (CDN) | Fornitori di servizi CDN per distribuzione rapida dei contenuti. | Sistema Esterno | Velocità di distribuzione, affidabilità, costi. |
+| STK-09 |Servizio di Autenticazione | Fornitori di servizi per gestione dell'autenticazione e sicurezza. | Sistema Esterno | Sicurezza, facilità d'integrazione, costi. |
+| STK-10 |Servizio di Notifica | Fornitori di servizi per invio di notifiche push o email. | Sistema Esterno | Affidabilità, facilità d'integrazione, costi. |
 ---
 
 # 2) Context Diagram
