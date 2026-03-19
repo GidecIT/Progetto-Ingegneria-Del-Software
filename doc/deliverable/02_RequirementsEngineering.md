@@ -5,7 +5,7 @@
 | STK-01 |Cittadino         | Utenti finali, risiedono o frequentano la città. | Utilizzatori | Semplicità d'uso, attenzione alla privacy e ai dati personali, efficienza nella comunivazione e nellarisoluzione dei problemi. |
 | STK-02 |Operatori Comunali| Personale degli uffici tecnici incaricato della gestione delle segnalazioni. | Utilizzatori / Gestori | Carico di lavoro, precisione delle segnalazioni, comunicazione con il cittadino. |
 | STK-03 |Amministratori di Sistema| Personale IT che gestisce l'infrastruttura (Cloud, DB, Docker). | Gestori Tecnici | Sicurezza dei dati, scalabilità dell'infrastruttura, monitoraggio di log e metriche. |
-| STK-04 |Comune di Torino   | L'ente pubblico che adotta e finanzia il sistema. | Committente | Efficienza operativa, feedback positivi, conformità legale. |
+| STK-04 |Comune di Torino   | Ente pubblico che adotta e finanzia il sistema. | Committente | Efficienza operativa, feedback positivi, conformità legale. |
 | STK-05 |Sviluppatori | Incaricati dello sviluppo del sistema. | Sviluppatori | Sviluppo delle funzionalità richieste, qualità del codice, tempi di sviluppo. |
 | STK-06 |Analisti  | Personale incaricato dell'analisi dei requisiti e della valutazione delle performance. | Analisti | Analisi dei dati, valutazione delle performance, feedback sugli aspetti funzionali. |
 | STK-07 |Servizi di archiviazione Cloud | Fornitori di servizi cloud per  storage delle immagini. | Sistema Esterno | Disponibilità, performance, costi. |
