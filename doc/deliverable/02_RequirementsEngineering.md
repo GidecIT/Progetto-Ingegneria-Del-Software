@@ -43,18 +43,25 @@ Attach your context diagram as an image under `../data/img/` and link it here:
 
 # 4) Personas
 
-| ID     | Name | Role | Background / Context | Goals | Constraints | Devices / Usage setting | Accessibility / Additional needs |
-|:-------|:-----|:-----|:---------------------|:------|:------------|:------------------------|:---------------------------------|
-| PER-XX |      |      |                      |       |             |                         |                                  |
+| ID     | Name   | Role               | Background / Context                                                                                           | Goals                                                                                                                  | Constraints                                                                  | Devices / Usage setting        | Accessibility / Additional needs                                                                     |
+|:-------|:-------|:-------------------|:---------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------|:-------------------------------|:-----------------------------------------------------------------------------------------------------|
+| **PER-01** | Marco  | Cittadino          | Residente a Torino, 35 anni. Nota spesso problemi urbani (buche, lampioni) nel tragitto casa-lavoro.           | Segnalare disservizi in meno di 2 minuti e ricevere aggiornamenti sullo stato.                                         | Scarsa pazienza per form complicati; preoccupato per la privacy dei dati.    | Smartphone (On-the-go), 4G/5G. | Interfaccia ad alto contrasto per uso all'aperto.                                                    |
+| **PER-02** | Giulia | Operatore Comunale | Dipendente comunale, 50 anni. Gestisce decine di ticket al giorno e coordina le squadre di operatori comunali. | Filtrare segnalazioni fasulle, assegnare priorità e e smistarle correttamente ai reparti competenti senza errori.      | Deve rispettare i tempi di risposta previsti dal regolamento comunale (SLA). | PC Desktop (Ufficio), Tablet.  | Facilità di lettura di mappe e coordinate GPS. <br/>Ipovedente: necessita di font ridimensionabili." |
+| **PER-03** | Sandro | Amministratore     | Sistemista esperto, 42 anni. Si occupa della stabilità della piattaforma e della sicurezza di essa.            | Assicurare che il sistema sia sempre online, non ci siano violazioni di sicurezza e che i dati siano salvati (Backup). | Deve operare con permessi limitati sui dati sensibili (GDPR).                | Laptop professionale, VPN/SSH. | Dashboard di monitoraggio e alert automatici.                                                        |
 
 ---
 
 # 5) User Stories
 
-| ID    | Persona/Role | User story (As a… I want… so that…) |
-|:------|:-------------|:------------------------------------|
-| US-XX |              |                                     |
-
+| ID         | Persona/Role                | User story (As a… I want… so that…)                                                                                              |
+|:-----------|:----------------------------|:---------------------------------------------------------------------------------------------------------------------------------|
+| **US-01**  | Marco - Cittadino           | Come cittadino, voglio inviare una foto e la posizione GPS di un problema, così che il comune possa localizzarlo con precisione. |
+| **US-02**  | Marco - Cittadino           | Come cittadino, voglio ricevere una notifica quando la mia segnalazione cambia stato, così da sentirmi coinvolto nel processo.   |
+| **US-03**  | Giulia - Operatore Comunale | Come operatore, voglio visualizzare le segnalazioni su una mappa, così da ottimizzare i percorsi delle squadre di riparazione.   |
+| **US-04**  | Giulia - Operatore Comunale | Come operatore, voglio poter rifiutare segnalazioni duplicate, così da non sprecare risorse su problemi già presi in carico.     |
+| **US-05**  | Sandro - Amministratore     | Come admin, voglio che il login sia protetto, così da impedire accessi non autorizzati alla dashboard amministrativa.            |
+| **US-06**  | Sandro - Amministratore     | Come admin, voglio consultare i log, così da individuare e risolvere rapidamente bug nel backend.                                |
+| **US-07**  | Comune - Torino             | Come ente, voglio generare report sulle risoluzioni, così da dimostrare l'efficienza operativa del sistema ai cittadini.         |
 ---
 
 # 6) Functional Requirements (FR)
