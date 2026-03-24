@@ -23,12 +23,7 @@ Add one narrative for each use case shown in the diagram.
 | Minimum guarantees      |Se l'autenticazione fallisce,l'utete non ottiene alcun privilegio di accesso e lo stato del sistema rimane invariato                             |
 | Success guarantees      |L'utente è autenticato e viene reindirizzato all'interno della piattaforma con i permessi corrispondenti al proprio ruolo                             |
 | Trigger                 |L'utente richiedere di accedere al sistema cliccando sul pulsante login                              |
-| Main success scenario   |1. L'utente chiede di loggarsi a Participium 
-2. Il sistema mostra la pagina di login 
-3. L'utente inserisce le proprie credenziali e verifica che l'account sia attivo
-4. Il sistema valida le credenziali e verifica che l'account sia attivo
-5. Il sistema autentica l'utente e gli assegna i permessi corretti
-6. Il caso d'uso termina con successo                        |
+| Main success scenario   |1. L'utente chiede di loggarsi a Participium 2. Il sistema mostra la pagina di login 3. L'utente inserisce le proprie credenziali e verifica che l'account sia attivo 4. Il sistema valida le credenziali e verifica che l'account sia attiva 5. Il sistema autentica l'utente e gli assegna i permessi corretti 6. Il caso d'uso termina con successo                        |
 | Extensions              |3a. L'utente annulla l'operazione:
 3a.1 Il sistema interrompe il processo di login e il caso d'uso termina con un fallimento
 4a. Le credenziali inserite non sono corrette:
