@@ -67,18 +67,15 @@ Il diagramma di contesto mostra il funzionamento generale del sistema **Particip
 | US-01 | Marco - Cittadino (autenticato)   | Come cittadino, voglio inviare una foto e la posizione GPS di un problema, così che il comune possa localizzarlo con precisione.                                      |
 | US-02 | Marco - Cittadino (autenticato)   | Come cittadino, voglio ricevere una notifica quando la mia segnalazione cambia stato, così da sentirmi coinvolto nel processo.                                        |
 | US-03 | Pietro - Cittadino (autenticato)  | Come studente pendolare, voglio segnalare malfunzionamenti alle stazioni di ricarica bici, così da poter pianificare i miei spostamenti senza imprevisti.             |
-| US-04 | Pietro - Cittadino (autenticato)  | Come cittadino attento al budget, voglio poter inviare segnalazioni anche tramite testo semplice se la connessione è debole, così da non consumare troppi dati.       |
-| US-05 | Giuseppe - Cittadino (visitatore) | Come utente anziano, voglio poter inviare una segnalazione rapida senza login obbligatorio, così da non rinunciare a partecipare per colpa della burocrazia digitale. |
-| US-06 | Giuseppe - Cittadino (visitatore) | Come cittadino con vista ridotta, voglio che i tasti per allegare la foto siano grandi e colorati, così da poterli individuare facilmente anche senza occhiali.       |
-| US-07 | Giulia - Operatore Comunale       | Come operatore, voglio visualizzare le segnalazioni su una mappa, così da ottimizzare i percorsi delle squadre di riparazione.                                        |
-| US-08 | Giulia - Operatore Comunale       | Come coordinatrice, voglio assegnare i ticket alle squadre in base alla zona di competenza, così da ridurre i tempi di spostamento dei mezzi.                         |
-| US-09 | Matteo - Operatore Comunale       | Come tecnico sul campo, voglio poter allegare la foto del lavoro terminato direttamente dal tablet, così da chiudere l'intervento senza tornare in ufficio.           |
-| US-10 | Matteo - Operatore Comunale       | Come operatore, voglio poter rifiutare segnalazioni duplicate, così da non sprecare risorse su problemi già presi in carico.                                          |
-| US-11 | Sandro - Amministratore           | Come admin, voglio che il login sia protetto, così da impedire accessi non autorizzati alla dashboard amministrativa.                                                 |
-| US-12 | Sandro - Amministratore           | Come admin, voglio consultare i log, così da individuare e risolvere rapidamente bug nel backend.                                                                     |
-| US-13 | Alessia - Amministratore          | Come responsabile dati, voglio anonimizzare i dati sensibili prima dell'esportazione, così da rispettare le normative GDPR vigenti.                                   |
-| US-14 | Alessia - Amministratore          | Come data analyst, voglio generare grafici sull'andamento stagionale dei guasti, così da suggerire manutenzioni preventive al comune.                                 |
-| US-15 | Comune - Torino                   | Come ente, voglio generare report sulle risoluzioni, così da dimostrare l'efficienza operativa del sistema ai cittadini.                                              |---
+| US-04 | Giuseppe - Cittadino (autenticato) | Come utente anziano, così da non rinunciare a partecipare per colpa della burocrazia digitale. |
+| US-05 | Giulia - Operatore Comunale       | Come operatore, voglio visualizzare le segnalazioni su una mappa, così da ottimizzare i percorsi delle squadre di riparazione.                                        |
+| US-06 | Giulia - Operatore Comunale       | Come coordinatrice, voglio assegnare i ticket alle squadre in base alla zona di competenza, così da ridurre i tempi di spostamento dei mezzi.                         |
+| US-07 | Matteo - Operatore stradale       | Come tecnico sul campo, voglio poter allegare la foto del lavoro terminato direttamente dal tablet, così da chiudere l'intervento senza tornare in ufficio.           |
+| US-8 | Matteo - Operatore Comunale       | Come operatore, voglio poter rifiutare segnalazioni duplicate, così da non sprecare risorse su problemi già presi in carico.                                          |
+| US-9 | Sandro - Amministratore           | Come admin, voglio che il login sia protetto, così da impedire accessi non autorizzati alla dashboard amministrativa.                                                 |
+| US-10 | Sandro - Amministratore           | Come admin, voglio consultare i log, così da individuare e risolvere rapidamente bug nel backend.                                                                     |
+| US-11 | Alessia - Amministratore          | Come data analyst, voglio generare grafici sull'andamento stagionale dei guasti, così da suggerire manutenzioni preventive al comune.                                 |
+| US-12 | Alessia - Amministratore               | Come data analyst, voglio generare report sulle risoluzioni, così da dimostrare l'efficienza operativa del sistema ai cittadini.                                              |---
 
 # 6) Functional Requirements (FR)
 
