@@ -12,7 +12,7 @@ Add one narrative for each use case shown in the diagram.
   
 | Use Case                |                             |
 |:------------------------|:----------------------------|
-| ID                      |UC-02-Login                |
+| ID                      |UC-01-Login                |
 | Scope                   |Sistema web Participium                             |
 | Level                   |User goal                             |
 | Intention in Context    |Accedere al sistema per usufruire delle funzionalità riservate agli utenti registrati                             |
@@ -28,23 +28,40 @@ Add one narrative for each use case shown in the diagram.
 
 | Use Case                |                             |
 |:------------------------|:----------------------------|
-| ID                      |UC-01-SubmitReport           |
+| ID                      |UC-02-SubmitReport           |
 | Scope                   |Sistema web Participium      |
 | Level                   |User goal                    |
 | Intention in Context    |Inviare una segnalazione geolocalizzata di un disservizio urbano al Comune di Torino. |
 | Primary actor           |[Cittadino (autenticato)](./02_RequirementsEngineering.md#4-personas) (PER-01, PER-02, PER-03) |
 | Supporting actors       |[OpenStreetMap (IF-03)](./02_RequirementsEngineering.md#3-interfaces), [Media Storage (IF-04)](./02_RequirementsEngineering.md#3-interfaces) |
 | Stakeholders' interests |[Cittadino (STK-01)](./02_RequirementsEngineering.md#1-stakeholders): Comunicare efficacemente il problema, garantire la propria privacy (anonimato pubblico), assicurarsi che la segnalazione venga ricevuta. <br> [Comune di Torino (STK-04)](./02_RequirementsEngineering.md#1-stakeholders): Ricevere dati accurati e geolocalizzati con evidenze visive per ottimizzare gli interventi. <br> [Operatore Comunale (STK-02)](./02_RequirementsEngineering.md#1-stakeholders): Ottenere informazioni chiare e foto per valutare l'entità del problema. |
-| Precondition            |L'utente deve essere autenticato ([UC-02-Login](#2-use-case-narratives)). |
+| Precondition            |L'utente deve essere autenticato ([UC-01-Login](#2-use-case-narratives)). |
 | Minimum guarantees      |Nessuna segnalazione viene creata nel database e nessun file viene caricato se il processo viene interrotto o fallisce. |
 | Success guarantees      |Viene creata una nuova segnalazione con stato "Pending Approval", le foto sono archiviate, la posizione è registrata e l'utente riceve conferma. |
 | Trigger                 |L'utente seleziona l'opzione per inserire una nuova segnalazione sulla mappa o tramite pulsante dedicato. |
 | Main success scenario   |1. Il cittadino avvia la procedura di inserimento segnalazione. <br> 2. Il sistema mostra la mappa interattiva ([OpenStreetMap](./02_RequirementsEngineering.md#3-interfaces)) e il modulo di inserimento. <br> 3. Il cittadino seleziona la posizione del disservizio sulla mappa. <br> 4. Il sistema cattura le coordinate geografiche. <br> 5. Il cittadino inserisce titolo, descrizione e seleziona una [categoria](./02_RequirementsEngineering.md#6-functional-requirements-fr) (FR-13.2). <br> 6. Il cittadino carica da 1 a 3 [foto](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr) (NFR-04). <br> 7. Il cittadino seleziona opzionalmente l'opzione di [anonimato pubblico](./02_RequirementsEngineering.md#6-functional-requirements-fr) (FR-13.1). <br> 8. Il cittadino conferma l'invio. <br> 9. Il sistema valida i dati, carica le immagini su Cloud Storage e salva la segnalazione. <br> 10. Il sistema assegna lo stato "Pending Approval" e mostra un messaggio di successo. |
 | Extensions              |2a. Il servizio mappa non è disponibile: 2a.1 Il sistema avvisa l'utente e termina il caso d'uso. <br> 6a. Il cittadino carica più di 3 foto: 6a.1 Il sistema impedisce il caricamento o mostra un errore. <br> 9a. Dati obbligatori mancanti o invalidi: 9a.1 Il sistema evidenzia i campi mancanti e torna al punto 5. <br> 9b. Errore nel caricamento delle immagini: 9b.1 Il sistema avvisa l'utente del fallimento e permette di riprovare l'invio. |
 
+| Use Case                |                             |
+|:------------------------|:----------------------------|
+| ID                      |UC-03-ManageReportStatus     |
+| Scope                   |Sistema web Participium      |
+| Level                   |User goal                    |
+| Intention in Context    |Aggiornare lo stato di una segnalazione durante il processo di gestione comunale. |
+| Primary actor           |[Operatore Comunale](./02_RequirementsEngineering.md#4-personas) (PER-05, PER-06) |
+| Supporting actors       |                             |
+| Stakeholders' interests |[Operatore Comunale (STK-02)](./02_RequirementsEngineering.md#1-stakeholders): Gestire il carico di lavoro, tracciare l'avanzamento degli interventi. <br> [Cittadino (STK-01)](./02_RequirementsEngineering.md#1-stakeholders): Ricevere aggiornamenti trasparenti e tempestivi sulla risoluzione del problema. <br> [Comune di Torino (STK-04)](./02_RequirementsEngineering.md#1-stakeholders): Monitorare l'efficienza degli uffici tecnici. |
+| Precondition            |L'operatore deve essere autenticato ([UC-01-Login](#2-use-case-narratives)) e la segnalazione deve esistere nel sistema. |
+| Minimum guarantees      |Lo stato della segnalazione rimane invariato se l'aggiornamento fallisce. |
+| Success guarantees      |Lo stato della segnalazione è aggiornato, l'utente segnalante (e i follower) ricevono una [notifica](./02_RequirementsEngineering.md#6-functional-requirements-fr) (FR-15). |
+| Trigger                 |L'operatore accede alla dashboard di gestione e seleziona una segnalazione da aggiornare. |
+| Main success scenario   |1. L'operatore visualizza i dettagli di una segnalazione ([FR-10](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 2. L'operatore seleziona un nuovo stato dall'elenco predefinito (es. "Assigned", "In Progress", "Resolved"). <br> 3. L'operatore inserisce opzionalmente un commento o aggiornamento interno. <br> 4. L'operatore conferma l'aggiornamento. <br> 5. Il sistema valida il passaggio di stato, aggiorna il database e registra lo storico. <br> 6. Il sistema genera automaticamente notifiche in-platform ed email per il segnalante e i follower ([FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr)). |
+| Extensions              |2a. L'operatore seleziona "Rejected": 2a.1 Il sistema obbliga l'inserimento di una motivazione ([FR-14.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 2b. Transizione di stato non valida: 2b.1 Il sistema segnala l'errore e impedisce l'operazione. |
+
 # 3) Traceability Table
 
 | UC ID | REQ ID |
 | :---- | :----- |
-| UC-01 | FR-13, FR-13.1, FR-13.2, FR-8, NFR-04 |
-| UC-02 | FR-5, FR-5.1 |
+| UC-01 | FR-5, FR-5.1 |
+| UC-02 | FR-13, FR-13.1, FR-13.2, FR-8, NFR-04 |
+| UC-03 | FR-14, FR-14.1, FR-15, FR-16 |
