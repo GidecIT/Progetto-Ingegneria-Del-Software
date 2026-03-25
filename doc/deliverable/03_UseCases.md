@@ -18,8 +18,8 @@ Add one narrative for each use case shown in the diagram.
 | Intention in Context    |Accedere al sistema per usufruire delle funzionalità riservate agli utenti registrati                             |
 | Primary actor           |Utente registrato                              |
 | Supporting actors       |                             |
-| Stakeholders' interests |Comune di Torino:garantire che solo gli utenti verificati e autorizzati possono interagire con le segnalazioni o accedere ai dati amministrativi. Utente:accedere in sicurezza al proprio profilo e operare sulla piattaforma                             |
-| Precondition            |L'utente deve aver completato la regstrazione e, nel caso dei cittadini, aver confermato l'indirizzo email tramite link di verifica                             |
+| Stakeholders' interests |Comune di Torino: garantire che solo gli utenti verificati e autorizzati possano interagire con le segnalazioni o accedere ai dati amministrativi. <br> Utente:accedere in sicurezza al proprio profilo e operare sulla piattaforma                             |
+| Precondition            |L'utente deve aver completato la regstrazione.|
 | Minimum guarantees      |Se l'autenticazione fallisce,l'utete non ottiene alcun privilegio di accesso e lo stato del sistema rimane invariato                             |
 | Success guarantees      |L'utente è autenticato e viene reindirizzato all'interno della piattaforma con i permessi corrispondenti al proprio ruolo                             |
 | Trigger                 |L'utente richiedere di accedere al sistema cliccando sul pulsante login                              |
