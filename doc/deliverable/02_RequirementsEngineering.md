@@ -60,29 +60,31 @@ Il diagramma di contesto mostra il funzionamento generale del sistema **Particip
 | PER-07 | Sandro    | Amministratore          | Sistemista esperto, 42 anni. Si occupa della stabilità della piattaforma e della sicurezza di essa.                   | Assicurare che il sistema sia sempre online, non ci siano violazioni di sicurezza e che i dati siano salvati (Backup). | Deve operare con permessi limitati sui dati sensibili (GDPR).                                    | Laptop professionale, VPN/SSH.               | Dashboard di monitoraggio e alert automatici.                                                  |
 | PER-08 | Alessia   | Amministratore          | Data Analyst e Responsabile Trasparenza, 38 anni. Analizza i flussi di dati per ottimizzare i servizi comunali.       | Estrarre report periodici sui tempi di intervento e identificare le zone della città con più disservizi.               | Deve garantire l'anonimato dei cittadini nei report pubblici (Open Data).                        | PC Desktop, Monitor multipli.                | Visualizzazioni grafiche avanzate e compatibilità con screen reader per audit.                 |
 ---
- 
-AGGIUNGERE COSA FA MATTEO? e atomicità
 
 # 5) User Stories
 
 | ID    | Persona/Role                      | User story (As a… I want… so that…)                                                                                                                                   |
 |:------|:----------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| US-01 | Giuseppe - Cittadino (visitatore)   | Come cittadino visitatore voglio visualizzare la mappa delle segnalazioni con la possibilità di visualizzare i dettagli così che io possa informarmi sui problemi del mio quartiere. |  
-| US-02 | Giuseppe - Cittadino (visitatore)   | Come cittadino voglio potermi registrare fornendo i miei dati di base così che io possa effettuare segnalazioni   |
-| US-03 | Marco - Cittadino (autenticato)   | Come cittadino autenticato, voglio inviare una segnalazione completa di foto, posizione su mappa e descrizione, e poter scambiare messaggi con l'operatore comunale, così da facilitare l'intervento e fornire eventuali chiarimenti richiesti.|
-| US-04 | Marco - Cittadino (autenticato)   | Come cittadino, voglio poter modificare le mie credenziali d'accesso e il mio profilo utente così da poter mantenere aggiornati i miei dati personali.|
-| US-05 | Marco - Cittadino (autenticato)   | Come cittadino, voglio poter recuperare le mie credenziali in caso di perdita |     
-| US-06 | Marco - Cittadino (autenticato)   | Come cittadino voglio poter effettuare un follow di una segnalazione e ricevere notifiche quando la segnalazione cambia stato, così da sentirmi coinvolto nel processo.  |
-| US-07 | Marco - Cittadino (autenticato)   | Come cittadino, voglio avere accesso ad una pagina contente le segnalazioni da me effettuate ed avere accesso ai dettagli. Voglio inoltre la possibilità di esportare le segnalazioni in CSV per condurre un analisi privata |
-| US-08 | Emanuele - Cittadino (autenticato)   | Come cittadino, voglio poter effettuare un logout così da proteggere il mio account quando uso dispositivi condivisi|
-| US-09 | Pietro - Cittadino (autenticato)  | Come studente pendolare: voglio poter visualizzare la mappa con le varie segnalazioni anche in versione tabellare, inoltre voglio segnalare malfunzionamenti alle stazioni di ricarica bici, così da poter pianificare i miei spostamenti senza imprevisti. |
-| US-10 | Pietro - Cittadino (autenticato) | Come utente voglio effettuare ricerche filtrate e ordinate nella lista segnalazioni e comunicare con l'operatore per chiarimenti sui ticket aperti. |
-| US-11 | Giulia - Operatore Comunale       | Come operatore, voglio visualizzare le segnalazioni su una mappa, così da ottimizzare i percorsi delle squadre di riparazione ed inoltre voglio gestire gli stati delle segnalazioni. |      
-| US-12 | Giulia - Operatore comunale| Come operatore, voglio poter rifiutare segnalazioni aggiungendo una motivazione ed inoltre voglio poter comunicare direttamente con il cittadino tramite il servizio di messagistica. |
-| US-13 | Sandro - Amministratore           | Come amministratore voglio consultare i log di sistema per diagnosticare bug applicativi e monitorare tentativi di intrusione.|
-| US-14 | Alessia - Amministratore          | Come amministratore voglio generare report sull'andamento stagionale dei guasti, così da suggerire manutenzioni preventive al comune. Inoltre voglio poter esportare le segnalazioni in CSV.  |
-| US-15 | Alessia - Amministratore               | Come amministratore, voglio generare report sulle risoluzioni, così da dimostrare l'efficienza operativa del sistema ai cittadini. |   
-| US-16 | Sandro - Amministratore               | Come amministratore, voglio creare altri amministratori e creare gli account per gli operatori comunali|                                          
+| US-01 | Marco - Cittadino (autenticato)   | Come cittadino, voglio poter modificare le mie credenziali d'accesso e il mio profilo utente così da poter mantenere aggiornati i miei dati personali.|
+| US-02 | Marco - Cittadino (autenticato)   | Come cittadino, voglio poter recuperare le mie credenziali in caso di perdita, così da rientrare in possesso del mio account in modo autonomo e sicuro senza dover creare un nuovo profilo. |     
+| US-03 | Marco - Cittadino (autenticato)   | Come cittadino voglio poter effettuare un follow di una segnalazione e ricevere notifiche quando la segnalazione cambia stato, così da sentirmi coinvolto nel processo.  |
+| US-04 | Marco - Cittadino (autenticato)   | Come cittadino autenticato, voglio scambiare messaggi con l'operatore comunale, così da facilitare l'intervento e fornire eventuali chiarimenti richiesti.|
+| US-05 | Marco - Cittadino (autenticato)   | Come cittadino, voglio avere accesso ad una pagina contente le segnalazioni da me effettuate così da tenerne traccia. |
+| US-06 | Giuseppe - Cittadino (visitatore)   | Come cittadino visitatore voglio visualizzare la mappa anche in versione tabellare delle segnalazioni così da avere una panoramica strutturata dei problemi urbani  |  
+| US-07 | Giuseppe - Cittadino (visitatore)   | Come cittadino voglio visualizzare i dettagli delle segnalazioni così che io possa informarmi sui problemi del mio quartiere. | 
+| US-08 | Giuseppe - Cittadino (visitatore)   |Come cittadino visitatore, voglio consultare le statistiche pubbliche sulle segnalazioni così da avere una visione aggregata dei problemi della città. |  
+| US-09 | Giuseppe - Cittadino (visitatore)   | Come cittadino voglio potermi registrare fornendo i miei dati di base così che io possa effettuare segnalazioni   |
+| US-10 | Emanuele - Cittadino (autenticato)   | Come cittadino, voglio avere la possibilità di esportare le segnalazioni in CSV per condurre un analisi privata  |
+| US-11 | Emanuele - Cittadino (autenticato)   | Come cittadino, voglio poter effettuare un logout così da proteggere il mio account quando uso dispositivi condivisi|
+| US-12 | Pietro - Cittadino (autenticato)  | Come cittadino, voglio segnalare malfunzionamenti alle infrastrutture per la mobilità sostenibile allegando foto, posizione su mappa e descrizione, così da contribuire al miglioramento dei servizi. |
+| US-13 | Pietro - Cittadino (autenticato) | Come cittadino, voglio effettuare ricerche filtrate e ordinate, così da individuare rapidamente i problemi che mi interessano. |
+| US-14 | Giulia - Operatore comunale| Come operatore, voglio poter rifiutare segnalazioni aggiungendo una motivazione così da spiegare al cittadino il motivo della mancata presa in carico. |
+| US-15 | Giulia - Operatore comunale| Come operatore, voglio poter comunicare direttamente con il cittadino tramite il servizio di messagistica così da richiedere chiarimenti riguardanti la segnalazione effettuata. |
+| US-16 | Matteo - Operatore Comunale       | Come operatore comunale, voglio gestire e aggiornare gli stati delle segnalazioni (es. da Pending a Assigned o Resolved), così da riflettere l'avanzamento reale dell'intervento e mantenere i cittadini informati in modo trasparente. |    
+| US-17 | Sandro - Amministratore           | Come amministratore , voglio consultare i log tecnici e di sicurezza, così da diagnosticare rapidamente eventuali bug applicativi e monitorare tentativi di intrusione.|
+| US-18 | Sandro - Amministratore               | Come amministratore, voglio creare altri amministratori e creare gli account per gli operatori comunali così da garantire i permessi corretti.|   
+| US-19 | Alessia - Amministratore               | Come amministratore, voglio generare report avanzati sull'andamento delle segnalazioni, così da monitorare l'efficienza operativa e suggerire interventi preventivi al comune. |   
+                                       
                                                                   
                               
                      
@@ -95,7 +97,8 @@ AGGIUNGERE COSA FA MATTEO? e atomicità
 | ID    | Requirement statement (The system shall…) | Priority | User story ID | Notes |
 |:------|:------------------------------------------|:---------|:--------------|:------|
 | FR-1 | Il sistema deve consentire la creazione di molteplici account con privilegi di amministratore | alta | US-16 | Il primo account amministratore viene creato durante la creazione del sistema e poi ogni amministratore può creare altri amministratori |
-| FR-2 | Il sistema deve consentire agli amministratori di creare e gestire gli account per gli operatori comunali | alta | US-16 |  
+| FR-2 | Il sistema deve consentire agli amministratori di creare  gli account per gli operatori comunali | alta | US-16 |   |
+| FR-2.1 | Il sistema deve consentire agli amministratori di gestire gli account per gli operatori comunali | alta | US-16 | Gli amministratori devono poter disattivare o modificare gli account degli operatori comunali  |
 | FR-3 | Il sistema deve consentire ai cittadini di creare l'account | alta | US-02  | I cittadini per registrarsi devono fornire le informazioni identificative di base: username, nome, cognome ed inoltre devono confermare l'indirizzo email tramite un link di verifica |
 | FR-4 | Il sistema deve registrare in un file di log ogni errore applicativo e ogni tentativo di accesso fallito  | alta | US-13  | I log devono essere persistenti e non modificabili. Devono tracciare errori applicativi e accessi falliti per scopi di debugging e monitoraggio della sicurezza, garantendo la continuità operativa del sistema. |
 | FR-5 | Il sistema deve consentire agli utenti registrati di effettuare il login | alta | requisito generale da (US-03 a US-16) | Il login viene fatto tramite username/email e password|
@@ -104,17 +107,20 @@ AGGIUNGERE COSA FA MATTEO? e atomicità
 | FR-7 | Il sistema deve permettere la visione e la modifica dei dati personali per gli account registrati | media | US-04 | I dati personali come email, password, username e preferenza di notifica devono essere visualizzabili e deve esserci la possibilità di cambiarli |
 | FR-7.1 | Il sistema deve permettere l'inserimento della foto profilo | bassa | US-04 | Per i cittadini registrati deve essere possibile (opzionalmente) l'inserimento di una foto profilo  |
 | FR-7.2 | Il sistema deve permettere ai cittadini di visualizzare l'elenco delle proprie segnalazioni | media | US-07 | Per i cittadini registrati deve essere possibile visualizzare tutte le proprie segnalazioni  |
-| FR-8| Il sistema deve consentire la visualizzazione della mappa sia in versione grafica sia tabellare| media  |   US-01, US-09      | La mappa con eventuali pin per le segnalazioni deve essere visibile sia agli utenti registrati sia ai visitatori non registrati |
+| FR-8| Il sistema deve consentire la visualizzazione della mappa in versione grafica | media  |   US-01, US-09      | La mappa con eventuali pin per le segnalazioni deve essere visibile sia agli utenti registrati sia ai visitatori non registrati |
+| FR-8.1| Il sistema deve consentire la visualizzazione della mappa in versione tabellare | media  |   US-01, US-09      | La mappa in versione tabellare  deve essere visibile sia agli utenti registrati sia ai visitatori non registrati |
 | FR-9| Il sistema deve consentire la ricerca tramite un campo e l'ordinamento delle segnalazioni | media |   US-10      | L'ordinamento e la ricerca deve essere possibile sia agli utenti registrati sia ai visitatori non registrati |
 | FR-10| Il sistema deve consentire l'accesso ad una sezione dedicata al dettaglio delle segnalazioni | alta |   US-01, US-07      | Il dettaglio delle segnalazioni può comprendere: titolo, descrizione, categoria, posizione, foto, stato corrente e storico aggiornamento |
 | FR-11| Il sistema deve consentire l'esportazione delle segnalazioni in CSV | bassa |    US-07, US-14     |  |
 | FR-12 | Il sistema deve consentire il follow delle segnalazioni|  media |     US-06    | I cittadini registrati devono poter attivare il follow di una qualsiasi segnalazione in modo da seguirne lo stato  |
-| FR-13 | Il sistema deve consentire ai cittadini di inserire le segnalazioni|  alta |    US-03     | Deve essere possibile solo per i cittadini registrati includendo: titolo, posizione scelta tramite mappa, descrizione, categoria e massimo 3 foto, inoltre il cittadino può decidere di contrassegnare una segnalazione come anonima ed in tal caso l'identità non è mostrata |
+| FR-13 | Il sistema deve consentire ai cittadini di inserire le segnalazioni|  alta |    US-03     | Deve essere possibile solo per i cittadini registrati includendo: titolo, posizione scelta tramite mappa, descrizione, categoria e massimo 3 foto|
+| FR-13.1 | Il sistema deve consentire ai cittadini di inserire le segnalazioni con opzione di anonimato|  alta |    US-03     | Deve essere possibile usare un opzione di anonimato così che  il cittadino possa decidere di contrassegnare una segnalazione come anonima ed in tal caso l'identità non è mostrata |
 | FR-14 | Il sistema deve gestire gli stati delle segnalazioni| alta  |     US-11    | Il sistema deve gestire gli stati delle segnalazioni: pending approval, assigned, in progress, suspended, rejected, resolved|  
 | FR-14.1 | Il sistema deve garantire una motivazione nel caso di segnalazione respinta| media  |  US-12      | Se una segnalazione viene respinta il sistema deve obbligare l'operatore comunale a dare una motivazione |
 | FR-15 | Il sistema deve generare una notifica quando una segnalazione cambia di stato | media  |     US-06, US-03     | Se una segnalazione cambia di stato deve esser generata una notifica in piattaforma per il cittadino segnalante e per i cittadini che hanno scelto di seguire la segnalazione e deve essere inviata una notifica per email per gli utenti che non hanno disabilitato questa opzione |
 | FR-16 | Il sistema deve gestire il servizio di messagistica diretta tra cittadino e operatore | alta  |    US-03, US-12     |  |
-| FR-17 | Il sistema deve generare le statistiche | media  |    US-14, US-15     | Le statistiche pubbliche devono essere visibili sia dagli utenti registrati sia ai non registrati. Le statistiche private sono invece visibili ai soli amministratori. |
+| FR-17 | Il sistema deve generare le statistiche pubbliche| media  |    US-14, US-15     | Le statistiche pubbliche devono essere visibili sia dagli utenti registrati sia ai non registrati.  |
+| FR-18 | Il sistema deve generare le statistiche private| media  |    US-14, US-15     | Le statistiche private devono essere visibili ai soli amministratori. |
 
 
 
