@@ -28,7 +28,7 @@ Add one narrative for each use case shown in the diagram.
 
 | Use Case                |                             |
 |:------------------------|:----------------------------|
-| ID                      |UC-02-SubmitReport           |
+| ID                      |UC-02-InserimentoSegnalazione|
 | Scope                   |Sistema web Participium      |
 | Level                   |User goal                    |
 | Intention in Context    |Inviare una segnalazione geolocalizzata di un disservizio urbano al Comune di Torino. |
@@ -44,7 +44,7 @@ Add one narrative for each use case shown in the diagram.
 
 | Use Case                |                             |
 |:------------------------|:----------------------------|
-| ID                      |UC-03-ManageReportStatus     |
+| ID                      |UC-03-GestioneStatoSegnalazione|
 | Scope                   |Sistema web Participium      |
 | Level                   |User goal                    |
 | Intention in Context    |Aggiornare lo stato di una segnalazione durante il processo di gestione comunale. |
