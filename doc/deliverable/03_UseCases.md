@@ -23,8 +23,8 @@ Add one narrative for each use case shown in the diagram.
 | Minimum guarantees      |Se l'autenticazione fallisce,l'utete non ottiene alcun privilegio di accesso e lo stato del sistema rimane invariato                             |
 | Success guarantees      |L'utente è autenticato e viene reindirizzato all'interno della piattaforma con i permessi corrispondenti al proprio ruolo                             |
 | Trigger                 |L'utente richiedere di accedere al sistema cliccando sul pulsante login                              |
-| Main success scenario   |1. L'utente chiede di loggarsi a Participium 2. Il sistema mostra la pagina di login 3. L'utente inserisce le proprie credenziali e verifica che l'account sia attivo 4. Il sistema valida le credenziali e verifica che l'account sia attiva 5. Il sistema autentica l'utente e gli assegna i permessi corretti 6. Il caso d'uso termina con successo                        |
-| Extensions              |3a. L'utente annulla l'operazione: 3a.1 Il sistema interrompe il processo di login e il caso d'uso termina con un fallimento 4a. Le credenziali inserite non sono corrette: 4a.1 Il sistema mostra un messaggio di errore e il caso d'uso riprende dal punto 2 4b. L'account del cittadino non ha l'email verificata: 4b.1 Il sistema avvisa l'utente della necessità di confermare l'indirizzo email e il caso d'uso riprende dal punto 2                              |
+| Main success scenario   |1. L'utente chiede di loggarsi a Participium <br> 2. Il sistema mostra la pagina di login <br> 3.  L'utente inserisce le proprie credenziali <br> 4. Il sistema valida le credenziali e verifica che l'account sia attivo<br> 5. Il sistema autentica l'utente e gli assegna i permessi corretti<br> 6. Il caso d'uso termina con successo                        |
+| Extensions              |3a. L'utente annulla l'operazione:<br>   3a.1 Il sistema interrompe il processo di login e il caso d'uso termina con un fallimento<br><br> 3b.L'utente chiede di resettare la password <br>3b.1 il sistema avvia US-02 (FR-5.1) e il caso d'uso termina con un fallimento<br><br> 4a. Le credenziali inserite non sono corrette:<br> 4a.1 Il sistema mostra un messaggio di errore e il caso d'uso riprende dal punto 2<br><br> 4b. L'account del cittadino non ha l'email verificata:<br>  4b.1 Il sistema avvisa l'utente della necessità di confermare l'indirizzo email e il caso d'uso riprende dal punto 2                              |
 
 | Use Case                |                             |
 |:------------------------|:----------------------------|
@@ -78,7 +78,7 @@ Add one narrative for each use case shown in the diagram.
 
 | UC ID | REQ ID |
 | :---- | :----- |
-| UC-01 | FR-5, FR-5.1 |
+| UC-01 | FR-5 |
 | UC-02 | FR-13, FR-13.1, FR-13.2, FR-8, NFR-04 |
 | UC-03 | FR-14, FR-14.1, FR-15, FR-16 |
 | UC-04 | FR-8, FR-8.1, FR-9, FR-9.1, FR-10 |
