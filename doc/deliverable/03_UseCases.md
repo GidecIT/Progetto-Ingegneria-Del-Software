@@ -28,23 +28,23 @@ Add one narrative for each use case shown in the diagram.
 
 | Use Case                |                             |
 |:------------------------|:----------------------------|
-| ID                      |                             |
-| Scope                   |                             |
-| Level                   |                             |
-| Intention in Context    |                             |
-| Primary actor           |                             |
-| Supporting actors       |                             |
-| Stakeholders' interests |                             |
-| Precondition            |                             |
-| Minimum guarantees      |                             |
-| Success guarantees      |                             |
-| Trigger                 |                             |
-| Main success scenario   |                             |
-| Extensions              |                             |
-
+| ID                      |UC-01-SubmitReport           |
+| Scope                   |Sistema web Participium      |
+| Level                   |User goal                    |
+| Intention in Context    |Inviare una segnalazione geolocalizzata di un disservizio urbano al Comune di Torino. |
+| Primary actor           |[Cittadino (autenticato)](./02_RequirementsEngineering.md#4-personas) (PER-01, PER-02, PER-03) |
+| Supporting actors       |[OpenStreetMap (IF-03)](./02_RequirementsEngineering.md#3-interfaces), [Media Storage (IF-04)](./02_RequirementsEngineering.md#3-interfaces) |
+| Stakeholders' interests |[Cittadino (STK-01)](./02_RequirementsEngineering.md#1-stakeholders): Comunicare efficacemente il problema, garantire la propria privacy (anonimato pubblico), assicurarsi che la segnalazione venga ricevuta. <br> [Comune di Torino (STK-04)](./02_RequirementsEngineering.md#1-stakeholders): Ricevere dati accurati e geolocalizzati con evidenze visive per ottimizzare gli interventi. <br> [Operatore Comunale (STK-02)](./02_RequirementsEngineering.md#1-stakeholders): Ottenere informazioni chiare e foto per valutare l'entità del problema. |
+| Precondition            |L'utente deve essere autenticato ([UC-02-Login](#2-use-case-narratives)). |
+| Minimum guarantees      |Nessuna segnalazione viene creata nel database e nessun file viene caricato se il processo viene interrotto o fallisce. |
+| Success guarantees      |Viene creata una nuova segnalazione con stato "Pending Approval", le foto sono archiviate, la posizione è registrata e l'utente riceve conferma. |
+| Trigger                 |L'utente seleziona l'opzione per inserire una nuova segnalazione sulla mappa o tramite pulsante dedicato. |
+| Main success scenario   |1. Il cittadino avvia la procedura di inserimento segnalazione. <br> 2. Il sistema mostra la mappa interattiva ([OpenStreetMap](./02_RequirementsEngineering.md#3-interfaces)) e il modulo di inserimento. <br> 3. Il cittadino seleziona la posizione del disservizio sulla mappa. <br> 4. Il sistema cattura le coordinate geografiche. <br> 5. Il cittadino inserisce titolo, descrizione e seleziona una [categoria](./02_RequirementsEngineering.md#6-functional-requirements-fr) (FR-13.2). <br> 6. Il cittadino carica da 1 a 3 [foto](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr) (NFR-04). <br> 7. Il cittadino seleziona opzionalmente l'opzione di [anonimato pubblico](./02_RequirementsEngineering.md#6-functional-requirements-fr) (FR-13.1). <br> 8. Il cittadino conferma l'invio. <br> 9. Il sistema valida i dati, carica le immagini su Cloud Storage e salva la segnalazione. <br> 10. Il sistema assegna lo stato "Pending Approval" e mostra un messaggio di successo. |
+| Extensions              |2a. Il servizio mappa non è disponibile: 2a.1 Il sistema avvisa l'utente e termina il caso d'uso. <br> 6a. Il cittadino carica più di 3 foto: 6a.1 Il sistema impedisce il caricamento o mostra un errore. <br> 9a. Dati obbligatori mancanti o invalidi: 9a.1 Il sistema evidenzia i campi mancanti e torna al punto 5. <br> 9b. Errore nel caricamento delle immagini: 9b.1 Il sistema avvisa l'utente del fallimento e permette di riprovare l'invio. |
 
 # 3) Traceability Table
 
 | UC ID | REQ ID |
 | :---- | :----- |
-| UC-XX | FR-XX  |
+| UC-01 | FR-13, FR-13.1, FR-13.2, FR-8, NFR-04 |
+| UC-02 | FR-5, FR-5.1 |
