@@ -58,6 +58,22 @@ Add one narrative for each use case shown in the diagram.
 | Main success scenario   |1. L'operatore visualizza i dettagli di una segnalazione ([FR-10](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 2. L'operatore seleziona un nuovo stato dall'elenco predefinito (es. "Assigned", "In Progress", "Resolved"). <br> 3. L'operatore inserisce opzionalmente un commento o aggiornamento interno. <br> 4. L'operatore conferma l'aggiornamento. <br> 5. Il sistema valida il passaggio di stato, aggiorna il database e registra lo storico. <br> 6. Il sistema genera automaticamente notifiche in-platform ed email per il segnalante e i follower ([FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr)). |
 | Extensions              |2a. L'operatore seleziona "Rejected": 2a.1 Il sistema obbliga l'inserimento di una motivazione ([FR-14.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 2b. Transizione di stato non valida: 2b.1 Il sistema segnala l'errore e impedisce l'operazione. |
 
+| Use Case                |                             |
+|:------------------------|:----------------------------|
+| ID                      |UC-04-ConsultazioneMappaESegnalazioni|
+| Scope                   |Sistema web Participium      |
+| Level                   |User goal                    |
+| Intention in Context    |Navigare sulla mappa, filtrare e visualizzare i dettagli delle segnalazioni pubblicate. |
+| Primary actor           |[Cittadino (visitatore/autenticato)](./02_RequirementsEngineering.md#4-personas) (PER-01, PER-04) |
+| Supporting actors       |[OpenStreetMap (IF-03)](./02_RequirementsEngineering.md#3-interfaces) |
+| Stakeholders' interests |[Cittadino (STK-01)](./02_RequirementsEngineering.md#1-stakeholders): Verificare se un problema è già stato segnalato, monitorare i disservizi nel proprio quartiere. <br> [Comune di Torino (STK-04)](./02_RequirementsEngineering.md#1-stakeholders): Garantire trasparenza e ridurre segnalazioni duplicate. |
+| Precondition            |Il sistema deve essere accessibile. |
+| Minimum guarantees      |Il sistema mostra i dati pubblici delle segnalazioni senza compromettere la privacy (anonimato). |
+| Success guarantees      |L'utente trova le informazioni cercate e visualizza i dettagli completi di una segnalazione. |
+| Trigger                 |L'utente accede alla home page o alla sezione mappa del portale. |
+| Main success scenario   |1. L'utente accede alla mappa interattiva di Participium. <br> 2. Il sistema carica e visualizza i pin delle segnalazioni geolocalizzate ([FR-8](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 3. L'utente applica filtri per categoria, stato o intervallo temporale ([FR-9.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 4. Il sistema aggiorna la visualizzazione in base ai filtri applicati. <br> 5. L'utente seleziona una segnalazione specifica dalla mappa o dalla vista tabellare ([FR-8.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 6. Il sistema mostra la pagina di dettaglio con titolo, descrizione, categoria, foto e stato corrente ([FR-10](./02_RequirementsEngineering.md#6-functional-requirements-fr)). |
+| Extensions              |3a. L'utente effettua una ricerca testuale: 3a.1 Il sistema filtra le segnalazioni che corrispondono alla stringa inserita ([FR-9](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 5a. La segnalazione è stata contrassegnata come anonima: 5a.1 Il sistema nasconde i dati identificativi del segnalante ([FR-13.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)). |
+
 # 3) Traceability Table
 
 | UC ID | REQ ID |
@@ -65,3 +81,4 @@ Add one narrative for each use case shown in the diagram.
 | UC-01 | FR-5, FR-5.1 |
 | UC-02 | FR-13, FR-13.1, FR-13.2, FR-8, NFR-04 |
 | UC-03 | FR-14, FR-14.1, FR-15, FR-16 |
+| UC-04 | FR-8, FR-8.1, FR-9, FR-9.1, FR-10 |
