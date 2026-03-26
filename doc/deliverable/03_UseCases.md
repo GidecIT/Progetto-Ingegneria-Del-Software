@@ -18,13 +18,13 @@ Add one narrative for each use case shown in the diagram.
 | Intention in Context    |Accedere al sistema per usufruire delle funzionalità riservate agli utenti registrati                             |
 | Primary actor           |Utente registrato                              |
 | Supporting actors       |                             |
-| Stakeholders' interests |Comune di Torino: garantire che solo gli utenti verificati e autorizzati possano interagire con le segnalazioni o accedere ai dati amministrativi. <br> Utente:accedere in sicurezza al proprio profilo e operare sulla piattaforma                             |
-| Precondition            |L'utente deve aver completato la regstrazione.|
-| Minimum guarantees      |Se l'autenticazione fallisce,l'utete non ottiene alcun privilegio di accesso e lo stato del sistema rimane invariato                             |
+| Stakeholders' interests |Comune di Torino: garantire che solo gli utenti verificati e autorizzati possano interagire con le segnalazioni o accedere ai dati amministrativi. <br> Utente: accedere in sicurezza al proprio profilo e operare sulla piattaforma                             |
+| Precondition            |L'utente deve aver completato la registrazione.|
+| Minimum guarantees      |Se l'autenticazione fallisce,l'utente non ottiene alcun privilegio di accesso e lo stato del sistema rimane invariato                             |
 | Success guarantees      |L'utente è autenticato e viene reindirizzato all'interno della piattaforma con i permessi corrispondenti al proprio ruolo                             |
-| Trigger                 |L'utente richiedere di accedere al sistema cliccando sul pulsante login                              |
-| Main success scenario   |1. L'utente chiede di loggarsi a Participium <br> 2. Il sistema mostra la pagina di login <br> 3.  L'utente inserisce le proprie credenziali <br> 4. Il sistema valida le credenziali e verifica che l'account sia attivo<br> 5. Il sistema autentica l'utente e gli assegna i permessi corretti<br> 6. Il caso d'uso termina con successo                        |
-| Extensions              |3a. L'utente annulla l'operazione:<br>   3a.1 Il sistema interrompe il processo di login e il caso d'uso termina con un fallimento<br><br> 3b.L'utente chiede di resettare la password <br>3b.1 il sistema avvia US-02 (FR-5.1) e il caso d'uso termina con un fallimento<br><br> 4a. Le credenziali inserite non sono corrette:<br> 4a.1 Il sistema mostra un messaggio di errore e il caso d'uso riprende dal punto 2<br><br> 4b. L'account del cittadino non ha l'email verificata:<br>  4b.1 Il sistema avvisa l'utente della necessità di confermare l'indirizzo email e il caso d'uso riprende dal punto 2                              |
+| Trigger                 |L'utente richiede di accedere al sistema cliccando sul pulsante login                              |
+| Main success scenario   |1. L'utente chiede di accedere a Participium <br> 2. Il sistema mostra la pagina di login <br> 3.  L'utente inserisce le proprie credenziali <br> 4. Il sistema valida le credenziali e verifica che l'account sia attivo<br> 5. Il sistema autentica l'utente e gli assegna i permessi corretti<br> 6. Il caso d'uso termina con successo                        |
+| Extensions              |3a. L'utente annulla l'operazione:<br>   3a.1 Il sistema interrompe il processo di login e il caso d'uso termina con un fallimento<br><br> 3b.L'utente chiede di resettare la password <br>3b.1 il sistema avvia UC-05 e il caso d'uso termina con un fallimento<br><br> 4a. Le credenziali inserite non sono corrette:<br> 4a.1 Il sistema mostra un messaggio di errore e il caso d'uso riprende dal punto 2<br><br> 4b. L'account del cittadino non ha l'email verificata:<br>  4b.1 Il sistema avvisa l'utente della necessità di confermare l'indirizzo email e il caso d'uso riprende dal punto 2                              |
 
 | Use Case                |                             |
 |:------------------------|:----------------------------|
@@ -74,11 +74,48 @@ Add one narrative for each use case shown in the diagram.
 | Main success scenario   |1. L'utente accede alla mappa interattiva di Participium. <br> 2. Il sistema carica e visualizza i pin delle segnalazioni geolocalizzate ([FR-8](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 3. L'utente applica filtri per categoria, stato o intervallo temporale ([FR-9.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 4. Il sistema aggiorna la visualizzazione in base ai filtri applicati. <br> 5. L'utente seleziona una segnalazione specifica dalla mappa o dalla vista tabellare ([FR-8.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 6. Il sistema mostra la pagina di dettaglio con titolo, descrizione, categoria, foto e stato corrente ([FR-10](./02_RequirementsEngineering.md#6-functional-requirements-fr)). |
 | Extensions              |3a. L'utente effettua una ricerca testuale: 3a.1 Il sistema filtra le segnalazioni che corrispondono alla stringa inserita ([FR-9](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 5a. La segnalazione è stata contrassegnata come anonima: 5a.1 Il sistema nasconde i dati identificativi del segnalante ([FR-13.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)). |
 
+
+| Use Case                |                             |
+|:------------------------|:----------------------------|
+| ID                      |     UC-05 - Ripristino password                        |
+| Scope                   |         Sistema web Participium                    |
+| Level                   |      User Goal                       |
+| Intention in Context    |    Ripristinare la password dell'account                        |
+| Primary actor           |    Utente registrato                         |
+| Supporting actors       | Servizio email (IF-06)|
+| Stakeholders' interests |        Utente: ripristinare la propria password in caso di smarrimento|
+| Precondition            |    L'utente deve essere registrato|
+| Minimum guarantees      |  Se il ripristino fallisce la password rimane invariata|
+| Success guarantees      |     La password viene reimpostata                        |
+| Trigger                 |  L'utente richiede di ripristinare la propria password                           |
+| Main success scenario   | 1. L'utente chiede il recupero della password inserendo il proprio indirizzo email <br> 2. il sistema verifica che l'email sia associata ad un account attivo <br> 3. il sistema genera un token monouso e invia una email all'utente <br> 4. L'utente apre l'email e clicca il link di reset <br> 5. il sistema valida il token <br> 6. il sistema mostra il form per la nuova password <br> 7. l'utente inserisce la nuova password e conferma <br> 8. il sistema valida la complessità della password, la aggiorna e invalida il token  <br> 9. il sistema reindirizza al login (UC-01) e il caso d'uso termina con successo                              |
+| Extensions              |   2a. l'email non è associata a nessun account attivo <br> 2a.1 il sistema avvisa l'utente e il caso d'uso termina con fallimento <br> <br> 5a Il token è scaduto o non valido <br> 5a.1 il sistema informa l'utente che il token non è più utilizzabile e il caso d'uso termina con fallimento  <br> <br> 8a. La password non rispetta i requisiti di sicurezza <br> 8a.1 il sistema mostra un errore e riprende dal punto 7      |
+
+
+| Use Case                |                             |
+|:------------------------|:----------------------------|
+| ID                      |                             |
+| Scope                   |                             |
+| Level                   |                             |
+| Intention in Context    |                             |
+| Primary actor           |                             |
+| Supporting actors       |                             |
+| Stakeholders' interests |                             |
+| Precondition            |                             |
+| Minimum guarantees      |                             |
+| Success guarantees      |                             |
+| Trigger                 |                             |
+| Main success scenario   |                             |
+| Extensions              |                             |
+
+
+
 # 3) Traceability Table
 
 | UC ID | REQ ID |
 | :---- | :----- |
-| UC-01 | FR-5 |
+| UC-01 | FR-5, FR-4, NFR-11, NFR-12 |
 | UC-02 | FR-13, FR-13.1, FR-13.2, FR-8, NFR-04 |
 | UC-03 | FR-14, FR-14.1, FR-15, FR-16 |
 | UC-04 | FR-8, FR-8.1, FR-9, FR-9.1, FR-10 |
+| UC-05 | FR-5.1, FR-4, NFR-11, NFR-12|
