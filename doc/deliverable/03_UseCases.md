@@ -264,3 +264,7 @@ Add one narrative for each use case shown in the diagram.
 | UC-08 | [FR-1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-2](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-4](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-18](./02_RequirementsEngineering.md#6-functional-requirements-fr) |
 | UC-09 | [FR-5.1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-4](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-11](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr), [NFR-12](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
 | UC-10| [FR-10](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
+| UC-XX-Visualizzazione Storico Aggiornamenti | [FR-10](./02_RequirementsEngineering.md#6-functional-requirements-fr) |
+| UC-XX-Follow Segnalazione | [FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr) |
+| UC-XX-Analisi Avanzata Amministratore | [FR-18](./02_RequirementsEngineering.md#6-functional-requirements-fr) |
+| UC-XX-Analisi Statistiche Pubbliche | [FR-17](./02_RequirementsEngineering.md#6-functional-requirements-fr) |
