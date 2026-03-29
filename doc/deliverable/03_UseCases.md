@@ -248,7 +248,21 @@ Add one narrative for each use case shown in the diagram.
 | **Main success scenario**| 1. L'utente accede alla sezione "Statistiche" del portale pubblico. <br> 2. Il sistema mostra le statistiche pubbliche. <br> 3. L'utente filtra i dati per periodo (giorno, settimana, mese). <br> 4. Il sistema aggiorna dinamicamente le visualizzazioni. <br> Il caso d'uso termina con successo.|
 | **Extensions** | 3a. Il filtro selezionato non restituisce dati <br> 3a.1 Il sistema mostra un messaggio informativo, il caso d'uso riprende dal punto 2. |
 
-
+| Use Case||
+|:------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **ID** | UC-XX-Ricerca e filtraggio segnalazioni|
+| **Scope** | Sistema web Participium|
+| **Level** | User goal|
+| **Intention in Context**| Consultare segnalazioni specifiche tramite filtri( categoria, stato, periodo temporale) sia in vista che in mappa tabellare.|
+| **Primary actor** | [Cittadino (visitatore/autenticato)](./02_RequirementsEngineering.md#4-personas)|
+| **Supporting actors** ||
+| **Stakeholders' interests**| [Cittadino (visitatore/autenticato)](./02_RequirementsEngineering.md#1-stakeholders): trovare rapidamente le segnalazioni di interesse o monitorare i problemi nella propria zona <br> [Comune di Torino](./02_RequirementsEngineering.md#1-stakeholders): garantire trasparenza pubblica offrendo strumenti efficaci per consultare cosa è in gestione.|
+| **Precondition** | Il sistema contiene segnalazioni pubblicate.|
+|**Minimum guarantees**|La consultazione non altera alcun dato nel sistema.|
+| **Success guarantees** | L'utente ottiene e visualizza un sottoinsieme di segnalazioni(su mappa o in tabella) coerente con i criteri di ricerca impostati.|
+| **Trigger** |L'utente seleziona uno o più filtri di ricerca nell'interfaccia(es. categoria "Waste", stato "in Progress", o in un intervallo temproale) [(FR-09.1)(FR-09.2)](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
+| **Main success scenario**| 1. L'utente scrive o lascia in bianco la barra di ricerca delle segnalazioni <br> 2. Il sistema cerca le segnalazioni corrispondenti ai criteri impostati dall'utente (filtri applicati e parole inserite nella barra di ricerca) nel database [(FR-09)](./02_RequirementsEngineering.md#6-functional-requirements-fr) <br> 3.Il sistema aggiorna la visualizzazione mostrando solo i risultati filtrati.<br> 4. Il caso d'uso termona con successo|
+| **Extensions** | 2a. Nessuna segnalazione soddisfa i criteri inseriti dall'utente: <br> 2a.1 Il sistema mostra un risultato vuoto (tabella vuota o mappa senza nessun riferimento) avvisando l'utente, il caso d'uso termina. |
 
 # Traceability Table
 
@@ -268,3 +282,4 @@ Add one narrative for each use case shown in the diagram.
 | UC-XX-Follow Segnalazione | [FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr) |
 | UC-XX-Analisi Avanzata Amministratore | [FR-18](./02_RequirementsEngineering.md#6-functional-requirements-fr) |
 | UC-XX-Analisi Statistiche Pubbliche | [FR-17](./02_RequirementsEngineering.md#6-functional-requirements-fr) |
+| UC-XX-Ricerca e filtraggio segnalazioni| [FR-09](./02_RequirementsEngineering.md#6-functional-requirements-fr),[FR-09.1](./02_RequirementsEngineering.md#6-functional-requirements-fr),[FR-09.2](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
