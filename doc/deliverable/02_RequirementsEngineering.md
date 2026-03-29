@@ -123,7 +123,7 @@ Il diagramma di contesto mostra il funzionamento generale del sistema **Particip
 | FR-16 | Il sistema deve gestire il servizio di messagistica diretta tra cittadino e operatore | Alta  |    US-04, US-15     | Gli operatori possono inviare messaggi ai cittadini per richiedere chiarimenti e i cittadini possono rispondere tramite la piattaforma |
 | FR-17 | Il sistema deve generare le statistiche pubbliche| media  |    US-08     | Le statistiche pubbliche come: numero di segnalazioni per categoria e trend nel tempo devono essere visibili sia dagli utenti registrati sia ai non registrati.  |
 | FR-18 | Il sistema deve generare le statistiche private| media  |    US-19    | Le statistiche private come numero di segnalazioni per stato, per tipologia, per tipologia e stato, per segnalante, per segnalante e tipologia, per segnalante/tipologia/stato, segnalazioni inserite dal top 1% e top 5% dei segnalanti per tipologia, devono essere visibili ai soli amministratori. |
-| FR-19 | Il sistema deve consentire agli amministratori di gestire gli account degli utenti registrati  |    US-20    | Le azioni disponibili devono includere: sospendere, bannare o limitare temporaneamente un account|
+| FR-19 | Il sistema deve consentire agli amministratori di gestire gli account degli utenti | alta | US-20            | Le azioni possibili devono comprendere: sospendere, bannare o limitare temporaneamente un account|
 
 
 
