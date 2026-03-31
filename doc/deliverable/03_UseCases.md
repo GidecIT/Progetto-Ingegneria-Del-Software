@@ -412,28 +412,48 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Extensions**              | 3a. Il filtro selezionato non restituisce dati.                                                                                                                  |
 |                             | &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema mostra un messaggio informativo, il caso d'uso riprende dal punto 2.                                                     |
 
-| Use Case                    |                                                                                                                                                                                                                                                                                                                                                           |
+| Use Case                    ||
 |:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**                      | UC-19-Ricerca&FiltraggioSegnalazioni                                                                                                                                                                                                                                                                                                                      |
-| **Scope**                   | Sistema web Participium.                                                                                                                                                                                                                                                                                                                                  |
-| **Level**                   | User goal.                                                                                                                                                                                                                                                                                                                                                |
-| **Intention in Context**    | Consultare segnalazioni specifiche tramite filtri (categoria, stato, periodo temporale) sia in vista mappa che in vista tabellare.                                                                                                                                                                                                                        |
-| **Primary actor**| [Cittadino (visitatore/autenticato)](./02_RequirementsEngineering.md#4-personas).                                                                                                                                                                                                                                                                         |
-| **Supporting actors**       | -                                                                                                                                                                                                                                                                                                                                                         |
-| **Stakeholders' interests** | [Cittadino (visitatore/autenticato)](./02_RequirementsEngineering.md#1-stakeholders): trovare rapidamente le segnalazioni di interesse o monitorare i problemi nella propria zona. <br> [Comune di Torino](./02_RequirementsEngineering.md#1-stakeholders): garantire trasparenza pubblica offrendo strumenti efficaci per consultare cosa è in gestione. |
-| **Precondition**            | Il sistema contiene segnalazioni pubblicate.                                                                                                                                                                                                                                                                                                              |
-| **Minimum guarantees**      | La consultazione non altera alcun dato nel sistema.                                                                                                                                                                                                                                                                                                       |
-| **Success guarantees**      | L'utente ottiene e visualizza un sottoinsieme di segnalazioni (su mappa o in tabella) coerente con i criteri di ricerca impostati.                                                                                                                                                                                                                        |
-| **Trigger**                 | L'utente seleziona uno o più filtri di ricerca nell'interfaccia (es. categoria "Waste", stato "In Progress", o un intervallo temporale) [(FR-09.1)(FR-09.2)](./02_RequirementsEngineering.md#6-functional-requirements-fr).                                                                                                                               |
-| **Main success scenario**   | 1. L'utente scrive o lascia in bianco la barra di ricerca delle segnalazioni.                                                                                                                                                                                                                                                                             |
-|                             | 2. Il sistema cerca le segnalazioni corrispondenti ai criteri impostati dall'utente (filtri applicati e parole inserite nella barra di ricerca) nel database ([FR-09](./02_RequirementsEngineering.md#6-functional-requirements-fr)).                                                                                                                     |
-|                             | 3. Il sistema aggiorna la visualizzazione mostrando solo i risultati filtrati; il caso d'uso termina con successo.                                                                                                                                                                                                                                        |
-| **Extensions**              | 2a. Nessuna segnalazione soddisfa i criteri inseriti dall'utente.                                                                                                                                                                                                                                                                                         |
-|                             | &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema mostra un risultato vuoto (tabella vuota o mappa senza nessun riferimento) avvisando l'utente, il caso d'uso termina.                                                                                                                                                                                             |
+| **ID**                      | UC-19-RicercaSegnalazioni|
+| **Scope**                   | Sistema web Participium.|
+| **Level**                   | User goal.|
+| **Intention in Context**    | Consultare segnalazioni specifiche tramite ricerca per nome o descrizione.|
+| **Primary actor**| [Cittadino (visitatore/autenticato)](./02_RequirementsEngineering.md#4-personas).|
+| **Supporting actors**       | -|
+| **Stakeholders' interests** | [Cittadino (visitatore/autenticato)](./02_RequirementsEngineering.md#1-stakeholders): trovare rapidamente le segnalazioni di interesse. <br> [Comune di Torino](./02_RequirementsEngineering.md#1-stakeholders): garantire trasparenza pubblica offrendo strumenti efficaci per velocizzare la consultazione. |
+| **Precondition**            | Il sistema contiene segnalazioni pubblicate.|
+| **Minimum guarantees**      | |
+| **Success guarantees**      | L'utente ottiene e visualizza un sottoinsieme di segnalazioni corrispondenti ai criteri di ricerca.|
+| **Trigger**                 | |
+| **Main success scenario**   | 1. L'utente scrive del testo nella barra di ricerca delle segnalazioni. |
+|                             | 2. Il sistema cerca le segnalazioni corrispondenti al testo inserito.|
+|                             | 3. Il sistema aggiorna la visualizzazione mostrando solo le segnalazioni corrispondenti; il caso d'uso termina con successo.|
+| **Extensions**              | 2a. Nessuna segnalazione soddisfa i criteri inseriti dall'utente.|
+|                             | &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema mostra un risultato vuoto e il caso d'uso termina.|
 
 | Use Case||
 |:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**| UC-XX-Notifica cambio di cambio stato|
+| **ID**                      |UC-20-FiltraggioSegnalazioni|
+| **Scope**                   | Sistema web Participium.|
+| **Level**                   | User goal.|
+| **Intention in Context**    | Consultare segnalazioni specifiche che soddisfano i filtri (categoria, stato, periodo temporale).|
+| **Primary actor**| [Cittadino (visitatore/autenticato)](./02_RequirementsEngineering.md#4-personas).|
+| **Supporting actors**       | |
+| **Stakeholders' interests** | [Cittadino (visitatore/autenticato)](./02_RequirementsEngineering.md#1-stakeholders): visualizzare segnalazioni corrispondenti ai criteri di ricerca e visualizzarle secondo l'ordine desiderato. <br> [Comune di Torino](./02_RequirementsEngineering.md#1-stakeholders): garantire trasparenza pubblica offrendo strumenti efficaci per velocizzare la consultazione. |
+| **Precondition**            | Il sistema contiene segnalazioni pubblicate.|
+| **Minimum guarantees**      | |
+| **Success guarantees**      | L'utente ottiene e visualizza un sottoinsieme di segnalazioni corrispondenti ai filtri selezionati.|
+| **Trigger**                 | |
+| **Main success scenario**   | 1. L'utente seleziona uno o più filtri di ricerca nell'interfaccia.|
+|                             | 2. Il sistema cerca le segnalazioni corrispondenti ai criteri impostati dall'utente (filtri applicati e parole inserite nella barra di ricerca) nel database ([FR-09](./02_RequirementsEngineering.md#6-functional-requirements-fr)).|
+|                             | 3. Il sistema aggiorna la visualizzazione mostrando solo i risultati filtrati. Il caso d'uso termina con successo.|
+| **Extensions**              | 2a. Nessuna segnalazione soddisfa i criteri inseriti dall'utente.|
+|                             | &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema mostra un risultato vuoto e il caso d'uso termina.|
+
+
+| Use Case||
+|:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **ID**| UC-21-Notifiche|
 | **Scope**| Sistema web Participium.|
 | **Level**|Subfunction|
 | **Intention in Context**| Informare gli utenti che seguono (Follow) la segnalazione di un avanzamento di stato.|
@@ -475,4 +495,6 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | UC-16 | [FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                                                                                      |
 | UC-17 | [FR-18](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                                                                                      |
 | UC-18 | [FR-17](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                                                                                      |
-| UC-19 | [FR-09](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-09.1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-09.2](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                    |
+| UC-19 | [FR-09](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
+ UC-20 | [FR-09.1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-09.2](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
+| UC-21 | [FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
