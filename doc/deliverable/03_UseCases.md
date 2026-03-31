@@ -418,7 +418,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Scope**                   | Sistema web Participium.                                                                                                                                                                                                                                                                                                                                  |
 | **Level**                   | User goal.                                                                                                                                                                                                                                                                                                                                                |
 | **Intention in Context**    | Consultare segnalazioni specifiche tramite filtri (categoria, stato, periodo temporale) sia in vista mappa che in vista tabellare.                                                                                                                                                                                                                        |
-| **Primary actor**           | [Cittadino (visitatore/autenticato)](./02_RequirementsEngineering.md#4-personas).                                                                                                                                                                                                                                                                         |
+| **Primary actor**| [Cittadino (visitatore/autenticato)](./02_RequirementsEngineering.md#4-personas).                                                                                                                                                                                                                                                                         |
 | **Supporting actors**       | -                                                                                                                                                                                                                                                                                                                                                         |
 | **Stakeholders' interests** | [Cittadino (visitatore/autenticato)](./02_RequirementsEngineering.md#1-stakeholders): trovare rapidamente le segnalazioni di interesse o monitorare i problemi nella propria zona. <br> [Comune di Torino](./02_RequirementsEngineering.md#1-stakeholders): garantire trasparenza pubblica offrendo strumenti efficaci per consultare cosa è in gestione. |
 | **Precondition**            | Il sistema contiene segnalazioni pubblicate.                                                                                                                                                                                                                                                                                                              |
@@ -430,6 +430,28 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 |                             | 3. Il sistema aggiorna la visualizzazione mostrando solo i risultati filtrati; il caso d'uso termina con successo.                                                                                                                                                                                                                                        |
 | **Extensions**              | 2a. Nessuna segnalazione soddisfa i criteri inseriti dall'utente.                                                                                                                                                                                                                                                                                         |
 |                             | &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema mostra un risultato vuoto (tabella vuota o mappa senza nessun riferimento) avvisando l'utente, il caso d'uso termina.                                                                                                                                                                                             |
+
+| Use Case||
+|:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **ID**| UC-XX-Notifica cambio di cambio stato|
+| **Scope**| Sistema web Participium.|
+| **Level**|Subfunction|
+| **Intention in Context**| Informare gli utenti che seguono (Follow) la segnalazione di un avanzamento di stato.|
+| **Primary actor**           | [Operatore Comunale](./02_RequirementsEngineering.md#4-personas).|
+| **Supporting actors**|Servizio di notifca, Servizio Mail|
+| **Stakeholders' interests** | [Cittadino](./02_RequirementsEngineering.md#1-stakeholders): essere informato sui cambiamenti di stato delle segnalazioni a cui è interessato. |
+| **Precondition**|Lo stato della segnalazione è cambiato e l'utente la sta seguendo.|
+| **Minimum guarantees**|Nessuna notifica viene inviata se nessun utente sta seguendo la segnalazione.|
+| **Success guarantees**| L'utente riceve una notifica in piattaforma e via email se ha espresso tale preferenza.|
+| **Trigger**| Un operatore comunale modifica lo stato di una segnalazione.|
+| **Main success scenario**|1. Il sistema individua gli utenti che seguono la segnalazione.|
+| |2. Il sistema invia una notifica in piattaforma a tutti gli utenti interessati comunicando il cambio di stato appena registrato.|
+| |3. Se l'utente ha attivato la ricezione di notifiche via email, il sistema invia una mail con le stesse informazioni. Il caso d'uso termina con successo.|
+| **Extensions**|3a. Il servizio di notifica non è disponibile. Il caso d'uso termina con errore.|
+
+
+
+|________________________________|
 
 # Traceability Table
 
