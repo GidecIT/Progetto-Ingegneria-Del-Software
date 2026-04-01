@@ -130,8 +130,7 @@ ritiene valida la segnalazione cambia stato in **assigned** segnalando la presa 
 direttamente **rejected** con motivazione obbligatoria da parte dell'operatore. Una volta assegnata l'operatore avvia l'
 intervento portandola in **in progress**, oppure la sospende temporaneamente tramite lo stato **suspended**. Dallo stato
 **in progress** la segnalazione può essere sospesa tramite **suspended** oppure chiusa come **resolved** una volta
-completato l'intervento. Una segnalazione sospesa può essere ripresa tramite lo stato **in progress** oppure
-definitivamente respinta tramite lo stato **rejected**. Gli stati **resolved** e **rejected** sono terminali dunque una
+completato l'intervento. Una segnalazione sospesa può essere ripresa tramite lo stato **in progress**. Gli stati **resolved** e **rejected** sono terminali dunque una
 segnalazione che vi entra non può più cambiare stato.
 
 ![Diagramma di transizione tra stati](../../data/img/state-diagram.png)
