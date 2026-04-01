@@ -19,7 +19,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Minimum guarantees**| Se l'autenticazione fallisce, l'utente non ottiene alcun privilegio di accesso e lo stato del sistema rimane invariato.|
 | **Success guarantees**      | L'utente è autenticato e viene reindirizzato all'interno della piattaforma con i permessi corrispondenti al proprio ruolo.|
 | **Trigger**|-|
-| **Main success scenario**   | 1. L'utente clicca sul pulsante "Login" nella barra di navigazione superiore per richiedere l'accesso.|
+| **Main success scenario**   | 1. L'utente clicca sul pulsante per il login nella home page o nella pagina di registrazione.|
 |                             | 2. Il sistema mostra la pagina di login.|
 |                             | 3. L'utente inserisce le proprie credenziali.|
 |                             | 4. Il sistema valida le credenziali e verifica che l'account si attivo.|
@@ -69,7 +69,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 |:----------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **ID**| UC-03-GestioneStatoSegnalazione|
 | **Scope**| Sistema web Participium.|
-| **Level** | User goal|
+| **Level** | User goal.|
 | **Intention in Context**    | Aggiornare lo stato di una segnalazione durante il processo di gestione comunale.|
 | **Primary actor**| [Operatore Comunale](./02_RequirementsEngineering.md#4-personas) (PER-05, PER-06).|
 | **Supporting actors**| [Servizio di notifica (IF-07)](./02_RequirementsEngineering.md#3-interfaces).|
@@ -99,12 +99,13 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Supporting actors**       | [OpenStreetMap (IF-03)](./02_RequirementsEngineering.md#3-interfaces).|
 | **Stakeholders' interests** | [Cittadino (STK-01)](./02_RequirementsEngineering.md#1-stakeholders): Verificare se un problema è già stato segnalato, monitorare i disservizi nel proprio quartiere. <br> [Comune di Torino (STK-04)](./02_RequirementsEngineering.md#1-stakeholders): Garantire trasparenza e ridurre segnalazioni duplicate. |
 | **Precondition**            | Il sistema deve essere accessibile.|
-| **Minimum guarantees**      | Il sistema mostra i dati pubblici delle segnalazioni senza compromettere la privacy (anonimato).|
-| **Success guarantees**      | L'utente visualizza le segnalazioni filtrate correttamente e visualizza i dettagli completi di una segnalazione.|
+| **Minimum guarantees**      | Il sistema mostra le segnalazioni presenti nel database.|
+| **Success guarantees**      | L'utente visualizza le segnalazioni correttamente, visionandole sia sulla mappa che nella vista tabellare.|
 | **Trigger**                 | -|
-| **Main success scenario**   | 1. L'utente accede alla homepage e clicca sul link "Esplora Mappa" per accedere alla mappa interattiva.|
-|                             | 2. Il sistema carica i pin geolocalizzati ([FR-8](./02_RequirementsEngineering.md#6-functional-requirements-fr)).|
-|                             | 3. L'utente applica filtri per categoria, stato o intervallo temporale tramite il pannello laterale ([FR-9.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)).|
+| **Main success scenario**   | 1. L'utente accede alla pagina di consultazione delle segnalazioni.|
+|                             | 2. Il sistema carica la mappa con i pin geolocalizzati ([FR-8](./02_RequirementsEngineering.md#6-functional-requirements-fr)) e la lista delle segnalazioni ([FR-8.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)).|
+|                             | 3. L'utente visualizza le segnalazioni sulla mappa e nella lista, visualizzandone titolo, categoria, stato e data.|
+|                             | 3. DA ELIMINAREEEEEEEEEEEEEEEEEEEEEEEEEEEEE <BR>L'utente applica filtri per categoria, stato o intervallo temporale tramite il pannello laterale ([FR-9.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)).|
 |                             | 4. Il sistema aggiorna la visualizzazione in tempo reale in base ai filtri applicati.|
 |                             | 5. L'utente seleziona una segnalazione specifica dalla mappa o dalla vista tabellare ([FR-8.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)).|
 |                             | 6. Il sistema mostra la pagina di dettaglio con titolo, descrizione, categoria, foto e stato corrente ([FR-10](./02_RequirementsEngineering.md#6-functional-requirements-fr)); il caso d'uso termina con successo.|
@@ -118,53 +119,53 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **ID**                      | UC-05-Registrazione                                                                                                                            |
 | **Scope**                   | Sistema web Participium.                                                                                                                       |
 | **Level** | User goal.                                                                                                                                     |
-| **Intention in Context**    | Creare un nuovo account utente sulla piattaforma fornendo dati identificativi.                                                                 |
-| **Primary actor**           | [Cittadino (visitatore)](./02_RequirementsEngineering.md#4-personas) (PER-04).                                                                 |
-| **Supporting actors**       | [Servizio mail (IF-06)](./02_RequirementsEngineering.md#3-interfaces).                                                                         |
+| **Intention in Context**    | Creare un nuovo account utente sulla piattaforma fornendo dati identificativi.|
+| **Primary actor**           | [Cittadino (visitatore)](./02_RequirementsEngineering.md#4-personas) (PER-04).|
+| **Supporting actors**       | [Servizio mail (IF-06)](./02_RequirementsEngineering.md#3-interfaces).|
 | **Stakeholders' interests** | [Cittadino (STK-01)](./02_RequirementsEngineering.md#1-stakeholders): Ottenere l'accesso per effettuare segnalazioni.                          |
-| **Precondition**            | L'utente non deve essere già autenticato ([UC-07-Logout](#2-use-case-narratives)).                                                             |
-| **Minimum guarantees**      | I dati non vengono salvati se la validazione fallisce.                                                                                         |
-| **Success guarantees**      | Viene creato un account attivo dopo la verifica dell'email.                                                                                    |
-| **Trigger**                 | -                                                                                                                                              |
-| **Main success scenario**   | 1. Il visitatore clicca sul pulsante "Registrati" nella home page o nella pagina di login.                                                     |
-|                             | 2. Il sistema mostra il modulo di registrazione.                                                                                               |
-|                             | 3. Il visitatore inserisce nome, cognome, email e password.                                                                                    |
-|                             | 4. Il visitatore spunta le caselle per l'accettazione di termini e privacy.                                                                    |
-|                             | 5. L'utente spunta o meno il flag "Ricevi notifiche tramite email".                                                                            |
-|                             | 6. Il visitatore clicca sul tasto "Crea Account".                                                                                              |
-|                             | 7. Il sistema valida i dati (univocità email) ([FR-3](./02_RequirementsEngineering.md#6-functional-requirements-fr)).                          |
-|                             | 8. Il sistema crea l'account in stato "Pending" e invia una mail con link di verifica ([IF-06](./02_RequirementsEngineering.md#3-interfaces)). |
-|                             | 9. Il visitatore clicca sul link di verifica ricevuto nella propria casella email.                                                             |
-|                             | 10. Il sistema attiva l'account e mostra un messaggio di conferma; il caso d'uso termina con successo.                                         |
-| **Extensions**              | 7a. Email già presente.                                                                                                                        |
-|                             | &nbsp;&nbsp;&nbsp;&nbsp;7a.1 Il sistema segnala il conflitto; il caso d'uso termina con fallimento.                                            |
-|                             | 9a. Link di verifica scaduto.                                                                                                                  |
-|                             | &nbsp;&nbsp;&nbsp;&nbsp;9a.1 Il sistema permette di richiedere un nuovo invio; il caso d'uso termina con successo.                             |
+| **Precondition**            | L'utente non deve essere già registrato ([UC-07-Logout](#2-use-case-narratives)).|
+| **Minimum guarantees**      | I dati relativi al nuovo utente non vengono salvati se la validazione fallisce.|
+| **Success guarantees**      | Viene creato un account attivo dopo la verifica dell'email.|
+| **Trigger**|-|
+| **Main success scenario**   | 1. Il visitatore clicca sul pulsante per la registrazione nella home page o nella pagina di login.|
+|                             | 2. Il sistema mostra il modulo di registrazione.|
+|                             | 3. Il visitatore compila il form con i suoi dati.|
+|                             | 4. Il visitatore spunta le caselle per accettare i termini e la privacy.|
+|                             | 5. Il visitatore conferma la registrazione.|
+|                             | 6. Il sistema valida i dati (univocità email) ([FR-3](./02_RequirementsEngineering.md#6-functional-requirements-fr)).|
+|                             | 7. Il sistema crea l'account e invia una mail con link di verifica ([IF-06](./02_RequirementsEngineering.md#3-interfaces)). |
+|                             | 8. Il visitatore accede alla propria email e verifica l'account cliccando il link.|
+|                             | 9. Il sistema attiva l'account e mostra un messaggio di conferma; il caso d'uso termina con successo.|
+| **Extensions**              | 7a. Email già presente.|
+|                             | &nbsp;&nbsp;&nbsp;&nbsp;7a.1 Il sistema segnala il conflitto. Il caso d'uso riprende dal punto 3.|
+|                             | 8a. Link di verifica scaduto.|
+|                             | &nbsp;&nbsp;&nbsp;&nbsp;8a.1 Il sistema permette di richiedere un nuovo invio; il caso d'uso riprende dal punto 8.|
 
-| Use Case                    |                                                                                                                                                                         |
+| Use Case||
 |:----------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**                      | UC-06-GestioneProfilo                                                                                                                                                   |
-| **Scope**                   | Sistema web Participium.                                                                                                                                                |
-| **Level** | User goal.                                                                                                                                                              |
-| **Intention in Context**    | Aggiornare i dati personali, caricare una foto profilo e gestire le preferenze di notifica.                                                                             |
-| **Primary actor**           | [Cittadino (autenticato)](./02_RequirementsEngineering.md#4-personas) (PER-01, PER-02, PER-03).                                                                         |
-| **Supporting actors**       | [Media Storage (IF-04)](./02_RequirementsEngineering.md#3-interfaces).                                                                                                  |
-| **Stakeholders' interests** | [Cittadino (STK-01)](./02_RequirementsEngineering.md#1-stakeholders): Personalizzare la propria esperienza e gestire la privacy.                                        |
-| **Precondition**            | L'utente deve essere autenticato ([UC-01-Login](#2-use-case-narratives)).                                                                                               |
-| **Minimum guarantees**      | Le modifiche non confermate non vengono salvate.                                                                                                                        |
-| **Success guarantees**      | Il profilo e le preferenze vengono aggiornati correttamente.                                                                                                            |
-| **Trigger**                 | -                                                                                                                                                                       |
-| **Main success scenario**   | 1. L'utente clicca sulla propria icona profilo e seleziona "Impostazioni" o "Il mio profilo".                                                                           |
+| **ID**                      | UC-06-GestioneProfilo|
+| **Scope**                   | Sistema web Participium.|
+| **Level** | User goal.|
+| **Intention in Context**    | Aggiornare i dati personali, caricare una foto profilo e gestire le preferenze di notifica.|
+| **Primary actor**           | [Cittadino (autenticato)](./02_RequirementsEngineering.md#4-personas) (PER-01, PER-02, PER-03).|
+| **Supporting actors**       | [Media Storage (IF-04)](./02_RequirementsEngineering.md#3-interfaces).|
+| **Stakeholders' interests** | [Cittadino (STK-01)](./02_RequirementsEngineering.md#1-stakeholders): Personalizzare la propria esperienza e gestire la privacy.|
+| **Precondition**            | L'utente deve essere autenticato ([UC-01-Login](#2-use-case-narratives)).|
+| **Minimum guarantees**      | Le modifiche non confermate non vengono salvate.|
+| **Success guarantees**      | Il profilo e le preferenze vengono aggiornati correttamente.|
+| **Trigger**                 |-|
+| **Main success scenario**   | 1. L'utente clicca sulla propria icona profilo e seleziona "Impostazioni" o "Il mio profilo".|
 |                             | 2. Il sistema mostra i dati correnti, la foto profilo (se presente) e le impostazioni notifiche ([FR-7](./02_RequirementsEngineering.md#6-functional-requirements-fr)). |
-|                             | 3. L'utente carica o modifica la propria foto profilo ([IF-04](./02_RequirementsEngineering.md#3-interfaces)).                                                          |
-|                             | 4. L'utente attiva/disattiva il flag "Ricevi notifiche tramite email".                                                                                                  |
-|                             | 5. L'utente modifica eventuali campi anagrafici.                                                                                                                        |
-|                             | 6. L'utente clicca sul pulsante "Salva Modifiche".                                                                                                                      |
-|                             | 7. Il sistema valida i dati e aggiorna il database; il caso d'uso termina con successo.                                                                                 |
-| **Extensions**              | 3a. Formato immagine non valido.                                                                                                                                        |
-|                             | &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema avvisa l'utente sui formati ammessi; il caso d'uso termina con fallimento.                                                      |
-|                             | 7a. Errore di connessione al database.                                                                                                                                  |
-|                             | &nbsp;&nbsp;&nbsp;&nbsp;7a.1 Il sistema mostra un messaggio di errore tecnico; il caso d'uso termina con fallimento.                                                    |
+|                             | 3. L'utente carica o modifica la propria foto profilo ([IF-04](./02_RequirementsEngineering.md#3-interfaces)).|
+|                             | 4. L'utente attiva/disattiva il flag "Ricevi notifiche tramite email".|
+|                             | 5. L'utente modifica eventuali campi anagrafici.|
+|                             | 6. L'utente clicca sul pulsante "Salva Modifiche".|
+|                             | 7. Il sistema valida i dati e aggiorna il database; il caso d'uso termina con successo.|
+| **Extensions**              | 3a. Formato immagine non valido.|
+|                             | &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema avvisa l'utente sui formati ammessi; il caso d'uso termina con fallimento.|
+|                             | 7a. Errore di connessione al database.|
+|                             | &nbsp;&nbsp;&nbsp;&nbsp;7a.1 Il sistema mostra un messaggio di errore tecnico; il caso d'uso termina con fallimento.|
+
 
 | Use Case                    |                                                                                                                        |
 |:----------------------------|:-----------------------------------------------------------------------------------------------------------------------|
@@ -230,7 +231,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 |:----------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **ID**                      | UC-10-CreazioneAccountAmministratore                                                                                                                                                                                          |
 | **Scope**                   | Sistema web Participium.                                                                                                                                                                                                      |
-| **Level** | User goal                                                                                                                                                                                                                     |
+| **Level** | User goal.                                                                                                                                                                                                                     |
 | **Intention in Context**    | Creare account per amministratori o operatori.                                                                                                                                                                                |
 | **Primary actor**           | [Amministratore (di sistema)](./02_RequirementsEngineering.md#4-personas) (PER-07).                                                                                                                                           |
 | **Supporting actors**       | [Servizio mail (IF-06)](./02_RequirementsEngineering.md#3-interfaces).                                                                                                                                                        |
@@ -273,7 +274,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 |:----------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **ID**                      | UC-12-RipristinoPassword                                                                                                                                               |
 | **Scope**                   | Sistema web Participium.                                                                                                                                               |
-| **Level** | User Goal.                                                                                                                                                             |
+| **Level** | User goal.                                                                                                                                                             |
 | **Intention in Context**    | Ripristinare la password smarrita.                                                                                                                                     |
 | **Primary actor**           | [Cittadino (visitatore/autenticato)](./02_RequirementsEngineering.md#4-personas) (PER-01, PER-02, PER-03, PER-04).                                                     |
 | **Supporting actors**       | [Servizio mail (IF-06)](./02_RequirementsEngineering.md#3-interfaces).                                                                                                 |
@@ -323,7 +324,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 |:----------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **ID**                      | UC-14-VisualizzazioneDettaglioSegnalazione                                                                                                                                               |
 | **Scope**                   | Sistema web Participium.                                                                                                                                                                 |
-| **Level** | User Goal.                                                                                                                                                                               |
+| **Level** | User goal.                                                                                                                                                                               |
 | **Intention in Context**    | Accedere alla scheda completa di una segnalazione per leggerne la descrizione, visualizzarne le foto e visualizzare lo storico degli aggiornamenti.                                      |
 | **Primary actor**           | [Cittadino (visitatore/autenticato)](./02_RequirementsEngineering.md#4-personas).                                                                                                        |
 | **Supporting actors**       | [OpenStreetMap](./02_RequirementsEngineering.md#3-interfaces) (IF-03).                                                                                                                   |
