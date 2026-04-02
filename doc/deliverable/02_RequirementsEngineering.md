@@ -34,8 +34,8 @@ esterne.
 
 | ID    | Interface                         | Actor                                                       | Physical interface                        | Logical interface                                    |
 |:------|:----------------------------------|:------------------------------------------------------------|:------------------------------------------|:-----------------------------------------------------|
-| IF-01 | Web App                           | Cittadino / Visitatore                                      | Smartphone/PC con connessione ad Internet | Applicazione web responsive                          |
-| IF-02 | Dashboard amministrativa          | Operatore Comunale / Amministratori                         | PC con connessione a Internet             | Dashboard gestionale e di amministrazione            |
+| IF-01 | Web app                           | Cittadino                                                   | Smartphone/PC con connessione ad Internet | Applicazione web responsive                          |
+| IF-02 | Dashboard amministrativa          | Operatore Comunale / Amministratore                         | PC con connessione a Internet             | Dashboard gestionale e di amministrazione            |
 | IF-03 | Map Service API                   | Servizio OpenStreetMap [(I5)](./01_ProjectManagement.md)    | Connessione a Internet                    | API per geolocalizzazione                            |
 | IF-04 | Media Storage API                 | Object Storage [(I3)](./01_ProjectManagement.md)            | Connessione a Internet                    | API per upload/download immagini segnalazioni        |
 | IF-05 | Content Delivery Network          | CDN [(I6)](./01_ProjectManagement.md)                       | Connessione a Internet                    | Interfaccia per distribuzione rapida contenuti       |
