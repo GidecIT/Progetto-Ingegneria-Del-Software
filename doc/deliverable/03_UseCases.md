@@ -174,8 +174,8 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Level** | User goal.                                                                                                                                                             |
 | **Intention in Context**    | Ripristinare la password smarrita.                                                                                                                                     |
 | **Primary actor**           | Cittadino.                                                     |
-| **Supporting actors**       | [Servizio mail (IF-06)](./02_RequirementsEngineering.md#3-interfaces).                                                                                                 |
-| **Stakeholders' interests** | [Cittadino (STK-01)](./02_RequirementsEngineering.md#1-stakeholders): Recuperare l'accesso autonomamente.                                                              |
+| **Supporting actors**       | Servizio mail (IF-06)md#3-interfaces).                                                                                                 |
+| **Stakeholders' interests** | Cittadino (STK-01): Recuperare l'accesso autonomamente.                                                              |
 | **Precondition**            | L'account deve essere già stato verificato ([UC-05-Registrazione](#2-use-case-narratives)).                                                                            |
 | **Minimum guarantees**      | Il token è temporaneo e monouso e se il ripristino fallisce la password rimane invariata.                                                                              |
 | **Success guarantees**      | La password viene aggiornata con successo.                                                                                                                             |
@@ -189,14 +189,14 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Scope**| Sistema web Participium.|
 | **Level** | User goal.|
 | **Intention in Context**    | Permettere al cittadino di consultare lo storico e lo stato attuale di tutte le segnalazioni da lui inviate.                                                     |
-| **Primary actor**      | [Cittadino (autenticato)](./02_RequirementsEngineering.md#4-personas) (PER-01, PER-02, PER-03).                                                                  |
+| **Primary actor**      | Cittadino (autenticato).                                                                  |
 | **Supporting actors**       |-|
-| **Stakeholders' interests** | [Cittadino (STK-01)](./02_RequirementsEngineering.md#1-stakeholders): Verificare l'avanzamento dei propri ticket e avere uno storico personale.                  |
+| **Stakeholders' interests** | Cittadino (STK-01): Verificare l'avanzamento dei propri ticket e avere uno storico personale.                  |
 | **Precondition**            | L'utente deve essere autenticato UC-01-Login.|
 | **Minimum guarantees**      | Se non sono presenti segnalazioni, il sistema mostra un elenco vuoto senza errori.|
 | **Success guarantees**      | L'utente visualizza l'elenco corretto delle proprie segnalazioni con i relativi stati aggiornati.|
 | **Trigger**                 | -|
-| **Main success scenario**   | 1. L'utente clicca sulla voce "Le mie segnalazioni" presente nel menu del profilo o nella barra laterale della dashboard. <br>  2. Il sistema interroga il database per recuperare i record associati all'ID utente.   <br> 3. Il sistema mostra una lista ordinata cronologicamente delle segnalazioni effettuate ([FR-7.2](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 4. Per ogni voce, il sistema mostra titolo, data e lo stato corrente dell'intervento.   <br>  5. L'utente clicca su una specifica riga per aprirne il dettaglio completo ([UC-13](#2-use-case-narratives)); il caso d'uso termina con successo.                |
+| **Main success scenario**   | 1. L'utente seleziona la voce "Le mie segnalazioni" presente nel menu del profilo o nella barra laterale della dashboard. <br>  2. Il sistema interroga il database per recuperare i record associati all'ID utente.   <br> 3. Il sistema mostra una lista ordinata cronologicamente delle segnalazioni effettuate ([FR-7.2](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 4. Per ogni voce, il sistema mostra titolo, data e lo stato corrente dell'intervento.   <br>  5. L'utente clicca su una specifica riga per aprirne il dettaglio completo ([UC-13](#2-use-case-narratives)); il caso d'uso termina con successo.                |
 | **Extensions**              | 1a. L'utente non ha segnalazioni.  <br>  &nbsp;&nbsp;&nbsp;&nbsp;1a.1 Il sistema mostra un messaggio "Non hai ancora effettuato segnalazioni"; il caso d'uso termina con successo.|
 
 | Use Case||
@@ -205,14 +205,14 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Scope**| Sistema web Participium.|
 | **Level** | User goal.|
 | **Intention in Context**    | Accedere alla scheda completa di una segnalazione per leggerne la descrizione, visualizzarne le foto e visualizzare lo storico degli aggiornamenti.|
-| **Primary actor**           | [Cittadino (visitatore/autenticato)](./02_RequirementsEngineering.md#4-personas).|
-| **Supporting actors**       | [OpenStreetMap](./02_RequirementsEngineering.md#3-interfaces) (IF-03).|
-| **Stakeholders' interests** | [Cittadino (visitatore/autenticato)](./02_RequirementsEngineering.md#4-personas): Comprendere i dettagli di un problema specifico e seguire gli aggiornamenti di stato.||
+| **Primary actor**           | Cittadino (visitatore/autenticato).|
+| **Supporting actors**       | OpenStreetMap (IF-03).|
+| **Stakeholders' interests** | Cittadino (visitatore/autenticato): Comprendere i dettagli di un problema specifico e seguire gli aggiornamenti di stato.||
 | **Precondition**            | La segnalazione selezionata esiste ed è accessibile.|
 | **Minimum guarantees**      | La visualizzazione non altera lo stato o i contenuti della segnalazione.|
 | **Success guarantees**      | Il cittadino visualizza la pagina di dettaglio completa contenente i dati della segnalazione e le relative interazioni pubbliche.|
-| **Trigger**                 | Il cittadino clicca su una specifica segnalazione dalla visualizzazione della mappa.|
-| **Main success scenario**   | 1. Il sistema recupera i dati associati alla segnalazione selezionata (titolo, descrizione, categoria, posizione, foto allegate, stato corrente, storico degli aggiornamenti).  <br>  2. Il sistema mostra a schermo la pagina con tutte le informazioni raccolte ([FR-10](./02_RequirementsEngineering.md#6-functional-requirements-fr)); il caso d'uso termina con successo. |
+| **Trigger**                 |-|
+| **Main success scenario**   | 1.Il cittadino clicca su una specifica segnalazione dalla visualizzazione della mappa.  <br>  2. Il sistema recupera i dati associati alla segnalazione selezionata (titolo, descrizione, categoria, posizione, foto allegate, stato corrente, storico degli aggiornamenti).  <br>  3. Il sistema mostra a schermo la pagina con tutte le informazioni raccolte ([FR-10](./02_RequirementsEngineering.md#6-functional-requirements-fr)); il caso d'uso termina con successo. |
 | **Extensions**              | 1a. La segnalazione non è raggiungibile (poiché rimossa o a causa di un errore di sistema).   <br>  &nbsp;&nbsp;&nbsp;&nbsp;1a.1 Il sistema mostra un messaggio di errore e il caso d'uso termina con un fallimento.|
 
 | Use Case                    ||
@@ -221,9 +221,9 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Scope**                   | Sistema web Participium.|
 | **Level** | User goal.|
 | **Intention in Context**    | Verificare lo storico degli stati di una segnalazione per monitorare la gestione del problema nel tempo.                                   |
-| **Primary actor**           | [Cittadino](./02_RequirementsEngineering.md#4-personas).|
+| **Primary actor**           | Cittadino.|
 | **Supporting actors**       | -|
-| **Stakeholders' interests** | [Cittadino](./02_RequirementsEngineering.md#1-stakeholders): Verificare lo stato della segnalazione e monitorarne i progressi nel tempo.   |
+| **Stakeholders' interests** | Cittadino: Verificare lo stato della segnalazione e monitorarne i progressi nel tempo.   |
 | **Precondition**            | L'utente deve aver selezionato una segnalazione.|
 | **Minimum guarantees**      | Se il sistema non riesce a recuperare lo storico, l'utente visualizza comunque i dati correnti della segnalazione.|
 | **Success guarantees**      | Il sistema mostra tutti i cambi di stato nel tempo.|
@@ -237,13 +237,13 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Scope**                   | Sistema web.|
 | **Level** | User goal.|
 | **Intention in Context**    | Seguire una segnalazione esistente per ricevere aggiornamenti sulla sua evoluzione.                                                                                               |
-| **Primary actor**           | [Cittadino (autenticato)](./02_RequirementsEngineering.md#4-personas).|
-| **Supporting actors**       | [Servizio di Notifica (IF-07)](./02_RequirementsEngineering.md#3-interfaces).|
-| **Stakeholders' interests** | [Cittadino](./02_RequirementsEngineering.md#1-stakeholders): Rimanere informato sugli sviluppi della risoluzione delle segnalazioni di interesse.|
+| **Primary actor**           | Cittadino (autenticato).|
+| **Supporting actors**       | Servizio di Notifica (IF-07).|
+| **Stakeholders' interests** | Cittadino: Rimanere informato sugli sviluppi della risoluzione delle segnalazioni di interesse.|
 | **Precondition**            | L'utente deve essere autenticato ([UC-01](#2-use-case-narratives)) e deve star vedendo i dettagli di una segnalazione.|
 | **Success guarantees**      | Il sistema predispone l'invio di notifiche all'utente ad ogni cambio di stato della segnalazione seguita ([FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr)). |
 | **Trigger**| -|
-| **Main success scenario**   | 1. Il cittadino preme il pulsante "Segui". <br>  2. Il sistema associa l'identificativo utente alla segnalazione nel database.   <br> 3. Il sistema conferma visivamente l'attivazione del follow; il caso d'uso termina con successo.                                                                                  |
+| **Main success scenario**   | 1. Il cittadino seleziona il pulsante "Segui". <br>  2. Il sistema associa l'identificativo utente alla segnalazione nel database.   <br> 3. Il sistema conferma visivamente l'attivazione del follow; il caso d'uso termina con successo.                                                                                  |
 | **Extensions**              | 1a. L'utente segue già la segnalazione.   <br> &nbsp;&nbsp;&nbsp;&nbsp;1a.1 Il sistema mostra l'opzione "Smetti di seguire".                                                                                                     |
 
 | Use Case||
@@ -252,9 +252,9 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Scope**                   | Sistema web Participium.|
 | **Level** | User goal.|
 | **Intention in Context**    | Analizzare dati complessi per monitorare l'efficienza del servizio e prevenire abusi (es. top segnalanti).|
-| **Primary actor**           | [Amministratore](./02_RequirementsEngineering.md#4-personas) (PER-08).|
-| **Supporting actors**       | [Modulo Statistiche (S3.1)](./01_ProjectManagement.md).|
-| **Stakeholders' interests** | [Amministratore](./02_RequirementsEngineering.md#1-stakeholders): Ottimizzare i flussi di lavoro e identificare criticità sistemiche. <br> [Comune di Torino](./02_RequirementsEngineering.md#1-stakeholders): Disporre di reportistica per la pianificazione urbana. |
+| **Primary actor**           | Amministratore.|
+| **Supporting actors**       | Modulo Statistiche (S3.1).|
+| **Stakeholders' interests** | Amministratore: Ottimizzare i flussi di lavoro e identificare criticità sistemiche. <br> Comune di Torino: Disporre di reportistica per la pianificazione urbana. |
 | **Precondition**            | L'amministratore deve essere autenticato con permessi elevati.|
 | **Success guarantees**      | Il sistema genera report e grafici basati su metriche private non accessibili al pubblico ([FR-18](./02_RequirementsEngineering.md#6-functional-requirements-fr)).|
 | **Trigger**|-|
