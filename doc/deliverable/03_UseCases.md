@@ -135,21 +135,6 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Main success scenario**   | 1. L'utente (operatore o cittadino) clicca sulla scheda "Messaggi" all'interno del dettaglio di una segnalazione.  <br>  2. Il sistema mostra la cronologia dei messaggi scambiati ([FR-16](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br>  3. L'utente scrive un nuovo testo nel campo di input e preme l'icona "Invia".       <br>  4. Il sistema salva il messaggio associandolo univocamente alla segnalazione.     <br>  5. Il sistema invia una notifica push o email al destinatario ([FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr)); il caso d'uso termina con successo.                                 |
 | **Extensions**              | 3a. Messaggio vuoto.   <br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema impedisce l'invio; il caso d'uso termina con fallimento.                                                                                                           |
 
-| Use Case                    |                                                                                                                                         |
-|:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**                      | UC-09-ConsultazioneLog                                                                                                                  |
-| **Scope**                   | Sistema web Participium.                                                                                                                |
-| **Level** | User goal.                                                                                                                              |
-| **Intention in Context**    | Monitorare log tecnici e sicurezza.                                                                                                     |
-| **Primary actor**           | [Amministratore (di sistema)](./02_RequirementsEngineering.md#4-personas) (PER-07).                                                     |
-| **Supporting actors**       | [Sistema di monitoraggio e logging (IF-08)](./02_RequirementsEngineering.md#3-interfaces).                                              |
-| **Stakeholders' interests** | [Amministratore (di sistema, STK-03)](./02_RequirementsEngineering.md#1-stakeholders): Diagnosticare bug e monitorare intrusioni.       |
-| **Precondition**            | L'amministratore deve essere autenticato ([UC-01-Login](#2-use-case-narratives)) come Admin.                                            |
-| **Minimum guarantees**      | I log sono in sola lettura e non modificabili.                                                                                          |
-| **Success guarantees**      | L'amministratore visualizza le voci di log filtrate correttamente.                                                                      |
-| **Trigger**                 | -                                                                                                                                       |
-| **Main success scenario**   | 1. L'amministratore clicca sulla voce "Log di Sistema" nel menu laterale della dashboard amministrativa (**IF-02**).   <br> 2. Il sistema presenta l'elenco cronologico dei log persistenti ([FR-4](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 3. L'amministratore imposta i filtri di ricerca (livello errore, data, utente).            <br>4. Il sistema aggiorna la tabella mostrando solo i log filtrati; il caso d'uso termina con successo.                                    |
-| **Extensions**              | 3a. Nessun risultato.      <br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema mostra un avviso "Nessun log trovato"; il caso d'uso termina con successo.                      |
 
 | Use Case                    |                                                                                                                                                                                                                               |
 |:----------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -343,19 +328,19 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 
 | Use Case||
 |:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**| UC-21-ApprovazioneSegnalazione|
+| **ID**| UC-22-ApprovazioneSegnalazione|
 | **Scope**| Sistema web Participium.|
 | **Level**|User goal.|
 | **Intention in Context**|Approvare una segnalazione effettuata da un cittadino.|
 | **Primary actor**           | Operatore Comunale.|
-| **Supporting actors**|Servizio di notifca, Servizio Mail|
-| **Stakeholders' interests** | [Cittadino](./02_RequirementsEngineering.md#1-stakeholders): essere informato sui cambiamenti di stato delle segnalazioni a cui è interessato. |
-| **Precondition**|Lo stato della segnalazione è cambiato e l'utente la sta seguendo.|
-| **Minimum guarantees**|Nessuna notifica viene inviata se nessun utente sta seguendo la segnalazione.|
-| **Success guarantees**| L'utente riceve una notifica in piattaforma e via email se ha espresso tale preferenza.|
-| **Trigger**| Un operatore comunale modifica lo stato di una segnalazione.|
-| **Main success scenario**|1. Il sistema individua gli utenti che seguono la segnalazione. <br>2. Il sistema invia una notifica in piattaforma a tutti gli utenti interessati comunicando il cambio di stato appena registrato. <br>3. Se l'utente ha attivato la ricezione di notifiche via email, il sistema invia una mail con le stesse informazioni. Il caso d'uso termina con successo.|
-| **Extensions**|3a Il servizio di notifica non è disponibile. <br> 3a.1 Il caso d'uso termina con errore.|
+| **Supporting actors**||
+| **Stakeholders' interests** | Cittadino: . |
+| **Precondition**|Un cittadino ha effettuato una segnalazione.|
+| **Minimum guarantees**|-|
+| **Success guarantees**|La segnalazione viene approvata e lo stato viene aggiornato in 'Assigned'|
+| **Trigger**|-|
+| **Main success scenario**|1. L'operatore comunale chiede di approvare una segbalazione. <br> 2. l'operatore accede ai dettagli della segnalazione. <br> 3. L'operatore conferma l'approvazione. <br> 4. Il sistema aggiorna lo stato della segnalazione da 'Pending' a 'Assigned'. Il caso d'uso termina con successo.|
+| **Extensions**|3.a L'operatore rifiuta la segnalazione. fornendone una motivazione valida. <br> &nbsp;&nbsp;&nbsp;&nbsp; 3.a.1 Il sistema aggiorna lo stato della segnalazione da 'Pending' a 'Rejected'; il caso d'uso termina con errore.|
 
 
 
@@ -371,7 +356,6 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | UC-06 | [FR-7](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-7.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                               |
 | UC-07 | [FR-6](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                                                                                       |
 | UC-08 | [FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-16](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                               |
-| UC-09 | [FR-4](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                                                                                       |
 | UC-10 | [FR-1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-2](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                 |
 | UC-11 | [FR-11](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-18](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-05](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr), [NFR-06](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)                                                                                                                                     |
 | UC-12 | [FR-5.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                                                                                     |
@@ -384,3 +368,4 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | UC-19 | [FR-09](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
  UC-20 | [FR-09.1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-09.2](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
 | UC-21 | [FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
+| UC-22 | [FR-14](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-14.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
