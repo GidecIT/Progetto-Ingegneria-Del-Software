@@ -14,13 +14,13 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Intention in Context**    | Accedere al sistema per usufruire delle funzionalità riservate agli utenti registrati.|
 | **Primary actor**           | Cittadino, Operatore Comunale, Amministratore|
 | **Supporting actors**       | Servizio di autenticazione (IF-10).|
-| **Stakeholders' interests** | Comune di Torino (STK-04): garantire accessi autorizzati. <br> Cittadino (STK-01): accedere in sicurezza. |
+| **Stakeholders' interests** | Comune di Torino: garantire ai cittaadini accessi autorizzati e protetti. <br> Cittadino, Operatore Comunale, Amministratore: accedere in sicurezza ai propri account. |
 | **Precondition**| L'utente deve aver completato la registrazione UC-05-Registrazione.
 | **Minimum guarantees**| Se l'autenticazione fallisce, l'utente non ottiene alcun privilegio di accesso e lo stato del sistema rimane invariato.|
 | **Success guarantees**      | L'utente è autenticato e viene reindirizzato all'interno della piattaforma con i permessi corrispondenti al proprio ruolo.|
 | **Trigger**|-|
-| **Main success scenario**   | 1. L'utente chiede di effettuare il login. <br>  2. Il sistema mostra la pagina di login. <br> 3. L'utente inserisce le proprie credenziali. <br> 4. Il sistema valida le credenziali e verifica che l'account si attivo.<br> 5. Il sistema autentica l'utente e assegna i permessi; il caso d'uso termina con successo.|
-| **Extensions**              | 3a. L'utente annulla l'operazione.<br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema interrompe il processo; il caso d'uso termina con fallimento.<br> 3b. L'utente chiede di resettare la password. <br> &nbsp;&nbsp;&nbsp;&nbsp;3b.1 Il sistema avvia [UC-12-RipristinoPassword](#2-use-case-narratives) <br> 4a. Le credenziali inserite sono errate.<br>  &nbsp;&nbsp;&nbsp;&nbsp;4a.1 Il sistema mostra errore; il caso riprende dal punto 2. <br> 4b. L'account del cittadino non ha l'email verificata. <br> &nbsp;&nbsp;&nbsp;&nbsp;4b.1 Il sistema avvisa l'utente della necessità di confermare l'indirizzo email e il caso d'uso riprende dal punto 2. <br> 4c. L'account è disabilitato. <br> &nbsp;&nbsp;&nbsp;&nbsp;4c.1 Il sistema mostra un messaggio di errore; il caso d'uso riprende dal punto 2.|
+| **Main success scenario**   | 1. L'utente chiede di effettuare il login. <br>  2. Il sistema mostra la pagina di login. <br> 3. L'utente inserisce le proprie credenziali. <br> 4. Il sistema valida le credenziali e verifica che l'account si attivo.<br> 5. Il sistema autentica l'utente e assegna i permessi dovuti; il caso d'uso termina con successo.|
+| **Extensions**              | 3a. L'utente annulla l'operazione.<br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema interrompe il processo; il caso d'uso termina con fallimento.<br> 3b. L'utente chiede di resettare la password. <br> &nbsp;&nbsp;&nbsp;&nbsp;3b.1 Il sistema avvia UC-11-RipristinoPassword <br> 4a. Le credenziali inserite sono errate.<br>  &nbsp;&nbsp;&nbsp;&nbsp;4a.1 Il sistema mostra errore; il caso riprende dal punto 2. <br> 4b. L'account del cittadino non ha l'email verificata. <br> &nbsp;&nbsp;&nbsp;&nbsp;4b.1 Il sistema avvisa l'utente della necessità di confermare l'indirizzo email e il caso d'uso riprende dal punto 2. <br> 4c. L'account è disabilitato. <br> &nbsp;&nbsp;&nbsp;&nbsp;4c.1 Il sistema mostra un messaggio di errore; il caso d'uso riprende dal punto 2.|
 
 | Use Case                    ||
 |:----------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -31,7 +31,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Primary actor**           | Cittadino|
 | **Supporting actors**       | [OpenStreetMap (IF-03)](./02_RequirementsEngineering.md#3-interfaces), [Media Storage (IF-04)](./02_RequirementsEngineering.md#3-interfaces).|
 | **Stakeholders' interests** | Cittadino: Comunicare efficacemente il problema riscontrato, garantire la propria privacy (anonimato pubblico), assicurarsi che la segnalazione venga ricevuta.<br>Comune di Torino: Ricevere segnalazioni accurate e geolocalizzate con evidenze visive per ottimizzare gli interventi.
-| **Precondition**            | L'utente deve essere autenticato ([UC-01-Login](#2-use-case-narratives)).|
+| **Precondition**            | L'utente deve essere autenticato UC-01-Login.|
 | **Minimum guarantees**      | Nessuna segnalazione viene creata se il processo viene interrotto.|
 | **Success guarantees**      | Viene creata una segnalazione con stato "Pending Approval", le foto vengono archiviate, la posizione registrata e l'utente riceve conferma visiva.|
 | **Trigger**|-|
@@ -46,8 +46,8 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Intention in Context**    | Aggiornare lo stato di una segnalazione durante il processo di gestione comunale.|
 | **Primary actor**| Operatore Comunale.|
 | **Supporting actors**| [Servizio di notifica (IF-07)](./02_RequirementsEngineering.md#3-interfaces).|
-| **Stakeholders' interests** | [Operatore Comunale (STK-02)](./02_RequirementsEngineering.md#1-stakeholders): Gestire il carico di lavoro, tracciare l'avanzamento degli interventi. <br> [Cittadino (STK-01)](./02_RequirementsEngineering.md#1-stakeholders): Ricevere aggiornamenti trasparenti e tempestivi sulla risoluzione del problema.<br> [Comune di Torino (STK-04)](./02_RequirementsEngineering.md#1-stakeholders): Monitorare l'efficienza degli uffici tecnici. |
-| **Precondition**            | L'operatore deve essere autenticato ([UC-01-Login](#2-use-case-narratives)) e la segnalazione deve esistere nel sistema.|
+| **Stakeholders' interests** | Operatore Comunale; Gestire il carico di lavoro, tracciare l'avanzamento degli interventi. <br> Cittadino: Ricevere aggiornamenti trasparenti e tempestivi sulla risoluzione del problema.<br> Comune di Torino: Monitorare l'efficienza degli uffici tecnici. |
+| **Precondition**            | L'operatore deve essere autenticato UC-01-Login. e la segnalazione deve esistere nel sistema.|
 | **Minimum guarantees**| Lo stato rimane invariato se l'aggiornamento fallisce.|
 | **Success guarantees**| Lo stato della segnalazione è aggiornato, l'utente segnalante e i followers della seganalazione ricevono una notifica ([FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr)).|
 | **Trigger**| -|
@@ -62,7 +62,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Intention in Context**    | Visualizzare le segnalazioni presenti sia sulla mappa che nella vista tabellare.|
 | **Primary actor**           | Cittadino.|
 | **Supporting actors**       | [OpenStreetMap (IF-03)](./02_RequirementsEngineering.md#3-interfaces).|
-| **Stakeholders' interests** | [Cittadino (STK-01)](./02_RequirementsEngineering.md#1-stakeholders): Verificare se un problema è già stato segnalato, monitorare i disservizi nella città. <br> [Comune di Torino (STK-04)](./02_RequirementsEngineering.md#1-stakeholders): Garantire trasparenza e ridurre segnalazioni duplicate. |
+| **Stakeholders' interests** | Cittadino: Verificare se un problema è già stato segnalato, monitorare i disservizi nella città. <br> Comune di Torino: Garantire trasparenza e ridurre segnalazioni duplicate. |
 | **Precondition**            |-|
 | **Minimum guarantees**      |-|
 | **Success guarantees**      | L'utente visualizza le segnalazioni correttamente.|
@@ -78,7 +78,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Intention in Context**    | Creare un nuovo account utente sulla piattaforma fornendo dati identificativi.|
 | **Primary actor**           | Cittadino(Visitatore).|
 | **Supporting actors**       | [Servizio mail (IF-06)](./02_RequirementsEngineering.md#3-interfaces).|
-| **Stakeholders' interests** | [Cittadino (STK-01)](./02_RequirementsEngineering.md#1-stakeholders): Ottenere l'accesso per effettuare segnalazioni.                          |
+| **Stakeholders' interests** | Cittadino: Ottenere l'accesso per effettuare segnalazioni.                          |
 | **Precondition**            | L'utente non deve essere già registrato ([UC-07-Logout](#2-use-case-narratives)).|
 | **Minimum guarantees**      | I dati relativi al nuovo utente non vengono salvati se la validazione fallisce.|
 | **Success guarantees**      | Viene creato un account attivo dopo la verifica dell'email.|
@@ -95,7 +95,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Primary actor**           | [Cittadino (autenticato)](./02_RequirementsEngineering.md#4-personas) (PER-01, PER-02, PER-03).|
 | **Supporting actors**       | [Media Storage (IF-04)](./02_RequirementsEngineering.md#3-interfaces).|
 | **Stakeholders' interests** | [Cittadino (STK-01)](./02_RequirementsEngineering.md#1-stakeholders): Personalizzare la propria esperienza e gestire la privacy.|
-| **Precondition**            | L'utente deve essere autenticato ([UC-01-Login](#2-use-case-narratives)).|
+| **Precondition**            | L'utente deve essere autenticato UC-01-Login.|
 | **Minimum guarantees**      | Le modifiche non confermate non vengono salvate.|
 | **Success guarantees**      | Il profilo e le preferenze vengono aggiornati correttamente.|
 | **Trigger**                 |-|
@@ -112,7 +112,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Primary actor**           | [Cittadino (autenticato)](./02_RequirementsEngineering.md#4-personas) (PER-01, PER-02, PER-03).                        |
 | **Supporting actors**       | [Servizio di autenticazione (IF-10)](./02_RequirementsEngineering.md#3-interfaces).                                    |
 | **Stakeholders' interests** | [Cittadino (STK-01)](./02_RequirementsEngineering.md#1-stakeholders): Proteggere l'account su dispositivi condivisi.   |
-| **Precondition**            | L'utente deve essere autenticato ([UC-01-Login](#2-use-case-narratives)).                                              |
+| **Precondition**            | L'utente deve essere autenticato UC-01-Login.                                              |
 | **Minimum guarantees**      | Nessuna.                                                                                                               |
 | **Success guarantees**      | La sessione viene invalidata e l'accesso protetto revocato.                                                            |
 | **Trigger**                 | -                                                                                                                      |
@@ -128,7 +128,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Primary actor**           | [Operatore Comunale](./02_RequirementsEngineering.md#4-personas) (PER-05, PER-06).|
 | **Supporting actors**       | [Cittadino (autenticato)](./02_RequirementsEngineering.md#4-personas) (PER-01, PER-02, PER-03).|
 | **Stakeholders' interests** | [Operatore Comunale (STK-02)](./02_RequirementsEngineering.md#1-stakeholders): Richiedere chiarimenti. <br> [Cittadino (STK-01)](./02_RequirementsEngineering.md#1-stakeholders): Facilitare l'intervento. |
-| **Precondition**            | Entrambi gli attori devono essere autenticati ([UC-01-Login](#2-use-case-narratives)) e legati alla segnalazione specifica.                                                                                |
+| **Precondition**            | Entrambi gli attori devono essere autenticati UC-01-Login. e legati alla segnalazione specifica.                                                                                |
 | **Minimum guarantees**      | I messaggi sono privati e legati solo al ticket di riferimento.                                                                                                                                            |
 | **Success guarantees**      | Il messaggio viene recapitato e notificato al destinatario.                                                                                                                                                |
 | **Trigger**                 | -                                                                                                                                                                                                          |
@@ -138,14 +138,14 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 
 | Use Case                    |                                                                                                                                                                                                                               |
 |:----------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**                      | UC-10-CreazioneAccountAmministratore                                                                                                                                                                                          |
+| **ID**                      | UC-9-CreazioneAccountAmministratore                                                                                                                                                                                          |
 | **Scope**                   | Sistema web Participium.                                                                                                                                                                                                      |
 | **Level** | User goal.                                                                                                                                                                                                                     |
 | **Intention in Context**    | Creare account per amministratori o operatori.                                                                                                                                                                                |
 | **Primary actor**           | [Amministratore (di sistema)](./02_RequirementsEngineering.md#4-personas) (PER-07).                                                                                                                                           |
 | **Supporting actors**       | [Servizio mail (IF-06)](./02_RequirementsEngineering.md#3-interfaces).                                                                                                                                                        |
 | **Stakeholders' interests** | [Amministratore (di sistema, STK-03)](./02_RequirementsEngineering.md#1-stakeholders): Gestire il team tecnico e operativo.                                                                                                   |
-| **Precondition**            | L'utente deve essere autenticato ([UC-01-Login](#2-use-case-narratives)) come Amministratore.                                                                                                                                 |
+| **Precondition**            | L'utente deve essere autenticato UC-01-Login. come Amministratore.                                                                                                                                 |
 | **Minimum guarantees**      | Non vengono creati account duplicati.                                                                                                                                                                                         |
 | **Success guarantees**      | Viene creato il nuovo account e inviata la mail di benvenuto.                                                                                                                                                                 |
 | **Trigger**                 | -                                                                                                                                                                                                                             |
@@ -154,14 +154,14 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 
 | Use Case                    |                                                                                                                                                                                               |
 |:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**                      | UC-11-GenerazioneReport                                                                                                                                                                       |
+| **ID**                      | UC-10-GenerazioneReport                                                                                                                                                                       |
 | **Scope**                   | Sistema web Participium.                                                                                                                                                                      |
 | **Level** | User goal.                                                                                                                                                                                    |
 | **Intention in Context**    | Estrarre dati statistici avanzati.                                                                                                                                                            |
 | **Primary actor**           | [Amministratore (data analyst)](./02_RequirementsEngineering.md#4-personas) (PER-08).                                                                                                         |
 | **Supporting actors**       | [Cloud Account (IF-09)](./02_RequirementsEngineering.md#3-interfaces).                                                                                                                        |
 | **Stakeholders' interests** | [Amministratore (data analyst, STK-06)](./02_RequirementsEngineering.md#1-stakeholders): Ottimizzare i servizi comunali.                                                                      |
-| **Precondition**            | L'utente deve essere autenticato ([UC-01-Login](#2-use-case-narratives)) come Amministratore/Analista.                                                                                        |
+| **Precondition**            | L'utente deve essere autenticato UC-01-Login. come Amministratore/Analista.                                                                                        |
 | **Minimum guarantees**      | I dati privati rimangono riservati agli amministratori.                                                                                                                                       |
 | **Success guarantees**      | Il report viene generato ed esportato in formato conforme.                                                                                                                                    |
 | **Trigger**                 | -                                                                                                                                                                                             |
@@ -170,7 +170,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 
 | Use Case                    |                                                                                                                                                                        |
 |:----------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**                      | UC-12-RipristinoPassword                                                                                                                                               |
+| **ID**                      | UC-11-RipristinoPassword                                                                                                                                               |
 | **Scope**                   | Sistema web Participium.                                                                                                                                               |
 | **Level** | User goal.                                                                                                                                                             |
 | **Intention in Context**    | Ripristinare la password smarrita.                                                                                                                                     |
@@ -186,23 +186,23 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 
 | Use Case||
 |:----------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**| UC-13-VisualizzazioneProprieSegnalazioni|
+| **ID**| UC-12-VisualizzazioneProprieSegnalazioni|
 | **Scope**| Sistema web Participium.|
 | **Level** | User goal.|
 | **Intention in Context**    | Permettere al cittadino di consultare lo storico e lo stato attuale di tutte le segnalazioni da lui inviate.                                                     |
 | **Primary actor**      | [Cittadino (autenticato)](./02_RequirementsEngineering.md#4-personas) (PER-01, PER-02, PER-03).                                                                  |
 | **Supporting actors**       |-|
 | **Stakeholders' interests** | [Cittadino (STK-01)](./02_RequirementsEngineering.md#1-stakeholders): Verificare l'avanzamento dei propri ticket e avere uno storico personale.                  |
-| **Precondition**            | L'utente deve essere autenticato ([UC-01-Login](#2-use-case-narratives)).|
+| **Precondition**            | L'utente deve essere autenticato UC-01-Login.|
 | **Minimum guarantees**      | Se non sono presenti segnalazioni, il sistema mostra un elenco vuoto senza errori.|
 | **Success guarantees**      | L'utente visualizza l'elenco corretto delle proprie segnalazioni con i relativi stati aggiornati.|
 | **Trigger**                 | -|
-| **Main success scenario**   | 1. L'utente clicca sulla voce "Le mie segnalazioni" presente nel menu del profilo o nella barra laterale della dashboard. <br>  2. Il sistema interroga il database per recuperare i record associati all'ID utente.   <br> 3. Il sistema mostra una lista ordinata cronologicamente delle segnalazioni effettuate ([FR-7.2](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 4. Per ogni voce, il sistema mostra titolo, data e lo stato corrente dell'intervento.   <br>  5. L'utente clicca su una specifica riga per aprirne il dettaglio completo ([UC-14](#2-use-case-narratives)); il caso d'uso termina con successo.                |
+| **Main success scenario**   | 1. L'utente clicca sulla voce "Le mie segnalazioni" presente nel menu del profilo o nella barra laterale della dashboard. <br>  2. Il sistema interroga il database per recuperare i record associati all'ID utente.   <br> 3. Il sistema mostra una lista ordinata cronologicamente delle segnalazioni effettuate ([FR-7.2](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 4. Per ogni voce, il sistema mostra titolo, data e lo stato corrente dell'intervento.   <br>  5. L'utente clicca su una specifica riga per aprirne il dettaglio completo ([UC-13](#2-use-case-narratives)); il caso d'uso termina con successo.                |
 | **Extensions**              | 1a. L'utente non ha segnalazioni.  <br>  &nbsp;&nbsp;&nbsp;&nbsp;1a.1 Il sistema mostra un messaggio "Non hai ancora effettuato segnalazioni"; il caso d'uso termina con successo.|
 
 | Use Case||
 |:----------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**  | UC-14-VisualizzazioneDettaglioSegnalazione|
+| **ID**  | UC-13-VisualizzazioneDettaglioSegnalazione|
 | **Scope**| Sistema web Participium.|
 | **Level** | User goal.|
 | **Intention in Context**    | Accedere alla scheda completa di una segnalazione per leggerne la descrizione, visualizzarne le foto e visualizzare lo storico degli aggiornamenti.|
@@ -218,7 +218,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 
 | Use Case                    ||
 |:----------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**                      | UC-15-VisualizzazioneStoricoAggiornamenti|
+| **ID**                      | UC-14-VisualizzazioneStoricoAggiornamenti|
 | **Scope**                   | Sistema web Participium.|
 | **Level** | User goal.|
 | **Intention in Context**    | Verificare lo storico degli stati di una segnalazione per monitorare la gestione del problema nel tempo.                                   |
@@ -234,7 +234,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 
 | Use Case||
 |:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**| UC-16-FollowSegnalazione|
+| **ID**| UC-15-FollowSegnalazione|
 | **Scope**                   | Sistema web.|
 | **Level** | User goal.|
 | **Intention in Context**    | Seguire una segnalazione esistente per ricevere aggiornamenti sulla sua evoluzione.                                                                                               |
@@ -249,7 +249,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 
 | Use Case||
 |:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**| UC-17-AnalisiAvanzataAmministratore|
+| **ID**| UC-16-AnalisiAvanzataAmministratore|
 | **Scope**                   | Sistema web Participium.|
 | **Level** | User goal.|
 | **Intention in Context**    | Analizzare dati complessi per monitorare l'efficienza del servizio e prevenire abusi (es. top segnalanti).|
@@ -264,7 +264,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 
 | Use Case||
 |:----------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**                      | UC-18-AnalisiStatistichePubbliche|
+| **ID**                      | UC-17-AnalisiStatistichePubbliche|
 | **Scope**                   | Sistema web Participium.|
 | **Level** | User goal.|
 | **Intention in Context**    | Consultare dati aggregati e trend generali per comprendere lo stato dei problemi urbani in città.|
@@ -279,7 +279,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 
 | Use Case                    ||
 |:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**                      | UC-19-RicercaSegnalazioni|
+| **ID**                      | UC-18-RicercaSegnalazioni|
 | **Scope**                   | Sistema web Participium.|
 | **Level** | User goal.|
 | **Intention in Context**    | Consultare segnalazioni specifiche tramite ricerca per nome o descrizione.|
@@ -295,7 +295,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 
 | Use Case||
 |:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**                      |UC-20-FiltraggioSegnalazioni|
+| **ID**                      |UC-19-FiltraggioSegnalazioni|
 | **Scope**                   | Sistema web Participium.|
 | **Level** | User goal.|
 | **Intention in Context**    | Consultare segnalazioni specifiche che soddisfano i filtri (categoria, stato, periodo temporale).|
@@ -312,7 +312,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 
 | Use Case||
 |:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**| UC-21-Notifiche|
+| **ID**| UC-20-Notifiche|
 | **Scope**| Sistema web Participium.|
 | **Level**|Subfunction|
 | **Intention in Context**| Informare gli utenti che seguono (Follow) la segnalazione di un avanzamento di stato.|
@@ -328,7 +328,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 
 | Use Case||
 |:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**| UC-22-ApprovazioneSegnalazione|
+| **ID**| UC-21-ApprovazioneSegnalazione|
 | **Scope**| Sistema web Participium.|
 | **Level**|User goal.|
 | **Intention in Context**|Approvare una segnalazione effettuata da un cittadino.|
@@ -356,16 +356,16 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | UC-06 | [FR-7](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-7.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                               |
 | UC-07 | [FR-6](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                                                                                       |
 | UC-08 | [FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-16](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                               |
-| UC-10 | [FR-1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-2](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                 |
-| UC-11 | [FR-11](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-18](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-05](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr), [NFR-06](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)                                                                                                                                     |
-| UC-12 | [FR-5.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                                                                                     |
-| UC-13 | [FR-7.2](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                                                                                     |
+| UC-9 | [FR-1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-2](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                 |
+| UC-10 | [FR-11](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-18](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-05](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr), [NFR-06](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)                                                                                                                                     |
+| UC-11 | [FR-5.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                                                                                     |
+| UC-12 | [FR-7.2](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                                                                                     |
+| UC-13 | [FR-10](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                                                                                      |
 | UC-14 | [FR-10](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                                                                                      |
-| UC-15 | [FR-10](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                                                                                      |
-| UC-16 | [FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                                                                                      |
-| UC-17 | [FR-18](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                                                                                      |
-| UC-18 | [FR-17](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                                                                                      |
-| UC-19 | [FR-09](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
- UC-20 | [FR-09.1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-09.2](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
-| UC-21 | [FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
-| UC-22 | [FR-14](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-14.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
+| UC-15 | [FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                                                                                      |
+| UC-16 | [FR-18](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                                                                                      |
+| UC-17 | [FR-17](./02_RequirementsEngineering.md#6-functional-requirements-fr)                                                                                                                                                                                                                                                                                                                                                                      |
+| UC-18 | [FR-09](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
+ UC-19 | [FR-09.1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-09.2](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
+| UC-20 | [FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
+| UC-21 | [FR-14](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-14.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
