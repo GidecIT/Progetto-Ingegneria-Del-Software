@@ -151,20 +151,20 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Main success scenario**   | 1. L'amministratore sceglie l'opzione per aggiungere un nuovo utente dalla dashboard <br> 2. L'amministratore inserisce nome, email e ruolo del nuovo collaboratore.          <br> 3. L'amministratore seleziona i permessi specifici (Amministratore o Operatore) ([FR-1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-2](./02_RequirementsEngineering.md#6-functional-requirements-fr)).<br>  4. Il sistema valida i dati e crea l'utenza nel database.           <br>5. Il sistema invia automaticamente le credenziali temporanee via mail ([IF-06](./02_RequirementsEngineering.md#3-interfaces)); il caso d'uso termina con successo.                                                           |
 | **Extensions**              | 4a. Email già registrata.             <br> &nbsp;&nbsp;&nbsp;&nbsp;4a.1 Il sistema nega la creazione mostrando errore; il caso d'uso termina con fallimento. |
 
-| Use Case                    |                                                                                                                                                                                               |
+| Use Case                    ||
 |:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**                      | UC-10-GenerazioneReport                                                                                                                                                                       |
-| **Scope**                   | Sistema web Participium.                                                                                                                                                                      |
-| **Level** | User goal.                                                                                                                                                                                    |
-| **Intention in Context**    | Estrarre dati statistici avanzati.                                                                                                                                                            |
-| **Primary actor**           | [Amministratore (data analyst)](./02_RequirementsEngineering.md#4-personas) (PER-08).                                                                                                         |
-| **Supporting actors**       | [Cloud Account (IF-09)](./02_RequirementsEngineering.md#3-interfaces).                                                                                                                        |
-| **Stakeholders' interests** | [Amministratore (data analyst, STK-06)](./02_RequirementsEngineering.md#1-stakeholders): Ottimizzare i servizi comunali.                                                                      |
-| **Precondition**            | L'utente deve essere autenticato UC-01-Login. come Amministratore/Analista.                                                                                        |
-| **Minimum guarantees**      | I dati privati rimangono riservati agli amministratori.                                                                                                                                       |
-| **Success guarantees**      | Il report viene generato ed esportato in formato conforme.                                                                                                                                    |
-| **Trigger**                 | -                                                                                                                                                                                             |
-| **Main success scenario**   | 1. L'amministratore clicca sulla voce "Statistiche e Report" nel menu principale della dashboard.     <br>  2. Il sistema propone i filtri di aggregazione (per categoria, per operatore, ecc.).            <br>  3. L'amministratore seleziona i parametri per la generazione di dati privati ([FR-18](./02_RequirementsEngineering.md#6-functional-requirements-fr)).  <br> 4. Il sistema genera e visualizza i grafici interattivi.     <br>  5. L'amministratore clicca sul tasto "Esporta CSV" ([FR-11](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br>  6. Il sistema genera il file conforme allo standard e avvia il download ([NFR-06](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)); il caso d'uso termina con successo.    |
+| **ID**                      | UC-10-GenerazioneReport |
+| **Scope**                   | Sistema web Participium |
+| **Level** | User goal |
+| **Intention in Context**    | Estrarre dati statistici avanzati. |
+| **Primary actor**           | Amministratore (data analyst) |
+| **Supporting actors**       | Cloud Account (IF-09) |
+| **Stakeholders' interests** | Amministratore (data analyst) (STK-03): Ottimizzare i servizi comunali. |
+| **Precondition**            | L'utente deve essere autenticato (UC-01-Login) come Amministratore (data analyst). |
+| **Minimum guarantees**      | I dati privati rimangono riservati agli amministratori. |
+| **Success guarantees**      | Il report viene generato ed esportato in formato conforme. |
+| **Trigger**                 | - |
+| **Main success scenario**   | 1. L'amministratore seleziona l'opzione per generare statistiche e report dalla dashboard.     <br>  2. Il sistema propone i filtri di aggregazione. <br>  3. L'amministratore seleziona i parametri per la generazione di dati privati ([FR-18](./02_RequirementsEngineering.md#6-functional-requirements-fr)).  <br> 4. Il sistema genera e visualizza i grafici interattivi.     <br>  5. L'amministratore seleziona l'opzione per generare il file CSV. ([FR-11](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br>  6. Il sistema genera il file conforme allo standard e avvia il download ([NFR-06](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)); il caso d'uso termina con successo.    |
 | **Extensions**              | 3a. Non autorizzato.   <br>  &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema nega l'accesso ai dati sensibili ([NFR-05](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)); il caso d'uso termina con fallimento. |
 
 | Use Case                    |                                                                                                                                                                        |
