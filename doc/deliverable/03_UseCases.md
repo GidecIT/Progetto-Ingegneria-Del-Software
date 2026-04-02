@@ -88,20 +88,20 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 
 | Use Case||
 |:----------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**                      | UC-06-GestioneProfilo|
-| **Scope**                   | Sistema web Participium.|
-| **Level**                   | User goal.|
+| **ID**                      | UC-06-GestioneProfilo |
+| **Scope**                   | Sistema web Participium |
+| **Level**                   | User goal |
 | **Intention in Context**    | Aggiornare i dati personali, caricare una foto profilo e gestire le preferenze di notifica.|
-| **Primary actor**           | [Cittadino (autenticato)](./02_RequirementsEngineering.md#4-personas) (PER-01, PER-02, PER-03).|
-| **Supporting actors**       | [Media Storage (IF-04)](./02_RequirementsEngineering.md#3-interfaces).|
-| **Stakeholders' interests** | [Cittadino (STK-01)](./02_RequirementsEngineering.md#1-stakeholders): Personalizzare la propria esperienza e gestire la privacy.|
-| **Precondition**            | L'utente deve essere autenticato UC-01-Login.|
+| **Primary actor**           | Cittadino (autenticato) |
+| **Supporting actors**       | Media Storage (IF-04) |
+| **Stakeholders' interests** | [Cittadino (STK-01): Personalizzare la propria esperienza e gestire la privacy.|
+| **Precondition**            | L'utente deve essere autenticato (UC-01-Login).|
 | **Minimum guarantees**      | Le modifiche non confermate non vengono salvate.|
 | **Success guarantees**      | Il profilo e le preferenze vengono aggiornati correttamente.|
-| **Trigger**                 |-|
-| **Main success scenario**   | 1. L'utente clicca sulla propria icona profilo e seleziona "Impostazioni" o "Il mio profilo". <br> 2. Il sistema mostra i dati correnti, la foto profilo (se presente) e le impostazioni notifiche ([FR-7](./02_RequirementsEngineering.md#6-functional-requirements-fr)).  <br> 3. L'utente carica o modifica la propria foto profilo ([IF-04](./02_RequirementsEngineering.md#3-interfaces)). <br> 4. L'utente attiva/disattiva il flag "Ricevi notifiche tramite email". <br> 5. L'utente modifica eventuali campi anagrafici. <br> 6. L'utente clicca sul pulsante "Salva Modifiche". <br> 7. Il sistema valida i dati e aggiorna il database; il caso d'uso termina con successo.|
+| **Trigger**                 |- |
+| **Main success scenario**   | 1. L'utente seleziona l'impostazione relative alla gestione del profilo. 
+<br> 2. Il sistema mostra i dati correnti, la foto profilo (se presente) e le impostazioni notifiche ([FR-7](./02_RequirementsEngineering.md#6-functional-requirements-fr)).  <br> 3. L'utente carica o modifica la propria foto profilo. <br> 4. L'utente attiva/disattiva il flag "Ricevi notifiche tramite email". <br> 5. L'utente modifica eventuali campi anagrafici. <br> 6. L'utente sceglie l'opzione per salvare le modifiche. <br> 7. Il sistema valida i dati e aggiorna il database; il caso d'uso termina con successo.|
 | **Extensions**              | 3a. Formato immagine non valido. <br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema avvisa l'utente sui formati ammessi; il caso d'uso termina con fallimento. <br> 7a. Errore di connessione al database. <br> &nbsp;&nbsp;&nbsp;&nbsp; 7a.1 Il sistema mostra un messaggio di errore tecnico; il caso d'uso termina con fallimento.|
-
 
 | Use Case||
 |:----------------------------|:-----------------------------------------------------------------------------------------------------------------------|
