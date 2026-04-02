@@ -99,8 +99,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Minimum guarantees**      | Le modifiche non confermate non vengono salvate.|
 | **Success guarantees**      | Il profilo e le preferenze vengono aggiornati correttamente.|
 | **Trigger**                 |- |
-| **Main success scenario**   | 1. L'utente seleziona l'impostazione relative alla gestione del profilo. 
-<br> 2. Il sistema mostra i dati correnti, la foto profilo (se presente) e le impostazioni notifiche ([FR-7](./02_RequirementsEngineering.md#6-functional-requirements-fr)).  <br> 3. L'utente carica o modifica la propria foto profilo. <br> 4. L'utente attiva/disattiva il flag "Ricevi notifiche tramite email". <br> 5. L'utente modifica eventuali campi anagrafici. <br> 6. L'utente sceglie l'opzione per salvare le modifiche. <br> 7. Il sistema valida i dati e aggiorna il database; il caso d'uso termina con successo.|
+| **Main success scenario**   | 1. L'utente seleziona l'impostazione relative alla gestione del profilo. <br> 2. Il sistema mostra i dati correnti, la foto profilo (se presente) e le impostazioni notifiche ([FR-7](./02_RequirementsEngineering.md#6-functional-requirements-fr)).  <br> 3. L'utente carica o modifica la propria foto profilo. <br> 4. L'utente attiva/disattiva il flag "Ricevi notifiche tramite email". <br> 5. L'utente modifica eventuali campi anagrafici. <br> 6. L'utente sceglie l'opzione per salvare le modifiche. <br> 7. Il sistema valida i dati e aggiorna il database; il caso d'uso termina con successo.|
 | **Extensions**              | 3a. Formato immagine non valido. <br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema avvisa l'utente sui formati ammessi; il caso d'uso termina con fallimento. <br> 7a. Errore di connessione al database. <br> &nbsp;&nbsp;&nbsp;&nbsp; 7a.1 Il sistema mostra un messaggio di errore tecnico; il caso d'uso termina con fallimento.|
 
 | Use Case||
@@ -108,49 +107,49 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **ID**   | UC-07-Logout|
 | **Scope**     | Sistema web Participium.|
 | **Level** | User goal.|
-| **Intention in Context**    | Terminare la sessione in sicurezza.              |
-| **Primary actor**           | [Cittadino (autenticato)](./02_RequirementsEngineering.md#4-personas) (PER-01, PER-02, PER-03).                        |
-| **Supporting actors**       | [Servizio di autenticazione (IF-10)](./02_RequirementsEngineering.md#3-interfaces).                                    |
-| **Stakeholders' interests** | [Cittadino (STK-01)](./02_RequirementsEngineering.md#1-stakeholders): Proteggere l'account su dispositivi condivisi.   |
-| **Precondition**            | L'utente deve essere autenticato UC-01-Login.                                              |
-| **Minimum guarantees**      | Nessuna.                                                                                                               |
-| **Success guarantees**      | La sessione viene invalidata e l'accesso protetto revocato.                                                            |
-| **Trigger**                 | -                                                                                                                      |
-| **Main success scenario**   | 1. L'utente clicca sul pulsante "Esci" o "Logout" presente nel menu a tendina del profilo. <br> 2. Il sistema invalida la sessione lato server ([FR-6](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br>  3. Il sistema reindirizza l'utente alla home page pubblica; il caso d'uso termina con successo.                        |
+| **Intention in Context**    | Terminare la sessione in sicurezza. |
+| **Primary actor**           | Cittadino (autenticato) |
+| **Supporting actors**       | Servizio di autenticazione (IF-10) |
+| **Stakeholders' interests** | Cittadino (STK-01): Proteggere l'account su dispositivi condivisi. |
+| **Precondition**            | L'utente deve essere autenticato UC-01-Login. |
+| **Minimum guarantees**      | - |
+| **Success guarantees**      | La sessione viene invalidata e l'accesso protetto revocato. |
+| **Trigger**                 | - |
+| **Main success scenario**   | 1. L'utente seleziona l'opzione per eseguire il logout. <br> 2. Il sistema invalida la sessione lato server ([FR-6](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br>  3. Il sistema reindirizza l'utente alla home page pubblica; il caso d'uso termina con successo.                        |
 | **Extensions**              | 2a Errore invalidazione.  <br> &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema forza la chiusura lato client; il caso d'uso termina con successo.             |
 
-| Use Case                    |                                                                                                                                                                                                            |
+
+| Use Case                    ||
 |:----------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **ID**| UC-08-MessaggioOperatoreCittadino|
-| **Scope**                   | Sistema web Participium.|
-| **Level** | User goal.|
-| **Intention in Context**    | Scambio di messaggi diretti tra operatore e cittadino su una segnalazione.|
-| **Primary actor**           | [Operatore Comunale](./02_RequirementsEngineering.md#4-personas) (PER-05, PER-06).|
-| **Supporting actors**       | [Cittadino (autenticato)](./02_RequirementsEngineering.md#4-personas) (PER-01, PER-02, PER-03).|
-| **Stakeholders' interests** | [Operatore Comunale (STK-02)](./02_RequirementsEngineering.md#1-stakeholders): Richiedere chiarimenti. <br> [Cittadino (STK-01)](./02_RequirementsEngineering.md#1-stakeholders): Facilitare l'intervento. |
-| **Precondition**            | Entrambi gli attori devono essere autenticati UC-01-Login. e legati alla segnalazione specifica.                                                                                |
-| **Minimum guarantees**      | I messaggi sono privati e legati solo al ticket di riferimento.                                                                                                                                            |
-| **Success guarantees**      | Il messaggio viene recapitato e notificato al destinatario.                                                                                                                                                |
-| **Trigger**                 | -                                                                                                                                                                                                          |
-| **Main success scenario**   | 1. L'utente (operatore o cittadino) clicca sulla scheda "Messaggi" all'interno del dettaglio di una segnalazione.  <br>  2. Il sistema mostra la cronologia dei messaggi scambiati ([FR-16](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br>  3. L'utente scrive un nuovo testo nel campo di input e preme l'icona "Invia".       <br>  4. Il sistema salva il messaggio associandolo univocamente alla segnalazione.     <br>  5. Il sistema invia una notifica push o email al destinatario ([FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr)); il caso d'uso termina con successo.                                 |
-| **Extensions**              | 3a. Messaggio vuoto.   <br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema impedisce l'invio; il caso d'uso termina con fallimento.                                                                                                           |
+| **Scope**                   | Sistema web Participium |
+| **Level** | User goal |
+| **Intention in Context**    | Scambio di messaggi diretti tra operatore e cittadino su una segnalazione. |
+| **Primary actor**           | Operatore Comunale |
+| **Supporting actors**       | Cittadino (autenticato) |
+| **Stakeholders' interests** | Operatore Comunale (STK-02): Richiedere chiarimenti. <br> Cittadino (STK-01): Facilitare l'intervento. |
+| **Precondition**            | Entrambi gli attori devono essere autenticati (UC-01-Login). e legati alla segnalazione specifica. |
+| **Minimum guarantees**      | I messaggi sono privati e legati solo al ticket di riferimento. |
+| **Success guarantees**      | Il messaggio viene recapitato e notificato al destinatario. |
+| **Trigger**                 | - |
+| **Main success scenario**   | 1. L'utente seleziona l'opzione per visualizzare i messaggi all'interno del dettaglio di una segnalazione.  <br>  2. Il sistema mostra la cronologia dei messaggi scambiati ([FR-16](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br>  3. L'utente scrive un nuovo testo del messaggio e lo invia. <br>  4. Il sistema salva il messaggio associandolo univocamente alla segnalazione.     <br>  5. Il sistema invia una notifica al destinatario ([FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr)); il caso d'uso termina con successo.                                 |
+| **Extensions**              | 3a. Messaggio vuoto.   <br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema impedisce l'invio; il caso d'uso termina con fallimento. |
 
-
-| Use Case                    |                                                                                                                                                                                                                               |
+| Use Case                    ||
 |:----------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**                      | UC-9-CreazioneAccountAmministratore                                                                                                                                                                                          |
-| **Scope**                   | Sistema web Participium.                                                                                                                                                                                                      |
-| **Level** | User goal.                                                                                                                                                                                                                     |
-| **Intention in Context**    | Creare account per amministratori o operatori.                                                                                                                                                                                |
-| **Primary actor**           | [Amministratore (di sistema)](./02_RequirementsEngineering.md#4-personas) (PER-07).                                                                                                                                           |
-| **Supporting actors**       | [Servizio mail (IF-06)](./02_RequirementsEngineering.md#3-interfaces).                                                                                                                                                        |
-| **Stakeholders' interests** | [Amministratore (di sistema, STK-03)](./02_RequirementsEngineering.md#1-stakeholders): Gestire il team tecnico e operativo.                                                                                                   |
-| **Precondition**            | L'utente deve essere autenticato UC-01-Login. come Amministratore.                                                                                                                                 |
-| **Minimum guarantees**      | Non vengono creati account duplicati.                                                                                                                                                                                         |
-| **Success guarantees**      | Viene creato il nuovo account e inviata la mail di benvenuto.                                                                                                                                                                 |
-| **Trigger**                 | -                                                                                                                                                                                                                             |
-| **Main success scenario**   | 1. L'amministratore clicca sul pulsante "Aggiungi Nuovo Utente" nella sezione Gestione Staff della dashboard (**IF-02**).      <br> 2. L'amministratore inserisce nome, email e ruolo del nuovo collaboratore.          <br> 3. L'amministratore seleziona i permessi specifici (Amministratore o Operatore) ([FR-1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-2](./02_RequirementsEngineering.md#6-functional-requirements-fr)).<br>  4. Il sistema valida i dati e crea l'utenza nel database.           <br>5. Il sistema invia automaticamente le credenziali temporanee via mail ([IF-06](./02_RequirementsEngineering.md#3-interfaces)); il caso d'uso termina con successo.                                                           |
-| **Extensions**              | 4a. Email già registrata.             <br> &nbsp;&nbsp;&nbsp;&nbsp;4a.1 Il sistema nega la creazione mostrando errore; il caso d'uso termina con fallimento.                                                                                                             |
+| **ID**                      | UC-09-CreazioneAccountAmministratore |
+| **Scope**                   | Sistema web Participium |
+| **Level** | User goal |
+| **Intention in Context**    | Creare account per amministratori o operatori.|
+| **Primary actor**           | Amministratore (gestore tecnico) |
+| **Supporting actors**       | Servizio mail (IF-06) |
+| **Stakeholders' interests** | Amministratore (STK-03): Gestire il team tecnico e operativo. |
+| **Precondition**            | L'utente deve essere autenticato (UC-01-Login) come Amministratore. |
+| **Minimum guarantees**      | Non vengono creati account duplicati. |
+| **Success guarantees**      | Viene creato il nuovo account e inviata la mail di benvenuto. |
+| **Trigger**                 | - |
+| **Main success scenario**   | 1. L'amministratore sceglie l'opzione per aggiungere un nuovo utente dalla dashboard <br> 2. L'amministratore inserisce nome, email e ruolo del nuovo collaboratore.          <br> 3. L'amministratore seleziona i permessi specifici (Amministratore o Operatore) ([FR-1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-2](./02_RequirementsEngineering.md#6-functional-requirements-fr)).<br>  4. Il sistema valida i dati e crea l'utenza nel database.           <br>5. Il sistema invia automaticamente le credenziali temporanee via mail ([IF-06](./02_RequirementsEngineering.md#3-interfaces)); il caso d'uso termina con successo.                                                           |
+| **Extensions**              | 4a. Email già registrata.             <br> &nbsp;&nbsp;&nbsp;&nbsp;4a.1 Il sistema nega la creazione mostrando errore; il caso d'uso termina con fallimento. |
 
 | Use Case                    |                                                                                                                                                                                               |
 |:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
