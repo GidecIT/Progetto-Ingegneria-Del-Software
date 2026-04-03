@@ -31,7 +31,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Primary actor**           | Cittadino|
 | **Supporting actors**       | [OpenStreetMap (IF-03)](./02_RequirementsEngineering.md#3-interfaces), [Media Storage (IF-04)](./02_RequirementsEngineering.md#3-interfaces).|
 | **Stakeholders' interests** | Cittadino: comunicare efficacemente il problema riscontrato, garantire la propria privacy (anonimato pubblico), assicurarsi che la segnalazione venga ricevuta.<br>Comune di Torino: ricevere segnalazioni accurate e geolocalizzate con evidenze visive per ottimizzare gli interventi.
-| **Precondition**            | L'utente deve essere autenticato UC-01-Login.|
+| **Precondition**            | L'utente deve essere autenticato (UC-01-Login).|
 | **Minimum guarantees**      | Nessuna segnalazione viene creata se il processo viene interrotto.|
 | **Success guarantees**      | Viene creata una segnalazione con stato "Pending Approval", le foto vengono archiviate, la posizione registrata e l'utente riceve conferma visiva.|
 | **Trigger**|-|
@@ -63,7 +63,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Primary actor**           | Cittadino.|
 | **Supporting actors**       | [OpenStreetMap (IF-03)](./02_RequirementsEngineering.md#3-interfaces).|
 | **Stakeholders' interests** | Cittadino: verificare se un problema è già stato segnalato, monitorare i disservizi nella città. <br> Comune di Torino: garantire trasparenza e ridurre segnalazioni duplicate. |
-| **Precondition**            |-|
+| **Precondition**            |L'utente deve essere autenticato (UC-01-Login).|
 | **Minimum guarantees**      |-|
 | **Success guarantees**      | L'utente visualizza le segnalazioni correttamente.|
 | **Trigger**                 | -|
@@ -178,26 +178,26 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Stakeholders' interests** | Cittadino: recuperare l'accesso autonomamente.|
 | **Precondition**            | L'account deve essere già stato verificato ([UC-05-Registrazione](#2-use-case-narratives)).|
 | **Minimum guarantees**      | Il ripristino fallisce e la password rimane invariata.|
-| **Success guarantees**      | La password viene aggiornata con successo.                                                                                                                             |
-| **Trigger**                 | -                                                                                                                                                                      |
+| **Success guarantees**      | La password viene aggiornata con successo.|
+| **Trigger**| -|
 | **Main success scenario**   | 1. L'utente chiede di ripristinare la password ([FR-4.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)).   <br> 2. L'utente inserisce la propria email..  <br>  3. Il sistema invia una email contenente un token di ripristino monouso (IF-06).  <br>  4. L'utente apre l'email e clicca sul link di ripristino.   <br>  5. Il sistema valida il token e mostra il modulo per la nuova password.  <br>  6. L'utente inserisce e conferma la nuova password.  <br>  7. Il sistema valida la nuova password e aggiorna il database.; il caso d'uso termina con successo.                                                          |
-| **Extensions**              | 2a. L'email non è associata a nessun account attivo.   <br> &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema avvisa che l'email non è registrata; il caso riprende dal punto 2.        <br> 5a. Token invalido/scaduto.    <br>&nbsp;&nbsp;&nbsp;&nbsp;5a.1 Il sistema informa l'utente dell'impossibilità di procedere; il caso d'uso termina con fallimento.  <br> 7a. La password non rispetta i requisiti di sicurezza. <br> &nbsp;&nbsp;&nbsp;&nbsp;7a.1 Il sistema segnala l'errore; il caso d'uso riprende dal punto 6.                                                                          |
+| **Extensions**              | 2a. L'email non è associata a nessun account attivo.   <br> &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema avvisa che l'email non è registrata; il caso riprende dal punto 2.        <br> 5a. Token invalido/scaduto.    <br>&nbsp;&nbsp;&nbsp;&nbsp;5a.1 Il sistema informa l'utente dell'impossibilità di procedere; il caso d'uso termina con fallimento.  <br> 7a. La password non rispetta i requisiti minimi di sicurezza. <br> &nbsp;&nbsp;&nbsp;&nbsp;7a.1 Il sistema segnala l'errore; il caso d'uso riprende dal punto 6. |
 
 | Use Case||
 |:----------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **ID**| UC-12-VisualizzazioneProprieSegnalazioni|
 | **Scope**| Sistema web Participium.|
 | **Level** | User goal.|
-| **Intention in Context**    | Permettere al cittadino di consultare lo storico e lo stato attuale di tutte le segnalazioni da lui inviate.                                                     |
-| **Primary actor**      | Cittadino (autenticato).                                                                  |
+| **Intention in Context**    | Visualizzare le segnalazioni al cittadino di consultare lo storico e lo stato attuale di tutte le segnalazioni da lui inviate.|
+| **Primary actor**      | Cittadino.|
 | **Supporting actors**       |-|
-| **Stakeholders' interests** | Cittadino (STK-01): Verificare l'avanzamento dei propri ticket e avere uno storico personale.                  |
-| **Precondition**            | L'utente deve essere autenticato UC-01-Login.|
+| **Stakeholders' interests** | Cittadino: verificare l'avanzamento dei propri ticket e avere uno storico personale.|
+| **Precondition**            | L'utente deve essere autenticato (UC-01-Login).|
 | **Minimum guarantees**      | Se non sono presenti segnalazioni, il sistema mostra un elenco vuoto senza errori.|
 | **Success guarantees**      | L'utente visualizza l'elenco corretto delle proprie segnalazioni con i relativi stati aggiornati.|
 | **Trigger**                 | -|
-| **Main success scenario**   | 1. L'utente seleziona la voce "Le mie segnalazioni" presente nel menu del profilo o nella barra laterale della dashboard. <br>  2. Il sistema interroga il database per recuperare i record associati all'ID utente.   <br> 3. Il sistema mostra una lista ordinata cronologicamente delle segnalazioni effettuate ([FR-7.2](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 4. Per ogni voce, il sistema mostra titolo, data e lo stato corrente dell'intervento.   <br>  5. L'utente clicca su una specifica riga per aprirne il dettaglio completo ([UC-13](#2-use-case-narratives)); il caso d'uso termina con successo.                |
-| **Extensions**              | 1a. L'utente non ha segnalazioni.  <br>  &nbsp;&nbsp;&nbsp;&nbsp;1a.1 Il sistema mostra un messaggio "Non hai ancora effettuato segnalazioni"; il caso d'uso termina con successo.|
+| **Main success scenario**   | 1. L'utente chiede di visualizzare le proprie segnalazioni. <br>  2. Il sistema interroga il database per recuperare i record associati all'ID utente.   <br> 3. Il sistema mostra la lista delle segnalazioni o l'elenco vuoto ([FR-6-2](./02_RequirementsEngineering.md#6-functional-requirements-fr)); il caso d'uso termina con successo.                |
+| **Extensions**              | 1a. Il sistema non riesce a recuperare i dati.  <br>  &nbsp;&nbsp;&nbsp;&nbsp;1a.1 Il sistema mostra un messaggio di errore; il caso d'uso termina con fallimento.|
 
 | Use Case||
 |:----------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -205,15 +205,15 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Scope**| Sistema web Participium.|
 | **Level** | User goal.|
 | **Intention in Context**    | Accedere alla scheda completa di una segnalazione per leggerne la descrizione, visualizzarne le foto e visualizzare lo storico degli aggiornamenti.|
-| **Primary actor**           | Cittadino (visitatore/autenticato).|
+| **Primary actor**           | Cittadino.|
 | **Supporting actors**       | OpenStreetMap (IF-03).|
-| **Stakeholders' interests** | Cittadino (visitatore/autenticato): Comprendere i dettagli di un problema specifico e seguire gli aggiornamenti di stato.||
-| **Precondition**            | La segnalazione selezionata esiste ed è accessibile.|
-| **Minimum guarantees**      | La visualizzazione non altera lo stato o i contenuti della segnalazione.|
+| **Stakeholders' interests** | Cittadino (visitatore/autenticato): comprendere i dettagli di un problema specifico e seguire gli aggiornamenti di stato.||
+| **Precondition**            | L'utente deve essere autenticato (UC-01-Login)|
+| **Minimum guarantees**      |-|
 | **Success guarantees**      | Il cittadino visualizza la pagina di dettaglio completa contenente i dati della segnalazione e le relative interazioni pubbliche.|
 | **Trigger**                 |-|
-| **Main success scenario**   | 1.Il cittadino clicca su una specifica segnalazione dalla visualizzazione della mappa.  <br>  2. Il sistema recupera i dati associati alla segnalazione selezionata (titolo, descrizione, categoria, posizione, foto allegate, stato corrente, storico degli aggiornamenti).  <br>  3. Il sistema mostra a schermo la pagina con tutte le informazioni raccolte ([FR-10](./02_RequirementsEngineering.md#6-functional-requirements-fr)); il caso d'uso termina con successo. |
-| **Extensions**              | 1a. La segnalazione non è raggiungibile (poiché rimossa o a causa di un errore di sistema).   <br>  &nbsp;&nbsp;&nbsp;&nbsp;1a.1 Il sistema mostra un messaggio di errore e il caso d'uso termina con un fallimento.|
+| **Main success scenario**   | 1.Il cittadino chiede di accedere ai dettagli di una segnalazione.  <br>  2. Il sistema recupera i dati associati alla segnalazione selezionata.  <br>  3. Il sistema mostra i dettagli della segnalazione ([FR-9](./02_RequirementsEngineering.md#6-functional-requirements-fr)); il caso d'uso termina con successo. |
+| **Extensions**              | 1a. Il sistema non riesce a recuperare i dettagli della segnalazione.   <br>  &nbsp;&nbsp;&nbsp;&nbsp;1a.1 Il sistema mostra un messaggio di errore e il caso d'uso termina con un fallimento.|
 
 | Use Case                    ||
 |:----------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------|
@@ -222,44 +222,46 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Level** | User goal.|
 | **Intention in Context**    | Verificare lo storico degli stati di una segnalazione per monitorare la gestione del problema nel tempo.                                   |
 | **Primary actor**           | Cittadino.|
-| **Supporting actors**       | -|
-| **Stakeholders' interests** | Cittadino: Verificare lo stato della segnalazione e monitorarne i progressi nel tempo.   |
-| **Precondition**            | L'utente deve aver selezionato una segnalazione.|
+| **Supporting actors**       |-|
+| **Stakeholders' interests** | Cittadino: monitorare i progressi di una segnalazione nel tempo.   |
+| **Precondition**            | L'utente deve essere autenticato (UC-01-Login).|
 | **Minimum guarantees**      | Se il sistema non riesce a recuperare lo storico, l'utente visualizza comunque i dati correnti della segnalazione.|
-| **Success guarantees**      | Il sistema mostra tutti i cambi di stato nel tempo.|
+| **Success guarantees**      | Il sistema mostra tutti i cambi di stato nel tempo per una segnalazione.|
 | **Trigger**                 | -|
 | **Main success scenario**   | 1. L'utente accede alla pagina di dettaglio di una segnalazione.   <br>  2. Il sistema recupera dal database lo storico dei cambi di stato ([FR-10](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 3. Il sistema visualizza i passaggi di stato mostrandone le relative date; il caso d'uso termina con successo.|
-| **Extensions**              | 2a. Lo storico è vuoto.    <br>  &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema mostra i dati correnti della segnalazione e il caso d'uso termina con successo.                    |
+| **Extensions**              | 2a. Lo storico è vuoto.    <br>  &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema mostra i dati correnti della segnalazione e il caso d'uso termina con successo.|
 
 | Use Case||
 |:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **ID**| UC-15-FollowSegnalazione|
-| **Scope**                   | Sistema web.|
+| **Scope**                   | Sistema web Participium.|
 | **Level** | User goal.|
 | **Intention in Context**    | Seguire una segnalazione esistente per ricevere aggiornamenti sulla sua evoluzione.                                                                                               |
-| **Primary actor**           | Cittadino (autenticato).|
+| **Primary actor**           | Cittadino.|
 | **Supporting actors**       | Servizio di Notifica (IF-07).|
-| **Stakeholders' interests** | Cittadino: Rimanere informato sugli sviluppi della risoluzione delle segnalazioni di interesse.|
-| **Precondition**            | L'utente deve essere autenticato ([UC-01](#2-use-case-narratives)) e deve star vedendo i dettagli di una segnalazione.|
+| **Stakeholders' interests** | Cittadino: rimanere informato sugli sviluppi delle segnalazioni di interesse.|
+| **Precondition**            | L'utente deve essere autenticato (UC-01-Login) e non deve star già seguendo la segnalazione.|
+| **Minimum guarantees**      | -|
 | **Success guarantees**      | Il sistema predispone l'invio di notifiche all'utente ad ogni cambio di stato della segnalazione seguita ([FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr)). |
 | **Trigger**| -|
 | **Main success scenario**   | 1. Il cittadino seleziona il pulsante "Segui". <br>  2. Il sistema associa l'identificativo utente alla segnalazione nel database.   <br> 3. Il sistema conferma visivamente l'attivazione del follow; il caso d'uso termina con successo.                                                                                  |
-| **Extensions**              | 1a. L'utente segue già la segnalazione.   <br> &nbsp;&nbsp;&nbsp;&nbsp;1a.1 Il sistema mostra l'opzione "Smetti di seguire".                                                                                                     |
+| **Extensions**              | 1a. L'utente segue già la segnalazione.   <br> &nbsp;&nbsp;&nbsp;&nbsp;1a.1 Il sistema mostra l'opzione "Smetti di seguire".|
 
 | Use Case||
 |:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **ID**| UC-16-AnalisiAvanzataAmministratore|
 | **Scope**                   | Sistema web Participium.|
 | **Level** | User goal.|
-| **Intention in Context**    | Analizzare dati complessi per monitorare l'efficienza del servizio e prevenire abusi (es. top segnalanti).|
+| **Intention in Context**    | Analizzare dati complessi per monitorare l'efficienza del servizio.|
 | **Primary actor**           | Amministratore.|
-| **Supporting actors**       | Modulo Statistiche (S3.1).|
-| **Stakeholders' interests** | Amministratore: Ottimizzare i flussi di lavoro e identificare criticità sistemiche. <br> Comune di Torino: Disporre di reportistica per la pianificazione urbana. |
+| **Supporting actors**       | |
+| **Stakeholders' interests** | Amministratore: analizzare l'efficienza del servizio e identificare eventuali criticità. <br> Comune di Torino: disporre di reportistica dettagliata per migliorare il servizio.|
 | **Precondition**            | L'amministratore deve essere autenticato con permessi elevati.|
+| **Minimum guarantees**      | Se l'elaborazione fallisce, il sistema mostra un messaggio di errore e non aggiorna i dati visualizzati.|
 | **Success guarantees**      | Il sistema genera report e grafici basati su metriche private non accessibili al pubblico ([FR-18](./02_RequirementsEngineering.md#6-functional-requirements-fr)).|
 | **Trigger**|-|
-| **Main success scenario**   | 1. L'amministratore accede all'area riservata della Dashboard.   <br>  2. Seleziona i parametri da considerare nell'analisi.   <br>  3. Il sistema elabora i dati tramite query.  <br>  4. Il sistema visualizza i grafici avanzati e le tabelle analitiche; il caso d'uso termina con successo.|
-| **Extensions**              | 3a. L'elaborazione fallisce.  <br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema mostra un messaggio di errore, il caso d'uso riprende dal punto 2.|
+| **Main success scenario**   | 1. L'amministratore chiede di effettuare un'analisi avanzata.   <br>  2. L'amministratore seleziona i parametri da considerare nell'analisi.   <br>  3. Il sistema elabora i dati tramite query.  <br>  4. Il sistema mostra tabelle e  grafici avanzati; il caso d'uso termina con successo.|
+| **Extensions**              | 3a. L'elaborazione dei dati da parte del sistema fallisce.  <br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema mostra un messaggio di errore, il caso d'uso riprende dal punto 2.|
 
 | Use Case                    |                                                                                                                                                                                                                                                                                                         |
 |:----------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
