@@ -29,14 +29,14 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Level** | User goal.|
 | **Intention in Context**    | Inviare una segnalazione geolocalizzata di un disservizio urbano al Comune di Torino.|
 | **Primary actor**           | Cittadino|
-| **Supporting actors**       | [OpenStreetMap (IF-03)](./02_RequirementsEngineering.md#3-interfaces), [Media Storage (IF-04)](./02_RequirementsEngineering.md#3-interfaces).|
+| **Supporting actors**       | OpenStreetMap (IF-03), Media Storage (IF-04).|
 | **Stakeholders' interests** | Cittadino: comunicare efficacemente il problema riscontrato, garantire la propria privacy (anonimato pubblico), assicurarsi che la segnalazione venga ricevuta.<br>Comune di Torino: ricevere segnalazioni accurate e geolocalizzate con evidenze visive per ottimizzare gli interventi.
 | **Precondition**            | L'utente deve essere autenticato (UC-01-Login).|
 | **Minimum guarantees**      | Nessuna segnalazione viene creata se il processo viene interrotto.|
 | **Success guarantees**      | Viene creata una segnalazione con stato "Pending Approval", le foto vengono archiviate, la posizione registrata e l'utente riceve conferma visiva.|
 | **Trigger**|-|
-| **Main success scenario**   | 1. L'utente chiede di inserire una nuova segnalazione. <br>  2. Il sistema mostra la mappa ([FR-13](./02_RequirementsEngineering.md#6-functional-requirements-fr)) e il modulo di inserimento . <br>  3. Il cittadino seleziona la posizione del disservizio sulla mappa. <br> 4. Il cittadino inserisce le informazioni relative alla segnalazione ([FR-13](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 5. Il cittadino carica fino a 3 foto relative alla segnalazione. <br> 6. Il cittadino seleziona opzionalmente l'anonimato pubblico ([FR-13.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 7. Il cittadino conferma l'invio della segnalazione. <br> 8. Il sistema valida i dati, carica le immagini su Cloud Storage  e salva la segnalazione. <br> 9. Il sistema assegna lo stato "Pending Approval" e mostra successo; il caso d'uso termina con successo.|
-| **Extensions**              | 2a. Non è possibile visualizzare correttamente la mappa.<br>&nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema avvisa l'utente e il caso d'uso termina con fallimento.<br> 3.a Il cittadino seleziona una posizione non valida (fuori dai confini di Torino).<br>&nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema segnala l'errore e impedisce la selezione; il caso d'uso riprende dal punto 3. <br>  8a. L''utente non ha inserito tutti i dati necessari.<br>&nbsp;&nbsp;&nbsp;&nbsp;8a.1 Il sistema evidenzia i campi mancanti; il caso d'uso riprende dal punto 5. <br> 8b. L'utente non ha caricato alcuna foto.<br>&nbsp;&nbsp;&nbsp;&nbsp;8b.1 Il sistema ; il caso d'uso termina con fallimento.|
+| **Main success scenario**   | 1. L'utente chiede di inserire una nuova segnalazione. <br>  2. Il sistema mostra la mappa e il modulo di inserimento . <br>  3. Il cittadino fornisce i dettagli e la geolocalizzazione del disservizio. ([FR-12](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 4. Il cittadino carica da 1 a 3 foto relative alla segnalazione. <br> 5. Il cittadino seleziona opzionalmente l'anonimato pubblico ([FR-12.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 6. Il cittadino conferma l'invio della segnalazione. <br> 7. Il sistema valida i dati, carica le immagini su Cloud Storage  e salva la segnalazione. <br> 8. Il sistema assegna lo stato "Pending Approval" e mostra successo; il caso d'uso termina con successo.|
+| **Extensions**              | 2a. Non è possibile visualizzare correttamente la mappa.<br>&nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema avvisa l'utente e il caso d'uso termina con fallimento.<br> 3.a Il cittadino seleziona una posizione non valida (fuori dai confini di Torino).<br>&nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema segnala l'errore e impedisce la selezione; il caso d'uso riprende dal punto 3. <br>  7a. L''utente non ha inserito tutti i dati necessari.<br>&nbsp;&nbsp;&nbsp;&nbsp;7a.1 Il sistema evidenzia i campi mancanti; il caso d'uso riprende dal punto 3. <br> 7b. L'utente non ha caricato alcuna foto.<br>&nbsp;&nbsp;&nbsp;&nbsp;7b.1 Il sistema ; il caso d'uso riprende dal punto 4.|
 
 | Use Case||
 |:----------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -45,13 +45,13 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Level** | User goal.|
 | **Intention in Context**    | Aggiornare lo stato di una segnalazione durante il processo di gestione comunale.|
 | **Primary actor**| Operatore Comunale.|
-| **Supporting actors**| [Servizio di notifica (IF-07)](./02_RequirementsEngineering.md#3-interfaces).|
+| **Supporting actors**| Servizio di notifica (IF-07).|
 | **Stakeholders' interests** | Operatore Comunale; gestire il carico di lavoro, tracciare l'avanzamento degli interventi. <br> Cittadino: ricevere aggiornamenti trasparenti e tempestivi sulla risoluzione del problema.<br> Comune di Torino: monitorare l'efficienza degli uffici tecnici. |
 | **Precondition**            | L'operatore deve essere autenticato UC-01-Login. e la segnalazione deve esistere nel sistema.|
 | **Minimum guarantees**| Lo stato rimane invariato se l'aggiornamento fallisce.|
-| **Success guarantees**| Lo stato della segnalazione è aggiornato, l'utente segnalante e i followers della seganalazione ricevono una notifica ([FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr)).|
+| **Success guarantees**| Lo stato della segnalazione è aggiornato, l'utente segnalante e i followers della seganalazione ricevono una notifica ([FR-14](./02_RequirementsEngineering.md#6-functional-requirements-fr)).|
 | **Trigger**| -|
-| **Main success scenario**   | 1. L'operatore chiede di modificare una segnalazione. <br> 2. L'operatore assegna un nuovo stato alla segnalazione scegliendo tra quelli disponibili. <br> 3. L'operatore inserisce opzionalmente un commento interno nel campo di testo. <br>  4. L'operatore conferma l'aggiornamento di stato. <br> 5. Il sistema valida il passaggio di stato, aggiorna il database e registra lo storico. <br> 6. Il sistema genera automaticamente notifiche in-platform ed email (opzionalmente) per il segnalante e i follower ([FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr)); il caso d'uso termina con successo.|
+| **Main success scenario**   | 1. L'operatore chiede di modificare una segnalazione. <br> 2. L'operatore assegna un nuovo stato alla segnalazione scegliendo tra quelli disponibili. <br> 3. L'operatore inserisce opzionalmente un commento interno nel campo di testo. <br>  4. L'operatore conferma l'aggiornamento di stato. <br> 5. Il sistema valida il passaggio di stato, aggiorna il database e registra lo storico. <br> 6. Il sistema genera automaticamente notifiche in-platform ed email (opzionalmente) per il segnalante e i follower ([FR-14](./02_RequirementsEngineering.md#6-functional-requirements-fr)); il caso d'uso termina con successo.|
 | **Extensions**              | 2a. La transizione di stato non è valida. <br> &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema segnala l'errore e impedisce l'operazione; il caso d'uso riprende dal punto 2.<br>  2b. La segnlazione è già stata completata (Resolved o Rejected). &nbsp;&nbsp;&nbsp;&nbsp; <br> &nbsp;&nbsp;&nbsp;&nbsp; 2b.1 Il sistema segnala l'errore e impedisce l'operazione; il caso d'uso riprende dal punto 2.<br>  4a. Errore di connessione al database. <br> &nbsp;&nbsp;&nbsp;&nbsp;4a.1 Il sistema mostra un messaggio di errore; il caso d'uso termina con fallimento.|
 
 | Use Case||
@@ -61,7 +61,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Level** | User goal.|
 | **Intention in Context**    | Visualizzare le segnalazioni presenti sia sulla mappa che nella vista tabellare.|
 | **Primary actor**           | Cittadino.|
-| **Supporting actors**       | [OpenStreetMap (IF-03)](./02_RequirementsEngineering.md#3-interfaces).|
+| **Supporting actors**       | OpenStreetMap (IF-03).|
 | **Stakeholders' interests** | Cittadino: verificare se un problema è già stato segnalato, monitorare i disservizi nella città. <br> Comune di Torino: garantire trasparenza e ridurre segnalazioni duplicate. |
 | **Precondition**            |L'utente deve essere autenticato (UC-01-Login).|
 | **Minimum guarantees**      |-|
@@ -77,7 +77,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Level** | User goal.|
 | **Intention in Context**    | Creare un nuovo account utente sulla piattaforma fornendo dati identificativi.|
 | **Primary actor**           | Cittadino (Visitatore).|
-| **Supporting actors**       | [Servizio mail (IF-06)](./02_RequirementsEngineering.md#3-interfaces).|
+| **Supporting actors**       | Servizio mail (IF-06).|
 | **Stakeholders' interests** | Cittadino: ottenere l'accesso per effettuare segnalazioni e comunicare con gli operatori. <br> Comune di Torino: avere utenti univoci e verificati. |
 | **Precondition**            |-|
 | **Minimum guarantees**      | Nessun account duplicato viene creato. |
@@ -164,7 +164,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Minimum guarantees**      | - |
 | **Success guarantees**      | Il report viene generato ed esportato in formato conforme. |
 | **Trigger**                 | - |
-| **Main success scenario**   | 1. L'amministratore chiede di generare statistiche e report dalla dashboard amministratore.     <br>  2. Il sistema propone i filtri di aggregazione. <br>  3. L'amministratore seleziona i parametri per la generazione di dati privati ([FR-17](./02_RequirementsEngineering.md#6-functional-requirements-fr)).  <br> 4. Il sistema genera e mostra grafici interattivi.     <br>  5. L'amministratore chiede di esportare il report in formato CSV. ([FR-10](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br>  6. Il sistema genera il file conforme e avvia il download ([NFR-06](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)); il caso d'uso termina con successo.    |
+| **Main success scenario**   | 1. L'amministratore chiede di generare statistiche e report dalla dashboard amministratore.     <br>  2. Il sistema propone i filtri di aggregazione. <br>  3. L'amministratore seleziona i parametri per la generazione di dati privati ([FR-17](./02_RequirementsEngineering.md#6-functional-requirements-fr)).  <br> 4. Il sistema genera e mostra grafici interattivi.     <br>  5. L'amministratore chiede di esportare il report in formato CSV. ([FR-10](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br>  6. Il sistema genera il file conforme e avvia il download; il caso d'uso termina con successo.    |
 | **Extensions**              | 3a. Non autorizzato.   <br>  &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema nega l'accesso ai dati sensibili; il caso d'uso termina con fallimento. |
 
 | Use Case                    |                                                                                                                                                                        |
@@ -176,7 +176,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Primary actor**           | Cittadino.|
 | **Supporting actors**       | Servizio mail (IF-06)|
 | **Stakeholders' interests** | Cittadino: recuperare l'accesso autonomamente.|
-| **Precondition**            | L'account deve essere già stato verificato ([UC-05-Registrazione](#2-use-case-narratives)).|
+| **Precondition**            | L'account deve essere già stato verificato.|
 | **Minimum guarantees**      | Il ripristino fallisce e la password rimane invariata.|
 | **Success guarantees**      | La password viene aggiornata con successo.|
 | **Trigger**| -|
