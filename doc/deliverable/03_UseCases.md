@@ -2,7 +2,7 @@
 
 Attach your use case diagram as an image under `../data/img/` and link it here:
 
-- `![](../data/img/use-case-diagram.png)`
+![Use Case Diagram](../data/img/use-case-diagram.png)
 
 # 2) Use Case Narratives
 
