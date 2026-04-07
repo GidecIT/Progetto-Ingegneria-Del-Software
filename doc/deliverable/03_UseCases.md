@@ -319,7 +319,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | Use Case||
 |:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **ID**| UC-20-AnalisiAvanzataAmministratore|
-| **Scope**                   | Sistema web Participium.|
+| **Scope**| Sistema web Participium.|
 | **Level** | User goal.|
 | **Intention in Context**    | Analizzare dati complessi per monitorare l'efficienza del servizio.|
 | **Primary actor**           | Amministratore.|
@@ -355,24 +355,24 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 
 | UC ID | REQ ID|
 |:------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| UC-01 | [FR-1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-1.1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-1.2](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-1.2](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
-| UC-02 | [FR-3](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-1.1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-07](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
+| UC-01 | [FR-1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-1.1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-1.2](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-11](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
+| UC-02 | [FR-3](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-1.1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-11](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
 | UC-03 | [FR-2](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-12](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
 | UC-04 | [FR-4](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
-| UC-05 | [FR-5](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-5.1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-04](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
-| UC-06 | [FR-6](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-6.1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-6.2](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-01](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr), [NFR-02](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr), [NFR-03](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr), [NFR-04](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
+| UC-05 | [FR-5](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-5.1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-03](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
+| UC-06 | [FR-6](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-6.1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-6.2](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-01](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr), [NFR-02](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr), [NFR-04](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr), [NFR-07](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr), [NFR-08](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
 | UC-07 | [FR-7](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-7.1](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-8](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
 | UC-08 | [FR-8](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-07](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
-| UC-09 | [FR-10](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-11](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-02](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
+| UC-09 | [FR-10](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-11](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-07](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr), [NFR-09](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
 | UC-10 | [FR-12](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
-| UC-11 | [FR-13](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-03](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
+| UC-11 | [FR-13](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-04](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr), [NFR-06](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
 | UC-12 | [FR-13](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
 | UC-13 | [FR-11.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
 | UC-14 | [FR-11.2](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-11.3](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
 | UC-15 | [FR-14](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
-| UC-16 | [FR-9](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-07](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
-| UC-17 | [FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
-| UC-18 | [FR-19](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-20](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
-| UC-19 | [FR-16](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
+| UC-16 | [FR-9](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-11](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
+| UC-17 | [FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-01](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr), [NFR-02](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
+| UC-18 | [FR-19](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-20](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-03](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr), [NFR-11](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
+| UC-19 | [FR-16](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-06](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
 | UC-20 | [FR-17](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-05](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
-| UC-21 | [FR-18](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-06](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
+| UC-21 | [FR-18](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-14](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
