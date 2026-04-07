@@ -2,7 +2,7 @@
 
 Attach your class diagram as an image under `../data/img/` and link it here:
 
-- `![](../data/img/class-diagram.png)`
+![](../../data/img/ClassDiagram.png)
 
 Also, make sure to include the JSON source file downloaded from the UML Modeler used to draw the diagram in the `../data/` folder (for example `class-diagram.json`).
 
