@@ -60,14 +60,14 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Scope**     | Sistema web Participium.|
 | **Level** | User goal.|
 | **Intention in Context**    | Terminare la sessione in sicurezza. |
-| **Primary actor**           | Cittadino (autenticato) |
+| **Primary actor**           | Cittadino (autenticato), Operatore Comunale, Amministratore |
 | **Supporting actors**       | Servizio di autenticazione (IF-10) |
-| **Stakeholders' interests** | Cittadino: Proteggere l'account su dispositivi condivisi. |
-| **Precondition**            | Il cittadino deve essere autenticato (UC-03-Login). |
+| **Stakeholders' interests** | Cittadino, Operatore Comunale, Amministratore: Proteggere l'account su dispositivi condivisi. |
+| **Precondition**            | L'utente deve essere autenticato (UC-03-Login). |
 | **Minimum guarantees**      | - |
 | **Success guarantees**      | La sessione viene invalidata e l'accesso protetto revocato. |
 | **Trigger**                 | - |
-| **Main success scenario**   | 1. Il cittadino chiede di effettuare il logout. <br> 2. Il sistema invalida la sessione lato server ([FR-4](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br>  3. Il sistema reindirizza il cittadino alla home page pubblica; il caso d'uso termina con successo.                        |
+| **Main success scenario**   | 1. L'utente chiede di effettuare il logout. <br> 2. Il sistema invalida la sessione lato server ([FR-4](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br>  3. Il sistema reindirizza l'utente alla home page pubblica; il caso d'uso termina con successo.                        |
 | **Extensions**              | 2a Errore invalidazione.  <br> &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema forza la chiusura lato client; il caso d'uso termina con successo.             |
 
 | Use Case||
@@ -92,8 +92,8 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Scope**                   | Sistema web Participium.|
 | **Level** | User goal.|
 | **Intention in Context**    | Inviare una segnalazione geolocalizzata di un disservizio urbano al Comune di Torino.|
-| **Primary actor**           | Cittadino|
-| **Supporting actors**       | OpenStreetMap (IF-03), Media Storage (IF-04).|
+| **Primary actor**           | Cittadino (autenticato)|
+| **Supporting actors**       | Map Service API (IF-03), Media Storage (IF-04).|
 | **Stakeholders' interests** | Cittadino: comunicare efficacemente il problema riscontrato, garantire la propria privacy (anonimato pubblico), assicurarsi che la segnalazione venga ricevuta.<br>Comune di Torino: ricevere segnalazioni accurate e geolocalizzate con evidenze visive per ottimizzare gli interventi.
 | **Precondition**            | L'utente deve essere autenticato (UC-03-Login).|
 | **Minimum guarantees**      | Nessuna segnalazione viene creata se il processo viene interrotto.|
@@ -142,7 +142,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Level** | User goal.|
 | **Intention in Context**    | Visualizzare le segnalazioni presenti sia sulla mappa che nella vista tabellare.|
 | **Primary actor**           | Cittadino.|
-| **Supporting actors**       | OpenStreetMap (IF-03).|
+| **Supporting actors**       | Map Service API (IF-03).|
 | **Stakeholders' interests** | Cittadino: verificare se un problema è già stato segnalato, monitorare i disservizi nella città. <br> Comune di Torino: garantire trasparenza e ridurre segnalazioni duplicate. |
 | **Precondition**            |-|
 | **Minimum guarantees**      |-|
@@ -175,7 +175,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Level** | User goal.|
 | **Intention in Context**    | Accedere alla scheda completa di una segnalazione per leggerne la descrizione, visualizzarne le foto e visualizzare lo storico degli aggiornamenti.|
 | **Primary actor**           | Cittadino.|
-| **Supporting actors**       | OpenStreetMap (IF-03).|
+| **Supporting actors**       | Map Service API (IF-03).|
 | **Stakeholders' interests** | Cittadino: comprendere i dettagli di un problema specifico e seguire gli aggiornamenti di stato.||
 | **Precondition**            |-|
 | **Minimum guarantees**      |-|
@@ -339,7 +339,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Level** | User goal |
 | **Intention in Context**    | Estrarre dati statistici avanzati. |
 | **Primary actor**           | Amministratore (data analyst) |
-| **Supporting actors**       |-|
+| **Supporting actors**       | Dashboard Amministrativa (IF-02)|
 | **Stakeholders' interests** | Amministratore (data analyst): fornire indicazioni sull'andamento dell'attività. <br> Comune di Torino: ricevere report dettagliati per monitorare l'efficienza di risoluzione dei problemi. |
 | **Precondition**            | L'utente deve essere autenticato (UC-03-Login) come Amministratore (data analyst). |
 | **Minimum guarantees**      | - |
