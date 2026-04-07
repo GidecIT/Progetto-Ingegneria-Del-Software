@@ -110,7 +110,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Intention in Context** | Validare una segnalazione in stato "Pending approval" per renderla visibile e assegnarla agli uffici competenti.|
 | **Primary actor** | Operatore Comunale.|
 | **Supporting actors** | Servizio di notifica (IF-07), Dashboard Amministrativa (IF-02).|
-| **Stakeholders' interests** | Cittadino (STK-01): vedere la propria segnalazione validata e presa in carico. <br> Operatore Comunale (STK-02): filtrare segnalazioni inappropriate o duplicate per ottimizzare le risorse e garantire l'accuratezza dei dati (IF-04).|
+| **Stakeholders' interests** | Cittadino: vedere la propria segnalazione validata e presa in carico. <br> Operatore Comunale: filtrare segnalazioni inappropriate o duplicate per ottimizzare le risorse e garantire l'accuratezza dei dati (IF-04).|
 | **Precondition** | La segnalazione deve esistere e deve essere in stato 'Pending approval'.|
 | **Minimum guarantees** | Se l'approvazione fallisce, la segnalazione rimane in stato 'Pending approval' e non è visibile nel portale pubblico.|
 | **Success guarantees** | La segnalazione viene approvata, lo stato aggiornato in 'Assigned' e resa pubblica.|
@@ -313,7 +313,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Minimum guarantees** | Se l'elaborazione fallisce, il sistema mostra un messaggio di errore e non aggiorna i dati visualizzati.|
 | **Success guarantees** | L'utente visualizza grafici basati su categorie e trend temporali.|
 | **Trigger** | -|
-| **Main success scenario** | 1. Il cittadino chiede di visualizzare le statistiche pubbliche. <br> 2. Il sistema interroga il database e mostra le statistiche pubbliche richieste [FR-16](./02_RequirementsEngineering.md#6-functional-requirements-fr). <br> 3. Il cittadino applica filtri ai dati ottenuti. <br> 4. Il sistema aggiorna dinamicamente la visualizzazione; il caso d'uso termina con successo. |
+| **Main success scenario** | 1. Il cittadino chiede di visualizzare le statistiche pubbliche. <br> 2. Il sistema interroga il database e mostra le statistiche pubbliche richieste ([FR-16](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 3. Il cittadino applica filtri ai dati ottenuti. <br> 4. Il sistema aggiorna dinamicamente la visualizzazione; il caso d'uso termina con successo. |
 | **Extensions** | 3a.  L'elaborazione dei dati da parte del sistema fallisce. <br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema mostra un messaggio di errore, il caso d'uso riprende dal punto 2.|
 
 | Use Case||
@@ -349,6 +349,21 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Extensions**              | 3a. Non autorizzato.   <br>  &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema nega l'accesso ai dati sensibili; il caso d'uso termina con fallimento. |
 
 
+| Use Case                    ||
+|:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **ID**                      | UC-22-SospensioneAccount |
+| **Scope**                   | Sistema web Participium |
+| **Level** | User goal |
+| **Intention in Context**    | Sospendere l'accesso a un account utente. |
+| **Primary actor**           | Amministratore  |
+| **Supporting actors**       |-|
+| **Stakeholders' interests** | Amministratore:  <br> Comune di Torino:  |
+| **Precondition**            | L'utente deve essere autenticato (UC-03-Login) come Amministratore. |
+| **Minimum guarantees**      | - |
+| **Success guarantees**      | L'account utente viene sospeso con successo. |
+| **Trigger**                 | - |
+| **Main success scenario**   |1. L'amministratore chiede di sospendere un utente ([FR-21](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 2.  Il sistema sospende l'account utente e notifica l'amministratore; il caso d'uso termina con successo. |
+| **Extensions**              | 2.a. L'amministratore annulla l'operazione; il caso d'uso termina con fallimento. <br> 2b. L'utente è già sospeso <br> &nbsp;&nbsp;&nbsp;&nbsp; 2b.1 Il sistema mostra un messaggio di errore; il caso d'uso termina con fallimento. |
 <br> <br> <br>
 
 # Traceability Table
@@ -376,3 +391,4 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | UC-19 | [FR-16](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-06](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
 | UC-20 | [FR-17](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-05](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
 | UC-21 | [FR-18](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-14](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
+| UC-22 | [FR-21](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
