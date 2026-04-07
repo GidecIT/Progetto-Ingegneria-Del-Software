@@ -63,7 +63,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Primary actor**           | Cittadino.|
 | **Supporting actors**       | OpenStreetMap (IF-03).|
 | **Stakeholders' interests** | Cittadino: verificare se un problema è già stato segnalato, monitorare i disservizi nella città. <br> Comune di Torino: garantire trasparenza e ridurre segnalazioni duplicate. |
-| **Precondition**            |Il cittadino deve essere autenticato (UC-01-Login).|
+| **Precondition**            |-|
 | **Minimum guarantees**      |-|
 | **Success guarantees**      | Il cittadino visualizza le segnalazioni correttamente.|
 | **Trigger**                 | -|
@@ -125,8 +125,8 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Scope**                   | Sistema web Participium |
 | **Level** | User goal |
 | **Intention in Context**    | Scambio di messaggi diretti tra operatore e cittadino su una segnalazione. |
-| **Primary actor**           | Operatore Comunale / Cittadino|
-| **Supporting actors**       | Cittadino / Operatore Comunale |
+| **Primary actor**           | Operatore Comunale / Cittadino (autenticato) |
+| **Supporting actors**       | Cittadino (autenticato) / Operatore Comunale |
 | **Stakeholders' interests** | Operatore Comunale: Richiedere chiarimenti su segnalazioni ricevute. <br> Cittadino: Fornire ulteriori dettagli per facilitare l'intervento; chiedere informazioni sull'avanzamento. <br> Comune di Torino:  |
 | **Precondition**            | Entrambi gli attori devono essere autenticati (UC-01-Login)|
 | **Minimum guarantees**      |-|
@@ -158,7 +158,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Level** | User goal |
 | **Intention in Context**    | Estrarre dati statistici avanzati. |
 | **Primary actor**           | Amministratore (data analyst) |
-| **Supporting actors**       | Cloud Account (IF-09) |
+| **Supporting actors**       |-|
 | **Stakeholders' interests** | Amministratore (data analyst): fornire indicazioni sull'andamento dell'attività. <br> Comune di Torino: ricevere report dettagliati per monitorare l'efficienza di risoluzione dei problemi. |
 | **Precondition**            | L'utente deve essere autenticato (UC-01-Login) come Amministratore (data analyst). |
 | **Minimum guarantees**      | - |
@@ -189,7 +189,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Scope**| Sistema web Participium.|
 | **Level** | User goal.|
 | **Intention in Context**    | Visualizzare le segnalazioni al cittadino di consultare lo storico e lo stato attuale di tutte le segnalazioni da lui inviate.|
-| **Primary actor**      | Cittadino.|
+| **Primary actor**      | Cittadino (autenticato).|
 | **Supporting actors**       |-|
 | **Stakeholders' interests** | Cittadino: verificare l'avanzamento dei propri ticket e avere uno storico personale.|
 | **Precondition**            | Il cittadino deve essere autenticato (UC-01-Login).|
@@ -207,8 +207,8 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Intention in Context**    | Accedere alla scheda completa di una segnalazione per leggerne la descrizione, visualizzarne le foto e visualizzare lo storico degli aggiornamenti.|
 | **Primary actor**           | Cittadino.|
 | **Supporting actors**       | OpenStreetMap (IF-03).|
-| **Stakeholders' interests** | Cittadino (visitatore/autenticato): comprendere i dettagli di un problema specifico e seguire gli aggiornamenti di stato.||
-| **Precondition**            | Il cittadino deve essere autenticato (UC-01-Login)|
+| **Stakeholders' interests** | Cittadino: comprendere i dettagli di un problema specifico e seguire gli aggiornamenti di stato.||
+| **Precondition**            |-|
 | **Minimum guarantees**      |-|
 | **Success guarantees**      | Il cittadino visualizza la pagina di dettaglio completa contenente i dati della segnalazione e le relative interazioni pubbliche.|
 | **Trigger**                 |-|
@@ -224,11 +224,11 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Primary actor**           | Cittadino.|
 | **Supporting actors**       |-|
 | **Stakeholders' interests** | Cittadino: monitorare i progressi di una segnalazione nel tempo.   |
-| **Precondition**            | Il cittadino deve essere autenticato (UC-01-Login).|
+| **Precondition**            |-|
 | **Minimum guarantees**      | Se il sistema non riesce a recuperare lo storico, il cittadino visualizza comunque i dati correnti della segnalazione.|
 | **Success guarantees**      | Il sistema mostra tutti i cambi di stato nel tempo per una segnalazione.|
 | **Trigger**                 | -|
-| **Main success scenario**   | 1. Il cittadino chiede di visualizzare lo storico degli aggiornamenti di una segnalazione.   <br>  2. Il sistema recupera dal database lo storico dei cambi di stato. <br> 3. Il sistema mostra i cambi di stato e le relative date di cambiamento; il caso d'uso termina con successo.|
+| **Main success scenario**   | 1. Il cittadino chiede di visualizzare lo storico degli aggiornamenti di una segnalazione.   <br>  2. Il sistema recupera dal database lo storico dei cambi di stato. <br> 3. Il sistema mostra i cambi di stato e le relative date di cambiamento [FR-13](./02_RequirementsEngineering.md#6-functional-requirements-fr); il caso d'uso termina con successo.|
 | **Extensions**              | 2a. Lo storico è vuoto.    <br>  &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema mostra i dati correnti della segnalazione e il caso d'uso termina con successo.|
 
 | Use Case||
@@ -237,10 +237,10 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Scope**                   | Sistema web Participium.|
 | **Level** | User goal.|
 | **Intention in Context**    | Seguire una segnalazione esistente per ricevere aggiornamenti sulla sua evoluzione.                                                                                               |
-| **Primary actor**           | Cittadino.|
+| **Primary actor**           | Cittadino (autenticato).|
 | **Supporting actors**       | Servizio di Notifica (IF-07).|
 | **Stakeholders' interests** | Cittadino: rimanere informato sugli sviluppi delle segnalazioni di interesse.|
-| **Precondition**            | L'utente deve essere autenticato (UC-01-Login) e non deve star già seguendo la segnalazione.|
+| **Precondition**            | Il cittadino deve essere autenticato (UC-01-Login) e non deve star già seguendo la segnalazione.|
 | **Minimum guarantees**      | -|
 | **Success guarantees**      | Il sistema predispone l'invio di notifiche all'utente ad ogni cambio di stato della segnalazione seguita ([FR-15](./02_RequirementsEngineering.md#6-functional-requirements-fr)). |
 | **Trigger**| -|
@@ -256,7 +256,7 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Primary actor**           | Amministratore.|
 | **Supporting actors**       | |
 | **Stakeholders' interests** | Amministratore: analizzare l'efficienza del servizio e identificare eventuali criticità. <br> Comune di Torino: disporre di reportistica dettagliata per migliorare il servizio.|
-| **Precondition**            | L'amministratore deve essere autenticato con permessi elevati.|
+| **Precondition**            | L'utente deve essere autenticato (UC-01-Login) come Amministratore.|
 | **Minimum guarantees**      | Se l'elaborazione fallisce, il sistema mostra un messaggio di errore e non aggiorna i dati visualizzati.|
 | **Success guarantees**      | Il sistema genera report e grafici basati su metriche private non accessibili al pubblico.|
 | **Trigger**|-|
@@ -271,12 +271,13 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Intention in Context** | Consultare dati aggregati e trend generali per comprendere lo stato dei problemi urbani in città.|
 | **Primary actor** | Cittadino.|
 | **Supporting actors** | -|
-| **Stakeholders' interests** | Cittadino (STK-01): Avere una visione d'insieme dei disservizi più comuni nel proprio comune. <br> Amministratore (STK-03): Monitorare l'andamento delle segnalazioni per pianificare interventi.|
+| **Stakeholders' interests** | Cittadino : avere una visione d'insieme dei disservizi più comuni nel proprio comune. <br> Amministratore: monitorare l'andamento delle segnalazioni per cercare di migliorare il servizio.|
 | **Precondition** | Il database contiene segnalazioni pubblicate e approvate.|
-| **Success guarantees** | L'utente visualizza grafici anonimi e aggiornati basati su categorie e trend temporali (FR-16).|
+| **Minimum guarantees** | Se l'elaborazione fallisce, il sistema mostra un messaggio di errore e non aggiorna i dati visualizzati.|
+| **Success guarantees** | L'utente visualizza grafici basati su categorie e trend temporali.|
 | **Trigger** | -|
-| **Main success scenario** | 1. Il cittadino accede alla sezione dedicata. <br> 2. Il sistema interroga il database e mostra le statistiche pubbliche aggregate (FR-16). <br> 3. Il cittadino filtra i dati per periodo (giorno, settimana, mese). <br> 4. Il sistema aggiorna dinamicamente le visualizzazioni; il caso d'uso termina con successo. |
-| **Extensions** | 3a. Il filtro selezionato non restituisce dati. <br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema mostra un messaggio informativo, il caso d'uso riprende dal punto 2.                  |
+| **Main success scenario** | 1. Il cittadino chiede di visualizzare le statistiche pubbliche. <br> 2. Il sistema interroga il database e mostra le statistiche pubbliche richieste [(FR-16)](./02_RequirementsEngineering.md#6-functional-requirements-fr). <br> 3. Il cittadino applica filtri ai dati ottenuti. <br> 4. Il sistema aggiorna dinamicamente la visualizzazione; il caso d'uso termina con successo. |
+| **Extensions** | 3a.  L'elaborazione dei dati da parte del sistema fallisce. <br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema mostra un messaggio di errore, il caso d'uso riprende dal punto 2.                  |
 
 | Use Case||
 |:----------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -286,13 +287,13 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Intention in Context** | Consultare segnalazioni specifiche tramite ricerca testuale.|
 | **Primary actor** | Cittadino.|
 | **Supporting actors** | -|
-| **Stakeholders' interests** | Cittadino (STK-01): Trovare rapidamente le segnalazioni di proprio interesse. <br> Comune di Torino (STK-04): Garantire una navigazione fluida tra i contenuti pubblici.|
-| **Precondition** | Il database contiene segnalazioni pubblicate e approvate.|
+| **Stakeholders' interests** | Cittadino: trovare rapidamente le segnalazioni di proprio interesse.|
+| **Precondition** |-|
 | **Minimum guarantees** | I filtri applicati non influenzano la persistenza dei dati nel database.|
-| **Success guarantees** | L'utente visualizza l'elenco delle segnalazioni che corrispondono alla stringa inserita (FR-8).|
+| **Success guarantees** | L'utente visualizza l'elenco delle segnalazioni che corrispondono alla stringa inserita.|
 | **Trigger** | -|
-| **Main success scenario** | 1. Il cittadino effettua un ricerca testuale nella navigation bar del sito. <br> 2. Il sistema interroga il database e filtra le segnalazioni corrispondenti al testo inserito (FR-8). <br> 3. Il sistema aggiorna la visualizzazione mostrando i risultati; il caso d'uso termina con successo. |
-| **Extensions** | 2a. Nessuna segnalazione soddisfa i criteri inseriti dal cittadino. <br> &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema mostra un risultato vuoto e il caso d'uso termina.|
+| **Main success scenario** | 1. Il cittadino effettua un ricerca testuale nella navigation bar del sito. <br> 2. Il sistema interroga il database per ricercare le segnalazioni contenenti il testo inserito [(FR-11.1)](./02_RequirementsEngineering.md#6-functional-requirements-fr). <br> 3. Il sistema aggiorna la visualizzazione mostrando i risultati; il caso d'uso termina con successo. |
+| **Extensions** | 2a. Nessuna segnalazione soddisfa i criteri inseriti dal cittadino. <br> &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema mostra un risultato vuoto e il caso d'uso termina con fallimento.|
 
 | Use Case||
 |:----------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -302,12 +303,12 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Intention in Context** | Consultare segnalazioni specifiche tramite filtri (categoria, stato, periodo).|
 | **Primary actor** | Cittadino.|
 | **Supporting actors** | -|
-| **Stakeholders' interests** | Cittadino (STK-01): Visualizzare segnalazioni filtrate e ordinate secondo le proprie necessità (FR-8.2). <br> Comune di Torino (STK-04): Garantire una navigazione fluida tra i contenuti pubblici.                                                                     |
-| **Precondition** | Il database contiene segnalazioni pubblicate e approvate.|
+| **Stakeholders' interests** | Cittadino: visualizzare segnalazioni filtrate e ordinate secondo le proprie volontà. <br> Comune di Torino: garantire una navigazione fluida tra le segnalazioni.|
+| **Precondition** |-|
 | **Minimum guarantees** | I filtri applicati non influenzano la persistenza dei dati nel database.|
-| **Success guarantees** | L'utente visualizza un sottoinsieme di segnalazioni corrispondenti ai filtri selezionati (FR-8.1).|
+| **Success guarantees** | L'utente visualizza un sottoinsieme di segnalazioni corrispondenti ai filtri selezionati.|
 | **Trigger** | -|
-| **Main success scenario** | 1. Il cittadino seleziona uno o più filtri. <br> 2. Il sistema interroga il database e filtra le segnalazioni secondo i criteri impostati (FR-8.1). <br> 3. Il sistema aggiorna la visualizzazione mostrando solo i risultati filtrati; il caso d'uso termina con successo. |
+| **Main success scenario** | 1. Il cittadino seleziona uno o più filtri. <br> 2. Il sistema interroga il database e filtra le segnalazioni secondo i criteri impostati [(FR-11.2)](./02_RequirementsEngineering.md#6-functional-requirements-fr). <br> 3. Il sistema aggiorna la visualizzazione mostrando solo i risultati filtrati; il caso d'uso termina con successo. |
 | **Extensions** | 2a. Nessuna segnalazione soddisfa i criteri selezionati. <br> &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema mostra un risultato vuoto; il caso d'uso termina con fallimento.|
 
 | Use Case||
@@ -318,13 +319,13 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Intention in Context** | Informare gli utenti in merito all'avanzamento di stato di una segnalazione seguita.|
 | **Primary actor** | Operatore Comunale.|
 | **Supporting actors** | Servizio di notifica (IF-07), Servizio Mail (IF-06).|
-| **Stakeholders' interests** | Cittadino (STK-01): Essere aggiornato tempestivamente sui cambiamenti delle segnalazioni seguite (FR-11). <br> Operatore Comunale (STK-02): Comunicare automaticamente gli aggiornamenti senza interventi manuali aggiuntivi.                                       |
-| **Precondition** | Lo stato della segnalazione è variato e ci sono utenti che hanno attivato il "Follow" sulla stessa (FR-11).|
+| **Stakeholders' interests** | Cittadino: essere aggiornato tempestivamente sui cambiamenti delle segnalazioni seguite. <br> Operatore Comunale: comunicare automaticamente gli aggiornamenti senza interventi manuali aggiuntivi.                                       |
+| **Precondition** | |
 | **Minimum guarantees** | Il sistema non invia comunicazioni se non ci sono utenti interessati o se le preferenze di notifica sono disabilitate (FR-6).|
-| **Success guarantees** | L'utente riceve una notifica in piattaforma e via email (FR-14).|
+| **Success guarantees** | L'utente riceve una notifica in piattaforma e via email.|
 | **Trigger** | L'Operatore Comunale modifica lo stato di una segnalazione (UC-21-ApprovazioneSegnalazione).|
-| **Main success scenario** | 1. Il sistema individua gli utenti interessati alla segnalazione (segnalante e follower). <br> 2. Il sistema invia una notifica in piattaforma comunicando il nuovo stato (FR-14). <br> 3. Se previsto dalle preferenze, il sistema invia una mail informativa; il caso d'uso termina con successo. |
-| **Extensions** | 3a. Il servizio mail non è temporaneamente raggiungibile. <br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema mostra l'errore e mette la comunicazione in coda per un nuovo invio; il caso d'uso termina con fallimento.                                                   |
+| **Main success scenario** | 1. Il sistema individua gli utenti interessati alla segnalazione (segnalante e follower) [(FR-11)](./02_RequirementsEngineering.md#6-functional-requirements-fr). <br> 2. Il sistema invia una notifica in piattaforma comunicando il nuovo stato. <br> 3. Se previsto dalle preferenze, il sistema invia una mail informativa; il caso d'uso termina con successo. |
+| **Extensions** | 3a. Il servizio mail non è temporaneamente raggiungibile. <br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema mette la comunicazione in coda per un nuovo invio; il caso d'uso termina con fallimento.                                                   |
 
 | Use Case||
 |:----------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -334,13 +335,13 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 | **Intention in Context** | Validare una segnalazione in stato "Pending approval" per renderla visibile e assegnarla agli uffici competenti.|
 | **Primary actor** | Operatore Comunale.|
 | **Supporting actors** | Servizio di notifica (IF-07), Dashboard Amministrativa (IF-02).|
-| **Stakeholders' interests** | Cittadino (STK-01): Vedere la propria segnalazione validata e presa in carico. <br> Operatore Comunale (STK-02): Filtrare segnalazioni inappropriate o duplicate per ottimizzare le risorse e garantire l'accuratezza dei dati (IF-04).|
-| **Precondition** | La segnalazione deve esistere a sistema e deve essere in stato 'Pending approval' (FR-13).|
+| **Stakeholders' interests** | Cittadino (STK-01): vedere la propria segnalazione validata e presa in carico. <br> Operatore Comunale (STK-02): filtrare segnalazioni inappropriate o duplicate per ottimizzare le risorse e garantire l'accuratezza dei dati (IF-04).|
+| **Precondition** | La segnalazione deve esistere e deve essere in stato 'Pending approval'.|
 | **Minimum guarantees** | Se l'approvazione fallisce, la segnalazione rimane in stato 'Pending approval' e non è visibile nel portale pubblico.|
-| **Success guarantees** | La segnalazione viene approvata, lo stato aggiornato in 'Assigned' (FR-13) e resa pubblica.|
+| **Success guarantees** | La segnalazione viene approvata, lo stato aggiornato in 'Assigned' e resa pubblica.|
 | **Trigger** | Un utente crea una segnalazione (UC-12-InserimentoSegnalazione).|
-| **Main success scenario** | 1. L'operatore accede ai dettagli della segnalazione "Pending approval" tramite la dashboard (IF-02). <br> 2. L'operatore verifica la validità del contenuto e delle immagini (FR-9). <br> 3. L'operatore conferma l'approvazione. <br> 4. Il sistema aggiorna lo stato nel database da 'Pending approval' a 'Assigned' (FR-13); il caso d'uso termina con successo innescando "UC-20-Notifiche".|
-| **Extensions** | 2a. L'operatore richiede chiarimenti al cittadino segnalante (UC-15-MessaggioOperatoreCittadino). <br> <br> 3a. L'operatore rifiuta la segnalazione perché non conforme o duplicata. <br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 L'operatore inserisce la motivazione obbligatoria (FR-13.1). <br> &nbsp;&nbsp;&nbsp;&nbsp;3a.2 Il sistema aggiorna lo stato in 'Rejected'; il caso d'uso termina con fallimento innescando "UC-20-Notifiche". |
+| **Main success scenario** | 1. L'operatore accede ai dettagli della segnalazione "Pending approval" tramite la dashboard. <br> 2. L'operatore verifica la validità del contenuto e delle immagini. <br> 3. L'operatore ritiene la segnalazione conforme e conferma l'approvazione [(FR-7)](./02_RequirementsEngineering.md#6-functional-requirements-fr). <br> 4. Il sistema aggiorna lo stato nel database da 'Pending approval' a 'Assigned' (FR-13); il caso d'uso termina con successo innescando "UC-20-Notifiche".|
+| **Extensions** | 2a. L'operatore richiede chiarimenti al cittadino segnalante (UC-15-MessaggioOperatoreCittadino). <br> 3a. L'operatore rifiuta la segnalazione perché non conforme o duplicata. <br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 L'operatore inserisce la motivazione obbligatoria [(FR-7.1)](./02_RequirementsEngineering.md#6-functional-requirements-fr). <br> &nbsp;&nbsp;&nbsp;&nbsp;3a.2 Il sistema aggiorna lo stato in 'Rejected'; il caso d'uso termina con fallimento innescando "UC-20-Notifiche". |
 
 # Traceability Table
 
