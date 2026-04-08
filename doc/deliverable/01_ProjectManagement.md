@@ -5,18 +5,19 @@
 | **SOFTWARE** | 
 | S1 | Applicazione Web (UI + Client) | Software | Frontend responsive per l'interazione dei cittadini e degli operatori comunali.            |
 | S2 | Area Riservata Utente | Software | Gestione autenticazione, profili utente e preferenze di notifica.                             |
-| S3 | Dashboard Gestionale Amministratori | Software | Pannello di controllo per la gestione delle segnalazioni e degli uffici tecnici.           |
-| S3.1 | Modulo Statistiche Amministratore | Software | Visualizzazione di analytics avanzati e reportistica sull'efficienza del servizio.         |
-| S4 | Servizio Notifiche e Messaggistica | Software | Gestione delle comunicazioni in tempo reale e notifiche push tra sistema e utente.         |
-| S5 | API Gateway / BFF | Software | Punto di accesso centralizzato per il frontend per aggregare dati dai vari servizi backend. |
-| S6 | Servizio di Geolocalizzazione | Software | Logica di georeferenziazione, ricerca di indirizzi e filtri spaziali sulle segnalazioni.   |
-| S7 | Servizio di Segnalazione | Software | Motore di gestione del ciclo di vita delle segnalazioni (creazione, workflow di stato).    |
-| S8 | Consultazione e Monitoraggio | Software | Portale pubblico per la visualizzazione di mappe, liste e statistiche aperte ai cittadini. |
-| S8.1 | Esportazione CSV | Software | Funzionalità di export dei dati tabellari per analisi offline e trasparenza.               |
+| S3 | Dashboard Gestionale Amministratori | Software | Pannello di controllo per la gestione delle segnalazioni e degli uffici tecnici.|
+| S3.1 | Modulo Statistiche Amministratore | Software | Visualizzazione di analytics avanzati e reportistica sull'efficienza del servizio.|
+| S4 | Dashboard Operatori Comunali | Software | Interfaccia dedicata per la gestione operativa delle segnalazioni e comunicazione con i cittadini. |
+| S5 | Servizio Notifiche e Messaggistica | Software | Gestione delle comunicazioni in tempo reale e notifiche push tra sistema e utente.         |
+| S6| API Gateway / BFF | Software | Punto di accesso centralizzato per il frontend per aggregare dati dai vari servizi backend. |
+| S7 | Servizio di Geolocalizzazione | Software | Logica di georeferenziazione, ricerca di indirizzi e filtri spaziali sulle segnalazioni.   |
+| S8 | Servizio di Segnalazione | Software | Motore di gestione del ciclo di vita delle segnalazioni (creazione, workflow di stato).    |
+| S9 | Consultazione e Monitoraggio | Software | Portale pubblico per la visualizzazione di mappe, liste e statistiche aperte ai cittadini. |
+| S9.1 | Esportazione CSV | Software | Funzionalità di export dei dati tabellari per analisi offline e trasparenza.               |
 | **INFRASTRUTTURA** |
 | I1 | Cloud Account | Infrastruttura | Piattaforma AWS/Azure per l'hosting scalabile e sicuro di tutti i servizi del sistema.     |
 | I2 | Pipeline CI / CD & Repo GIT | Infrastruttura | GitHub Actions e repository Git per l'automazione dei test, della build e del deploy.      |
-| I3 | Object Storage | Infrastruttura | Servizio AWS S3 per l'archiviazione sicura e persistente delle immagini delle segnalazioni. |
+| I3 | Object Storage | Infrastruttura | Servizio AWS per l'archiviazione sicura e persistente delle immagini delle segnalazioni. |
 | I4 | Database PostgreSQL | Infrastruttura | Database relazionale PostgreSQL per la persistenza di utenti, segnalazioni e dati di sistema. |
 | I5 | Integrazione OpenStreetMap | Infrastruttura | API e tile server OpenStreetMap per fornire la cartografia e il supporto alla geolocalizzazione. |
 | I6 | Content Delivery Network (CDN) | Infrastruttura | Servizio CloudFront per velocizzare la distribuzione di contenuti statici e immagini agli utenti. |
@@ -51,16 +52,17 @@ L'architettura di **Participium** è progettata per essere scalabile, manutenibi
 |:----|:-------------|:--------------------------|
 |1|Project Management|D1, D9|
 |2|Requirement Elicitation|D1, D2|
-|3|Architettura, User Experience & API Design|S5,D3,D4|
+|3|Architettura, User Experience & API Design|S6,D3,D4|
 |4|Cloud Development|I1, I2, I7, I9|
-|5|API + scheletro backend|S2, S5, I4|
-|6|Sviluppo Frontend|S1, S2, S3, S4, S7, S8, I5|
-|6.a|Frontend Utente|S1, S2, S4, S7, S8|
-|6.b|Frontend Amministratore|S1, S2, S3, S4, S8|
-|7| Sviluppo Backend|S2, S3.1, S4, S8, S8.1, I5|
-|8|Media Storage|S7, I3, I6|
-|9|Integrazione Open Street Map|S6, I5|
-|10|Gestione sistema di notifica e mail|S4,I8|
+|5|API + scheletro backend|S2, S6, I4|
+|6|Sviluppo Frontend|S1, S2, S3, S4, S5, S8, S9, I5|
+|6.a|Frontend Utente|S1, S2, S5, S8, S9|
+|6.b|Frontend Amministratore|S1, S2, S3, S9|
+|6.c|Frontend Operatore Comunale|S1, S4, S5|
+|7| Sviluppo Backend|S2, S3.1, S5, S9, S9.1, I5|
+|8|Media Storage|S8, I3, I6|
+|9|Integrazione Open Street Map|S7, I5|
+|10|Gestione sistema di notifica e mail|S5,I8|
 |11|System Integration & functional testing|D5|
 |12|Non functional Validation|D5,D8|
 |13|Gestione del rilascio |D6,D7|
@@ -81,7 +83,8 @@ Finestra temporale assunta: 33 settimane (circa 8 mesi)
 | A5 |API + scheletro backend|6 sett|A3, A4|S10|S15|**Sì**|**Sì** |
 | A6 |Sviluppo Frontend|6 sett|A2, A5|S16|S21|**Sì**||
 | A6.a|Frontend Utente|3 sett|A2, A5|S16|S18|||
-| A6.b|Frontend Amministratore|3 sett|A2, A5|S19|S21|||
+| A6.b|Frontend Amministratore|2 sett|A2, A5|S19|S20|||
+| A6.c|Frontend Operatore Comunale|1 sett|A2, A5|S21|S21|||
 | A7 |Sviluppo Backend|6 sett|A2, A5|S16|S21|**Sì**|**Sì**|
 | A8 |Media Storage|6 sett|A3, A4|S10|S15|||
 | A9 |Integrazione Open Street Map|3 sett|A5|S16|S18|||
@@ -92,7 +95,7 @@ Finestra temporale assunta: 33 settimane (circa 8 mesi)
 | A14|Finalizzazione documenti |2 sett|A13|S32|S33|**Sì**|**Sì** |
 
 ### Nota sulla criticità del Frontend
-L'attività **Sviluppo Frontend (A6)** è segnata come critica in quanto il suo completamento è un prerequisito fondamentale per l'inizio dell'integrazione di sistema (A11). Tuttavia, le sotto-attività **A6.a (Frontend Utente)** e **A6.b (Frontend Amministratore)** non sono individualmente critiche perchè hanno flessibilità interna: un eventuale ritardo in una delle due può essere compensato o assorbito all'interno della finestra temporale totale di 6 settimane destinata al frontend, senza traslare necessariamente la data di fine di A6.
+L'attività **Sviluppo Frontend (A6)** è segnata come critica in quanto il suo completamento è un prerequisito fondamentale per l'inizio dell'integrazione di sistema (A11). Tuttavia, le sotto-attività **A6.a (Frontend Utente)**, **A6.b (Frontend Amministratore)** e **A6.c (Frontend Operatore Comunale)** non sono individualmente critiche perchè hanno flessibilità interna: un eventuale ritardo in una delle tre può essere compensato o assorbito all'interno della finestra temporale totale di 6 settimane destinata al frontend, senza traslare necessariamente la data di fine di A6.
 
 ![Gantt](../../data/img/gantt.png)
 
@@ -128,7 +131,7 @@ R03|Ritardi nello sviluppo | Sviluppo | 3 | 5 | 15 | Alto | Utilizzare iterazion
 R04|Problemi di integrazione | Integrazione | 3 | 4 | 12 | Alto | Pianificare fasi di integrazione regolari, con test continui e monitoraggio dei problemi. |
 R05|Problemi di risorse | Risorse | 2 | 4 | 8 | Medio | Pianificare le risorse in anticipo, con flessibilità per cambiamenti imprevisti. |
 R06|Problemi di qualità | Qualità | 2 | 5 | 10 | Medio | Controllo qualità periodico, con test e revisione del codice. |
-R07|Costi inattesi servizi esterni | Costi | 2 | 4 | 8 | Medio |Previsioni errate su costi di Storage e Cloud. Imporre un limite di dimensioni massime delle immagini delle segnalazioni. |
+R07|Costi inattesi servizi esterni | Costi | 2 | 4 | 8 | Medio |Previsioni errate su costi di Storage e Cloud. Imporre un limite di immagini nelle segnalazioni. |
 R08|Problemi di conformità legale | Legale | 1 | 5 | 5 | Medio | Assicurarsi che tutte le normative siano rispettate. |
 R09|Utilizzo utente | Progetto | 3 | 4 | 12 | Alto | Coinvolgere gli utenti finali durante lo sviluppo, raccogliendo feedback per migliorare l'esperienza utente. |
 R10|Scarsa qualità della documentazione finale | Documentazione | 2 | 4 | 8 | Medio | Coinvolgere il committente in revisioni parziali dei documenti (D2,D3, D8). |
