@@ -19,13 +19,13 @@
 Il diagramma di contesto mostra il funzionamento generale del sistema **Participium** e le sue interazioni con le entità
 esterne.
 
-![Diagramma di Contesto](../../data/img/Context Diagram.jpg)
+![Diagramma di Contesto](../../data/img/Context Diagram.png)
 
 **Legenda:**
 
-- **Arancione:** Rappresenta gli attori (persone o ruoli) che interagiscono direttamente con il sistema (Cittadini,
-  Operatori, Amministratori).
-- **Verde:** Rappresenta i sistemi e i servizi esterni integrati (OpenStreetMap, Resend, Cloud Storage).
+- **Arancione:** Rappresenta gli attori (persone o ruoli) che interagiscono direttamente con il sistema (cittadini,
+  operatori, amministratori).
+- **Verde:** Rappresenta i sistemi e i servizi esterni integrati (CDN, cloud storage, servizi di notifiche e autenticazione).
 - **Frecce:** Indicano la direzione del flusso di dati tra Participium e le entità.
 
 ---
