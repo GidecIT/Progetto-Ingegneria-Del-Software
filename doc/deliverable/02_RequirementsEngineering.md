@@ -19,7 +19,7 @@
 Il diagramma di contesto mostra il funzionamento generale del sistema **Participium** e le sue interazioni con le entità
 esterne.
 
-![Diagramma di Contesto](../../data/img/Context Diagram.jpg)
+![Diagramma di Contesto](../../data/img/Context Diagram.png)
 
 **Legenda:**
 
