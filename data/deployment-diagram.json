@@ -17,7 +17,7 @@
       "owner": null,
       "bounds": {
         "x": 420,
-        "y": 40,
+        "y": -50,
         "width": 300,
         "height": 90
       },
@@ -196,20 +196,6 @@
       "stereotype": "external system",
       "displayStereotype": true
     },
-    "37a99304-f7ce-4905-9559-b74eab13b12c": {
-      "id": "37a99304-f7ce-4905-9559-b74eab13b12c",
-      "name": "Servizio di monitoraggio e logging",
-      "type": "DeploymentNode",
-      "owner": null,
-      "bounds": {
-        "x": 420,
-        "y": -80,
-        "width": 300,
-        "height": 90
-      },
-      "stereotype": "external system",
-      "displayStereotype": true
-    },
     "80e7227f-79b9-4d24-be15-0456cd8fac37": {
       "id": "80e7227f-79b9-4d24-be15-0456cd8fac37",
       "name": "Database server",
@@ -301,7 +287,7 @@
       "owner": null,
       "bounds": {
         "x": 420,
-        "y": 160,
+        "y": 130,
         "width": 300,
         "height": 90
       },
@@ -317,7 +303,7 @@
       "owner": null,
       "bounds": {
         "x": 90,
-        "y": 45,
+        "y": -35,
         "width": 330,
         "height": 41
       },
@@ -438,37 +424,6 @@
       },
       "isManuallyLayouted": false
     },
-    "7516491c-0219-454b-9b67-81d371dce3e6": {
-      "id": "7516491c-0219-454b-9b67-81d371dce3e6",
-      "name": "HTTPS",
-      "type": "DeploymentAssociation",
-      "owner": null,
-      "bounds": {
-        "x": 90,
-        "y": -50,
-        "width": 330,
-        "height": 41
-      },
-      "path": [
-        {
-          "x": 330,
-          "y": 40
-        },
-        {
-          "x": 0,
-          "y": 40
-        }
-      ],
-      "source": {
-        "direction": "Left",
-        "element": "37a99304-f7ce-4905-9559-b74eab13b12c"
-      },
-      "target": {
-        "direction": "Right",
-        "element": "59620033-5649-4387-820c-eb1265eab98d"
-      },
-      "isManuallyLayouted": false
-    },
     "e7d80336-40c8-4927-aa3f-c73cf3cfaa94": {
       "id": "e7d80336-40c8-4927-aa3f-c73cf3cfaa94",
       "name": "HTTPS",
@@ -477,7 +432,7 @@
       "bounds": {
         "x": -85,
         "y": -260,
-        "width": 57.41666793823242,
+        "width": 57.421875,
         "height": 230
       },
       "path": [
@@ -570,7 +525,7 @@
       "bounds": {
         "x": 15,
         "y": 200,
-        "width": 36.983333587646484,
+        "width": 36.97916603088379,
         "height": 120
       },
       "path": [
@@ -601,7 +556,7 @@
       "bounds": {
         "x": -170,
         "y": 200,
-        "width": 57.41666793823242,
+        "width": 57.421875,
         "height": 120
       },
       "path": [
@@ -737,7 +692,7 @@
       "bounds": {
         "x": -195,
         "y": -535,
-        "width": 1022.4166679382324,
+        "width": 1022.421875,
         "height": 1145
       },
       "path": [
@@ -780,7 +735,7 @@
       "bounds": {
         "x": -210,
         "y": 405,
-        "width": 57.41666793823242,
+        "width": 57.421875,
         "height": 75
       },
       "path": [
@@ -810,7 +765,7 @@
       "owner": null,
       "bounds": {
         "x": 90,
-        "y": 140,
+        "y": 125,
         "width": 330,
         "height": 41
       },
