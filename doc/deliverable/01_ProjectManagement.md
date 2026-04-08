@@ -5,7 +5,7 @@
 | **SOFTWARE** | 
 | S1 | Applicazione Web (UI + Client) | Software | Frontend responsive per l'interazione dei cittadini e degli operatori comunali.            |
 | S2 | Area Riservata Utente | Software | Gestione autenticazione, profili utente e preferenze di notifica.                             |
-| S3 | Dashboard gestionale Amministratori | Software | Pannello di controllo per la gestione delle segnalazioni e degli uffici tecnici.           |
+| S3 | Dashboard Gestionale Amministratori | Software | Pannello di controllo per la gestione delle segnalazioni e degli uffici tecnici.           |
 | S3.1 | Modulo Statistiche Amministratore | Software | Visualizzazione di analytics avanzati e reportistica sull'efficienza del servizio.         |
 | S4 | Servizio Notifiche e Messaggistica | Software | Gestione delle comunicazioni in tempo reale e notifiche push tra sistema e utente.         |
 | S5 | API Gateway / BFF | Software | Punto di accesso centralizzato per il frontend per aggregare dati dai vari servizi backend. |
@@ -54,7 +54,7 @@ L'architettura di **Participium** è progettata per essere scalabile, manutenibi
 |2|Requirement Elicitation|D1, D2|
 |3|Architettura, User Experience & API Design|S5,D3,D4|
 |4|Cloud Development|I1, I2, I7, I8, I10|
-|5|API + scheletro backend|S2, S5, I4||
+|5|API + scheletro backend|S2, S5, I4|
 |6|Sviluppo Frontend|S1, S2, S3, S4, S7, S8, I5|
 |6.a|Frontend Utente|S1, S2, S4, S7, S8|
 |6.b|Frontend Amministratore|S1, S2, S3, S4, S8|
@@ -83,7 +83,7 @@ Finestra temporale assunta: 33 settimane (circa 8 mesi)
 | A6 |Sviluppo Frontend|6 sett|A2, A5|S16|S21|**Sì**||
 | A6.a|Frontend Utente|3 sett|A2, A5|S16|S18|||
 | A6.b|Frontend Amministratore|3 sett|A2, A5|S19|S21|||
-| A7 |Sviluppo Backend|6 sett|A2, A5|S16|S21|**Sì**|**Si**|
+| A7 |Sviluppo Backend|6 sett|A2, A5|S16|S21|**Sì**|**Sì**|
 | A8 |Media Storage|6 sett|A3, A4|S10|S15|||
 | A9 |Integrazione Open Street Map|3 sett|A5|S16|S18|||
 | A10|Gestione sistema di notifica e mail|2 sett|A5|S16|S17|||
@@ -126,10 +126,10 @@ Risk level thresholds (by exposure):
 R01| Scalabilità (latenza sistema sotto alto traffico)| Tecnico| 3 |5|15|Alto|Stress test, analisi log di carico, ottimizzazione query e asset| 
 R02|Cambiamento di requisiti | Requisiti | 4 | 4 | 16 | Alto | MVP chiaro, roadmap definita e approvazione formale dei requisiti. |
 R03|Ritardi nello sviluppo | Sviluppo | 3 | 5 | 15 | Alto | Utilizzare metodologie agili per iterazioni rapide e feedback frequenti, identificare e risolvere i colli di bottiglia tempestivamente. |
-R04|Problemi di integrazione | Integrazione | 3 | 4 | 12 | Medio | Pianificare fasi di integrazione regolari, con test continui e monitoraggio dei problemi. |
+R04|Problemi di integrazione | Integrazione | 3 | 4 | 12 | Alto | Pianificare fasi di integrazione regolari, con test continui e monitoraggio dei problemi. |
 R05|Problemi di risorse | Risorse | 2 | 4 | 8 | Basso | Pianificare le risorse in anticipo, con flessibilità per cambiamenti imprevisti. |
 R06|Problemi di qualità | Qualità | 2 | 5 | 10 | Medio | Controllo qualità periodico, con test e revisione del codice. |
 R07|Costi inattesi servizi esterni | Costi | 2 | 4 | 8 | Medio |Previsioni errate su costi di Storage e Cloud. Imporre un limite di dimensioni massime delle immagini delle segnalazioni. |
-R08|Problemi di conformità legale | Legale | 1 | 5 | 5 | Basso | Assicurarsi che tutte le normative siano rispettate. |
-R09|Utilizzo utente | Progetto | 3 | 4 | 12 | Medio | Coinvolgere gli utenti finali durante lo sviluppo, raccogliendo feedback per migliorare l'esperienza utente. |
-R10|Scarsa qualità della documentazione finale | Documentazione | 2 | 4 | 8 | Basso | Coinvolgere il committente in revisioni parziali dei documenti (D2,D3, D8). |
+R08|Problemi di conformità legale | Legale | 1 | 5 | 5 | Medio | Assicurarsi che tutte le normative siano rispettate. |
+R09|Utilizzo utente | Progetto | 3 | 4 | 12 | Alto | Coinvolgere gli utenti finali durante lo sviluppo, raccogliendo feedback per migliorare l'esperienza utente. |
+R10|Scarsa qualità della documentazione finale | Documentazione | 2 | 4 | 8 | Medio | Coinvolgere il committente in revisioni parziali dei documenti (D2,D3, D8). |
