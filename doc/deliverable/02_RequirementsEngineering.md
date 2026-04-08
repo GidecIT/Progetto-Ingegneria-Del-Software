@@ -34,16 +34,16 @@ esterne.
 
 | ID    | Interface                         | Actor                                                       | Physical interface                        | Logical interface                                    |
 |:------|:----------------------------------|:------------------------------------------------------------|:------------------------------------------|:-----------------------------------------------------|
-| IF-01 | Web app                           | Cittadino                                                   | Smartphone/PC con connessione ad Internet | Applicazione web responsive                          |
-| IF-02 | Dashboard amministrativa          | Operatore Comunale / Amministratore                         | PC con connessione a Internet                   | Dashboard gestionale e di amministrazione            |
-| IF-03 | Map Service API                   | Servizio OpenStreetMap [(I5)](./01_ProjectManagement.md)    | Connessione a Internet                    | API per geolocalizzazione                            |
-| IF-04 | Media Storage API                 | Object Storage [(I3)](./01_ProjectManagement.md)            | Connessione a Internet                    | API per upload/download immagini segnalazioni        |
-| IF-05 | Content Delivery Network          | CDN [(I6)](./01_ProjectManagement.md)                       | Connessione a Internet                    | Interfaccia per distribuzione rapida contenuti       |
-| IF-06 | Servizio mail                     | Protocollo SMTP                                             | Connessione a Internet                    | SMTP per invio notifiche email                       |
-| IF-07 | Servizio di notifiche             | Cittadino                                                   | Connessione a Internet                    | API per invio notifiche push                         |
-| IF-08 | Sistema di monitoraggio e logging | Sistema di Metriche e Log [(I7)](./01_ProjectManagement.md) | Connessione a Internet                    | Dashboard per monitoraggio prestazioni e errori      |
-| IF-09 | Servizio Cloud                    | Cloud Account [(I1)](./01_ProjectManagement.md)             | Connessione a Internet                    | Piattaforma per hosting                              |
-| IF-10 | Servizio di autenticazione        | Cittadino / Amministratore / Operatore Comunale             | Connessione a Internet                    | API REST per login, registrazione e gestione profilo |
+| IF-01 | Web app cittadino                        | Cittadino                                                   | Smartphone/PC con connessione ad Internet | Applicazione web responsive                          |
+| IF-02 | Dashboard amministrativa       | Amministratore                         | PC con connessione a Internet                   | Dashboard di amministrazione con striumenti di analisi avanzata e gestione utenti|
+| IF-03 | Backoffice gestionale            | Operatore Comunale  | PC con connessione a Internet                   | Interfaccia per gestione delle segnalazioni      |
+| IF-04 | Map Service API                   | Servizio OpenStreetMap [(I5)](./01_ProjectManagement.md)    | Connessione a Internet                    | API per geolocalizzazione                            |
+| IF-05 | Media Storage API                 | Object Storage [(I3)](./01_ProjectManagement.md)            | Connessione a Internet                    | API per upload/download immagini segnalazioni        |
+| IF-06 | Content Delivery Network          | CDN [(I6)](./01_ProjectManagement.md)                       | Connessione a Internet                    | Interfaccia per distribuzione rapida contenuti       |
+| IF-07 | Servizio mail                     | Protocollo SMTP                                             | Connessione a Internet                    | SMTP per invio notifiche email                       |
+| IF-08 | Servizio di notifiche             | Cittadino                                                   | Connessione a Internet                    | API per invio notifiche push                         |
+| IF-09 | Servizio Cloud | Cloud Account [(I1)](./01_ProjectManagement.md)| Connessione a Internet| Piattaforma per hosting|
+| IF-10 | Servizio di autenticazione        | Cittadino / Amministratore / Operatore Comunale             | Connessione a Internet                    | API REST per login e registrazione|
 
 ---
 
