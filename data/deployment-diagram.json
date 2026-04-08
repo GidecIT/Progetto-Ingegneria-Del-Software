@@ -31,7 +31,7 @@
       "owner": null,
       "bounds": {
         "x": -1020,
-        "y": -450,
+        "y": -510,
         "width": 320,
         "height": 190
       },
@@ -45,7 +45,7 @@
       "owner": "c46233ee-b143-4222-90ba-5d4e67f021bf",
       "bounds": {
         "x": -970,
-        "y": -380,
+        "y": -440,
         "width": 220,
         "height": 80
       },
@@ -58,8 +58,8 @@
       "type": "DeploymentNode",
       "owner": null,
       "bounds": {
-        "x": -460,
-        "y": 500,
+        "x": -350,
+        "y": 480,
         "width": 310,
         "height": 90
       },
@@ -73,7 +73,7 @@
       "owner": null,
       "bounds": {
         "x": -730,
-        "y": 150,
+        "y": 160,
         "width": 300,
         "height": 90
       },
@@ -100,10 +100,10 @@
       "type": "DeploymentNode",
       "owner": null,
       "bounds": {
-        "x": -240,
-        "y": -460,
+        "x": -250,
+        "y": -560,
         "width": 320,
-        "height": 220
+        "height": 300
       },
       "stereotype": "node",
       "displayStereotype": true
@@ -114,8 +114,8 @@
       "type": "DeploymentArtifact",
       "owner": "74e7f22f-b559-4a24-a3c7-d48cc0062449",
       "bounds": {
-        "x": -200,
-        "y": -390,
+        "x": -210,
+        "y": -490,
         "width": 230,
         "height": 40
       }
@@ -126,9 +126,21 @@
       "type": "DeploymentArtifact",
       "owner": "74e7f22f-b559-4a24-a3c7-d48cc0062449",
       "bounds": {
-        "x": -200,
-        "y": -320,
+        "x": -210,
+        "y": -420,
         "width": 230,
+        "height": 40
+      }
+    },
+    "f6bf18a4-111a-4f43-85a5-fa865424a57b": {
+      "id": "f6bf18a4-111a-4f43-85a5-fa865424a57b",
+      "name": "Backoffice gestionale",
+      "type": "DeploymentArtifact",
+      "owner": "74e7f22f-b559-4a24-a3c7-d48cc0062449",
+      "bounds": {
+        "x": -210,
+        "y": -350,
+        "width": 240,
         "height": 40
       }
     },
@@ -148,7 +160,7 @@
     },
     "48f8148c-5650-4c3b-84b5-43d045589b9e": {
       "id": "48f8148c-5650-4c3b-84b5-43d045589b9e",
-      "name": "Backend API",
+      "name": "API Gateway / BFF",
       "type": "DeploymentArtifact",
       "owner": "59620033-5649-4387-820c-eb1265eab98d",
       "bounds": {
@@ -156,6 +168,18 @@
         "y": 40,
         "width": 240,
         "height": 40
+      }
+    },
+    "a3885a1b-b1c0-4262-9d1f-62972811574d": {
+      "id": "a3885a1b-b1c0-4262-9d1f-62972811574d",
+      "name": "Sistema Backup",
+      "type": "DeploymentArtifact",
+      "owner": "59620033-5649-4387-820c-eb1265eab98d",
+      "bounds": {
+        "x": -200,
+        "y": 110,
+        "width": 240,
+        "height": 50
       }
     },
     "ed13d5d6-6239-431d-a583-b39e1608a779": {
@@ -192,37 +216,13 @@
       "type": "DeploymentNode",
       "owner": null,
       "bounds": {
-        "x": 50,
+        "x": -60,
         "y": 320,
-        "width": 320,
-        "height": 250
+        "width": 210,
+        "height": 90
       },
-      "stereotype": "node",
+      "stereotype": "external system",
       "displayStereotype": true
-    },
-    "6cee3226-0925-4c91-8740-f06de976bfe0": {
-      "id": "6cee3226-0925-4c91-8740-f06de976bfe0",
-      "name": "DBMS",
-      "type": "DeploymentArtifact",
-      "owner": "80e7227f-79b9-4d24-be15-0456cd8fac37",
-      "bounds": {
-        "x": 90,
-        "y": 410,
-        "width": 240,
-        "height": 40
-      }
-    },
-    "1570a211-d29f-40c3-b302-d20d8afc656e": {
-      "id": "1570a211-d29f-40c3-b302-d20d8afc656e",
-      "name": "Statistics storage",
-      "type": "DeploymentArtifact",
-      "owner": "80e7227f-79b9-4d24-be15-0456cd8fac37",
-      "bounds": {
-        "x": 90,
-        "y": 490,
-        "width": 240,
-        "height": 40
-      }
     },
     "83929887-7e2a-4bc5-b64e-e05581306d76": {
       "id": "83929887-7e2a-4bc5-b64e-e05581306d76",
@@ -230,23 +230,9 @@
       "type": "DeploymentNode",
       "owner": null,
       "bounds": {
-        "x": -420,
+        "x": -320,
         "y": 320,
         "width": 220,
-        "height": 90
-      },
-      "stereotype": "external system",
-      "displayStereotype": true
-    },
-    "8fb12b7e-9758-4f02-9c66-464e0699aa1b": {
-      "id": "8fb12b7e-9758-4f02-9c66-464e0699aa1b",
-      "name": "Map Service API",
-      "type": "DeploymentNode",
-      "owner": null,
-      "bounds": {
-        "x": -160,
-        "y": 320,
-        "width": 180,
         "height": 90
       },
       "stereotype": "external system",
@@ -259,7 +245,7 @@
       "owner": null,
       "bounds": {
         "x": 410,
-        "y": -330,
+        "y": -390,
         "width": 320,
         "height": 190
       },
@@ -273,7 +259,7 @@
       "owner": "63b067a7-6c25-4009-8145-551d2cce0607",
       "bounds": {
         "x": 460,
-        "y": -260,
+        "y": -320,
         "width": 220,
         "height": 80
       },
@@ -287,7 +273,7 @@
       "owner": null,
       "bounds": {
         "x": 410,
-        "y": -560,
+        "y": -630,
         "width": 320,
         "height": 190
       },
@@ -301,36 +287,26 @@
       "owner": "156e1d4b-313f-4f51-b660-f229c0e2d4c4",
       "bounds": {
         "x": 460,
-        "y": -490,
+        "y": -560,
         "width": 220,
         "height": 80
       },
       "stereotype": "execution environment",
       "displayStereotype": true
     },
-    "58280837-b63e-4589-94cb-bc83685fe896": {
-      "id": "58280837-b63e-4589-94cb-bc83685fe896",
-      "name": "Divisione disp. utenti ma con interefacce uguali? (Sempre da Browser)",
-      "type": "ColorLegend",
+    "5b168f2b-3a45-46b5-a8da-53af77fc1d2e": {
+      "id": "5b168f2b-3a45-46b5-a8da-53af77fc1d2e",
+      "name": "Servizio di geolocalizzazione",
+      "type": "DeploymentNode",
       "owner": null,
       "bounds": {
-        "x": -430,
-        "y": -560,
-        "width": 570,
-        "height": 50
-      }
-    },
-    "f7f5dc83-b664-4d6b-ac94-2597c6800155": {
-      "id": "f7f5dc83-b664-4d6b-ac94-2597c6800155",
-      "name": "CDN anche per Map Service?",
-      "type": "ColorLegend",
-      "owner": null,
-      "bounds": {
-        "x": 170,
-        "y": 230,
-        "width": 320,
-        "height": 50
-      }
+        "x": 420,
+        "y": 160,
+        "width": 300,
+        "height": 90
+      },
+      "stereotype": "external system",
+      "displayStereotype": true
     }
   },
   "relationships": {
@@ -372,18 +348,18 @@
       "owner": null,
       "bounds": {
         "x": -860,
-        "y": -260,
-        "width": 400,
-        "height": 805
+        "y": -320,
+        "width": 510,
+        "height": 845
       },
       "path": [
         {
-          "x": 400,
-          "y": 805
+          "x": 510,
+          "y": 845
         },
         {
           "x": 0,
-          "y": 805
+          "y": 845
         },
         {
           "x": 0,
@@ -407,7 +383,7 @@
       "owner": null,
       "bounds": {
         "x": -430,
-        "y": 135,
+        "y": 140,
         "width": 190,
         "height": 41
       },
@@ -499,10 +475,10 @@
       "type": "DeploymentAssociation",
       "owner": null,
       "bounds": {
-        "x": -80,
-        "y": -240,
+        "x": -85,
+        "y": -260,
         "width": 57.41666793823242,
-        "height": 210
+        "height": 230
       },
       "path": [
         {
@@ -511,7 +487,7 @@
         },
         {
           "x": 0,
-          "y": 210
+          "y": 230
         }
       ],
       "source": {
@@ -562,8 +538,8 @@
       "owner": null,
       "bounds": {
         "x": -700,
-        "y": -395,
-        "width": 460,
+        "y": -455,
+        "width": 450,
         "height": 41
       },
       "path": [
@@ -572,7 +548,7 @@
           "y": 40
         },
         {
-          "x": 460,
+          "x": 450,
           "y": 40
         }
       ],
@@ -592,7 +568,7 @@
       "type": "DeploymentAssociation",
       "owner": null,
       "bounds": {
-        "x": 70,
+        "x": 15,
         "y": 200,
         "width": 36.983333587646484,
         "height": 120
@@ -623,7 +599,7 @@
       "type": "DeploymentAssociation",
       "owner": null,
       "bounds": {
-        "x": -220,
+        "x": -170,
         "y": 200,
         "width": 57.41666793823242,
         "height": 120
@@ -648,81 +624,15 @@
       },
       "isManuallyLayouted": false
     },
-    "05e6c5df-883b-41e6-b7de-6bfb42077c1a": {
-      "id": "05e6c5df-883b-41e6-b7de-6bfb42077c1a",
-      "name": "HTTPS",
-      "type": "DeploymentAssociation",
-      "owner": null,
-      "bounds": {
-        "x": -70,
-        "y": 200,
-        "width": 57.41666793823242,
-        "height": 120
-      },
-      "path": [
-        {
-          "x": 0,
-          "y": 120
-        },
-        {
-          "x": 0,
-          "y": 0
-        }
-      ],
-      "source": {
-        "direction": "Up",
-        "element": "8fb12b7e-9758-4f02-9c66-464e0699aa1b"
-      },
-      "target": {
-        "direction": "Down",
-        "element": "59620033-5649-4387-820c-eb1265eab98d"
-      },
-      "isManuallyLayouted": false
-    },
-    "8f00e29e-b409-4446-a830-f0073a65142a": {
-      "id": "8f00e29e-b409-4446-a830-f0073a65142a",
-      "name": "HTTPS",
-      "type": "DeploymentAssociation",
-      "owner": null,
-      "bounds": {
-        "x": -150,
-        "y": 410,
-        "width": 137.41666793823242,
-        "height": 135
-      },
-      "path": [
-        {
-          "x": 80,
-          "y": 0
-        },
-        {
-          "x": 80,
-          "y": 135
-        },
-        {
-          "x": 0,
-          "y": 135
-        }
-      ],
-      "source": {
-        "direction": "Down",
-        "element": "8fb12b7e-9758-4f02-9c66-464e0699aa1b"
-      },
-      "target": {
-        "direction": "Right",
-        "element": "2cd4c7ca-d38f-4cfa-a026-81bf17c3dd3e"
-      },
-      "isManuallyLayouted": false
-    },
     "e60de247-805b-420c-bd5a-9dde848a2abd": {
       "id": "e60de247-805b-420c-bd5a-9dde848a2abd",
       "name": "HTTPS",
       "type": "DeploymentAssociation",
       "owner": null,
       "bounds": {
-        "x": 80,
-        "y": -325,
-        "width": 330,
+        "x": 70,
+        "y": -365,
+        "width": 340,
         "height": 41
       },
       "path": [
@@ -731,7 +641,7 @@
           "y": 40
         },
         {
-          "x": 330,
+          "x": 340,
           "y": 40
         }
       ],
@@ -751,14 +661,14 @@
       "type": "DeploymentAssociation",
       "owner": null,
       "bounds": {
-        "x": 80,
-        "y": -455,
-        "width": 330,
+        "x": 70,
+        "y": -540,
+        "width": 340,
         "height": 41
       },
       "path": [
         {
-          "x": 330,
+          "x": 340,
           "y": 40
         },
         {
@@ -782,30 +692,30 @@
       "type": "DeploymentAssociation",
       "owner": null,
       "bounds": {
-        "x": -305,
-        "y": -235,
-        "width": 1075,
-        "height": 865
+        "x": -195,
+        "y": -295,
+        "width": 965,
+        "height": 905
       },
       "path": [
         {
           "x": 0,
-          "y": 825
+          "y": 865
         },
         {
           "x": 0,
-          "y": 865
+          "y": 905
         },
         {
-          "x": 1075,
-          "y": 865
+          "x": 965,
+          "y": 905
         },
         {
-          "x": 1075,
+          "x": 965,
           "y": 0
         },
         {
-          "x": 1035,
+          "x": 925,
           "y": 0
         }
       ],
@@ -825,30 +735,30 @@
       "type": "DeploymentAssociation",
       "owner": null,
       "bounds": {
-        "x": -305,
-        "y": -465,
-        "width": 1132.4166679382324,
-        "height": 1095
+        "x": -195,
+        "y": -535,
+        "width": 1022.4166679382324,
+        "height": 1145
       },
       "path": [
         {
           "x": 0,
-          "y": 1055
+          "y": 1105
         },
         {
           "x": 0,
-          "y": 1095
+          "y": 1145
         },
         {
-          "x": 1075,
-          "y": 1095
+          "x": 965,
+          "y": 1145
         },
         {
-          "x": 1075,
+          "x": 965,
           "y": 0
         },
         {
-          "x": 1035,
+          "x": 925,
           "y": 0
         }
       ],
@@ -868,19 +778,19 @@
       "type": "DeploymentAssociation",
       "owner": null,
       "bounds": {
-        "x": -310,
-        "y": 410,
+        "x": -210,
+        "y": 405,
         "width": 57.41666793823242,
-        "height": 90
+        "height": 75
       },
       "path": [
         {
           "x": 0,
-          "y": 0
+          "y": 5
         },
         {
           "x": 0,
-          "y": 90
+          "y": 75
         }
       ],
       "source": {
@@ -890,6 +800,37 @@
       "target": {
         "direction": "Up",
         "element": "2cd4c7ca-d38f-4cfa-a026-81bf17c3dd3e"
+      },
+      "isManuallyLayouted": false
+    },
+    "dbd55c06-8cff-4867-8486-ac87156c4e85": {
+      "id": "dbd55c06-8cff-4867-8486-ac87156c4e85",
+      "name": "HTTPS",
+      "type": "DeploymentAssociation",
+      "owner": null,
+      "bounds": {
+        "x": 90,
+        "y": 140,
+        "width": 330,
+        "height": 41
+      },
+      "path": [
+        {
+          "x": 330,
+          "y": 40
+        },
+        {
+          "x": 0,
+          "y": 40
+        }
+      ],
+      "source": {
+        "direction": "Left",
+        "element": "5b168f2b-3a45-46b5-a8da-53af77fc1d2e"
+      },
+      "target": {
+        "direction": "Right",
+        "element": "59620033-5649-4387-820c-eb1265eab98d"
       },
       "isManuallyLayouted": false
     }

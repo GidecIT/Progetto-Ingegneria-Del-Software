@@ -1,17 +1,17 @@
 # 1) Stakeholders
 
-| ID| Stakeholder name| Description| Role| Main concerns|
+| ID| Stakeholder name               | Description| Role| Main concerns|
 |:-------|:-------------------------------|:--------------------------------------------------------------------------------------------|:---------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| STK-01 | Cittadino| Utente finale. Può essere autenticato o meno (visitatore).| Utilizzatore| Semplicità d'uso, attenzione alla privacy e ai dati personali, efficienza nella comunicazione dei problemi.|
-| STK-02 | Operatore Comunale | Personale degli uffici tecnici incaricato della gestione delle segnalazioni.| Utilizzatore / Gestore     | Carico di lavoro, precisione delle segnalazioni, comunicazione con i cittadini.|
-| STK-03 | Amministratore| Personale IT e incaricato dell'analisi dei requisiti e della valutazione delle performance. | Gestore Tecnico / Analista | Sicurezza dei dati, scalabilità dell'infrastruttura, reportistica per il Comune. Analisi dei dati, valutazione delle performance, feedback sugli aspetti funzionali.  |
-| STK-04 | Comune di Torino| Ente pubblico che adotta e finanzia il sistema.| Committente                | Efficienza operativa, feedback positivi, conformità legale.|
-| STK-05 | Sviluppatore| Incaricato dello sviluppo del sistema.| Sviluppatore| Sviluppo delle funzionalità richieste, qualità del codice, tempi di sviluppo.|
+| STK-01 | Cittadino                      | Utente finale. Può essere autenticato o meno (visitatore).| Utilizzatore| Semplicità d'uso, attenzione alla privacy e ai dati personali, efficienza nella comunicazione dei problemi.|
+| STK-02 | Operatore Comunale             | Personale degli uffici tecnici incaricato della gestione delle segnalazioni.| Utilizzatore / Gestore     | Carico di lavoro, precisione delle segnalazioni, comunicazione con i cittadini.|
+| STK-03 | Amministratore                 | Personale IT e incaricato dell'analisi dei requisiti e della valutazione delle performance. | Gestore Tecnico / Analista | Sicurezza dei dati, scalabilità dell'infrastruttura, reportistica per il Comune. Analisi dei dati, valutazione delle performance, feedback sugli aspetti funzionali.  |
+| STK-04 | Comune di Torino               | Ente pubblico che adotta e finanzia il sistema.| Committente                | Efficienza operativa, feedback positivi, conformità legale.|
+| STK-05 | Sviluppatore                   | Incaricato dello sviluppo del sistema.| Sviluppatore| Sviluppo delle funzionalità richieste, qualità del codice, tempi di sviluppo.|
 | STK-06 | Servizi di archiviazione Cloud | Fornitori di servizi cloud per  storage delle immagini.| Sistema Esterno| Disponibilità, performance, costi.|
 | STK-07 | Content Delivery Network (CDN) | Fornitori di servizi CDN per distribuzione rapida dei contenuti.| Sistema Esterno| Velocità di distribuzione, affidabilità, costi.|
-| STK-08 | Servizio di Autenticazione     | Fornitori di servizi per gestione dell'autenticazione e sicurezza.| Sistema Esterno| Sicurezza, facilità d'integrazione, costi.|
-| STK-09 | Servizio di Notifica | Fornitori di servizi per invio di notifiche push o email.| Sistema Esterno | Affidabilità, facilità d'integrazione, costi.|
-| STK-10 | Servizio di geolocalizzazione | Servizio OpenStreetMap per geolocalizzazione e mappe.| Sistema Esterno| Precisione, facilità d'integrazione, costi.|
+| STK-08 | Servizio di autenticazione     | Fornitori di servizi per gestione dell'autenticazione e sicurezza.| Sistema Esterno| Sicurezza, facilità d'integrazione, costi.|
+| STK-09 | Servizio di notifica           | Fornitori di servizi per invio di notifiche push o email.| Sistema Esterno | Affidabilità, facilità d'integrazione, costi.|
+| STK-10 | Servizio di geolocalizzazione  | Servizio OpenStreetMap per geolocalizzazione e mappe.| Sistema Esterno| Precisione, facilità d'integrazione, costi.|
 
 ---
 
@@ -19,23 +19,23 @@
 
 Il diagramma di contesto mostra il funzionamento generale del sistema **Participium** e le sue interazioni con le entità esterne.
 
-![Diagramma di Contesto](../../data/img/Context Diagram.png)
+![Diagramma di Contesto](../../data/img/ContextDiagram.png)
 
 ---
 
 # 3) Interfaces
 
-| ID    | Interface                         | Actor                                                       | Physical interface                        | Logical interface                                    |
-|:------|:----------------------------------|:------------------------------------------------------------|:------------------------------------------|:-----------------------------------------------------|
-| IF-01 | Web app cittadino                        | Cittadino                                                   | Smartphone/PC con connessione ad Internet | Applicazione web responsive                          |
-| IF-02 | Dashboard amministrativa       | Amministratore                         | PC con connessione a Internet                   | Dashboard di amministrazione con strumenti di analisi avanzata e gestione utenti|
-| IF-03 | Backoffice gestionale            | Operatore Comunale  | PC con connessione a Internet                   | Interfaccia per gestione delle segnalazioni      |
-| IF-04 | Map Service API                   | Servizio OpenStreetMap [(I5)](./01_ProjectManagement.md)    | Connessione a Internet                    | API per geolocalizzazione                            |
-| IF-05 | Media Storage API                 | Object Storage [(I3)](./01_ProjectManagement.md)            | Connessione a Internet                    | API per upload/download immagini segnalazioni        |
-| IF-06 | Content Delivery Network          | CDN [(I6)](./01_ProjectManagement.md)                       | Connessione a Internet                    | Interfaccia per distribuzione rapida contenuti       |
-| IF-07 | Servizio mail                     | Protocollo SMTP                                             | Connessione a Internet                    | SMTP per invio notifiche email                       |
-| IF-08 | Servizio di notifiche             | Cittadino                                                   | Connessione a Internet                    | API per invio notifiche push                         |
-| IF-09 | Servizio di autenticazione        | Cittadino / Amministratore / Operatore Comunale             | Connessione a Internet                    | API REST per login e registrazione|
+| ID    | Interface                         | Actor                                                    | Physical interface                        | Logical interface                                                                |
+|:------|:----------------------------------|:---------------------------------------------------------|:------------------------------------------|:---------------------------------------------------------------------------------|
+| IF-01 | Web app cittadino                        | Cittadino                                                | Smartphone/PC con connessione ad Internet | Applicazione web responsive                                                      |
+| IF-02 | Dashboard amministrativa       | Amministratore                                           | PC con connessione a Internet                   | Dashboard di amministrazione con strumenti di analisi avanzata e gestione utenti |
+| IF-03 | Backoffice gestionale            | Operatore Comunale                                       | PC con connessione a Internet                   | Interfaccia per gestione delle segnalazioni                                      |
+| IF-04 | Map Service API                   | Servizio OpenStreetMap [(I5)](./01_ProjectManagement.md) | Connessione a Internet                    | API per geolocalizzazione                                                        |
+| IF-05 | Media Storage API                 | Object Storage [(I3)](./01_ProjectManagement.md)         | Connessione a Internet                    | API per upload/download immagini segnalazioni                                    |
+| IF-06 | Content Delivery Network          | CDN [(I6)](./01_ProjectManagement.md)                    | Connessione a Internet                    | Interfaccia per distribuzione rapida contenuti                                   |
+| IF-07 | Servizio mail                     | Cittadino                                                | Connessione a Internet                    | Interfaccia SMTP(Resend) per invio notifiche email                               |
+| IF-08 | Servizio di notifiche             | Cittadino                                                | Connessione a Internet                    | API per invio notifiche push                                                     |
+| IF-09 | Servizio di autenticazione        | Cittadino / Amministratore / Operatore Comunale          | Connessione a Internet                    | API REST per login e registrazione                                               |
 
 ---
 
