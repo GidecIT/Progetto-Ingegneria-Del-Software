@@ -668,17 +668,18 @@
       "type": "Enumeration",
       "owner": null,
       "bounds": {
-        "x": 480,
-        "y": -410,
+        "x": 490,
+        "y": -460,
         "width": 160,
-        "height": 200
+        "height": 230
       },
       "attributes": [
         "181bf084-9e90-428c-bdef-e78dfe47876c",
         "bbec35ba-8a3e-4087-8dcd-e5a5a0002dd3",
         "747d05d3-45bf-4abf-8cd6-245b7243d4a8",
         "3b5dbe1c-6999-47f3-9a3c-96e6bd1a7fc0",
-        "9db182dc-af25-40e4-9994-ce4d526def77"
+        "9db182dc-af25-40e4-9994-ce4d526def77",
+        "c63c6af0-823e-49e0-bb89-0a6d0edf8b98"
       ],
       "methods": []
     },
@@ -688,8 +689,8 @@
       "type": "ClassAttribute",
       "owner": "0c57f8af-376f-46c5-8725-9488c07034ec",
       "bounds": {
-        "x": 480.5,
-        "y": -359.5,
+        "x": 490.5,
+        "y": -409.5,
         "width": 159,
         "height": 30
       }
@@ -700,8 +701,8 @@
       "type": "ClassAttribute",
       "owner": "0c57f8af-376f-46c5-8725-9488c07034ec",
       "bounds": {
-        "x": 480.5,
-        "y": -329.5,
+        "x": 490.5,
+        "y": -379.5,
         "width": 159,
         "height": 30
       }
@@ -712,8 +713,8 @@
       "type": "ClassAttribute",
       "owner": "0c57f8af-376f-46c5-8725-9488c07034ec",
       "bounds": {
-        "x": 480.5,
-        "y": -299.5,
+        "x": 490.5,
+        "y": -349.5,
         "width": 159,
         "height": 30
       }
@@ -724,8 +725,8 @@
       "type": "ClassAttribute",
       "owner": "0c57f8af-376f-46c5-8725-9488c07034ec",
       "bounds": {
-        "x": 480.5,
-        "y": -269.5,
+        "x": 490.5,
+        "y": -319.5,
         "width": 159,
         "height": 30
       }
@@ -736,8 +737,20 @@
       "type": "ClassAttribute",
       "owner": "0c57f8af-376f-46c5-8725-9488c07034ec",
       "bounds": {
-        "x": 480.5,
-        "y": -239.5,
+        "x": 490.5,
+        "y": -289.5,
+        "width": 159,
+        "height": 30
+      }
+    },
+    "c63c6af0-823e-49e0-bb89-0a6d0edf8b98": {
+      "id": "c63c6af0-823e-49e0-bb89-0a6d0edf8b98",
+      "name": "ELIMINATO",
+      "type": "ClassAttribute",
+      "owner": "0c57f8af-376f-46c5-8725-9488c07034ec",
+      "bounds": {
+        "x": 490.5,
+        "y": -259.5,
         "width": 159,
         "height": 30
       }
