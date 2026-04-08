@@ -360,7 +360,7 @@
     },
     "ef50147f-e729-45da-8302-dbcc1c1b46f6": {
       "id": "ef50147f-e729-45da-8302-dbcc1c1b46f6",
-      "name": "Context Delivery Network",
+      "name": "Content Delivery Network",
       "type": "UseCaseExternalSystem",
       "owner": null,
       "bounds": {
