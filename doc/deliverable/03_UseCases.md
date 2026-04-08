@@ -393,5 +393,5 @@ Annotazioni:
 | UC-18 | [FR-19](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-20](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-03](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr), [NFR-11](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
 | UC-19 | [FR-16](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-06](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
 | UC-20 | [FR-17](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-05](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
-| UC-21 | [FR-18](./02_RequirementsEngineering.md#6-functional-requirements-fr), [NFR-14](./02_RequirementsEngineering.md#7-non-functional-requirements-nfr)|
+| UC-21 | [FR-18](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
 | UC-22 | [FR-21](./02_RequirementsEngineering.md#6-functional-requirements-fr)|
