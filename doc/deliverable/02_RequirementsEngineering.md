@@ -11,22 +11,15 @@
 | STK-07 | Content Delivery Network (CDN) | Fornitori di servizi CDN per distribuzione rapida dei contenuti.| Sistema Esterno| Velocità di distribuzione, affidabilità, costi.|
 | STK-08 | Servizio di Autenticazione     | Fornitori di servizi per gestione dell'autenticazione e sicurezza.| Sistema Esterno| Sicurezza, facilità d'integrazione, costi.|
 | STK-09 | Servizio di Notifica | Fornitori di servizi per invio di notifiche push o email.| Sistema Esterno | Affidabilità, facilità d'integrazione, costi.|
+| STK-10 | Servizio di geolocalizzazione | Servizio OpenStreetMap per geolocalizzazione e mappe.| Sistema Esterno| Precisione, facilità d'integrazione, costi.|
 
 ---
 
 # 2) Context Diagram
 
-Il diagramma di contesto mostra il funzionamento generale del sistema **Participium** e le sue interazioni con le entità
-esterne.
+Il diagramma di contesto mostra il funzionamento generale del sistema **Participium** e le sue interazioni con le entità esterne.
 
 ![Diagramma di Contesto](../../data/img/Context Diagram.png)
-
-**Legenda:**
-
-- **Arancione:** Rappresenta gli attori (persone o ruoli) che interagiscono direttamente con il sistema (cittadini,
-  operatori, amministratori).
-- **Verde:** Rappresenta i sistemi e i servizi esterni integrati (CDN, cloud storage, servizi di notifiche e autenticazione).
-- **Frecce:** Indicano la direzione del flusso di dati tra Participium e le entità.
 
 ---
 
@@ -42,8 +35,7 @@ esterne.
 | IF-06 | Content Delivery Network          | CDN [(I6)](./01_ProjectManagement.md)                       | Connessione a Internet                    | Interfaccia per distribuzione rapida contenuti       |
 | IF-07 | Servizio mail                     | Protocollo SMTP                                             | Connessione a Internet                    | SMTP per invio notifiche email                       |
 | IF-08 | Servizio di notifiche             | Cittadino                                                   | Connessione a Internet                    | API per invio notifiche push                         |
-| IF-09 | Servizio Cloud | Cloud Account [(I1)](./01_ProjectManagement.md)| Connessione a Internet| Piattaforma per hosting|
-| IF-10 | Servizio di autenticazione        | Cittadino / Amministratore / Operatore Comunale             | Connessione a Internet                    | API REST per login e registrazione|
+| IF-09 | Servizio di autenticazione        | Cittadino / Amministratore / Operatore Comunale             | Connessione a Internet                    | API REST per login e registrazione|
 
 ---
 
