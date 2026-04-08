@@ -11,7 +11,7 @@
 | STK-07 | Content Delivery Network (CDN) | Fornitori di servizi CDN per distribuzione rapida dei contenuti.| Sistema Esterno| Velocità di distribuzione, affidabilità, costi.|
 | STK-08 | Servizio di Autenticazione     | Fornitori di servizi per gestione dell'autenticazione e sicurezza.| Sistema Esterno| Sicurezza, facilità d'integrazione, costi.|
 | STK-09 | Servizio di Notifica | Fornitori di servizi per invio di notifiche push o email.| Sistema Esterno | Affidabilità, facilità d'integrazione, costi.|
-| STK-10 | Servizio di geolocalizzazione | Fornitori di servizi per geolocalizzazione e mappe.| Sistema Esterno| Precisione, facilità d'integrazione, costi.|
+| STK-10 | Servizio di geolocalizzazione | Servizio OpenStreetMap per geolocalizzazione e mappe.| Sistema Esterno| Precisione, facilità d'integrazione, costi.|
 
 ---
 
@@ -20,13 +20,6 @@
 Il diagramma di contesto mostra il funzionamento generale del sistema **Participium** e le sue interazioni con le entità esterne.
 
 ![Diagramma di Contesto](../../data/img/Context Diagram.png)
-
-**Legenda:**
-
-- **Arancione:** Rappresenta gli attori (persone o ruoli) che interagiscono direttamente con il sistema (cittadini,
-  operatori, amministratori).
-- **Verde:** Rappresenta i sistemi e i servizi esterni integrati (CDN, cloud storage, servizi di notifiche e autenticazione).
-- **Frecce:** Indicano la direzione del flusso di dati tra Participium e le entità.
 
 ---
 
