@@ -164,7 +164,7 @@
       "owner": null,
       "bounds": {
         "x": -630,
-        "y": -10,
+        "y": -40,
         "width": 170,
         "height": 40
       },
@@ -789,8 +789,8 @@
       "type": "Class",
       "owner": null,
       "bounds": {
-        "x": 60,
-        "y": 150,
+        "x": 90,
+        "y": 160,
         "width": 160,
         "height": 70
       },
@@ -805,8 +805,8 @@
       "type": "ClassAttribute",
       "owner": "4bba6ea3-ff04-4889-8733-2c06b3dd93e1",
       "bounds": {
-        "x": 60.5,
-        "y": 190.5,
+        "x": 90.5,
+        "y": 200.5,
         "width": 159,
         "height": 30
       }
@@ -1229,12 +1229,12 @@
         "x": -490,
         "y": -160,
         "width": 10,
-        "height": 150
+        "height": 120
       },
       "path": [
         {
           "x": 5,
-          "y": 150
+          "y": 120
         },
         {
           "x": 5,
@@ -1374,24 +1374,28 @@
       "type": "ClassBidirectional",
       "owner": null,
       "bounds": {
-        "x": -280,
-        "y": -215,
-        "width": 460,
-        "height": 49.33333206176758
+        "x": -230,
+        "y": -105,
+        "width": 410,
+        "height": 155.33333206176758
       },
       "path": [
         {
-          "x": 0,
+          "x": 5,
+          "y": 145
+        },
+        {
+          "x": 5,
           "y": 10
         },
         {
-          "x": 460,
+          "x": 410,
           "y": 10
         }
       ],
       "source": {
-        "direction": "Right",
-        "element": "4271a742-1613-40e5-b3b0-9e6f1930ca0f",
+        "direction": "Up",
+        "element": "b4687ab8-29ed-4117-98ca-063e4b1e9d9b",
         "multiplicity": "1",
         "role": ""
       },
@@ -1457,14 +1461,14 @@
       "owner": null,
       "bounds": {
         "x": -485,
-        "y": 30,
+        "y": 0,
         "width": 18.90625,
-        "height": 160.33333206176758
+        "height": 190.33333206176758
       },
       "path": [
         {
           "x": 5,
-          "y": 150
+          "y": 180
         },
         {
           "x": 5,
@@ -1474,7 +1478,7 @@
       "source": {
         "direction": "Up",
         "element": "438b9a2f-e6ae-43c8-adf3-f406265e08d1",
-        "multiplicity": "0",
+        "multiplicity": "1",
         "role": ""
       },
       "target": {
@@ -1493,8 +1497,8 @@
       "bounds": {
         "x": -110,
         "y": 65,
-        "width": 170,
-        "height": 159.33333206176758
+        "width": 200,
+        "height": 169.33333206176758
       },
       "path": [
         {
@@ -1502,16 +1506,16 @@
           "y": 10
         },
         {
-          "x": 85,
+          "x": 100,
           "y": 10
         },
         {
-          "x": 85,
-          "y": 120
+          "x": 100,
+          "y": 130
         },
         {
-          "x": 170,
-          "y": 120
+          "x": 200,
+          "y": 130
         }
       ],
       "source": {
@@ -1534,15 +1538,15 @@
       "type": "ClassBidirectional",
       "owner": null,
       "bounds": {
-        "x": 195,
+        "x": 210,
         "y": 60,
         "width": 18.90625,
-        "height": 100.33333206176758
+        "height": 110.33333206176758
       },
       "path": [
         {
           "x": 5,
-          "y": 90
+          "y": 100
         },
         {
           "x": 5,
@@ -1678,12 +1682,12 @@
     },
     "94566fb5-03a1-465b-b112-a95f5652eef9": {
       "id": "94566fb5-03a1-465b-b112-a95f5652eef9",
-      "name": "",
+      "name": "gestisce",
       "type": "ClassBidirectional",
       "owner": null,
       "bounds": {
         "x": -460,
-        "y": 0,
+        "y": -30,
         "width": 640,
         "height": 49.33333206176758
       },
