@@ -128,7 +128,7 @@ R01| Scalabilità (latenza sistema sotto alto traffico)| Tecnico| 3 |5|15|Alto|S
 R02|Cambiamento di requisiti | Requisiti | 4 | 4 | 16 | Alto | MVP chiaro, roadmap definita e approvazione formale dei requisiti. |
 R03|Ritardi nello sviluppo | Sviluppo | 3 | 5 | 15 | Alto | Utilizzare metodologie agili per iterazioni rapide e feedback frequenti, identificare e risolvere i colli di bottiglia tempestivamente. |
 R04|Problemi di integrazione | Integrazione | 3 | 4 | 12 | Alto | Pianificare fasi di integrazione regolari, con test continui e monitoraggio dei problemi. |
-R05|Problemi di risorse | Risorse | 2 | 4 | 8 | Basso | Pianificare le risorse in anticipo, con flessibilità per cambiamenti imprevisti. |
+R05|Problemi di risorse | Risorse | 2 | 4 | 8 | Medio | Pianificare le risorse in anticipo, con flessibilità per cambiamenti imprevisti. |
 R06|Problemi di qualità | Qualità | 2 | 5 | 10 | Medio | Controllo qualità periodico, con test e revisione del codice. |
 R07|Costi inattesi servizi esterni | Costi | 2 | 4 | 8 | Medio |Previsioni errate su costi di Storage e Cloud. Imporre un limite di dimensioni massime delle immagini delle segnalazioni. |
 R08|Problemi di conformità legale | Legale | 1 | 5 | 5 | Medio | Assicurarsi che tutte le normative siano rispettate. |

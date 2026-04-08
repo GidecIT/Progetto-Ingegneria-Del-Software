@@ -47,12 +47,12 @@ Nota: 'Utente' comprende cittadino, operatore comunale e amministratore.
 | **Intention in Context**    | Accedere al sistema per usufruire delle funzionalità riservate agli utenti registrati.|
 | **Primary actor**           | Utente|
 | **Supporting actors**       | Servizio di autenticazione (IF-10).|
-| **Stakeholders' interests** | Comune di Torino: garantire ai cittaadini accessi autorizzati e protetti. <br> Utente: accedere in sicurezza ai propri account. |
+| **Stakeholders' interests** | Comune di Torino: garantire ai cittadini accessi autorizzati e protetti. <br> Utente: accedere in sicurezza ai propri account. |
 | **Precondition**| L'utente deve aver completato la registrazione (UC-01-Registrazione).|
 | **Minimum guarantees**|-|
 | **Success guarantees**      | L'utente è autenticato e riceve i permessi corrispondenti al proprio ruolo.|
 | **Trigger**|-|
-| **Main success scenario**   | 1. L'utente chiede di effettuare il login. <br>  2. Il sistema mostra il form di login ([FR-2](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 3. L'utente inserisce le proprie credenziali. <br> 4. Il sistema valida le credenziali e verifica che l'account si attivo.<br> 5. Il sistema autentica l'utente e assegna i permessi dovuti; il caso d'uso termina con successo.|
+| **Main success scenario**   | 1. L'utente chiede di effettuare il login. <br>  2. Il sistema mostra il form di login ([FR-2](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 3. L'utente inserisce le proprie credenziali. <br> 4. Il sistema valida le credenziali e verifica che l'account sia attivo.<br> 5. Il sistema autentica l'utente e assegna i permessi dovuti; il caso d'uso termina con successo.|
 | **Extensions**              | 3a. L'utente annulla l'operazione.<br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema interrompe il processo; il caso d'uso termina con fallimento.<br> 3b. L'utente chiede di resettare la password. <br> &nbsp;&nbsp;&nbsp;&nbsp;3b.1 Il sistema avvia UC-02-RipristinoPassword <br> 4a. Le credenziali inserite sono errate.<br>  &nbsp;&nbsp;&nbsp;&nbsp;4a.1 Il sistema mostra errore; il caso riprende dal punto 2. <br> 4b. L'account del cittadino non ha l'email verificata. <br> &nbsp;&nbsp;&nbsp;&nbsp;4b.1 Il sistema avvisa l'utente della necessità di confermare l'indirizzo email e il caso d'uso riprende dal punto 2. <br> 4c. L'account è disabilitato. <br> &nbsp;&nbsp;&nbsp;&nbsp;4c.1 Il sistema mostra un messaggio di errore; il caso d'uso riprende dal punto 2.|
 
 | Use Case||
@@ -69,7 +69,7 @@ Nota: 'Utente' comprende cittadino, operatore comunale e amministratore.
 | **Success guarantees**      | La sessione viene invalidata e l'accesso protetto revocato. |
 | **Trigger**                 | - |
 | **Main success scenario**   | 1. L'utente chiede di effettuare il logout. <br> 2. Il sistema invalida la sessione lato server ([FR-4](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br>  3. Il sistema reindirizza l'utente alla home page pubblica; il caso d'uso termina con successo.                        |
-| **Extensions**              | 2a Errore invalidazione.  <br> &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema forza la chiusura lato client; il caso d'uso termina con successo.             |
+| **Extensions**              | 2a. Errore invalidazione.  <br> &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema forza la chiusura lato client; il caso d'uso termina con successo.             |
 
 | Use Case||
 |:----------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -84,7 +84,7 @@ Nota: 'Utente' comprende cittadino, operatore comunale e amministratore.
 | **Minimum guarantees**      | Le modifiche non vengono salvate e il profilo rimane invariato.|
 | **Success guarantees**      | Il profilo e le preferenze vengono aggiornati correttamente.|
 | **Trigger**                 |- |
-| **Main success scenario**   | 1. Il cittadino chiede di modificare il proprio profilo. <br> 2. Il sistema mostra i dati correnti, la foto profilo (se presente) e le preferenze per le notifiche ([FR-5](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-5.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)).  <br> 3. Il cittadino modifica i dati desiderati e li conferma. <br> 4. Il sistema valida i dati e aggiorna il database. 5. Il sistema mosra il profilo aggiornato; il caso d'uso termina con successo.|
+| **Main success scenario**   | 1. Il cittadino chiede di modificare il proprio profilo. <br> 2. Il sistema mostra i dati correnti, la foto profilo (se presente) e le preferenze per le notifiche ([FR-5](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-5.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)).  <br> 3. Il cittadino modifica i dati desiderati e li conferma. <br> 4. Il sistema valida i dati e aggiorna il database. <br> 5. Il sistema mostra il profilo aggiornato; il caso d'uso termina con successo.|
 | **Extensions**              | 3a. Il cittadino annulla la modifica.<br> &nbsp;&nbsp;&nbsp;&nbsp; 3a.1 Il sistema non salva le modifiche; il caso d'uso termina con fallimento. <br> 4a. I dati non soddisfano i criteri di validità; <br> &nbsp;&nbsp;&nbsp;&nbsp; 4a.1 Il sistema mostra un messaggio di errore e il caso d'uso riprende dal punto 3. <br> 4b. Errore di connessione al database. <br> &nbsp;&nbsp;&nbsp;&nbsp; 4b.1 Il sistema mostra un messaggio di errore tecnico; il caso d'uso termina con fallimento.|
 
 | Use Case                    ||
@@ -98,10 +98,10 @@ Nota: 'Utente' comprende cittadino, operatore comunale e amministratore.
 | **Stakeholders' interests** | Cittadino: comunicare efficacemente il problema riscontrato, garantire la propria privacy (anonimato pubblico), assicurarsi che la segnalazione venga ricevuta.<br>Comune di Torino: ricevere segnalazioni accurate e geolocalizzate con evidenze visive per ottimizzare gli interventi.
 | **Precondition**            | L'utente deve essere autenticato (UC-03-Login).|
 | **Minimum guarantees**      | Nessuna segnalazione viene creata se il processo viene interrotto.|
-| **Success guarantees**      | Viene creata una segnalazione con stato "Pending Approval", le foto vengono archiviate, la posizione registrata e Il cittadino riceve conferma visiva.|
+| **Success guarantees**      | Viene creata una segnalazione con stato "Pending Approval", le foto vengono archiviate, la posizione registrata e il cittadino riceve conferma visiva.|
 | **Trigger**|-|
-| **Main success scenario**   | 1. Il cittadino chiede di inserire una nuova segnalazione. <br>  2. Il sistema mostra la mappa e il modulo di inserimento . <br>  3. Il cittadino fornisce i dettagli e la geolocalizzazione del disservizio. ([FR-6](./02_RequirementsEngineering.md#6-functional-requirements-fr) , [FR-6.2](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 4. Il cittadino carica da 1 a 3 foto relative alla segnalazione. <br> 5. Il cittadino seleziona opzionalmente l'anonimato pubblico ([FR-6.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 6. Il cittadino conferma l'invio della segnalazione. <br> 7. Il sistema valida i dati, carica le immagini sul Media Storage  e salva la segnalazione. <br> 8. Il sistema assegna alla segnalzione lo stato "Pending Approval"; il caso d'uso termina con successo.|
-| **Extensions**              | 2a. Non è possibile visualizzare correttamente la mappa.<br>&nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema avvisa Il cittadino e il caso d'uso termina con fallimento.<br> 3.a Il cittadino seleziona una posizione non valida (fuori dai confini di Torino).<br>&nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema segnala l'errore e impedisce la selezione; il caso d'uso riprende dal punto 3. <br>  7a. L''utente non ha inserito tutti i dati necessari.<br>&nbsp;&nbsp;&nbsp;&nbsp;7a.1 Il sistema evidenzia i campi mancanti; il caso d'uso riprende dal punto 3. <br> 7b. Il cittadino non ha caricato alcuna foto.<br>&nbsp;&nbsp;&nbsp;&nbsp;7b.1 Il sistema ; il caso d'uso riprende dal punto 4.|
+| **Main success scenario**   | 1. Il cittadino chiede di inserire una nuova segnalazione. <br>  2. Il sistema mostra la mappa e il modulo di inserimento. <br>  3. Il cittadino fornisce i dettagli e la geolocalizzazione del disservizio. ([FR-6](./02_RequirementsEngineering.md#6-functional-requirements-fr) , [FR-6.2](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 4. Il cittadino carica da 1 a 3 foto relative alla segnalazione. <br> 5. Il cittadino seleziona opzionalmente l'anonimato pubblico ([FR-6.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 6. Il cittadino conferma l'invio della segnalazione. <br> 7. Il sistema valida i dati, carica le immagini sul Media Storage  e salva la segnalazione. <br> 8. Il sistema assegna alla segnalazione lo stato "Pending Approval"; il caso d'uso termina con successo.|
+| **Extensions**              | 2a. Non è possibile visualizzare correttamente la mappa.<br>&nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema avvisa Il cittadino e il caso d'uso termina con fallimento.<br> 3a. Il cittadino seleziona una posizione non valida (fuori dai confini di Torino).<br>&nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema segnala l'errore e impedisce la selezione; il caso d'uso riprende dal punto 3. <br>  7a. L'utente non ha inserito tutti i dati necessari.<br>&nbsp;&nbsp;&nbsp;&nbsp;7a.1 Il sistema evidenzia i campi mancanti; il caso d'uso riprende dal punto 3. <br> 7b. Il cittadino non ha caricato alcuna foto.<br>&nbsp;&nbsp;&nbsp;&nbsp;7b.1 Il sistema ; il caso d'uso riprende dal punto 4.|
 
 | Use Case||
 |:----------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -131,10 +131,10 @@ Nota: 'Utente' comprende cittadino, operatore comunale e amministratore.
 | **Stakeholders' interests** | Operatore Comunale; gestire il carico di lavoro, tracciare l'avanzamento degli interventi. <br> Cittadino: ricevere aggiornamenti trasparenti e tempestivi sulla risoluzione del problema.<br> Comune di Torino: monitorare l'efficienza degli uffici tecnici. |
 | **Precondition**            | L'operatore deve essere autenticato UC-03-Login. e la segnalazione deve esistere nel sistema.|
 | **Minimum guarantees**| Lo stato rimane invariato se l'aggiornamento fallisce.|
-| **Success guarantees**| Lo stato della segnalazione è aggiornato, Il cittadino segnalante e i followers della seganalazione ricevono una notifica .|
+| **Success guarantees**| Lo stato della segnalazione è aggiornato, Il cittadino segnalante e i followers della seganalazione ricevono una notifica.|
 | **Trigger**| -|
-| **Main success scenario**   | 1. L'operatore chiede di modificare una segnalazione. <br> 2. L'operatore assegna un nuovo stato alla segnalazione scegliendo tra quelli disponibili ([FR-8](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 3. L'operatore inserisce opzionalmente un commento interno nel campo di testo. <br>  4. L'operatore conferma l'aggiornamento di stato. <br> 5. Il sistema valida il passaggio di stato, aggiorna il database e registra lo storico; il caso d'uso termina con successo il caso d'uso termina con successo innescando "UC-16-Notifiche"..|
-| **Extensions**              | 2a. La transizione di stato non è valida. <br> &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema segnala l'errore e impedisce l'operazione; il caso d'uso riprende dal punto 2.<br>  2b. La segnlazione è già stata completata (Resolved o Rejected). &nbsp;&nbsp;&nbsp;&nbsp; <br> &nbsp;&nbsp;&nbsp;&nbsp; 2b.1 Il sistema segnala l'errore e impedisce l'operazione; il caso d'uso riprende dal punto 2.<br>  4a. Errore di connessione al database. <br> &nbsp;&nbsp;&nbsp;&nbsp;4a.1 Il sistema mostra un messaggio di errore; il caso d'uso termina con fallimento.|
+| **Main success scenario**   | 1. L'operatore chiede di modificare una segnalazione. <br> 2. L'operatore assegna un nuovo stato alla segnalazione scegliendo tra quelli disponibili ([FR-8](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 3. L'operatore inserisce opzionalmente un commento interno nel campo di testo. <br>  4. L'operatore conferma l'aggiornamento di stato. <br> 5. Il sistema valida il passaggio di stato, aggiorna il database e registra lo storico; il caso d'uso termina con successo innescando "UC-16-Notifiche"..|
+| **Extensions**              | 2a. La transizione di stato non è valida. <br> &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema segnala l'errore e impedisce l'operazione; il caso d'uso riprende dal punto 2.<br>  2b. La segnalazione è già stata completata (Resolved o Rejected). &nbsp;&nbsp;&nbsp;&nbsp; <br> &nbsp;&nbsp;&nbsp;&nbsp; 2b.1 Il sistema segnala l'errore e impedisce l'operazione; il caso d'uso riprende dal punto 2.<br>  4a. Errore di connessione al database. <br> &nbsp;&nbsp;&nbsp;&nbsp;4a.1 Il sistema mostra un messaggio di errore; il caso d'uso termina con fallimento.|
 
 | Use Case||
 |:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -149,7 +149,7 @@ Nota: 'Utente' comprende cittadino, operatore comunale e amministratore.
 | **Minimum guarantees**      |-|
 | **Success guarantees**      | L'utente visualizza le segnalazioni correttamente.|
 | **Trigger**                 | -|
-| **Main success scenario**   | 1. L'utente chiede di consultazione le segnalazioni. <br> 2. Il sistema carica la mappa con i pin geolocalizzati  e la lista delle segnalazioni. <br> 3. L'utente visualizza le segnalazioni sulla mappa ([FR-10](./02_RequirementsEngineering.md#6-functional-requirements-fr)) e nella lista ([FR-11](./02_RequirementsEngineering.md#6-functional-requirements-fr)), visualizzandone titolo, categoria, stato e data. Il caso d'uso termina con successo.|
+| **Main success scenario**   | 1. L'utente chiede di consultare le segnalazioni. <br> 2. Il sistema carica la mappa con i pin geolocalizzati  e la lista delle segnalazioni. <br> 3. L'utente visualizza le segnalazioni sulla mappa ([FR-10](./02_RequirementsEngineering.md#6-functional-requirements-fr)) e nella lista ([FR-11](./02_RequirementsEngineering.md#6-functional-requirements-fr)), visualizzandone titolo, categoria, stato e data. Il caso d'uso termina con successo.|
 | **Extensions**              | 2a. Il sistema OpenStreetMap non è disponibile.<br>&nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema avvisa l'utente e mostra solo la lista delle segnalazioni; il caso d'uso termina con successo.|
 
 | Use Case||
@@ -157,7 +157,7 @@ Nota: 'Utente' comprende cittadino, operatore comunale e amministratore.
 | **ID**| UC-10-VisualizzazioneProprieSegnalazioni|
 | **Scope**| Sistema web Participium.|
 | **Level** | User goal.|
-| **Intention in Context**    | Visualizzare le segnalazioni al cittadino di consultare lo storico e lo stato attuale di tutte le segnalazioni da lui inviate.|
+| **Intention in Context**    | Visualizzare le segnalazioni del cittadino, consultare lo storico e lo stato attuale di tutte le segnalazioni da lui inviate.|
 | **Primary actor**      | Cittadino.|
 | **Supporting actors**       | Map Service API (IF-04).|
 | **Stakeholders' interests** | Cittadino: verificare l'avanzamento dei propri ticket e avere uno storico personale.|
@@ -216,7 +216,7 @@ Nota: 'Utente' comprende cittadino, operatore comunale e amministratore.
 | **Minimum guarantees** | I filtri applicati non influenzano la persistenza dei dati nel database.|
 | **Success guarantees** | L'utente visualizza l'elenco delle segnalazioni che corrispondono alla stringa inserita.|
 | **Trigger** | -|
-| **Main success scenario** | 1. L'utente effettua un ricerca testuale nella navigation bar del sito. <br> 2. Il sistema interroga il database per ricercare le segnalazioni contenenti il testo inserito ([FR-11.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 3. Il sistema aggiorna la visualizzazione mostrando i risultati; il caso d'uso termina con successo. |
+| **Main success scenario** | 1. L'utente effettua una ricerca testuale nella navigation bar del sito. <br> 2. Il sistema interroga il database per ricercare le segnalazioni contenenti il testo inserito ([FR-11.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 3. Il sistema aggiorna la visualizzazione mostrando i risultati; il caso d'uso termina con successo. |
 | **Extensions** | 2a. Nessuna segnalazione soddisfa i criteri inseriti dall'utente. <br> &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema mostra un risultato vuoto e il caso d'uso termina con fallimento.|
 
 | Use Case||
@@ -298,7 +298,7 @@ Nota: 'Utente' comprende cittadino, operatore comunale e amministratore.
 | **Minimum guarantees**      |-|
 | **Success guarantees**      | Viene creato il nuovo account e inviata la mail con le informazioni di accesso. |
 | **Trigger**                 | - |
-| **Main success scenario**   | 1. L'amministratore schiede di creare un nuovo utente. <br> 2. L'amministratore inserisce i dati del nuovo collaboratore.          <br> 3. L'amministratore seleziona i permessi specifici (Amministratore o Operatore) ([FR-19](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-20](./02_RequirementsEngineering.md#6-functional-requirements-fr)).<br>  4. Il sistema valida i dati e aggiorna il database. <br> 5. Il sistema invia automaticamente le credenziali d'accesso via mail; il caso d'uso termina con successo.                                                           |
+| **Main success scenario**   | 1. L'amministratore chiede di creare un nuovo utente. <br> 2. L'amministratore inserisce i dati del nuovo collaboratore.          <br> 3. L'amministratore seleziona i permessi specifici (Amministratore o Operatore) ([FR-19](./02_RequirementsEngineering.md#6-functional-requirements-fr), [FR-20](./02_RequirementsEngineering.md#6-functional-requirements-fr)).<br>  4. Il sistema valida i dati e aggiorna il database. <br> 5. Il sistema invia automaticamente le credenziali d'accesso via mail; il caso d'uso termina con successo.                                                           |
 | **Extensions**              | 4a. L'email inserita è già presente nel database o non è valida.             <br> &nbsp;&nbsp;&nbsp;&nbsp;4a.1 Il sistema nega la creazione mostrando errore; il caso d'uso riprende dal punto 2. |
 
 | Use Case||
@@ -309,7 +309,7 @@ Nota: 'Utente' comprende cittadino, operatore comunale e amministratore.
 | **Intention in Context** | Consultare dati aggregati e trend generali per comprendere lo stato dei problemi urbani in città.|
 | **Primary actor** | Utente.|
 | **Supporting actors** | -|
-| **Stakeholders' interests** | Utente : avere una visione d'insieme dei disservizi più comuni nel proprio comune. <br> Amministratore: monitorare l'andamento delle segnalazioni per cercare di migliorare il servizio.|
+| **Stakeholders' interests** | Utente: avere una visione d'insieme dei disservizi più comuni nel proprio comune. <br> Amministratore: monitorare l'andamento delle segnalazioni per cercare di migliorare il servizio.|
 | **Precondition** | Il database contiene segnalazioni pubblicate e approvate.|
 | **Minimum guarantees** | Se l'elaborazione fallisce, il sistema mostra un messaggio di errore e non aggiorna i dati visualizzati.|
 | **Success guarantees** | L'utente visualizza grafici basati su categorie e trend temporali.|
@@ -364,7 +364,7 @@ Nota: 'Utente' comprende cittadino, operatore comunale e amministratore.
 | **Success guarantees**      | I permessi dell'account utente vengono aggiornati con successo. |
 | **Trigger**                 | - |
 | **Main success scenario**   |1. L'amministratore chiede di modificare i permessi di un utente ([FR-21](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 2.  Il sistema modifica i permessi dell'account utente e notifica l'amministratore; il caso d'uso termina con successo. |
-| **Extensions**              | 2.a. L'amministratore annulla l'operazione; il caso d'uso termina con fallimento. <br> 2b. L'utente è già sospeso <br> &nbsp;&nbsp;&nbsp;&nbsp; 2b.1 Il sistema mostra un messaggio di errore; il caso d'uso termina con fallimento. |
+| **Extensions**              | 2a. L'amministratore annulla l'operazione; il caso d'uso termina con fallimento. <br> 2b. L'utente è già sospeso <br> &nbsp;&nbsp;&nbsp;&nbsp; 2b.1 Il sistema mostra un messaggio di errore; il caso d'uso termina con fallimento. |
 <br> <br> <br>
 
 # Traceability Table
