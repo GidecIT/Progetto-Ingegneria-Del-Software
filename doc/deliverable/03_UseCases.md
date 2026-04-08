@@ -7,8 +7,8 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 # 2) Use Case Narratives
 Annotazioni:
 - 'Utente' comprende cittadino, operatore comunale e amministratore.
-- I casi d'uso che hanno come Primary Actor 'Amministratore' o 'Operatore Comunale' richiedono sempre che l'utente sia autenticato (UC-03-Login). 
-- 
+- I casi d'uso che hanno come Primary Actor 'Amministratore' o 'Operatore Comunale' richiedono sempre che l'utente sia autenticato, cioè che abbia completato il caso d'uso UC-03-Login. 
+  
 | Use Case||
 |:----------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------|
 | **ID**   | UC-01-Registrazione|
@@ -48,7 +48,7 @@ Annotazioni:
 | **Level** | User goal.|
 | **Intention in Context**    | Accedere al sistema per usufruire delle funzionalità riservate agli utenti registrati.|
 | **Primary actor**           | Utente|
-| **Supporting actors**       | Servizio di autenticazione (IF-10).|
+| **Supporting actors**       | Servizio di autenticazione (IF-09).|
 | **Stakeholders' interests** | Comune di Torino: garantire ai cittadini accessi autorizzati e protetti. <br> Utente: accedere in sicurezza ai propri account. |
 | **Precondition**| L'utente deve aver completato la registrazione (UC-01-Registrazione).|
 | **Minimum guarantees**|-|
@@ -64,7 +64,7 @@ Annotazioni:
 | **Level** | User goal.|
 | **Intention in Context**    | Terminare la sessione in sicurezza. |
 | **Primary actor**           | Utente|
-| **Supporting actors**       | Servizio di autenticazione (IF-10) |
+| **Supporting actors**       | Servizio di autenticazione (IF-09) |
 | **Stakeholders' interests** | Utente: Proteggere l'account su dispositivi condivisi. |
 | **Precondition**            | L'utente deve essere autenticato (UC-03-Login). |
 | **Minimum guarantees**      | - |
@@ -96,7 +96,7 @@ Annotazioni:
 | **Level** | User goal.|
 | **Intention in Context**    | Inviare una segnalazione geolocalizzata di un disservizio urbano al Comune di Torino.|
 | **Primary actor**           | Cittadino|
-| **Supporting actors**       | Map Service API (IF-03), Media Storage (IF-05), Content Delivery Network (IF-06).|
+| **Supporting actors**       | Map Service API (IF-03), Media Storage (IF-05).|
 | **Stakeholders' interests** | Cittadino: comunicare efficacemente il problema riscontrato, garantire la propria privacy (anonimato pubblico), assicurarsi che la segnalazione venga ricevuta.<br>Comune di Torino: ricevere segnalazioni accurate e geolocalizzate con evidenze visive per ottimizzare gli interventi.
 | **Precondition**            | L'utente deve essere autenticato (UC-03-Login).|
 | **Minimum guarantees**      | Nessuna segnalazione viene creata se il processo viene interrotto.|
@@ -130,8 +130,8 @@ Annotazioni:
 | **Intention in Context**    | Aggiornare lo stato di una segnalazione durante il processo di gestione comunale.|
 | **Primary actor**| Operatore Comunale.|
 | **Supporting actors**|- |
-| **Stakeholders' interests** | Operatore Comunale; gestire il carico di lavoro, tracciare l'avanzamento degli interventi. <br> Cittadino: ricevere aggiornamenti trasparenti e tempestivi sulla risoluzione del problema.<br> Comune di Torino: monitorare l'efficienza degli uffici tecnici. |
-| **Precondition**            | L'operatore deve essere autenticato UC-03-Login. e la segnalazione deve esistere nel sistema.|
+| **Stakeholders' interests** | Operatore Comunale: gestire il carico di lavoro, tracciare l'avanzamento degli interventi. <br> Cittadino: ricevere aggiornamenti trasparenti e tempestivi sulla risoluzione del problema.<br> Comune di Torino: monitorare l'efficienza degli uffici tecnici. |
+| **Precondition**            | La segnalazione deve esistere nel sistema.|
 | **Minimum guarantees**| Lo stato rimane invariato se l'aggiornamento fallisce.|
 | **Success guarantees**| Lo stato della segnalazione è aggiornato, Il cittadino segnalante e i followers della seganalazione ricevono una notifica.|
 | **Trigger**| -|
@@ -145,7 +145,7 @@ Annotazioni:
 | **Level** | User goal.|
 | **Intention in Context**    | Visualizzare le segnalazioni presenti sia sulla mappa che nella vista tabellare.|
 | **Primary actor**           | Utente.|
-| **Supporting actors**       | Map Service API (IF-04).|
+| **Supporting actors**       | Map Service API (IF-04), Content Delivery Network (IF-06).|
 | **Stakeholders' interests** | Utente: verificare se un problema è già stato segnalato, monitorare i disservizi nella città. <br> Comune di Torino: garantire trasparenza e ridurre segnalazioni duplicate. |
 | **Precondition**            |-|
 | **Minimum guarantees**      |-|
@@ -296,7 +296,7 @@ Annotazioni:
 | **Primary actor**           | Amministratore  |
 | **Supporting actors**       | Servizio mail (IF-07) |
 | **Stakeholders' interests** | Amministratore : gestire il team tecnico e operativo fornendo accesso ai sistemi. |
-| **Precondition**            | L'utente deve essere autenticato (UC-03-Login) come Amministratore. |
+| **Precondition**            | -|
 | **Minimum guarantees**      |-|
 | **Success guarantees**      | Viene creato il nuovo account e inviata la mail con le informazioni di accesso. |
 | **Trigger**                 | - |
@@ -328,7 +328,7 @@ Annotazioni:
 | **Primary actor**           | Amministratore.|
 | **Supporting actors**       | - |
 | **Stakeholders' interests** | Amministratore: analizzare l'efficienza del servizio e identificare eventuali criticità. <br> Comune di Torino: disporre di reportistica dettagliata per migliorare il servizio.|
-| **Precondition**            | L'utente deve essere autenticato (UC-03-Login) come Amministratore.|
+| **Precondition**            | -|
 | **Minimum guarantees**      | Se l'elaborazione fallisce, il sistema mostra un messaggio di errore e non aggiorna i dati visualizzati.|
 | **Success guarantees**      | Il sistema genera report e grafici basati su metriche private non accessibili al pubblico.|
 | **Trigger**|-|
@@ -344,7 +344,7 @@ Annotazioni:
 | **Primary actor**           | Amministratore  |
 | **Supporting actors**       | - |
 | **Stakeholders' interests** | Amministratore : fornire indicazioni sull'andamento dell'attività. <br> Comune di Torino: ricevere report dettagliati per monitorare l'efficienza di risoluzione dei problemi. |
-| **Precondition**            | L'utente deve essere autenticato (UC-03-Login) come Amministratore . |
+| **Precondition**            | - |
 | **Minimum guarantees**      | - |
 | **Success guarantees**      | Il report viene generato ed esportato in formato conforme. |
 | **Trigger**                 | - |
@@ -361,7 +361,7 @@ Annotazioni:
 | **Primary actor**           | Amministratore  |
 | **Supporting actors**       |-|
 | **Stakeholders' interests** | Amministratore: gestire gli account utente <br> Comune di Torino: monitorare l'utilizzo della piattaforma da parte degli utenti |
-| **Precondition**            | L'utente deve essere autenticato (UC-03-Login) come Amministratore. |
+| **Precondition**            | - |
 | **Minimum guarantees**      | - |
 | **Success guarantees**      | I permessi dell'account utente vengono aggiornati con successo. |
 | **Trigger**                 | - |
