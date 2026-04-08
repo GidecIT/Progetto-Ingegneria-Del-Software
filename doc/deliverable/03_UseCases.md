@@ -5,8 +5,10 @@ Attach your use case diagram as an image under `../data/img/` and link it here:
 ![Use Case Diagram](../../data/img/use-case-diagram.png)
 
 # 2) Use Case Narratives
-Nota: 'Utente' comprende cittadino, operatore comunale e amministratore.
-
+Annotazioni:
+- 'Utente' comprende cittadino, operatore comunale e amministratore.
+- I casi d'uso che hanno come Primary Actor 'Amministratore' o 'Operatore Comunale' richiedono sempre che l'utente sia autenticato (UC-03-Login). 
+- 
 | Use Case||
 |:----------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------|
 | **ID**   | UC-01-Registrazione|
