@@ -196,21 +196,9 @@
       "type": "UseCase",
       "owner": null,
       "bounds": {
-        "x": 650,
-        "y": -90,
+        "x": 590,
+        "y": -20,
         "width": 350,
-        "height": 60
-      }
-    },
-    "861641ca-6aca-488f-9a68-5f85b8ec4921": {
-      "id": "861641ca-6aca-488f-9a68-5f85b8ec4921",
-      "name": "Servizio Cloud",
-      "type": "UseCaseExternalSystem",
-      "owner": null,
-      "bounds": {
-        "x": 260,
-        "y": -340,
-        "width": 220,
         "height": 60
       }
     },
@@ -220,8 +208,8 @@
       "type": "UseCase",
       "owner": null,
       "bounds": {
-        "x": 690,
-        "y": -290,
+        "x": 630,
+        "y": -250,
         "width": 230,
         "height": 60
       }
@@ -268,8 +256,8 @@
       "type": "UseCase",
       "owner": null,
       "bounds": {
-        "x": 630,
-        "y": -210,
+        "x": 580,
+        "y": -100,
         "width": 380,
         "height": 60
       }
@@ -292,8 +280,8 @@
       "type": "UseCase",
       "owner": null,
       "bounds": {
-        "x": 560,
-        "y": -410,
+        "x": 470,
+        "y": -390,
         "width": 310,
         "height": 60
       }
@@ -304,8 +292,8 @@
       "type": "UseCase",
       "owner": null,
       "bounds": {
-        "x": 30,
-        "y": -660,
+        "x": 530,
+        "y": -650,
         "width": 360,
         "height": 60
       }
@@ -364,7 +352,7 @@
       "type": "UseCaseExternalSystem",
       "owner": null,
       "bounds": {
-        "x": -530,
+        "x": -520,
         "y": 60,
         "width": 200,
         "height": 100
@@ -377,7 +365,7 @@
       "owner": null,
       "bounds": {
         "x": 20,
-        "y": 340,
+        "y": 320,
         "width": 250,
         "height": 100
       }
@@ -581,18 +569,18 @@
       "type": "UseCaseAssociation",
       "owner": null,
       "bounds": {
-        "x": 1000,
+        "x": 940,
         "y": -490,
-        "width": 40,
-        "height": 430
+        "width": 100,
+        "height": 500
       },
       "path": [
         {
           "x": 0,
-          "y": 430
+          "y": 500
         },
         {
-          "x": 40,
+          "x": 100,
           "y": 0
         }
       ],
@@ -612,18 +600,18 @@
       "type": "UseCaseAssociation",
       "owner": null,
       "bounds": {
-        "x": 920,
+        "x": 860,
         "y": -490,
-        "width": 120,
-        "height": 230
+        "width": 180,
+        "height": 270
       },
       "path": [
         {
           "x": 0,
-          "y": 230
+          "y": 270
         },
         {
-          "x": 120,
+          "x": 180,
           "y": 0
         }
       ],
@@ -676,8 +664,8 @@
       "bounds": {
         "x": -190,
         "y": -90,
-        "width": 840,
-        "height": 30
+        "width": 780,
+        "height": 100
       },
       "path": [
         {
@@ -685,8 +673,8 @@
           "y": 0
         },
         {
-          "x": 840,
-          "y": 30
+          "x": 780,
+          "y": 100
         }
       ],
       "source": {
@@ -892,18 +880,18 @@
       "owner": null,
       "bounds": {
         "x": 510,
-        "y": -180,
-        "width": 120,
-        "height": 10
+        "y": -170,
+        "width": 70,
+        "height": 100
       },
       "path": [
         {
           "x": 0,
-          "y": 10
+          "y": 0
         },
         {
-          "x": 120,
-          "y": 0
+          "x": 70,
+          "y": 100
         }
       ],
       "source": {
@@ -953,18 +941,18 @@
       "type": "UseCaseAssociation",
       "owner": null,
       "bounds": {
-        "x": 870,
+        "x": 780,
         "y": -490,
-        "width": 170,
-        "height": 110
+        "width": 260,
+        "height": 130
       },
       "path": [
         {
           "x": 0,
-          "y": 110
+          "y": 130
         },
         {
-          "x": 170,
+          "x": 260,
           "y": 0
         }
       ],
@@ -986,13 +974,13 @@
       "bounds": {
         "x": -300,
         "y": -660,
-        "width": 330,
-        "height": 30
+        "width": 830,
+        "height": 40
       },
       "path": [
         {
-          "x": 330,
-          "y": 30
+          "x": 830,
+          "y": 40
         },
         {
           "x": 0,
@@ -1232,15 +1220,15 @@
       "type": "UseCaseSupport",
       "owner": null,
       "bounds": {
-        "x": -730,
-        "y": 230,
-        "width": 750,
-        "height": 160
+        "x": -147.5,
+        "y": -160,
+        "width": 292.5,
+        "height": 480
       },
       "path": [
         {
-          "x": 750,
-          "y": 160
+          "x": 292.5,
+          "y": 480
         },
         {
           "x": 0,
@@ -1248,12 +1236,12 @@
         }
       ],
       "source": {
-        "direction": "Left",
+        "direction": "Up",
         "element": "ef50147f-e729-45da-8302-dbcc1c1b46f6"
       },
       "target": {
-        "direction": "Right",
-        "element": "6f347c34-8e28-41ec-bcec-1c2ffb95440a"
+        "direction": "Bottomright",
+        "element": "0b01ec42-ab51-4343-9bde-5e3797ca68a3"
       },
       "isManuallyLayouted": false
     },
@@ -1266,12 +1254,12 @@
         "x": 270,
         "y": -140,
         "width": 50,
-        "height": 530
+        "height": 510
       },
       "path": [
         {
           "x": 0,
-          "y": 530
+          "y": 510
         },
         {
           "x": 50,
@@ -1296,12 +1284,12 @@
       "bounds": {
         "x": -680,
         "y": 70,
-        "width": 150,
+        "width": 160,
         "height": 40
       },
       "path": [
         {
-          "x": 150,
+          "x": 160,
           "y": 40
         },
         {
@@ -1358,12 +1346,12 @@
       "bounds": {
         "x": -730,
         "y": 110,
-        "width": 200,
+        "width": 210,
         "height": 105
       },
       "path": [
         {
-          "x": 200,
+          "x": 210,
           "y": 0
         },
         {
@@ -1750,37 +1738,6 @@
       "target": {
         "direction": "Up",
         "element": "e8181d00-d1ac-42cb-8fce-237adcd6539f"
-      },
-      "isManuallyLayouted": false
-    },
-    "292cff8c-397a-434e-be4f-ac2db7a55c8d": {
-      "id": "292cff8c-397a-434e-be4f-ac2db7a55c8d",
-      "name": "",
-      "type": "UseCaseSupport",
-      "owner": null,
-      "bounds": {
-        "x": 370,
-        "y": -380,
-        "width": 190,
-        "height": 40
-      },
-      "path": [
-        {
-          "x": 0,
-          "y": 40
-        },
-        {
-          "x": 190,
-          "y": 0
-        }
-      ],
-      "source": {
-        "direction": "Up",
-        "element": "861641ca-6aca-488f-9a68-5f85b8ec4921"
-      },
-      "target": {
-        "direction": "Left",
-        "element": "c165018f-c388-429a-87d3-dcea2e132a5f"
       },
       "isManuallyLayouted": false
     }
