@@ -235,7 +235,7 @@ Annotazioni:
 | **Success guarantees** | L'utente visualizza un sottoinsieme di segnalazioni corrispondenti ai filtri selezionati.|
 | **Trigger** | -|
 | **Main success scenario** | 1. L'utente seleziona uno o più filtri. <br> 2. Il sistema interroga il database e filtra le segnalazioni secondo i criteri impostati [FR-11.2](./02_RequirementsEngineering.md#6-functional-requirements-fr). <br> 3. Il sistema aggiorna la visualizzazione mostrando solo i risultati filtrati; il caso d'uso termina con successo. |
-| **Extensions** | 2a. Nessuna segnalazione soddisfa i criteri selezionati. <br> &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema mostra un risultato vuoto; il caso d'uso termina con fallimento.|
+| **Extensions** | 2a. Nessuna segnalazione soddisfa i criteri selezionati. <br> &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema mostra un risultato vuoto; il caso d'uso termina con successo.|
 
 
 | Use Case||
