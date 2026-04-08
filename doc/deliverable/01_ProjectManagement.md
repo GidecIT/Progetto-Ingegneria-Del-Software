@@ -20,10 +20,9 @@
 | I4 | Database PostgreSQL | Infrastruttura | Database relazionale PostgreSQL per la persistenza di utenti, segnalazioni e dati di sistema. |
 | I5 | Integrazione OpenStreetMap | Infrastruttura | API e tile server OpenStreetMap per fornire la cartografia e il supporto alla geolocalizzazione. |
 | I6 | Content Delivery Network (CDN) | Infrastruttura | Servizio CloudFront per velocizzare la distribuzione di contenuti statici e immagini agli utenti. |
-| I7 | Sistema di Metriche e Log | Infrastruttura | Stack Prometheus e Grafana per il monitoraggio delle prestazioni e la diagnosi di errori.   |
-| I8 | Sistema di Backup | Infrastruttura | Procedure di snapshot automatizzate per garantire il ripristino dei dati in caso di guasto. |
-| I9 | Servizio Mail | Infrastruttura | Servizio SMTP fornito da Resend per l'invio di notifiche e messaggi via email.             |
-| I10 | Docker & Kubernetes | Infrastruttura | Container Docker e cluster Kubernetes per l'orchestrazione e la scalabilità dei microservizi. |
+| I7 | Sistema di Backup | Infrastruttura | Procedure di snapshot automatizzate per garantire il ripristino dei dati in caso di guasto. |
+| I8 | Servizio Mail | Infrastruttura | Servizio SMTP fornito da Resend per l'invio di notifiche e messaggi via email.             |
+| I9 | Docker & Kubernetes | Infrastruttura | Container Docker e cluster Kubernetes per l'orchestrazione e la scalabilità dei microservizi. |
 | **DOCUMENTAZIONE** |
 | D1 | Vision & Scope | Documento | Definizione obiettivi, visione e scopo.                                                    |
 | D2 | Documento dei Requisiti | Documento | Analisi funzionale dettagliata.                                                            |
@@ -53,15 +52,15 @@ L'architettura di **Participium** è progettata per essere scalabile, manutenibi
 |1|Project Management|D1, D9|
 |2|Requirement Elicitation|D1, D2|
 |3|Architettura, User Experience & API Design|S5,D3,D4|
-|4|Cloud Development|I1, I2, I7, I8, I10|
+|4|Cloud Development|I1, I2, I7, I9|
 |5|API + scheletro backend|S2, S5, I4|
 |6|Sviluppo Frontend|S1, S2, S3, S4, S7, S8, I5|
 |6.a|Frontend Utente|S1, S2, S4, S7, S8|
 |6.b|Frontend Amministratore|S1, S2, S3, S4, S8|
-|7| Sviluppo Backend|S2, S3.1, S4, S8, S8.1, I5, I7|
+|7| Sviluppo Backend|S2, S3.1, S4, S8, S8.1, I5|
 |8|Media Storage|S7, I3, I6|
 |9|Integrazione Open Street Map|S6, I5|
-|10|Gestione sistema di notifica e mail|S4,I9|
+|10|Gestione sistema di notifica e mail|S4,I8|
 |11|System Integration & functional testing|D5|
 |12|Non functional Validation|D5,D8|
 |13|Gestione del rilascio |D6,D7|
@@ -123,9 +122,9 @@ Risk level thresholds (by exposure):
 ## Risks table
 | ID | Risk | Category | P | I | P×I | Level | Mitigation / Response strategy |
 |:---|:-----|:---------|--:|--:|----:|:------|:-------------------------------|
-R01| Scalabilità (latenza sistema sotto alto traffico)| Tecnico| 3 |5|15|Alto|Stress test, analisi log di carico, ottimizzazione query e asset| 
+R01| Scalabilità (latenza sistema sotto alto traffico)| Tecnico| 3 |5|15|Alto| Stress test, ottimizzazione query e asset| 
 R02|Cambiamento di requisiti | Requisiti | 4 | 4 | 16 | Alto | MVP chiaro, roadmap definita e approvazione formale dei requisiti. |
-R03|Ritardi nello sviluppo | Sviluppo | 3 | 5 | 15 | Alto | Utilizzare metodologie agili per iterazioni rapide e feedback frequenti, identificare e risolvere i colli di bottiglia tempestivamente. |
+R03|Ritardi nello sviluppo | Sviluppo | 3 | 5 | 15 | Alto | Utilizzare iterazioni rapide e feedback frequenti, identificare e risolvere i colli di bottiglia tempestivamente. |
 R04|Problemi di integrazione | Integrazione | 3 | 4 | 12 | Alto | Pianificare fasi di integrazione regolari, con test continui e monitoraggio dei problemi. |
 R05|Problemi di risorse | Risorse | 2 | 4 | 8 | Medio | Pianificare le risorse in anticipo, con flessibilità per cambiamenti imprevisti. |
 R06|Problemi di qualità | Qualità | 2 | 5 | 10 | Medio | Controllo qualità periodico, con test e revisione del codice. |
