@@ -221,24 +221,6 @@ Annotazioni:
 | **Main success scenario** | 1. L'utente effettua una ricerca testuale nella navigation bar del sito. <br> 2. Il sistema interroga il database per ricercare le segnalazioni contenenti il testo inserito ([FR-11.1](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 3. Il sistema aggiorna la visualizzazione mostrando i risultati; il caso d'uso termina con successo. |
 | **Extensions** | 2a. Nessuna segnalazione soddisfa i criteri inseriti dall'utente. <br> &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema mostra un risultato vuoto e il caso d'uso termina con fallimento.|
 
-| Use Case||
-|:----------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID** | UC-14-FiltraggioSegnalazioni|
-| **Scope** | Sistema web Participium.|
-| **Level** | User goal.|
-| **Intention in Context** | Consultare segnalazioni specifiche tramite filtri (categoria, stato, periodo).|
-| **Primary actor** | Utente.|
-| **Supporting actors** | -|
-| **Stakeholders' interests** | Utente: visualizzare segnalazioni filtrate e ordinate secondo le proprie volontà. <br> Comune di Torino: garantire una navigazione fluida tra le segnalazioni.|
-| **Precondition** | L'utente sta visualizzando l'elenco delle segnalazioni (UC-09 / UC-10)|
-| **Minimum guarantees** | I filtri applicati non influenzano la persistenza dei dati nel database.|
-| **Success guarantees** | L'utente visualizza un sottoinsieme di segnalazioni corrispondenti ai filtri selezionati.|
-| **Trigger** | -|
-| **Main success scenario** | 1. L'utente seleziona uno o più filtri. <br> 2. Il sistema interroga il database e filtra le segnalazioni secondo i criteri impostati [FR-11.2](./02_RequirementsEngineering.md#6-functional-requirements-fr). <br> 3. Il sistema aggiorna la visualizzazione mostrando solo i risultati filtrati; il caso d'uso termina con successo. |
-| **Extensions** | 2a. Nessuna segnalazione soddisfa i criteri selezionati. <br> &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema mostra un risultato vuoto; il caso d'uso termina con successo.|
-
-
-
 | Use Case|                                                                                                                                                                                                                                                                                                                                          |
 |:----------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **ID** | UC-14-FiltraggioSegnalazioni                                                                                                                                                                                                                                                                                                             |
@@ -253,8 +235,7 @@ Annotazioni:
 | **Success guarantees** | L'utente visualizza un sottoinsieme di segnalazioni corrispondenti ai filtri selezionati.                                                                                                                                                                                                                                                |
 | **Trigger** | -                                                                                                                                                                                                                                                                                                                                        |
 | **Main success scenario** | 1. L'utente seleziona uno o più filtri. <br> 2. Il sistema interroga il database e filtra le segnalazioni secondo i criteri impostati ([FR-11.2](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 3. Il sistema aggiorna la visualizzazione mostrando solo i risultati filtrati; il caso d'uso termina con successo. |
-| **Extensions** | 2a. Nessuna segnalazione soddisfa i criteri selezionati. <br> &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema mostra un risultato vuoto; il caso d'uso termina con fallimento.                                                                                                                                                                   |
-
+| **Extensions** | 2a. Nessuna segnalazione soddisfa i criteri selezionati. <br> &nbsp;&nbsp;&nbsp;&nbsp;2a.1 Il sistema mostra un risultato vuoto; il caso d'uso termina con successo.                                                                                                                                                                     |
 
 | Use Case||
 |:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -337,21 +318,21 @@ Annotazioni:
 | **Main success scenario** | 1. L'utente chiede di visualizzare le statistiche pubbliche. <br> 2. Il sistema interroga il database e mostra le statistiche pubbliche richieste ([FR-16](./02_RequirementsEngineering.md#6-functional-requirements-fr)). <br> 3. L'utente applica filtri ai dati ottenuti. <br> 4. Il sistema aggiorna dinamicamente la visualizzazione; il caso d'uso termina con successo. |
 | **Extensions** | 3a.  L'elaborazione dei dati da parte del sistema fallisce. <br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema mostra un messaggio di errore, il caso d'uso riprende dal punto 2.|
 
-| Use Case||
-|:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ID**| UC-20-AnalisiAvanzataAmministratore|
-| **Scope**| Sistema web Participium.|
-| **Level** | User goal.|
-| **Intention in Context**    | Analizzare dati complessi per monitorare l'efficienza del servizio.|
-| **Primary actor**           | Amministratore.|
-| **Supporting actors**       | - |
-| **Stakeholders' interests** | Amministratore: analizzare l'efficienza del servizio e identificare eventuali criticità. <br> Comune di Torino: disporre di reportistica dettagliata per migliorare il servizio.|
-| **Precondition**            | -|
-| **Minimum guarantees**      | Se l'elaborazione fallisce, il sistema mostra un messaggio di errore e non aggiorna i dati visualizzati.|
-| **Success guarantees**      | Il sistema genera report e grafici basati su metriche private non accessibili al pubblico.|
-| **Trigger**|-|
-| **Main success scenario**   | 1. L'amministratore chiede di effettuare un'analisi avanzata.   <br>  2. L'amministratore seleziona i parametri da considerare nell'analisi.   <br>  3. Il sistema elabora i dati tramite query.  <br>  4. Il sistema mostra tabelle e  grafici avanzati [FR-17](./02_RequirementsEngineering.md#6-functional-requirements-fr); il caso d'uso termina con successo.|
-| **Extensions**              | 3a. L'elaborazione dei dati da parte del sistema fallisce.  <br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema mostra un messaggio di errore, il caso d'uso riprende dal punto 2.|
+| Use Case|                                                                                                                                                                                                                                                                                                                                                                       |
+|:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **ID**| UC-20-AnalisiAvanzataAmministratore                                                                                                                                                                                                                                                                                                                                   |
+| **Scope**| Sistema web Participium.                                                                                                                                                                                                                                                                                                                                              |
+| **Level** | User goal.                                                                                                                                                                                                                                                                                                                                                            |
+| **Intention in Context**    | Analizzare dati complessi per monitorare l'efficienza del servizio.                                                                                                                                                                                                                                                                                                   |
+| **Primary actor**           | Amministratore.                                                                                                                                                                                                                                                                                                                                                       |
+| **Supporting actors**       | -                                                                                                                                                                                                                                                                                                                                                                     |
+| **Stakeholders' interests** | Amministratore: analizzare l'efficienza del servizio e identificare eventuali criticità. <br> Comune di Torino: disporre di reportistica dettagliata per migliorare il servizio.                                                                                                                                                                                      |
+| **Precondition**            | -                                                                                                                                                                                                                                                                                                                                                                     |
+| **Minimum guarantees**      | Se l'elaborazione fallisce, il sistema mostra un messaggio di errore e non aggiorna i dati visualizzati.                                                                                                                                                                                                                                                              |
+| **Success guarantees**      | Il sistema genera report e grafici basati su metriche private non accessibili al pubblico.                                                                                                                                                                                                                                                                            |
+| **Trigger**| -                                                                                                                                                                                                                                                                                                                                                                     |
+| **Main success scenario**   | 1. L'amministratore chiede di effettuare un'analisi avanzata.   <br>  2. L'amministratore seleziona i parametri da considerare nell'analisi.   <br>  3. Il sistema elabora i dati tramite query.  <br>  4. Il sistema mostra tabelle e  grafici avanzati ([FR-17](./02_RequirementsEngineering.md#6-functional-requirements-fr)); il caso d'uso termina con successo. |
+| **Extensions**              | 3a. L'elaborazione dei dati da parte del sistema fallisce.  <br> &nbsp;&nbsp;&nbsp;&nbsp;3a.1 Il sistema mostra un messaggio di errore, il caso d'uso riprende dal punto 2.                                                                                                                                                                                           |
 
 | Use Case                    ||
 |:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
