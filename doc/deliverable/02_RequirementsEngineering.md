@@ -64,7 +64,7 @@ esterne.
 
 # 5) User Stories
 
-| ID    | Persona/Role                              | User story (As a… I want… so that…)                                                                                                                                                                                                     |
+| ID| Persona/Role| User story (As a… I want… so that…)|
 |:------|:------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | US-01 | Marco - Cittadino (autenticato)           | Come cittadino, voglio poter modificare le mie credenziali d'accesso e il mio profilo utente così da poter mantenere aggiornata la mia identità.|
 | US-02 | Marco - Cittadino (autenticato)           | Come cittadino, voglio poter recuperare le mie credenziali autonomamente, così da rientrare in possesso del mio account senza doverne creare uno nuovo.|     
@@ -78,7 +78,7 @@ esterne.
 | US-10 | Emanuele - Cittadino (autenticato)        | Come cittadino, voglio avere la possibilità di esportare le segnalazioni in CSV per condurre un'analisi personale.|
 | US-11 | Emanuele - Cittadino (autenticato)        | Come cittadino, voglio poter effettuare un logout così da proteggere il mio account quando uso dispositivi condivisi.|
 | US-12 | Emanuele - Cittadino (autenticato)        | Come cittadino, voglio poter accedere al sistema utilizzando le mie credenziali, tenendo traccia delle mie attività.|
-| US-13 | Pietro - Cittadino (autenticato)          | Come cittadino, voglio segnalare anonimamente i disservizi allegandone foto, posizione geografica e descrizione, così da contribuire al miglioramento della città.|
+| US-13 | Pietro - Cittadino (autenticato)          | Come cittadino, voglio segnalare anonimamente i disservizi allegandone foto, posizione geografica, categoria e descrizione, così da contribuire al miglioramento della città.|
 | US-14 | Pietro - Cittadino (autenticato)          | Come cittadino, voglio effettuare ricerche testuali, filtrate e ordinate, così da individuare rapidamente i problemi che mi interessano.|
 | US-15 | Giulia - Operatore comunale               | Come operatore, voglio poter rifiutare segnalazioni aggiungendo una motivazione così da spiegare al cittadino il motivo della mancata presa in carico.|
 | US-16 | Giulia - Operatore comunale               | Come operatore, voglio poter comunicare direttamente con il cittadino tramite il servizio di messaggistica così da richiedere chiarimenti riguardanti la segnalazione effettuata.|
@@ -103,7 +103,7 @@ esterne.
 | FR-5.1  | Il sistema deve permettere l'inserimento della foto profilo                                           | Bassa    |US-01| Per i cittadini registrati deve essere possibile (opzionalmente) l'inserimento di una foto profilo|
 | FR-6   | Il sistema deve consentire ai cittadini di inserire le segnalazioni                                   | Alta     |US-13| Possibile solo per i cittadini autenticati. le segnalazioni includono: titolo, posizione scelta tramite mappa, descrizione, categoria e da 1 a 3 foto.|
 | FR-6.1 | Il sistema deve consentire ai cittadini di nascondere la proria identità nelle segnalazioni tramite opzione di anonimato pubblico | Alta |US-13| Deve essere possibile contrassegnare una segnalazione come anonima. In tal caso l'identità non è mostrata pubblicamente.                                                                                                       |
-| FR-6.2 | Il sistema deve permettere di selezionare una categoria per la segnalazione da un elenco predefinito  | Alta     | | Le categorie tra cui è possibile scegliere sono: Waterworks, Architectural Barriers, Sewerage, Public Lighting, Waste, Road Signs and Traffic Lights, Roads and Urban Furniture, Public Green Areas and Playgrounds, Other.|
+| FR-6.2 | Il sistema deve permettere di selezionare una categoria per la segnalazione da un elenco predefinito  | Alta     | US-13| Le categorie tra cui è possibile scegliere sono: Waterworks, Architectural Barriers, Sewerage, Public Lighting, Waste, Road Signs and Traffic Lights, Roads and Urban Furniture, Public Green Areas and Playgrounds, Other.|
 | FR-7   | Il sistema deve permettere agli operatori comunali di approvare o rifiutare le segnalazioni        | Alta     |US-15  | Se una segnalazione è ritenuta valida da un operatore comunale deve essere approvata e assegnata (Assigned), altrimenti deve essere respinta.|
 | FR-7.1 | Il sistema deve garantire una motivazione nel caso di segnalazione respinta                        | Alta    | US-15          | Non deve essere possibile rifiutare una segnalazione senza fornire una motivazione.|
 | FR-8   | Il sistema deve gestire gli stati delle segnalazioni                                                  | Alta     | US-17| Il sistema deve gestire gli stati delle segnalazioni: assigned, in progress, suspended, rejected, resolved|
@@ -126,15 +126,11 @@ esterne.
 
 ## Nota sulle transizioni tra stati
 
-Una segnalazione entra automaticamente nello stato **pending approval** nel momento in cui viene creata dal cittadino.
-Da questo punto, tutte le transizioni successive sono attivate manualmente dall'operatore comunale. Se l'operatore
-ritiene valida la segnalazione cambia stato in **assigned** segnalando la presa in carico, in caso contrario può essere
-direttamente **rejected** con motivazione obbligatoria da parte dell'operatore. Una volta assegnata l'operatore avvia l'
-intervento portandola in **in progress**, oppure la sospende temporaneamente tramite lo stato **suspended**. Dallo stato
-**in progress** la segnalazione può essere sospesa tramite **suspended** oppure chiusa come **resolved** una volta
-completato l'intervento. Una segnalazione sospesa può essere ripresa tramite lo stato **in progress**. Gli stati *
-*resolved** e **rejected** sono terminali dunque una
-segnalazione che vi entra non può più cambiare stato.
+Una segnalazione entra automaticamente nello stato **pending approval** nel momento in cui viene creata dal cittadino. Da questo punto, tutte le transizioni successive sono attivate manualmente dall'operatore comunale. Se l'operatore ritiene valida la segnalazione cambia stato in '**assigned**' segnalando la presa in carico, in caso contrario viene cambiato in '**rejected**'. In tal caso l'operatore deve obbligatoriamente fornire una motivazione per il rifiuto. <br>
+Una volta assegnata la segnalazione, quando l'operatore avvia l'intervento lo stato può cambiare in '**in progress**', oppure la segnalazione può essere sospesa temporaneamente con conseguente cambio di stato in **suspended** e ripresa successivamente. <br>
+Una volta che l'intervento è completato, lo stato della segnalazione può essere cambiato in '**resolved**'. <br>
+Gli stati **resolved** e **rejected** sono terminali, una
+segnalazione che vi entra non può più cambiare stato. <br> <br>
 
 ![Diagramma di transizione tra stati](../../data/img/state-diagram.png)
 
