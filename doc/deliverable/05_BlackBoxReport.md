@@ -4,9 +4,35 @@ Suggested test file: `test_authenticate.py`
 
 Prototype: `authenticate(identifier: str, password: str) -> User`
 
+ATTENZIONE: CONTROLLA SOLAMENTE LE STRINGHE CHE INSERIAMO, NON LA VALIDAZIONE DELLE CREDENZIALI O LO STATO DELL'ACCOUNT
+
+Criterio:
+- identifier
+
+Predicati:
+- identifier è vuoto  --> non valido
+- identifier non esistente --> non valido
+- identifier esistente --> valido
+
+
+Criterio: password
+
+Predicati:
+- password è vuoto --> non valido
+- password inserita
+
+Classi di Equivalenza
+- AUTH1: identifier vuoto
+- AUTH2: identifier non esistente
+- AUTH3: identifier esistente
+- AUTH4: password vuoto
+
+
 | TC-ID | identifier | password | Expected | Fixture |
 | :---- | :--------- | :------- | :------- | :------ |
-|  |  |  |  |  |
+| AU01 | nome_cognome@studenti.polito.it | password123 | User object | L'utente esiste |
+| AU02 | nome_cognome@studenti.polito.it | wrong_password | None | L'utente esiste |
+| AU03 | nome_cognome@studenti.polito.it  | 
 
 ## 2 `participium.core.utils.parse_date`
 
