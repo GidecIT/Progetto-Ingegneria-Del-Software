@@ -4,22 +4,25 @@ Suggested test file: `test_authenticate.py`
 
 Prototype: `authenticate(identifier: str, password: str) -> User`
 
-ATTENZIONE: CONTROLLA SOLAMENTE LE STRINGHE CHE INSERIAMO, NON LA VALIDAZIONE DELLE CREDENZIALI O LO STATO DELL'ACCOUNT
+ATTENZIONE: CONTROLLA ANCHE LA VALIDAZIONE DELLE CREDENZIALI O LO STATO DELL'ACCOUNT? 
+            NON CONTROLLA LA SINTASSI DELLE CREDENZIALI
+
+Requisiti:
+- il sistema deve permettere all'utente di autenticarsi a sistema
 
 Criterio:
 - identifier
 
 Predicati:
 - identifier è vuoto  --> non valido
-- identifier non esistente --> non valido
-- identifier esistente --> valido
+- identifier non vuoto --> valido
 
 
 Criterio: password
 
 Predicati:
 - password è vuoto --> non valido
-- password inserita
+- password non vuota --> valida
 
 Classi di Equivalenza
 - AUTH1: identifier vuoto
