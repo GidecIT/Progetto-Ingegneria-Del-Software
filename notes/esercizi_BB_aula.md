@@ -50,6 +50,7 @@ Per customer_type:
 - EC5: other
 
 Combinations of equivalence classes
+
 Since the function has two inputs, valid combinations must be considered.
     
     EC1 × EC3
