@@ -290,9 +290,167 @@ Suggested test file: `test_send_message.py`
 
 Prototype: `send_message(report: Report, sender: User, body: str) -> Message`
 
-| TC-ID | report | sender | body | Expected | Fixture |
-| :---- | :----- | :----- | :--- | :------- | :------ |
-|  |  |  |  |  |  |
+**Requisiti**:
+- Se o il report o l'id del report sono nulli il sistema deve generare un _ValidationError_. 
+- Se o il mittente o l'id del mittente sono nulli il sistema deve generare un _ValidationError_.
+- Se il mittente non può accedere al thread di messaggistica del report in questione il sistema deve generare un _AuthorizationError_.
+- Se il testo del messaggio è vuoto il sistema deve generare un _ValidationError_.  
+- Se il sistema non riesce a risolvere un destinatario del messaggio deve generare un _ValidationError_.
+- Se sia l'utente che il report esistono e hanno un id valido, l'utente può accedere ai messaggi del report e il testo del messaggio non è vuoto, il sistema ritorna un oggetto di tipo _Message_.
+
+**Criterio:** report
+
+**Predicati:**
+
+- report == null --> non valido
+- report.id == null --> non valido 
+- report.reporter_id == null --> non valido 
+- report esiste con il proprio id e reporter id validi --> valido 
+
+
+**Criterio:** sender
+
+**Predicati:**
+
+- sender == null --> non valido
+- sender.id == null --> non valido
+- il sender non ha lo stesso id del reporter (sender.id != report.reporter_id) --> non valido
+- sender esiste e ha lo stesso id del reporter (sender.id == report.reporter_id) --> valido
+
+
+**Criterio:** body
+
+**Predicati:**
+
+- body == null --> non valido
+- body è vuoto oppure contiene solo caratteri di tipo whitespace --> non valido
+- body contiene non solo caratteri di tipo whitespace --> valido
+
+### Equivalence Classes
+
+**Per report:**
+- **EC1**: report == null
+- **EC2**: report.id == null
+- **EC3**: report.reporter_id == null
+- **EC4**: report id e reporter id validi
+
+**Per sender:**
+- **EC5**: sender == null
+- **EC6**: sender.id == null
+- **EC7**: sender.id != report.reporter_id
+- **EC8**: sender id valido
+
+**Per body:**
+- **EC9**: body == null
+- **EC10**: body vuoto o con solo whitespace 
+- **EC11**: body valido 
+
+
+### Combinations of Equivalence Classes 
+
+Combinazioni possibili secondo i predicati:
+
+    EC1 x EC5 x EC9
+    EC1 x EC5 x EC10
+    EC1 x EC5 x EC11
+
+    EC1 x EC6 x EC9
+    EC1 x EC6 x EC10
+    EC1 x EC6 x EC11
+
+    EC1 x EC7 x EC9
+    EC1 x EC7 x EC10
+    EC1 x EC7 x EC11
+
+    EC1 x EC8 x EC9
+    EC1 x EC8 x EC10
+    EC1 x EC8 x EC11
+
+
+    EC2 x EC5 x EC9
+    EC2 x EC5 x EC10
+    EC2 x EC5 x EC11
+
+    EC2 x EC6 x EC9
+    EC2 x EC6 x EC10
+    EC2 x EC6 x EC11
+
+    EC2 x EC7 x EC9
+    EC2 x EC7 x EC10
+    EC2 x EC7 x EC11
+
+    EC2 x EC8 x EC9
+    EC2 x EC8 x EC10
+    EC2 x EC8 x EC11
+
+
+    EC3 x EC5 x EC9
+    EC3 x EC5 x EC10
+    EC3 x EC5 x EC11
+
+    EC3 x EC6 x EC9
+    EC3 x EC6 x EC10
+    EC3 x EC6 x EC11
+
+    EC3 x EC7 x EC9
+    EC3 x EC7 x EC10
+    EC3 x EC7 x EC11
+
+    EC3 x EC8 x EC9
+    EC3 x EC8 x EC10
+    EC3 x EC8 x EC11
+
+
+    EC4 x EC5 x EC9
+    EC4 x EC5 x EC10
+    EC4 x EC5 x EC11
+
+    EC4 x EC6 x EC9
+    EC4 x EC6 x EC10
+    EC4 x EC6 x EC11
+
+    EC4 x EC7 x EC9
+    EC4 x EC7 x EC10
+    EC4 x EC7 x EC11
+
+    EC4 x EC8 x EC9
+    EC4 x EC8 x EC10
+    EC4 x EC8 x EC11
+
+Definiamo i seguenti oggetti da usare nei test:
+- **user1**: utente con un campo id valido e uguale ad 1.
+- **user2**: utente con un campo id valido e uguale ad 2.
+- **user3**: utente con un campo id nullo.
+- **report1**: report fatto dall'utente 1.
+- **report2**: report con un campo reporter_id nullo.
+- **report3**: report con un campo id nullo.
+
+| TC-ID | report | sender | body | EC covered | Expected | Fixture |
+| :---- | :----- | :----- | :--- | :--------- | :------- | :------ |
+| MS01 | null | null | null |EC1, EC5, EC9 | ValidationError | Tutti e tre i campi omessi  |
+| MS02 | null | user1 | null | EC1, EC8, EC9 | ValidationError | User valido ma altri due campi omessi |
+| MS03 | report1 | null | null | EC4, EC5, EC9 | ValidationError | Report valido ma altri due campi omessi |
+| MS04 | null | null | "ciao" | EC1, EC5, EC11 | ValidationError | Body valido ma altri due campi omessi |
+| MS05 | report1 | user1 | null | EC4, EC8, EC9 | ValidationError | Body omesso |
+| MS06 | report1 | null | "ciao" | EC4, EC5, EC11 | ValidationError  | User omesso |
+| MS07 | null | user1 | "ciao" | EC4, EC8, EC11 | ValidationError  | Report omesso |
+| MS08 | report1 | user1 | "" | EC4, EC8, EC10 | ValidationError | Body vuoto |
+| MS09 | report1 | user2 | "ciao" | EC4, EC7, EC11 | AuthorizationError | Report non fatto dal mittente |
+| MS10 | report1 | user3 | "ciao" | EC4, EC6, EC11 | ValidationError  | User senza un campo id |
+| MS11 | report2 | user1 | "ciao" | EC2, EC6, EC11 | ValidationError  | Report senza un campo reporter_id |
+| MS12 | report3 | user1 | "ciao" | EC3, EC5, EC11 | ValidationError | Report senza un campo id |
+| MS13 | report1 | user1 | "ciao" | EC4, EC8, EC11 | Message | Tutto valido |
+
+### Boundary: messaging constraints
+
+**Boundary around body content:**
+
+| TC    | report | sender | body | Boundary covered | EC covered | Expected |
+| :---- | :----- | :----- | :--- | :--------------- | :--------- | :------- |
+| MSB01 | report1| user1  | "a"  | Minima lunghezza valida | EC4, EC8, EC11 | Message |
+| MSB02 | report1| user1  | " "  | Solo spazio bianco | EC4, EC8, EC10 | ValidationError |
+| MSB03 | report1| user1  | ""   | Stringa vuota | EC4, EC8, EC10 | ValidationError |
+
 
 ## 8 `participium.core.security.verify_password`
 
@@ -300,9 +458,78 @@ Suggested test file: `test_verify_password.py`
 
 Prototype: `verify_password(password: str, password_hash: str) -> bool`
 
-| TC-ID | password | password_hash | Expected | Fixture |
-| :---- | :------- | :------------ | :------- | :------ |
-|  |  |  |  |  |
+**Requisiti:**
+- Il sistema deve permettere la verifica di una password in chiaro rispetto ad un hash memorizzato.
+- Il sistema deve restituire `True` se la password corrisponde correttamente all'hash fornito.
+- Il sistema deve restituire `False` se la password non corrisponde all'hash fornito.
+- Il sistema deve invalidare la richiesta se la password o l'hash non sono forniti (null).
+
+**Criterio:** password
+
+**Predicati:**
+
+- password == null --> non valido
+- password != null --> valido
+
+
+**Criterio:** password_hash
+
+**Predicati:**
+
+- password_hash == null --> non valido
+- Le hash della password corrispondono (password_hash == hash(password)) --> valido
+- Le hash della password non corrispondono (password_hash != hash(password)) --> non valido
+
+
+### Equivalence Classes
+
+**Per password:**
+- **EC1**: password == null
+- **EC2**: password != null
+
+**Per password_hash:**
+- **EC3**: password_hash == null
+- **EC4**: hash corrispondono
+- **EC5**: hash non corrispondono
+
+
+### Combinations of Equivalence Classes 
+
+Combinazioni possibili secondo i predicati:
+
+    EC1 x EC3
+    EC1 x EC5
+    EC2 x EC3
+    EC2 x EC4
+    EC2 x EC5
+
+(EC1 x EC4 è impossibile poiché un hash non può corrispondere a un valore nullo)
+
+Definiamo i seguenti oggetti da usare nei test:
+- **pwd1**: stringa "pass123".
+- **hash1**: hash corretto di "pass123".
+- **hash2**: hash non corrispondente a "pass123".
+
+| TC-ID | password | password_hash | EC covered | Expected | Fixture |
+| :---- | :------- | :------------ | :--------- | :------- | :------ |
+| VP01 | pwd1 | hash1 | EC2, EC4 | True | Password e hash corretti |
+| VP02 | pwd1 | hash2 | EC2, EC5 | False | Password corretta, hash errato |
+| VP03 | pwd1 | null | EC2, EC3 | ValidationError | Password fornita, hash omesso |
+| VP04 | null | hash1 | EC1, EC5 | ValidationError | Password omessa, hash fornito |
+| VP05 | null | null | EC1, EC3 | ValidationError | Entrambi i campi omessi |
+
+
+### Boundary: password and hash comparison
+
+**Boundary around matching:**
+
+| TC    | password | password_hash | Boundary covered | EC covered | Expected |
+| :---- | :------- | :------------ | :--------------- | :--------- | :------- |
+| VPB01 | "pass123" | hash("pass123") | Uguaglianza | EC2, EC4 | True |
+| VPB02 | "pass123" | hash("Pass123") | Differenza lettera maiuscola | EC2, EC5 | False |
+| VPB03 | "pass123" | hash("pass12")  | Un carattere in meno | EC2, EC5 | False |
+| VPB04 | "pass123" | hash("pass1234")| Un carattere in più | EC2, EC5 | False |
+| VPB05 | ""        | hash("")        | Stringa vuota | EC2, EC4 | True |
 
 ## 9 `participium.services.notification_service.NotificationService.create_notification`
 
