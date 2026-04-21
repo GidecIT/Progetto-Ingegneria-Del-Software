@@ -39,12 +39,12 @@ User email non è verificata ( email_verified == False) --> non valido
 - **EC1**: identifier valido (username)
 - **EC2**: identifier valido (email)
 - **EC3**: identifier non esistente
-- **EC4**: identifier == null
+- **EC4**: identifier == None
 
 **Per password:**
 - **EC5**: password valida per l'utente inserito
 - **EC6**: password errata
-- **EC7**: password == null
+- **EC7**: password == None
 
 **Per stato User:**
 - **EC8**: User attivo e email verificata
@@ -56,11 +56,11 @@ User email non è verificata ( email_verified == False) --> non valido
 - EC1 × EC5 × EC8 -> autenticazione riuscita con username
 - EC2 × EC5 × EC8 -> autenticazione riuscita con email
 - EC1/EC2 × EC6 × EC8 -> autenticazione fallita per password errata
-- EC1/EC2 × EC7 × EC8 -> autenticazione fallita per password ==  null
+- EC1/EC2 × EC7 × EC8 -> autenticazione fallita per password ==  None
 - EC1/EC2 × EC5 × EC9-> autenticazione fallita per user non attivo
 - EC1/EC2 × EC5 × EC10 -> autenticazione fallita per user email non verificata
 - EC3 × qualsiasi password EC × qualsiasi stato User EC -> autenticazione fallita per identifier non valido
-- EC4 × qualsiasi password EC × qualsiasi stato User EC -> autenticazione fallita per identifier == null
+- EC4 × qualsiasi password EC × qualsiasi stato User EC -> autenticazione fallita per identifier == None
 
 
 
@@ -70,12 +70,12 @@ User email non è verificata ( email_verified == False) --> non valido
 | AU02 | `mario.r@polito.it`   | `pass123` | EC2, EC5, EC8   | User obj | Email e password corretti, user attivo e email verificata |
 | AU03 | `mario_r`         | `wrong`   | EC1, EC6   | None | Username corretto, password errata  |
 | AU04 | `mario.r@polito.it`   | `wrong`   | EC2, EC6 | None | Email corretta, password errata |
-| AU05 | `mario_r`         | null      | EC1, EC7   | None | Username corretto, password omessa |
-| AU06 | `mario.r@polito.it`   | null      | EC2, EC7   | None | Email corretta, password omessa  |
+| AU05 | `mario_r`         | None      | EC1, EC7   | None | Username corretto, password omessa |
+| AU06 | `mario.r@polito.it`   | None      | EC2, EC7   | None | Email corretta, password omessa  |
 | AU07 | `unknown_user`    | `pass123` | EC3   | None| Username inesistente |
 | AU08 | `unknown@mail.it` | `pass123` | EC3| None| Email inesistente |
-| AU09 | null              | `pass123` | EC4 | None| Identifier omesso  |
-| AU10 | null              | null      | EC4, EC7   | None| Entrambi i campi omessi |
+| AU09 | None              | `pass123` | EC4 | None| Identifier omesso  |
+| AU10 | None              | None      | EC4, EC7   | None| Entrambi i campi omessi |
 | AU11 | `mario_r`         | `pass123` | EC1, EC5, EC9   | None | Username e password corretti, user non attivo |
 | AU12 | `mario_r`         | `pass123` | EC2, EC5, EC10   | None | Email e password corretti, user email non verificata |
 
@@ -187,13 +187,13 @@ Allowed transitions:
 - **EC04**: `current_status == SUSPENDED`
 - **EC05**: `current_status == REJECTED`
 - **EC06**: `current_status == RESOLVED`
-- **EC07**: `current_status != any ReportStatus` || `current_status == null`
+- **EC07**: `current_status != any ReportStatus` || `current_status == None`
 
 **Per next_status:**
 
 - **EC08**: `next_status` è un valore permesso per lo stato corrente
 - **EC09**: `next_status` è un valore NON permesso per lo stato corrente
-- **EC10**: `next_status != any ReportStatus` || `next_status == null`
+- **EC10**: `next_status != any ReportStatus` || `next_status == None`
 
 ### Combinations of Equivalence Classes 
 
@@ -239,9 +239,9 @@ Combinazioni possibili secondo i predicati:
 | TR10 | `REJECTED`         | `IN_PROGRESS`     | EC05, EC09 | `ValidationError` | Transizione non ammessa dal workflow   |
 | TR11 | `RESOLVED`         | `RESOLVED`        | EC06, EC08 | `True`            | Auto-transizione sempre ammessa        |
 | TR12 | `RESOLVED`         | `ASSIGNED`        | EC06, EC09 | `ValidationError` | Transizione non ammessa dal workflow   |
-| TR13 | null               | `ASSIGNED`        | EC07, EC08 | `ValidationError` | Current status omesso                  |
+| TR13 | None               | `ASSIGNED`        | EC07, EC08 | `ValidationError` | Current status omesso                  |
 | TR14 | `INVALID`          | `ASSIGNED`        | EC07, EC08 | `ValidationError` | Current status non esistente           |
-| TR15 | `PENDING_APPROVAL` | null              | EC01, EC10 | `ValidationError` | Next status omesso                     |
+| TR15 | `PENDING_APPROVAL` | None              | EC01, EC10 | `ValidationError` | Next status omesso                     |
 | TR16 | `PENDING_APPROVAL` | `UNKNOWN`         | EC01, EC10 | `ValidationError` | Next status non esistente              |
 
 ### Boundary: workflow transitions
@@ -254,8 +254,8 @@ Combinazioni possibili secondo i predicati:
 | TRB02 | `PENDING_APPROVAL` | `REJECTED`        | Exact boundary     | EC1, EC8   | `True`|
 | TRB03 | `ASSIGNED`         | `RESOLVED`        | Exact boundary     | EC2, EC8   | `True`|
 | TRB04 | `SUSPENDED`        | `IN_PROGRESS`     | Exact boundary    | EC4, EC8   | `True`|
-| TRB05 | null               | `ASSIGNED`        | Immediately below | EC7, EC8   | `ValidationError` |
-| TRB06 | `PENDING_APPROVAL` | null              | Immediately below | EC1, EC10  | `ValidationError` |
+| TRB05 | None               | `ASSIGNED`        | Immediately below | EC7, EC8   | `ValidationError` |
+| TRB06 | `PENDING_APPROVAL` | None              | Immediately below | EC1, EC10  | `ValidationError` |
 | TRB07 | `INVALID_STATE`    | `ASSIGNED`        | Immediately below | EC7, EC8   | `ValidationError` |
 | TRB08 | `PENDING_APPROVAL` | `UNKNOWN`         | Immediately below | EC1, EC10  | `ValidationError` |
 | TRB09 | `REJECTED`         | `RESOLVED`        | Immediately above | EC5, EC9   | `ValidationError` |
@@ -267,10 +267,10 @@ Suggested test file: `test_create_report.py`
 Prototype: `create_report(reporter: User, category_id: int | str | None, title: str | None, description: str | None, latitude: float | str | None, longitude: float | str | None, photos: list[FileStorage], is_anonymous: bool = False) -> Report`
 
 **Requisiti:**
-- Se il reporter è nullo o non ha un id valido, il sistema deve restituire un errore di validazione (ValidationError).
-- Se il category_id è nullo, malformato o si riferisce a una categoria sconosciuta o a una categoria inattiva, il sistema deve restituire un errore di validazione (ValidationError).
-- Se la descrizione o il titolo sono nulli o vuoti, il sistema deve restituire un errore di validazione (ValidationError).
-- Se le coordinate geografiche sono nulle o non possono essere convertite in valori numerici, il sistema deve restituire un errore di validazione (ValidationError).
+- Se il reporter è Noneo o non ha un id valido, il sistema deve restituire un errore di validazione (ValidationError).
+- Se il category_id è Noneo, malformato o si riferisce a una categoria sconosciuta o a una categoria inattiva, il sistema deve restituire un errore di validazione (ValidationError).
+- Se la descrizione o il titolo sono Nonei o vuoti, il sistema deve restituire un errore di validazione (ValidationError).
+- Se le coordinate geografiche sono Nonee o non possono essere convertite in valori numerici, il sistema deve restituire un errore di validazione (ValidationError).
 - Se la lista di foto contiene zero foto valide  o più di 3 foto valide, il sistema deve restituire un errore di validazione (ValidationError).
 - Se tutti i campi sono validi, il sistema deve restituire un oggetto di tipo Report.
 
@@ -333,11 +333,11 @@ Sono presenti da 1 a 3 foto valide --> valid
 ### Combinations of Equivalence Classes 
 EC2 x EC5 x EC8 x EC11 x EC13 --> Report creato con successo
 EC1 x EC5 x EC8 x EC11 x EC13 --> reporter non valido
-EC2 x EC3 x EC8 x EC11 x EC13 --> category_id nullo
+EC2 x EC3 x EC8 x EC11 x EC13 --> category_id Noneo
 EC2 x EC4 x EC8 x EC11 x EC13 --> category_id malformato o sconosciuto
-EC2 x EC5 x EC6 x EC11 x EC13 --> title o description nulli o vuoti
+EC2 x EC5 x EC6 x EC11 x EC13 --> title o description Nonei o vuoti
 EC2 x EC5 x EC7 x EC11 x EC13 --> title o description non validi
-EC2 x EC5 x EC8 x EC9 x EC13 --> latitude o longitude nulli
+EC2 x EC5 x EC8 x EC9 x EC13 --> latitude o longitude Nonei
 EC2 x EC5 x EC8 x EC10 x EC13 --> latitude o longitude non validi
 EC2 x EC5 x EC8 x EC11 x EC12 --> numero di foto non valido
 
@@ -346,11 +346,11 @@ EC2 x EC5 x EC8 x EC11 x EC12 --> numero di foto non valido
 | :---- | :------- | :---------- | :---- | :---------- | :------- | :-------- | :----- | :----------- | :------- | :------- | :------ |
 |CR1| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | EC2, EC5, EC8, EC11, EC13  | Report |  |
 |CR2| None | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | EC1, EC5, EC8, EC11, EC13 | ValidationError | Reporter non valido |
-|CR3| user | "" | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC3, EC8, EC11, EC13| False | ValidationError | Categoria nulla | 
+|CR3| user | "" | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC3, EC8, EC11, EC13| False | ValidationError | Categoria Nonea | 
 |CR4| user | df | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC4, EC8, EC11, EC13 | False | ValidationError | Categoria non vallida|
 |CR5| user | 4 | "" | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC5, EC6, EC11, EC13 | False | ValidationError | Titolo vuoto|
 |CR6| user | 4 | Buca profonda |&&&%&£/$"(")"$$&"| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC5, EC7, EC11, EC13 | False | ValidationError | Descrizione non valida |
-|CR8| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | "" | [foto_buca.jpg] | EC2,EC5,EC8,EC9,EC13 | False | ValidationError | Longitude nulla |
+|CR8| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | "" | [foto_buca.jpg] | EC2,EC5,EC8,EC9,EC13 | False | ValidationError | Longitude Nonea |
 |CR9| user | 4 | Buca profonda | Buca profonda in piazza Castello| Quarantacinque | "7.6856" | [foto_buca.jpg] | EC2,EC5,EC8,EC10,EC13 | False | ValidationError | Formato Latitude non convertibile |
 |CR10| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [] | EC2, EC5, EC8, EC11, EC12 | False | ValidationError | Nessuna foto presente |
 
@@ -409,8 +409,8 @@ Suggested test file: `test_send_message.py`
 Prototype: `send_message(report: Report, sender: User, body: str) -> Message`
 
 **Requisiti**:
-- Se o il report o l'id del report sono nulli il sistema deve generare un ValidationError. 
-- Se o il mittente o l'id del mittente sono nulli il sistema deve generare un ValidationError.
+- Se o il report o l'id del report sono Nonei il sistema deve generare un ValidationError. 
+- Se o il mittente o l'id del mittente sono Nonei il sistema deve generare un ValidationError.
 - Se il mittente non può accedere al thread di messaggistica del report in questione il sistema deve generare un AuthorizationError.
 - Se il testo del messaggio è vuoto il sistema deve generare un ValidationError.  
 - Se il sistema non riesce a risolvere un destinatario del messaggio deve generare un ValidationError.
@@ -447,111 +447,53 @@ Prototype: `send_message(report: Report, sender: User, body: str) -> Message`
 ### Equivalence Classes
 
 **Per report:**
-- **EC1**: report == null
-- **EC2**: report.id == null
-- **EC3**: report.reporter_id == null
+- **EC1**: report == None
+- **EC2**: report.id == None
+- **EC3**: report.reporter_id == None
 - **EC4**: report id e reporter id validi
 
 **Per sender:**
-- **EC5**: sender == null
-- **EC6**: sender.id == null
+- **EC5**: sender == None
+- **EC6**: sender.id == None
 - **EC7**: sender.id != report.reporter_id
 - **EC8**: sender id valido
 
 **Per body:**
-- **EC9**: body == null
+- **EC9**: body == None
 - **EC10**: body vuoto o con solo whitespace 
 - **EC11**: body valido 
 
 
 ### Combinations of Equivalence Classes 
 
+- EC4 x EC8 x EC11 -> oggetto messaggio ritornato con successo
+- EC1 x EC8 x EC11 -> fallimento per report Noneo
+- EC2 x EC8 x EC11 -> fallimento per report id Noneo
+- EC3 x EC8 x EC11 -> fallimento per reporter id Noneo
+- EC4 x EC5 x EC11 -> fallimento per sender Noneo
+- EC4 x EC6 x EC11 -> fallimento per sender id Noneo
+- EC4 x EC7 x EC11 -> fallimento per sender id diverso da reporter id
+- EC4 x EC8 x EC9 -> fallimento per body Noneo
+- EC4 x EC8 x EC10 -> fallimento per body vuoto o con solo whitespace
+
 Combinazioni possibili secondo i predicati:
-
-    EC1 x EC5 x EC9
-    EC1 x EC5 x EC10
-    EC1 x EC5 x EC11
-
-    EC1 x EC6 x EC9
-    EC1 x EC6 x EC10
-    EC1 x EC6 x EC11
-
-    EC1 x EC7 x EC9
-    EC1 x EC7 x EC10
-    EC1 x EC7 x EC11
-
-    EC1 x EC8 x EC9
-    EC1 x EC8 x EC10
-    EC1 x EC8 x EC11
-
-
-    EC2 x EC5 x EC9
-    EC2 x EC5 x EC10
-    EC2 x EC5 x EC11
-
-    EC2 x EC6 x EC9
-    EC2 x EC6 x EC10
-    EC2 x EC6 x EC11
-
-    EC2 x EC7 x EC9
-    EC2 x EC7 x EC10
-    EC2 x EC7 x EC11
-
-    EC2 x EC8 x EC9
-    EC2 x EC8 x EC10
-    EC2 x EC8 x EC11
-
-
-    EC3 x EC5 x EC9
-    EC3 x EC5 x EC10
-    EC3 x EC5 x EC11
-
-    EC3 x EC6 x EC9
-    EC3 x EC6 x EC10
-    EC3 x EC6 x EC11
-
-    EC3 x EC7 x EC9
-    EC3 x EC7 x EC10
-    EC3 x EC7 x EC11
-
-    EC3 x EC8 x EC9
-    EC3 x EC8 x EC10
-    EC3 x EC8 x EC11
-
-
-    EC4 x EC5 x EC9
-    EC4 x EC5 x EC10
-    EC4 x EC5 x EC11
-
-    EC4 x EC6 x EC9
-    EC4 x EC6 x EC10
-    EC4 x EC6 x EC11
-
-    EC4 x EC7 x EC9
-    EC4 x EC7 x EC10
-    EC4 x EC7 x EC11
-
-    EC4 x EC8 x EC9
-    EC4 x EC8 x EC10
-    EC4 x EC8 x EC11
-
 Definiamo i seguenti oggetti da usare nei test:
 - **user1**: utente con un campo id valido e uguale ad 1.
 - **user2**: utente con un campo id valido e uguale ad 2.
-- **user3**: utente con un campo id nullo.
+- **user3**: utente con un campo id Noneo.
 - **report1**: report fatto dall'utente 1.
-- **report2**: report con un campo reporter_id nullo.
-- **report3**: report con un campo id nullo.
+- **report2**: report con un campo reporter_id Noneo.
+- **report3**: report con un campo id Noneo.
 
 | TC-ID | report | sender | body | EC covered | Expected | Fixture |
 | :---- | :----- | :----- | :--- | :--------- | :------- | :------ |
-| MS01 | null | null | null |EC1, EC5, EC9 | ValidationError | Tutti e tre i campi omessi  |
-| MS02 | null | user1 | null | EC1, EC8, EC9 | ValidationError | User valido ma altri due campi omessi |
-| MS03 | report1 | null | null | EC4, EC5, EC9 | ValidationError | Report valido ma altri due campi omessi |
-| MS04 | null | null | "ciao" | EC1, EC5, EC11 | ValidationError | Body valido ma altri due campi omessi |
-| MS05 | report1 | user1 | null | EC4, EC8, EC9 | ValidationError | Body omesso |
-| MS06 | report1 | null | "ciao" | EC4, EC5, EC11 | ValidationError  | User omesso |
-| MS07 | null | user1 | "ciao" | EC4, EC8, EC11 | ValidationError  | Report omesso |
+| MS01 | None | None | None |EC1, EC5, EC9 | ValidationError | Tutti e tre i campi omessi  |
+| MS02 | None | user1 | None | EC1, EC8, EC9 | ValidationError | User valido ma altri due campi omessi |
+| MS03 | report1 | None | None | EC4, EC5, EC9 | ValidationError | Report valido ma altri due campi omessi |
+| MS04 | None | None | "ciao" | EC1, EC5, EC11 | ValidationError | Body valido ma altri due campi omessi |
+| MS05 | report1 | user1 | None | EC4, EC8, EC9 | ValidationError | Body omesso |
+| MS06 | report1 | None | "ciao" | EC4, EC5, EC11 | ValidationError  | User omesso |
+| MS07 | None | user1 | "ciao" | EC4, EC8, EC11 | ValidationError  | Report omesso |
 | MS08 | report1 | user1 | "" | EC4, EC8, EC10 | ValidationError | Body vuoto |
 | MS09 | report1 | user2 | "ciao" | EC4, EC7, EC11 | AuthorizationError | Report non fatto dal mittente |
 | MS10 | report1 | user3 | "ciao" | EC4, EC6, EC11 | ValidationError  | User senza un campo id |
@@ -580,14 +522,14 @@ Prototype: `verify_password(password: str, password_hash: str) -> bool`
 - Il sistema deve permettere la verifica di una password in chiaro rispetto ad un hash memorizzato.
 - Il sistema deve restituire `True` se la password corrisponde correttamente all'hash fornito.
 - Il sistema deve restituire `False` se la password non corrisponde all'hash fornito.
-- Il sistema deve invalidare la richiesta se la password o l'hash non sono forniti (null).
+- Il sistema deve invalidare la richiesta se la password o l'hash non sono forniti (None).
 
 **Criterio:** password
 
 **Predicati:**
 
 - password è None--> non valido
-- password != null --> valido
+- password != None --> valido
 
 
 **Criterio:** password_hash
@@ -602,11 +544,11 @@ Prototype: `verify_password(password: str, password_hash: str) -> bool`
 ### Equivalence Classes
 
 **Per password:**
-- **EC1**: password == null
-- **EC2**: password != null
+- **EC1**: password == None
+- **EC2**: password != None
 
 **Per password_hash:**
-- **EC3**: password_hash == null
+- **EC3**: password_hash == None
 - **EC4**: hash corrispondono
 - **EC5**: hash non corrispondono
 
@@ -615,13 +557,10 @@ Prototype: `verify_password(password: str, password_hash: str) -> bool`
 
 Combinazioni possibili secondo i predicati:
 
-    EC1 x EC3
-    EC1 x EC5
-    EC2 x EC3
-    EC2 x EC4
-    EC2 x EC5
-
-(EC1 x EC4 è impossibile poiché un hash non può corrispondere a un valore nullo)
+- EC2 x EC4 -> hash corrispondono, funzione ritorna vero
+- EC2 x EC5 -> hash non corrispondono, funzione ritorna falso
+- EC1 x EC5 -> errore causato da password Nonea
+- EC2 x EC3 -> errore causato da hash Nonea
 
 Definiamo i seguenti oggetti da usare nei test:
 - **pwd1**: stringa "pass123".
@@ -632,9 +571,9 @@ Definiamo i seguenti oggetti da usare nei test:
 | :---- | :------- | :------------ | :--------- | :------- | :------ |
 | VP01 | pwd1 | hash1 | EC2, EC4 | True | Password e hash corretti |
 | VP02 | pwd1 | hash2 | EC2, EC5 | False | Password corretta, hash errato |
-| VP03 | pwd1 | null | EC2, EC3 | ValidationError | Password fornita, hash omesso |
-| VP04 | null | hash1 | EC1, EC5 | ValidationError | Password omessa, hash fornito |
-| VP05 | null | null | EC1, EC3 | ValidationError | Entrambi i campi omessi |
+| VP03 | pwd1 | None | EC2, EC3 | ValidationError | Password fornita, hash omesso |
+| VP04 | None | hash1 | EC1, EC5 | ValidationError | Password omessa, hash fornito |
+| VP05 | None | None | EC1, EC3 | ValidationError | Entrambi i campi omessi |
 
 
 ### Boundary: password and hash comparison
