@@ -487,7 +487,7 @@ Definiamo i seguenti oggetti da usare nei test:
 
 | TC-ID | report | sender | body | EC covered | Expected | Fixture |
 | :---- | :----- | :----- | :--- | :--------- | :------- | :------ |
-| MS01 | None | None | None |EC1, EC5, EC9 | ValidationError | Tutti e tre i campi omessi  |
+| MS01 | None | None | None | EC1, EC5, EC9 | ValidationError | Tutti e tre i campi omessi  |
 | MS02 | None | user1 | None | EC1, EC8, EC9 | ValidationError | User valido ma altri due campi omessi |
 | MS03 | report1 | None | None | EC4, EC5, EC9 | ValidationError | Report valido ma altri due campi omessi |
 | MS04 | None | None | "ciao" | EC1, EC5, EC11 | ValidationError | Body valido ma altri due campi omessi |
