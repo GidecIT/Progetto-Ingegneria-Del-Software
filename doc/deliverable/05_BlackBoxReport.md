@@ -5,81 +5,79 @@
 **Prototype:** `authenticate(identifier: str, password: str) -> User`
 
 **Requisiti:**
-
-- Il sistema deve permettere all'utente di autenticarsi, accettando come identifier sia il suo username che il suo indirizzo email fornito, oltre alla propria password.
-- Il sistema deve invalidare la richiesta se identifier o password non sono forniti (null).
-- L'accesso è considerato valido solo se esiste una corrispondenza univoca nel database tra l'identificativo fornito e la password (hash) associata a quell'utente specifico.
-- In caso di credenziali valide, il sistema deve restituire l'oggetto User corrispondente.
-- In caso di credenziali non valide (identifier inesistente o password errata), il sistema deve restituire un errore di autenticazione.
+ Il sistema deve autenticare un utente tramite username o email e una password.
+ 
+- Se le credenziali sono errate, il sistema deve restituire un errore di autenticazione (AuthenticationError).
+- Se l'utente viene trovato, ma non è attivo, il sistema deve restituire un errore di autenticazione (AuthenticationError).
+- Se le credenziali sono corrette, il sistema deve restituire l'oggetto User corrispondente.
 
 **Criterio:** identifier
 
 **Predicati:**
-
-- identifier == null --> non valido
-- identifier != null & identifier == any User.username --> valido
-- identifier != null & identifier != any User.username --> non valido
-- identifier != null & identifier == any User.email --> valido
-- identifier != null & identifier != any User.email --> non valido
+identifier è None--> non valido
+identifier corrisponde a un username esistente --> valido
+identifier corrisponde a un'email esistente --> valido
+identifier non corrisponde ad un username o email esistente --> non valido
 
 **Criterio:** password
 
 **Predicati:**
+password è None--> non valido
+password corrisponde alla password hash dell'utente trovato --> valido
+password non corrisponde alla password hash dell'utente trovato --> non valido
 
-(NOTA p.4: serve al caso in cui identifier sia vuoto o non esistente (d.c. oggetto 'User' nullo o non trovato), escludendo la ricerca di una qualsiasi password corrispondente in tutto il DB come invece facciamo per le EC di identifier)
+**Criterio:** stato User
 
-- password == null --> non valido
-- password != null & password == User.password_hash --> valida
-- password != null & password != User.password_hash --> non valida
-- password != null & (User == null) --> non valida 
+**Predicati:**
+User è attivo e l'email è verificata ( is_active == True AND is_email_verified == True) --> valido
+User non è attivo ( is_active == False) --> non valido
+User email non è verificata ( email_verified == False) --> non valido
 
 ### Equivalence Classes
 
 **Per identifier:**
-
-- **EC1**: `identifier == null`
-- **EC2**: `identifier != null` & `identifier == any User.username`
-- **EC3**: `identifier != null` & `identifier != any User.username`
-- **EC4**: `identifier != null` & `identifier == any User.email`
-- **EC5**: `identifier != null` & `identifier != any User.email`
+- **EC1**: identifier valido (username)
+- **EC2**: identifier valido (email)
+- **EC3**: identifier non esistente
+- **EC4**: identifier == null
 
 **Per password:**
-- **EC6**: `password == null`
-- **EC7**: `password != null` & `password == User.password_hash`
-- **EC8**: `password != null` & `password != User.password_hash`
-- **EC9**: `password != null` & `User == null`
+- **EC5**: password valida per l'utente inserito
+- **EC6**: password errata
+- **EC7**: password == null
+
+**Per stato User:**
+- **EC8**: User attivo e email verificata
+- **EC9**: User non attivo
+- **EC10**: User email non verificata
 
 ### Combinations of Equivalence Classes 
 
-Combinazioni possibili secondo i predicati:
+- EC1 × EC5 × EC8 -> autenticazione riuscita con username
+- EC2 × EC5 × EC8 -> autenticazione riuscita con email
+- EC1/EC2 × EC6 × EC8 -> autenticazione fallita per password errata
+- EC1/EC2 × EC7 × EC8 -> autenticazione fallita per password ==  null
+- EC1/EC2 × EC5 × EC9-> autenticazione fallita per user non attivo
+- EC1/EC2 × EC5 × EC10 -> autenticazione fallita per user email non verificata
+- EC3 × qualsiasi password EC × qualsiasi stato User EC -> autenticazione fallita per identifier non valido
+- EC4 × qualsiasi password EC × qualsiasi stato User EC -> autenticazione fallita per identifier == null
 
-    EC1 × EC6
-    EC1 × EC9
-    EC2 × EC6
-    EC2 × EC7
-    EC2 × EC8
-    EC3 × EC6
-    EC3 × EC9
-    EC4 × EC6
-    EC4 × EC7
-    EC4 × EC8
-    EC5 × EC6
-    EC5 × EC9
+
 
 | TC   | identifier        | password  | EC covered | Expected | Fixture                                             |
 |:-----|:------------------|:----------|:-----------|:---------|:----------------------------------------------------|
-| AU01 | `mario_r`         | `pass123` | EC2, EC7   | User obj | Identifier (username) e password corretti|
-| AU02 | `m.r@polito.it`   | `pass123` | EC4, EC7   | User obj | Identifier (email) e password corretti|
-| AU03 | `mario_r`         | `wrong`   | EC2, EC8   | None | Identifier (username) corretto, password errata  |
-| AU04 | `m.r@polito.it`   | `wrong`   | EC4, EC8   | None | Identifier (email) corretto, password errata |
-| AU05 | `mario_r`         | null      | EC2, EC6   | None | Identifier (username) corretto, password omessa |
-| AU06 | `m.r@polito.it`   | null      | EC4, EC6   | None | Identifier (email) corretto, password omessa  |
-| AU07 | `unknown_user`    | `pass123` | EC3, EC9   | None| Identifier (username) inesistente, password fornita |
-| AU08 | `unknown@mail.it` | `pass123` | EC5, EC9   | None| Identifier (email), password fornita  |
-| AU09 | `unknown_user`    | null      | EC3, EC6   | None| Identifier (username), password omessa    |
-| AU10 | `unknown@mail.it` | null      | EC5, EC6   | None| Identifier (email), password omessa |
-| AU11 | null              | `pass123` | EC1, EC9   | None| Identifier omesso, password fornita  |
-| AU12 | null              | nul`      | EC1, EC6   | None| Entrambi i campi omessi |
+| AU01 | `mario_r`         | `pass123` | EC1, EC5, EC8   | User obj | Username e password corretti, user attivo e email verificata |
+| AU02 | `mario.r@polito.it`   | `pass123` | EC2, EC5, EC8   | User obj | Email e password corretti, user attivo e email verificata |
+| AU03 | `mario_r`         | `wrong`   | EC1, EC6   | None | Username corretto, password errata  |
+| AU04 | `mario.r@polito.it`   | `wrong`   | EC2, EC6 | None | Email corretta, password errata |
+| AU05 | `mario_r`         | null      | EC1, EC7   | None | Username corretto, password omessa |
+| AU06 | `mario.r@polito.it`   | null      | EC2, EC7   | None | Email corretta, password omessa  |
+| AU07 | `unknown_user`    | `pass123` | EC3   | None| Username inesistente |
+| AU08 | `unknown@mail.it` | `pass123` | EC3| None| Email inesistente |
+| AU09 | null              | `pass123` | EC4 | None| Identifier omesso  |
+| AU10 | null              | null      | EC4, EC7   | None| Entrambi i campi omessi |
+| AU11 | `mario_r`         | `pass123` | EC1, EC5, EC9   | None | Username e password corretti, user non attivo |
+| AU12 | `mario_r`         | `pass123` | EC2, EC5, EC10   | None | Email e password corretti, user email non verificata |
 
 ### Boundary: identifier recognition
 
@@ -88,28 +86,37 @@ Combinazioni possibili secondo i predicati:
 | TC    | identifier | password  | Boundary covered  | Expected |
 | :---- | :--------- | :-------- |:------------------|:---------|
 | AUB01 | `mario_r`  | `pass123` | Exact boundary    | User obj |
-| AUB02 | `mario_rx` | `pass123` | Immediately above | None     |
-| AUB03 | `mario_`   | `pass123` | Immediately below | None     |
-| AUB04 | `MARIO_R`  | `pass123` | Immediately above  | None     |
+| AUB02 | `mario_rx` | `pass123` | Immediately above | AuthenticationError     |
+| AUB03 | `mario_`   | `pass123` | Immediately below | AuthenticationError     |
+| AUB04 | `MARIO_R`  | `pass123` | Immediately above  | AuthenticationError     |
 
 **Boundary around "email":**
 
 | TC    | identifier          | password  | Boundary covered  | Expected |
 | :---- | :------------------ | :-------- |:------------------|:-----|
 | AUB05 | `m.r@polito.it`     | `pass123` | Exact boundary    | User obj |
-| AUB06 | `m.r@polito.it.com` | `pass123` | Immediately above | None |
-| AUB07 | `m.r@polito.i`      | `pass123` | Immediately below | None |
-| AUB08 | `m.r@polito.it `    | `pass123` | Immediately above | None |
+| AUB06 | `m.r@polito.it.com` | `pass123` | Immediately above | AuthenticationError |
+| AUB07 | `m.r@polito.i`      | `pass123` | Immediately below | AuthenticationError |
+| AUB08 | `m.r@polito.it `    | `pass123` | Immediately above | AuthenticationError |
 
 ### Boundary: password comparison
 
 | TC    | identifier | password   | Boundary covered   | Expected |
 | :---- | :--------- | :--------- |:-------------------|:---------|
 | AUB09 | `mario_r`  | `pass123`  | Exact boundary     | User obj |
-| AUB10 | `mario_r`  | `Pass123`  | Immediately below  | None     |
-| AUB11 | `mario_r`  | `pass12`   | Immediately below  | None     |
-| AUB12 | `mario_r`  | `pass1234` | Immediately above  | None     |
-| AUB13 | `mario_r`  | `p@ss123`  | Immediately below  | None     |
+| AUB10 | `mario_r`  | `Pass123`  | Immediately below  | AuthenticationError     |
+| AUB11 | `mario_r`  | `pass12`   | Immediately below  | AuthenticationError     |
+| AUB12 | `mario_r`  | `pass1234` | Immediately above  | AuthenticationError     |
+| AUB13 | `mario_r`  | `p@ss123`  | Immediately below  | AuthenticationError     |
+
+### Boundary: stato User
+| TC    | identifier | password  | stato User | Boundary covered  | Expected |
+| :---- | :--------- | :------------- |:------------------|:------------------|:---------|
+| AUB14 | `mario_r`  | `pass123` | is_active == True AND is_email_verified == True | Exact boundary     | User obj |
+| AUB15 | `mario_r`  | `pass123` | is_active == False | Immediately below  | AuthenticationError     |
+| AUB16 | `mario_r`  | `pass123` | is_email_verified == False | Immediately below  | AuthenticationError     |
+
+
 
 ## 2 `participium.core.utils.parse_date`
 
@@ -160,7 +167,7 @@ Allowed transitions:
 - current_status == SUSPENDED --> valido
 - current_status == REJECTED --> valido
 - current_status == RESOLVED --> valido
-- current_status != any ReportStatus || current_status == null --> non valido
+- current_status != any ReportStatus || current_status è None--> non valido
 
 **Criterio: next_status**
 
@@ -168,7 +175,7 @@ Allowed transitions:
 
 - next_status == stato permesso dalle regole nel workflow per current_status --> valido
 - next_status == stato NON permesso dal workflow nel workflow current_status --> non valido
-- next_status != any ReportStatus || next_status == null --> non valido
+- next_status != any ReportStatus || next_status è None--> non valido
 
 ### Equivalence Classes
 
@@ -259,9 +266,120 @@ Suggested test file: `test_create_report.py`
 
 Prototype: `create_report(reporter: User, category_id: int | str | None, title: str | None, description: str | None, latitude: float | str | None, longitude: float | str | None, photos: list[FileStorage], is_anonymous: bool = False) -> Report`
 
-| TC-ID | reporter | category_id | title | description | latitude | longitude | photos | is_anonymous | Expected | Fixture |
-| :---- | :------- | :---------- | :---- | :---------- | :------- | :-------- | :----- | :----------- | :------- | :------ |
-|  |  |  |  |  |  |  |  |  |  |  |
+**Requisiti:**
+- Se il reporter è nullo o non ha un id valido, il sistema deve restituire un errore di validazione (ValidationError).
+- Se il category_id è nullo, malformato o si riferisce a una categoria sconosciuta o a una categoria inattiva, il sistema deve restituire un errore di validazione (ValidationError).
+- Se la descrizione o il titolo sono nulli o vuoti, il sistema deve restituire un errore di validazione (ValidationError).
+- Se le coordinate geografiche sono nulle o non possono essere convertite in valori numerici, il sistema deve restituire un errore di validazione (ValidationError).
+- Se la lista di foto contiene zero foto valide  o più di 3 foto valide, il sistema deve restituire un errore di validazione (ValidationError).
+- Se tutti i campi sono validi, il sistema deve restituire un oggetto di tipo Report.
+
+**Criterio:** reporter
+**Predicati:**
+reporter è None--> non valido
+reporter è un utente non autenticato --> non valido
+reporter è un utente auteenticato --> valido
+
+**Criterio:** category_id
+**Predicati:**
+category_id è None--> non valido
+category_id è malformato --> non valido
+category_id fa riferimento a una categoria sconosciuta --> non valido 
+category_id fa riferimento a una categoria inattiva --> non valido
+category_id è valido e attivo --> valido
+
+**Criterio:** title e description
+**Predicati:**
+title o descriptionè None o vuoto --> non valido
+title e descrizione sono stringhe non vuote --> valid
+
+**Criterio:** latitude / longitude
+**Predicati:**
+latitude o longitude è None --> non valido
+latitude o longitude non possono essere convertiti in valori numerici --> non valido
+latitude e longitude sono convertibili in valori numerici validi --> valid
+
+**Criterio:** photos
+**Predicati:**
+Non è presente alcuna foto valida --> non valido
+Sono presenti più di 3 foto valide --> non valido
+Sono presenti da 1 a 3 foto valide --> valid
+
+### Equivalence Classes
+
+**Per reporter:**
+- **EC1**: reporter è un utente non autenticato o non attivo
+- **EC2**: reporter è un utente autenticato e attivo
+- 
+**Per category_id:**
+- **EC3**: category_id is None
+- **EC4**: category_id non valido
+- **EC5**: category_id è valido e attivo
+
+**Per title e description:**
+- **EC6**: title o description è None 
+- **EC7**: title o description non valido
+- **EC8**: title e description sono validi
+
+**Per latitude/longitude:**
+- **EC9**: latitude o longitude is None
+- **EC10**: latitude o longitude non validi
+- **EC11**: latitude e longitude validi
+
+**Per photos:**
+- **EC12**: numero di foto non valido
+- **EC13**:  1 <= numero di foto  <= 3
+
+### Combinations of Equivalence Classes 
+EC2 x EC5 x EC8 x EC11 x EC13 --> Report creato con successo
+EC1 x EC5 x EC8 x EC11 x EC13 --> reporter non valido
+EC2 x EC3 x EC8 x EC11 x EC13 --> category_id nullo
+EC2 x EC4 x EC8 x EC11 x EC13 --> category_id malformato o sconosciuto
+EC2 x EC5 x EC6 x EC11 x EC13 --> title o description nulli o vuoti
+EC2 x EC5 x EC7 x EC11 x EC13 --> title o description non validi
+EC2 x EC5 x EC8 x EC9 x EC13 --> latitude o longitude nulli
+EC2 x EC5 x EC8 x EC10 x EC13 --> latitude o longitude non validi
+EC2 x EC5 x EC8 x EC11 x EC12 --> numero di foto non valido
+
+
+| TC-ID | reporter | category_id | title | description | latitude | longitude | photos | is_anonymous | EC covered | Expected | Fixture |
+| :---- | :------- | :---------- | :---- | :---------- | :------- | :-------- | :----- | :----------- | :------- | :------- | :------ |
+|CR1| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | EC2, EC5, EC8, EC11, EC13  | Report |  |
+|CR2| None | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | EC1, EC5, EC8, EC11, EC13 | ValidationError | Reporter non valido |
+|CR3| user | "" | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC3, EC8, EC11, EC13| False | ValidationError | Categoria nulla | 
+|CR4| user | df | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC4, EC8, EC11, EC13 | False | ValidationError | Categoria non vallida|
+|CR5| user | 4 | "" | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC5, EC6, EC11, EC13 | False | ValidationError | Titolo vuoto|
+|CR6| user | 4 | Buca profonda |&&&%&£/$"(")"$$&"| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC5, EC7, EC11, EC13 | False | ValidationError | Descrizione non valida |
+|CR8| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | "" | [foto_buca.jpg] | EC2,EC5,EC8,EC9,EC13 | False | ValidationError | Longitude nulla |
+|CR9| user | 4 | Buca profonda | Buca profonda in piazza Castello| Quarantacinque | "7.6856" | [foto_buca.jpg] | EC2,EC5,EC8,EC10,EC13 | False | ValidationError | Formato Latitude non convertibile |
+|CR10| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [] | EC2, EC5, EC8, EC11, EC12 | False | ValidationError | Nessuna foto presente |
+
+### Boundary: identifier recognition
+
+**Boundary around "category_id":**
+Boundary test per 'category_id' realizzati considerando le 10 categorie descritte nella specifica iniziale, con id associati da 0 a 9.
+
+| TC    | category_id | Boundary covered  | Expected |
+| :---- | :---------- |:------------------|:---------|
+| AUB01 | 4           | Exact boundary    | Report obj |
+| AUB02 | 10         | Immediately above | ValidationError |
+| AUB03 | -1          | Immediately below | ValidationError |
+
+**Boundary around "latitude/longitude":**
+| TC    | latitude/longitude | Boundary covered  | Expected |
+| :---- | :----------------- |:------------------|:---------|
+| AUB04 | 45.0710 / 7.6856   | Exact boundary    | Report obj |
+| AUB05 | 2324.52 / 7.6856 | Immediately above    | ValidationError |
+| AUB06 | 45.0710 / -235.89 | Immediately below    | ValidationError |
+
+**Boundary around "photos":**
+| TC    | photos | Boundary covered  | Expected |
+| :---- | :----- |:------------------|:---------|
+| AUB07 | [foto_buca.jpg] | Exact boundary    | Report obj |
+| AUB08 | [] | Immediately below    | ValidationError |
+| AUB09 | [foto1.jpg, foto2.jpg, foto3.jpg, foto4.jpg] | Immediately above    | ValidationError |
+
+
 
 ## 5 `participium.services.report_service.ReportService.update_status`
 
@@ -291,20 +409,20 @@ Suggested test file: `test_send_message.py`
 Prototype: `send_message(report: Report, sender: User, body: str) -> Message`
 
 **Requisiti**:
-- Se o il report o l'id del report sono nulli il sistema deve generare un _ValidationError_. 
-- Se o il mittente o l'id del mittente sono nulli il sistema deve generare un _ValidationError_.
-- Se il mittente non può accedere al thread di messaggistica del report in questione il sistema deve generare un _AuthorizationError_.
-- Se il testo del messaggio è vuoto il sistema deve generare un _ValidationError_.  
-- Se il sistema non riesce a risolvere un destinatario del messaggio deve generare un _ValidationError_.
-- Se sia l'utente che il report esistono e hanno un id valido, l'utente può accedere ai messaggi del report e il testo del messaggio non è vuoto, il sistema ritorna un oggetto di tipo _Message_.
+- Se o il report o l'id del report sono nulli il sistema deve generare un ValidationError. 
+- Se o il mittente o l'id del mittente sono nulli il sistema deve generare un ValidationError.
+- Se il mittente non può accedere al thread di messaggistica del report in questione il sistema deve generare un AuthorizationError.
+- Se il testo del messaggio è vuoto il sistema deve generare un ValidationError.  
+- Se il sistema non riesce a risolvere un destinatario del messaggio deve generare un ValidationError.
+- Se sia l'utente che il report esistono e hanno un id valido, l'utente può accedere ai messaggi del report e il testo del messaggio non è vuoto, il sistema ritorna un oggetto di tipo Message.
 
 **Criterio:** report
 
 **Predicati:**
 
-- report == null --> non valido
-- report.id == null --> non valido 
-- report.reporter_id == null --> non valido 
+- report è None--> non valido
+- report.id è None--> non valido 
+- report.reporter_id è None--> non valido 
 - report esiste con il proprio id e reporter id validi --> valido 
 
 
@@ -312,8 +430,8 @@ Prototype: `send_message(report: Report, sender: User, body: str) -> Message`
 
 **Predicati:**
 
-- sender == null --> non valido
-- sender.id == null --> non valido
+- sender è None--> non valido
+- sender.id è None--> non valido
 - il sender non ha lo stesso id del reporter (sender.id != report.reporter_id) --> non valido
 - sender esiste e ha lo stesso id del reporter (sender.id == report.reporter_id) --> valido
 
@@ -322,7 +440,7 @@ Prototype: `send_message(report: Report, sender: User, body: str) -> Message`
 
 **Predicati:**
 
-- body == null --> non valido
+- body è None--> non valido
 - body è vuoto oppure contiene solo caratteri di tipo whitespace --> non valido
 - body contiene non solo caratteri di tipo whitespace --> valido
 
@@ -468,7 +586,7 @@ Prototype: `verify_password(password: str, password_hash: str) -> bool`
 
 **Predicati:**
 
-- password == null --> non valido
+- password è None--> non valido
 - password != null --> valido
 
 
@@ -476,7 +594,7 @@ Prototype: `verify_password(password: str, password_hash: str) -> bool`
 
 **Predicati:**
 
-- password_hash == null --> non valido
+- password_hash è None--> non valido
 - Le hash della password corrispondono (password_hash == hash(password)) --> valido
 - Le hash della password non corrispondono (password_hash != hash(password)) --> non valido
 
