@@ -350,6 +350,9 @@ Suggested test file: `test_update_status.py`
 
 Prototype: `update_status(report_id: int, operator: User, next_status_value: str, note: str | None = None) -> Report`
 
+Requisiti: 
+
+
 | TC-ID | report_id | operator | next_status_value | note | Expected | Fixture |
 | :---- | :-------- | :------- | :---------------- | :--- | :------- | :------ |
 |  |  |  |  |  |  |  |
@@ -360,10 +363,119 @@ Suggested test file: `test_public_reports.py`
 
 Prototype: `list_public_reports(category_id: int | None = None, status: ReportStatus | None = None, date_from: datetime | None = None, date_to: datetime | None = None, sort: str = "desc") -> list[Report]`
 
-| TC-ID | category_id | status | date_from | date_to | sort | Expected | Fixture |
-| :---- | :---------- | :----- | :-------- | :------ | :--- | :------- | :------ |
-|  |  |  |  |  |  |  |  |
+Requisiti:
+    - il sistema deve restituire una lista di report basata su filtri opzionali
+    - se nessun filtro è fornito, deve restituire una lista con tutte le segnalazioni 
+    - il sistema deve fornire una lista con tutte le segnalazioni con categoria uguale a category_id (se fornito) 
+    - il sistema deve fornire una lista con tutte le segnalazioni con stato uguale a status (se fornito) 
+    - il sistema deve fornire una lista con tutte le segnalazioni con data uguale o successiva a date_from (se fornita)
+    - il sistema deve fornire una lista con tutte le segnalazioni con data uguale o precedente a date_to (se fornita)
+    - il sistema deve fornire una lista con le segnalazioni ordinate in base al parametro sort (di default decrescente)
 
+Criterio: category_id
+Predicati:
+    - category_id è int -> valido
+    - category_id è None -> valido (filtro assente)
+
+Criterio: status 
+Predicati:
+    - status è uno degli stati possibili --> valido 
+    - status non è presente --> valido(filtro assente)
+
+Criterio: date_from
+Predicati:
+    - date_from è None -> valido (filtro assente) 
+    - date_from è una datetime -> valido 
+
+Criterio: date_to 
+Predicati:
+    - date_to è None -> valido (filtro assente) 
+    - date_to è una datetime -> valido 
+
+Criterio: sort 
+Predicati:
+    - sort == "desc" -> valido 
+    - sort == "asc" -> valido 
+
+### Equivalence Classes
+
+**Per category_id**
+- **EC01**: category_id è None
+- **EC02**: category_id valido (int) ed esiste
+- **EC03**: category_id valido (int) ma non esiste
+
+**Per status**
+- **EC04**: status è None 
+- **EC05**: status è un valore valido (ReportStatus)
+
+**Per date_from**
+- **EC06**: date_from è None
+- **EC07**: date_from è una data valida
+
+**Per date_to**
+- **EC08**: date_to è None
+- **EC09**: date_to è una data valida
+
+**Per sort**
+- **EC10**: "desc"
+- **EC11**: "asc"
+
+
+### Combinations of Equivalence Classes 
+- EC01 x EC04 x EC06 x EC08 x EC10 --> nessun filtro attivo quindi tutti i report in ordine decrescente
+- EC02 x EC05 x EC07 x EC09 x EC11 --> tutti i filtri attivi, ordine crescente
+- EC02 x EC04 x EC06 x EC08 x EC11 --> solo category_id attivo, ordine crescente
+- EC01 x EC05 x EC06 x EC08 x EC10 --> solo status attivo, ordine decrescente
+- EC01 x EC04 x EC07 x EC08 x EC10 --> solo date_from attivo, ordine decrescente
+- EC01 x EC04 x EC06 x EC09 x EC10 --> solo date_to attivo, ordine decrescente
+- EC01 x EC04 x EC07 x EC09 x EC10 --> solo le date attive, ordine decrescente
+- EC03 x EC04 x EC06 x EC08 x EC10 --> category_id non esiste, ordine decrescente
+- EC02 x EC05 x EC06 x EC08 x EC11 --> category_id non esiste, ordine decrescente
+
+
+| TC-ID | category_id | status | date_from | date_to | sort | Expected | Fixture |
+|-------|-------------|--------|-----------|---------|------|----------|---------|
+| PR-01  | None | None | None | None | desc |Tutti i report ordinati in modo decrescente | Lista di report  diversi tra di loro|
+| PR-02  | 1 | None | None | None | asc | Solo i report con category_id==1 in ordine crescente| Lista di report  diversi tra di loro|
+| PR-03  | None | ASSIGNED | None | None | desc | Solo i report con status ASSIGNED in ordine decrescente | Lista di report  diversi tra di loro|
+| PR-04  | None | None | 2024-02-01 | None | desc | Solo i report dopo la data 2024-02-01 (compresa) in ordine decrescente | Lista di report diversi tra di loro|
+| PR-05  | None | None | None | 2024-02-01 | desc | Solo i report prima della data 2024-02-01 (compresa) in ordine decrescente | Lista di report diversi tra di loro|
+| PR-06  | None | None | 2024-02-01 | 2024-03-01 | desc | Tutti i report dopo la data 2024-02-01 (compresa) e prima della data 2024-03-01 in ordine decrescente | Lista di report diversi tra di loro|
+| PR-07  | 1 | SUSPENDED | None | None | asc| Tutti i report che rispettano i filtri in ordine crescente | Lista di report diversi tra di loro|
+| PR-08  | 1 | SUSPENDED | 2024-02-01 | 2024-03-01 | asc| Tutti i report che rispettano i filtri in ordine crescente | Lista di report diversi tra di loro|
+| PR-09  | None | None | None | None | desc | Lista vuota | Lista vuota |
+| PR-10  | 9999 | None | None | None | desc | Lista vuota | Lista di report con category_id 9999 inesistente|
+
+### Boundary
+**Boundary around "category_id":**
+| TC    | category_id  | Boundary covered  | Expected |
+| :---- | :-------- |:------------------|:---------|
+| PRB01 |  0 | Exact boundary   | Lista di report con category_id 0 |
+| PRB02 |  6 | Immediately above   | Lista vuota |
+| PRB03 |  -1 | Immediately below   | Lista vuota |
+
+**Boundary around "date_from":**
+| TC    | date_from  | Boundary covered  | Expected |
+| :---- | :-------- |:------------------|:---------|
+| PRB04 |  2024-02-01 00:00:00 | Exact boundary   | Lista di report con date da 2024-02-01 00:00:00 |
+| PRB05 |  2024-02-01 00:00:01 | Immediately above   | Lista di report con date da 2024-02-01 00:00:01 |
+| PRB06 |  2024-01-31 23:59:59 | Immediately below   | Lista di report con date da 2024-01-31 23:59:59 |
+
+**Boundary around "date_to":**
+| TC    | date_to  | Boundary covered  | Expected |
+| :---- | :-------- |:------------------|:---------|
+| PRB07 |  2024-02-01 00:00:00 | Exact boundary   | Lista con date fino a 2024-02-01 00:00:00 |
+| PRB08 |  2024-02-01 00:00:01 | Immediately above   | Lista con date fino a 2024-02-01 00:00:01 |
+| PRB09 |  2024-01-31 23:59:59 | Immediately below   | Lista con date fino a 2024-01-31 23:59:59 |
+
+**Boundary around "date_from" and "date_to"**
+| TC    | date_from  | date_to | Boundary covered  | Expected |
+| :---- | :-------- |:--------|:------------------|:---------|
+| PRB10 |  2024-02-01 00:00:00 | 2024-02-01 00:00:00 | Exact boundary   | Lista con report in data 2024-02-01 |
+| PRB08 |  2024-03-01 00:00:00 | 2024-02-01 00:00:00   |  | Lista vuota |
+
+
+| PR-07  | None | None | 2024-03-01  | 2024-02-01 | desc | Lista vuota | Lista di report diversi tra di loro|
 
 ## 7 `participium.services.messaging_service.MessagingService.send_message`
 
