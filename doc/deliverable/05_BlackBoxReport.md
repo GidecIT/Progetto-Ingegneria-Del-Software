@@ -143,122 +143,85 @@ Allowed transitions:
 `Resolved -> Resolved`.
 
 **Requisiti:**
-
-- Il sistema deve permettere la transizione tra gli stati di un report secondo le regole del seguente workflow:
-
-        Pending Approval -> Pending Approval, Assigned, Rejected
-        Assigned -> Assigned, In Progress, Suspended, Resolved
-        In Progress -> In Progress, Suspended, Resolved
-        Suspended -> Suspended, In Progress, Resolved
-        Rejected -> Rejected
-        Resolved -> Resolved
-
-- Il sistema deve permettere le auto-transizioni (current_status == next_status) per ogni stato esistente.
-- In caso di transizione permessa, il sistema deve restituire `True`.
-- In caso di transizione non permessa dalle regole del workflow, il sistema restituisce un errore di transazione.
+- Se la transizione di stato è una auto-transizione (current_status == next_status), il sistema deve restituire `True`.
+- Se la transizione di stato è permessa, il sistema deve restituire `True`.
+- Se la transizione di stato non è permessa, il sistema deve restituire un errore di validazione (ValidationError).
 
 **Criterio: current_status**
 
 **Predicati:**
-
-- current_status == PENDING_APPROVAL --> valido
-- current_status == ASSIGNED --> valido
-- current_status == IN_PROGRESS --> valido
-- current_status == SUSPENDED --> valido
-- current_status == REJECTED --> valido
-- current_status == RESOLVED --> valido
-- current_status != any ReportStatus || current_status è None--> non valido
+- current_status è uno degli stati possibili --> valido
+- current_status è diverso dagli stati possibili o uguale a None --> non valido
 
 **Criterio: next_status**
 
 **Predicati:**
-
-- next_status == stato permesso dalle regole nel workflow per current_status --> valido
-- next_status == stato NON permesso dal workflow nel workflow current_status --> non valido
-- next_status != any ReportStatus || next_status è None--> non valido
+- next_status è uno degli stati possibili --> valido
+- next_status non è uno stato permesso dal workflow nel workflow current_status --> non valido
 
 ### Equivalence Classes
 
 **Per current_status:**
 
-- **EC01**: `current_status == PENDING_APPROVAL`
-- **EC02**: `current_status == ASSIGNED`
-- **EC03**: `current_status == IN_PROGRESS`
-- **EC04**: `current_status == SUSPENDED`
-- **EC05**: `current_status == REJECTED`
-- **EC06**: `current_status == RESOLVED`
-- **EC07**: `current_status != any ReportStatus` || `current_status == None`
+- **EC01**: current_status == Pending Approval
+- **EC02**: current_status == Assigned
+- **EC03**: current_status == In Progress
+- **EC04**: current_status == Suspended
+- **EC05**: current_status == Rejected
+- **EC06**: current_status == Resolved
 
 **Per next_status:**
 
-- **EC08**: `next_status` è un valore permesso per lo stato corrente
-- **EC09**: `next_status` è un valore NON permesso per lo stato corrente
-- **EC10**: `next_status != any ReportStatus` || `next_status == None`
+- **EC07**: `next_status` è un valore di transizione permesso per lo stato corrente
+- **EC08**: `next_status` è un valore di transizione non permesso per lo stato corrente
+
 
 ### Combinations of Equivalence Classes 
 
 Combinazioni possibili secondo i predicati:
 
-    EC01 × EC08
-    EC01 × EC09
-    EC01 × EC10
-    EC02 × EC08
-    EC02 × EC09
-    EC02 × EC10
-    EC03 × EC08
-    EC03 × EC09
-    EC03 × EC10
-    EC04 × EC08
-    EC04 × EC09
-    EC04 × EC10
-    EC05 × EC08
-    EC05 × EC09
-    EC05 × EC10
-    EC06 × EC08
-    EC06 × EC09
-    EC06 × EC10
-    EC07 × EC08
-    EC07 × EC09
-    EC07 × EC10
+    EC01 × EC07 --> transizione ammessa per Pending Approval
+    EC01 × EC08 --> transizione non ammessa per Pending Approval
+    EC02 × EC07 --> transizione ammessa per Assigned
+    EC02 × EC08 --> transizione non ammessa per Assigned
+    EC03 × EC07 --> transizione ammessa per In Progress
+    EC03 × EC08 --> transizione non ammessa per In Progress
+    EC04 × EC07 --> transizione ammessa per Suspended
+    EC04 × EC08 --> transizione non ammessa per Suspended
+    EC05 × EC07 --> transizione ammessa per Rejected
+    EC05 × EC08 --> transizione non ammessa per Rejected
+    EC06 × EC07 --> transizione ammessa per Resolved
+    EC06 × EC08 --> transizione non ammessa per Resolved
 
 (NOTA: ridondanti? tutte quanti sono possibili)
 
 ### Combinations of Equivalence Classes 
 
-| TC   | current_status     | next_status       | EC covered | Expected          | Fixture                                |
-|:-----|:-------------------|:------------------|:-----------|:------------------|:---------------------------------------|
-| TR01 | `PENDING_APPROVAL` | `ASSIGNED`        | EC01, EC08 | `True`            | Transizione ammessa dal workflow       |
-| TR02 | `PENDING_APPROVAL` | `RESOLVED`        | EC01, EC09 | `ValidationError` | Transizione non ammessa dal workflow   |
-| TR03 | `ASSIGNED`         | `IN_PROGRESS`     | EC02, EC08 | `True`            | Transizione ammessa dal workflow       |
-| TR04 | `ASSIGNED`         | `REJECTED`        | EC02, EC09 | `ValidationError` | Transizione non ammessa dal workflow   |
-| TR05 | `IN_PROGRESS`      | `SUSPENDED`       | EC03, EC08 | `True`            | Transizione ammessa dal workflow       |
-| TR06 | `IN_PROGRESS`      | `PENDING_APPROVAL`| EC03, EC09 | `ValidationError` | Transizione non ammessa dal workflow   |
-| TR07 | `SUSPENDED`        | `RESOLVED`        | EC04, EC08 | `True`            | Transizione ammessa dal workflow       |
-| TR08 | `SUSPENDED`        | `ASSIGNED`        | EC04, EC09 | `ValidationError` | Transizione non ammessa dal workflow   |
-| TR09 | `REJECTED`         | `REJECTED`        | EC05, EC08 | `True`            | Auto-transizione sempre ammessa        |
-| TR10 | `REJECTED`         | `IN_PROGRESS`     | EC05, EC09 | `ValidationError` | Transizione non ammessa dal workflow   |
-| TR11 | `RESOLVED`         | `RESOLVED`        | EC06, EC08 | `True`            | Auto-transizione sempre ammessa        |
-| TR12 | `RESOLVED`         | `ASSIGNED`        | EC06, EC09 | `ValidationError` | Transizione non ammessa dal workflow   |
-| TR13 | None               | `ASSIGNED`        | EC07, EC08 | `ValidationError` | Current status omesso                  |
-| TR14 | `INVALID`          | `ASSIGNED`        | EC07, EC08 | `ValidationError` | Current status non esistente           |
-| TR15 | `PENDING_APPROVAL` | None              | EC01, EC10 | `ValidationError` | Next status omesso                     |
-| TR16 | `PENDING_APPROVAL` | `UNKNOWN`         | EC01, EC10 | `ValidationError` | Next status non esistente              |
+| TC   | current_status     | next_status       | EC covered   | Expected          | Fixture                                |
+|:-----|:-------------------|:------------------|:-------------------------|:------------------|:---------------------------------------|
+|TR1 | Pending Approval | Pending Approval | EC01, EC07 | True | Self-transition |
+|TR2 | Pending Approval | Assigned | EC01, EC07 | True | Transizione valida|
+|TR3 | Pending Approval | Rejected | EC01, EC07 | True | Transizione valida|
+|TR4 | Pending Approval | Resolved | EC01, EC08 | ValidationError | Transizione non valida|
+|TR5 | Assigned | Assigned | EC02, EC07 | True | Self-transition |
+|TR6 | Assigned | In Progress | EC02, EC07 | True | Transizione valida|
+|TR7 | Assigned | Suspended | EC02, EC08 | True | Transizione valida|
+|TR8 | Assigned | Resolved | EC02, EC08 | True | Transizione valida|
+|TR9 | Assigned | Pending Approval | EC02, EC08 | ValidationError | Transizione non valida|
+|TR10 | In Progress | In Progress | EC03, EC07 | True | Self-transition |
+|TR11 | In Progress | Suspended | EC03, EC08 | True | Transizione valida|
+|TR12 | In Progress | Resolved | EC03, EC08 | True | Transizione valida|
+|TR13 | In Progress | Assigned | EC03, EC08 | ValidationError | Transizione non valida|
+|TR14 | Suspended | Suspended | EC04, EC07 | True | Self-transition|
+|TR15 | Suspended | In Progress | EC04, EC08 | True| Transizione valida|
+|TR16 | Suspended | Resolved | EC04, EC08 | True | Transizione valida|
+|TR17 | Suspended | Pending Approval | EC04, EC08 | ValidationError | Transizione non valida|
+|TR18 | Rejected | Rejected | EC05, EC07 | True | Self-transition |
+|TR19 | Rejected | Assigned | EC05, EC08 | ValidationError | Transizione non valida |
+|TR20 | Resolved | Resolved | EC06, EC07 | True | Self-transition |
+|TR21 | Resolved | In Progress | EC06, EC08 | ValidationError | Transizione non valida |
 
-### Boundary: workflow transitions
 
-**Boundary around allowed transitions:**
-
-| TC    | current_status     | next_status       | Boundary covered| EC Covered | Expected          |
-| :---- |:-------------------|:------------------|:-----------------|:-----------|:------------------|
-| TRB01 | `PENDING_APPROVAL` | `PENDING_APPROVAL`| Exact boundary (self) | EC1, EC8   | `True`|
-| TRB02 | `PENDING_APPROVAL` | `REJECTED`        | Exact boundary     | EC1, EC8   | `True`|
-| TRB03 | `ASSIGNED`         | `RESOLVED`        | Exact boundary     | EC2, EC8   | `True`|
-| TRB04 | `SUSPENDED`        | `IN_PROGRESS`     | Exact boundary    | EC4, EC8   | `True`|
-| TRB05 | None               | `ASSIGNED`        | Immediately below | EC7, EC8   | `ValidationError` |
-| TRB06 | `PENDING_APPROVAL` | None              | Immediately below | EC1, EC10  | `ValidationError` |
-| TRB07 | `INVALID_STATE`    | `ASSIGNED`        | Immediately below | EC7, EC8   | `ValidationError` |
-| TRB08 | `PENDING_APPROVAL` | `UNKNOWN`         | Immediately below | EC1, EC10  | `ValidationError` |
-| TRB09 | `REJECTED`         | `RESOLVED`        | Immediately above | EC5, EC9   | `ValidationError` |
 
 ## 4 `participium.services.report_service.ReportService.create_report`
 
@@ -267,10 +230,10 @@ Suggested test file: `test_create_report.py`
 Prototype: `create_report(reporter: User, category_id: int | str | None, title: str | None, description: str | None, latitude: float | str | None, longitude: float | str | None, photos: list[FileStorage], is_anonymous: bool = False) -> Report`
 
 **Requisiti:**
-- Se il reporter è Noneo o non ha un id valido, il sistema deve restituire un errore di validazione (ValidationError).
-- Se il category_id è Noneo, malformato o si riferisce a una categoria sconosciuta o a una categoria inattiva, il sistema deve restituire un errore di validazione (ValidationError).
-- Se la descrizione o il titolo sono Nonei o vuoti, il sistema deve restituire un errore di validazione (ValidationError).
-- Se le coordinate geografiche sono Nonee o non possono essere convertite in valori numerici, il sistema deve restituire un errore di validazione (ValidationError).
+- Se il reporter è None o non ha un id valido, il sistema deve restituire un errore di validazione (ValidationError).
+- Se il category_id è None, malformato o si riferisce a una categoria sconosciuta o a una categoria inattiva, il sistema deve restituire un errore di validazione (ValidationError).
+- Se la descrizione o il titolo sono None o vuoti, il sistema deve restituire un errore di validazione (ValidationError).
+- Se le coordinate geografiche sono None o non possono essere convertite in valori numerici, il sistema deve restituire un errore di validazione (ValidationError).
 - Se la lista di foto contiene zero foto valide  o più di 3 foto valide, il sistema deve restituire un errore di validazione (ValidationError).
 - Se tutti i campi sono validi, il sistema deve restituire un oggetto di tipo Report.
 
@@ -331,15 +294,15 @@ Sono presenti da 1 a 3 foto valide --> valid
 - **EC13**:  1 <= numero di foto  <= 3
 
 ### Combinations of Equivalence Classes 
-EC2 x EC5 x EC8 x EC11 x EC13 --> Report creato con successo
-EC1 x EC5 x EC8 x EC11 x EC13 --> reporter non valido
-EC2 x EC3 x EC8 x EC11 x EC13 --> category_id Noneo
-EC2 x EC4 x EC8 x EC11 x EC13 --> category_id malformato o sconosciuto
-EC2 x EC5 x EC6 x EC11 x EC13 --> title o description Nonei o vuoti
-EC2 x EC5 x EC7 x EC11 x EC13 --> title o description non validi
-EC2 x EC5 x EC8 x EC9 x EC13 --> latitude o longitude Nonei
-EC2 x EC5 x EC8 x EC10 x EC13 --> latitude o longitude non validi
-EC2 x EC5 x EC8 x EC11 x EC12 --> numero di foto non valido
+- EC2 x EC5 x EC8 x EC11 x EC13 --> Report creato con successo
+- EC1 x EC5 x EC8 x EC11 x EC13 --> reporter non valido
+- EC2 x EC3 x EC8 x EC11 x EC13 --> category_id None
+- EC2 x EC4 x EC8 x EC11 x EC13 --> category_id malformato o sconosciuto
+- EC2 x EC5 x EC6 x EC11 x EC13 --> title o description None o vuoti
+- EC2 x EC5 x EC7 x EC11 x EC13 --> title o description non validi
+- EC2 x EC5 x EC8 x EC9 x EC13 --> latitude o longitude None
+- EC2 x EC5 x EC8 x EC10 x EC13 --> latitude o longitude non validi
+- EC2 x EC5 x EC8 x EC11 x EC12 --> numero di foto non valido
 
 
 | TC-ID | reporter | category_id | title | description | latitude | longitude | photos | is_anonymous | EC covered | Expected | Fixture |
@@ -409,8 +372,8 @@ Suggested test file: `test_send_message.py`
 Prototype: `send_message(report: Report, sender: User, body: str) -> Message`
 
 **Requisiti**:
-- Se o il report o l'id del report sono Nonei il sistema deve generare un ValidationError. 
-- Se o il mittente o l'id del mittente sono Nonei il sistema deve generare un ValidationError.
+- Se o il report o l'id del report sono None il sistema deve generare un ValidationError. 
+- Se o il mittente o l'id del mittente sono None il sistema deve generare un ValidationError.
 - Se il mittente non può accedere al thread di messaggistica del report in questione il sistema deve generare un AuthorizationError.
 - Se il testo del messaggio è vuoto il sistema deve generare un ValidationError.  
 - Se il sistema non riesce a risolvere un destinatario del messaggio deve generare un ValidationError.
@@ -467,23 +430,23 @@ Prototype: `send_message(report: Report, sender: User, body: str) -> Message`
 ### Combinations of Equivalence Classes 
 
 - EC4 x EC8 x EC11 -> oggetto messaggio ritornato con successo
-- EC1 x EC8 x EC11 -> fallimento per report Noneo
-- EC2 x EC8 x EC11 -> fallimento per report id Noneo
-- EC3 x EC8 x EC11 -> fallimento per reporter id Noneo
-- EC4 x EC5 x EC11 -> fallimento per sender Noneo
-- EC4 x EC6 x EC11 -> fallimento per sender id Noneo
+- EC1 x EC8 x EC11 -> fallimento per report None
+- EC2 x EC8 x EC11 -> fallimento per report id None
+- EC3 x EC8 x EC11 -> fallimento per reporter id None
+- EC4 x EC5 x EC11 -> fallimento per sender None
+- EC4 x EC6 x EC11 -> fallimento per sender id None
 - EC4 x EC7 x EC11 -> fallimento per sender id diverso da reporter id
-- EC4 x EC8 x EC9 -> fallimento per body Noneo
+- EC4 x EC8 x EC9 -> fallimento per body None
 - EC4 x EC8 x EC10 -> fallimento per body vuoto o con solo whitespace
 
 Combinazioni possibili secondo i predicati:
 Definiamo i seguenti oggetti da usare nei test:
 - **user1**: utente con un campo id valido e uguale ad 1.
 - **user2**: utente con un campo id valido e uguale ad 2.
-- **user3**: utente con un campo id Noneo.
+- **user3**: utente con un campo id None.
 - **report1**: report fatto dall'utente 1.
-- **report2**: report con un campo reporter_id Noneo.
-- **report3**: report con un campo id Noneo.
+- **report2**: report con un campo reporter_id None.
+- **report3**: report con un campo id None.
 
 | TC-ID | report | sender | body | EC covered | Expected | Fixture |
 | :---- | :----- | :----- | :--- | :--------- | :------- | :------ |
