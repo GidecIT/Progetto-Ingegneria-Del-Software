@@ -649,9 +649,9 @@ Definiamo i seguenti oggetti da usare nei test:
 | CN08 | user1 | type1 | "Titolo" | "" | report1 | ValidationError | Body vuoto |
 | CN09 | user1 | type1 | "Titolo" | "Corpo" | report_invalid | ValidationError | Report fornito ma senza id |
 
-### Boundary: password and hash comparison
+### Boundary: title and body content
 
-**Boundary around matching:**
+**Boundary around string lengths (title/body)**:
 
 | TC | user | notification_type | title | body | report | Boundary covered | EC covered | Expected |
 | :- | :--- | :---------------- | :---- | :--- | :----- | :--------------- | :--------- | :------- |
@@ -667,6 +667,101 @@ Suggested test file: `test_update_profile.py`
 
 Prototype: `update_profile(user: User, username: str | None = None, first_name: str | None = None, last_name: str | None = None, email_notifications_enabled: bool | None = None, profile_picture: FileStorage | None = None) -> User`
 
+**Requisiti:**
+- Se user è None o non ha un id valido, il sistema restituisce un ValidationError.
+- Se username, first_name o last_name sono diversi da None ma sono stringhe vuote o contengono solo spazi, il sistema restituisce un ValidationError.
+- Se profile_picture è diverso da None ma non è un file valido, il sistema restituisce un ValidationError.
+- Se l'utente è valido e tutti i campi opzionali forniti sono validi, il sistema aggiorna il profilo e restituisce l'oggetto User aggiornato.
+- Se l'utente è valido e tutti i campi opzionali sono None, il sistema restituisce l'oggetto User senza apportare modifiche.
+
+**Criterio**: user
+
+**Predicati**:
+
+- user è un utente con id valido -> valido
+- user è None -> non valido
+- user è fornito ma non ha un id valido -> non valido
+
+**Criterio**: campi testuali (username, first_name, last_name)
+
+**Predicati**:
+
+- I campi forniti sono stringhe valide non vuote -> valido
+- Tutti i campi sono None -> valido
+- Almeno uno dei campi forniti è una stringa vuota o composta solo da spazi -> non valido
+
+**Criterio**: profile_picture
+
+**Predicati**:
+
+- Il file fornito è un'immagine valida -> valido
+- Il parametro è None -> valido
+- Il file fornito non è valido o è di un formato non supportato -> non valido
+
+
+### Equivalence Classes
+
+**Per user**:
+
+- **EC1**: user valido (con id)
+- **EC2**: user == None
+- **EC3**: user non valido (senza id)
+
+**Per campi testuali (username, first_name, last_name)**:
+
+- **EC4**: tutti i campi testuali forniti sono validi
+- **EC5**: tutti i campi testuali sono None
+- **EC6**: almeno un campo testuale fornito è vuoto o malformato
+
+**Per email_notifications_enabled**:
+
+- **EC7**: valore booleano (True/False)
+- **EC8**: valore None
+
+**Per profile_picture**:
+
+- **EC9**: file immagine valido
+- **EC10**: None
+- **EC11**: file non valido (es. formato errato)
+
+### Combinations of Equivalence Classes 
+
+Combinazioni possibili secondo i predicati:
+
+- EC1 x EC4 x EC7 x EC9 -> Successo con tutti i campi forniti
+- EC1 x EC5 x EC8 x EC10 -> Successo senza nessun campo da aggiornare
+- EC2 x EC4 x EC7 x EC9 -> Fallimento per user None
+- EC3 x EC4 x EC7 x EC9 -> Fallimento per user senza id
+- EC1 x EC6 x EC7 x EC9 -> Fallimento per almeno un campo testuale vuoto
+- EC1 x EC4 x EC7 x EC11 -> Fallimento per immagine non valida
+
+Definiamo i seguenti oggetti da usare nei test:
+
+- **user1**: utente con id valido.
+- **user_invalid**: utente con campo id uguale a None.
+- **valid_pic**: oggetto FileStorage contenente un'immagine JPEG valida.
+- **invalid_pic**: oggetto FileStorage contenente un file .txt non valido.
+
+
 | TC-ID | user | username | first_name | last_name | email_notifications_enabled | profile_picture | Expected | Fixture |
 | :---- | :--- | :------- | :--------- | :-------- | :-------------------------- | :-------------- | :------- | :------ |
-|  |  |  |  |  |  |  |  |  |
+| UP01 | user1 | "mario_rossi" | "Mario" |	"Rossi" | True | valid_pic | User |	Tutti i parametri validi e forniti |
+| UP02 | user1 | None |	None | None | None | None | User | Solo user fornito, campi opzionali a None |
+| UP03 | None | "mario_rossi" | "Mario" | "Rossi" | True | valid_pic | ValidationError|	Parametro user omesso (None) |
+| UP04 | user_invalid | "mario_rossi" | "Mario" | "Rossi" |	False |	valid_pic | ValidationError | User fornito ma privo di id |
+| UP05 | user1 | "" | "Mario" |	"Rossi" | True | valid_pic | ValidationError | Parametro username vuoto |
+| UP06 | user1 | "mario_rossi" | "" | "Rossi" |	True | valid_pic | ValidationError | Parametro first_name vuoto |
+| UP07 | user1 | "mario_rossi" | "Mario" | "" | True | valid_pic | ValidationError | Parametro last_name vuoto |
+| UP08 | user1 | "mario_rossi" | "Mario" | "Rossi" | True | invalid_pic | ValidationError | File di profile_picture non valido |
+
+
+### Boundary: text fields content
+
+**Boundary around string lengths (username/first_name/last_name)**:
+
+| TC | user | username | first_name | last_name | email_notifications_enabled |	profile_picture | Boundary covered | EC covered | Expected |
+| :- | :--- | :------- | :--------- | :-------- | :-------------------------- | :-------------- | :--------------- | :--------- | :------- |
+| UPB01 | user1 | "a" |	"b" | "c" | None | None | Minima lunghezza valida | EC1, EC4, EC8, EC10 | User |
+| UPB02 | user1 | " " | "Mario" | "Rossi" |	None | None | Solo spazio bianco (username) | EC1, EC6, EC8, EC10 |	ValidationError |
+| UPB03 | user1 | "mario" | "" | "Rossi" | None | None | Stringa vuota (first_name) | EC1, EC6, EC8, EC10 | ValidationError |
+
