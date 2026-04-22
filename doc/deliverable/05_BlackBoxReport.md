@@ -557,9 +557,109 @@ Suggested test file: `test_create_notification.py`
 
 Prototype: `create_notification(user: User | None, notification_type: NotificationType, title: str, body: str, report: Report | None = None) -> Notification | None`
 
+
+**Requisiti:**
+- Se title o body sono None-->Il sistema restituisce un ValidationError.
+- Se notification_type è None o il tipo a cui fa riferimento è sconosciuto-->Il sistema restituisce un ValidationError.
+- Se user non ha un id valido(diverso da None)-->Il sistema restituisce un ValidationError.
+- Se report non ha un id valido-->Il sistema restituisce un ValidationError.
+- Se tutti i cambi obbligaotiri sono presenti e validi e i campi opzionali sono validi o omessi --> Il sistema restituisce un oggetto Notification
+
+
+**Criterio:** user
+
+**Predicati:**
+
+- user è un utente con id-->valido
+- user è None--> valido (esempio di messaggio broadcast)?
+- user è fornito ma non ha un id valido--> non valido
+
+**Criterio:** notification_type
+
+**Predicati:**
+
+- notification_type è un tipo valido dell'enum-->valido
+- notification_type è None o sconosciuti--> non valido
+
+**Criterio:** title e body
+
+**Predicati:**
+
+- title o body sono None o vuoti-->non valido
+- title e body sono stringhe non vuote-->valido
+
+**Criterio:** report
+
+**Predicati:**
+
+- report è fornito e con un valido id-->valido
+- reort è None-->valido
+- report è fornito ma non ha un id valido-->non valido
+
+### Equivalence Classes
+
+**Per user:**
+- **EC1**: user valido (con id)
+- **EC2**: user == None
+- **EC3**: user non valido (senza id)
+
+**Per notification_type:**
+- **EC4**: tipo di notification_type è valido
+- **EC5**: tipo di notification_type non è valido o è None
+
+**Per title e body:**
+- **EC6**: title e body sono stringhe valide
+- **EC7**: title o body None
+- **EC8**: title o body stringhe vuote 
+
+**Per report:**
+- **EC9**: report valido (con id)
+- **EC10**: report == None
+- **EC11**: report non valido (senza id)
+
+### Combinations of Equivalence Classes 
+
+Combinazioni possibili secondo i predicati:
+
+- EC1 x EC4 x EC6 x EC9 -> Successo con utente e report completi
+- EC2 x EC4 x EC6 x EC10 -> Successo con campi opzionali a None
+- EC3 x EC4 x EC6 x EC9 -> Fallimento per user senza id
+- EC1 x EC5 x EC6 x EC9 -> Fallimento per type non valido
+- EC1 x EC4 x EC7 x EC9 -> Fallimento per title/body None
+- EC1 x EC4 x EC8 x EC9 -> Fallimento per title/body vuoti
+- EC1 x EC4 x EC6 x EC11 -> Fallimento per report senza id
+
+
+Definiamo i seguenti oggetti da usare nei test:
+- **user1**: utente con id valido.
+- **user_invalid**: utente con campo id uguale a None.
+- **report1**: report con id valido.
+- **report_invalid**: report con campo id uguale a None.
+- **type1**: tipo di notifica valido
+
 | TC-ID | user | notification_type | title | body | report | Expected | Fixture |
 | :---- | :--- | :---------------- | :---- | :--- | :----- | :------- | :------ |
-|  |  |  |  |  |  |  |  |
+| CN01 | user1 | type1 | "Nuovo aggiornamento" | "Il tuo report è in lavorazione" | report1 | Notification | Tutti i parametri validi forniti |
+| CN02 | None  | type1 | "Manutenzione" | " I server saranno offline" | None | Notification | Parametri opzionali omessi |
+| CN03 | user_invalid | type1 | "Titolo" | "Corpo" | report1 | ValidationError | user fornito ma senza id |
+| CN04 | user1 | None | "Titolo" | "Corpo" | report1 | ValidationError | NotificationType omesso |
+| CN05 | user1 | type1 | None |	"Corpo" | report1 | ValidationError | Titolo omesso |
+| CN06 | user1 | type1 | "Titolo" | None | report1 | ValidationError | Body omesso |
+| CN07 | user1 | type1 | "" | "Corpo" | report1 | ValidationError | Titolo vuoto |
+| CN08 | user1 | type1 | "Titolo" | "" | report1 | ValidationError | Body vuoto |
+| CN09 | user1 | type1 | "Titolo" | "Corpo" | report_invalid | ValidationError | Report fornito ma senza id |
+
+### Boundary: password and hash comparison
+
+**Boundary around matching:**
+
+| TC | user | notification_type | title | body | report | Boundary covered | EC covered | Expected |
+| :- | :--- | :---------------- | :---- | :--- | :----- | :--------------- | :--------- | :------- |
+| CNB01 | user1 | type1 | "A" |	"B" | report1 |	Minima lunghezza valida | EC1, EC4, EC6, EC9 | Notification |
+| CNB02	| user1 | type1 | " " | "B" | report1 |	Solo spazio bianco (titolo) | EC1, EC4, EC8, EC9 | ValidationError |
+| CNB03 | user1 | type1 | " " | "B" | report1 |	Stringa vuota (titolo) | EC1, EC4, EC8, EC9 | ValidationError |
+| CNB04 | user1 | type1 | "A" | " " | report1 | Solo spazio bianco (body) | EC1, EC4, EC8, EC9 | ValidationError |
+
 
 ## 10 `participium.services.user_service.UserService.update_profile`
 
