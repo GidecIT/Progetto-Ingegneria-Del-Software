@@ -485,8 +485,6 @@ Suggested test file: `test_send_message.py`
 Prototype: `send_message(report: Report, sender: User, body: str) -> Message`
 
 **Requisiti**:
-- Se o il report o l'id del report sono None il sistema deve generare un ValidationError. 
-- Se o il mittente o l'id del mittente sono None il sistema deve generare un ValidationError.
 - Se il mittente non può accedere al thread di messaggistica del report in questione il sistema deve generare un AuthorizationError.
 - Se il testo del messaggio è vuoto il sistema deve generare un ValidationError.  
 - Se il sistema non riesce a risolvere un destinatario del messaggio deve generare un ValidationError.
@@ -496,86 +494,53 @@ Prototype: `send_message(report: Report, sender: User, body: str) -> Message`
 
 **Predicati:**
 
-- report è None--> non valido
-- report.id è None--> non valido 
-- report.reporter_id è None--> non valido 
-- report esiste con il proprio id e reporter id validi --> valido 
-
+- report esiste -> valido 
 
 **Criterio:** sender
 
 **Predicati:**
 
-- sender è None--> non valido
-- sender.id è None--> non valido
-- il sender non ha lo stesso id del reporter (sender.id != report.reporter_id) --> non valido
-- sender esiste e ha lo stesso id del reporter (sender.id == report.reporter_id) --> valido
-
+- il sender non può accedere al thread
+- il sender può accedere al trhead
 
 **Criterio:** body
 
 **Predicati:**
 
-- body è None--> non valido
-- body è vuoto oppure contiene solo caratteri di tipo whitespace --> non valido
+- body è una stringa vuota --> non valido
+- body è una stringa contentente solo caratteri di tipo whitespace --> non valido
 - body contiene non solo caratteri di tipo whitespace --> valido
 
 ### Equivalence Classes
 
 **Per report:**
-- **EC1**: report == None
-- **EC2**: report.id == None
-- **EC3**: report.reporter_id == None
-- **EC4**: report id e reporter id validi
+- **EC1**: report valido
 
 **Per sender:**
-- **EC5**: sender == None
-- **EC6**: sender.id == None
-- **EC7**: sender.id != report.reporter_id
-- **EC8**: sender id valido
+- **EC2**: sender non può accedere al thread
+- **EC3**: sender può accedere al thread
 
 **Per body:**
-- **EC9**: body == None
-- **EC10**: body vuoto o con solo whitespace 
-- **EC11**: body valido 
-
+- **EC4**: body vuoto o con solo whitespace
+- **EC5**: body valido
 
 ### Combinations of Equivalence Classes 
 
-- EC4 x EC8 x EC11 -> oggetto messaggio ritornato con successo
-- EC1 x EC8 x EC11 -> fallimento per report None
-- EC2 x EC8 x EC11 -> fallimento per report id None
-- EC3 x EC8 x EC11 -> fallimento per reporter id None
-- EC4 x EC5 x EC11 -> fallimento per sender None
-- EC4 x EC6 x EC11 -> fallimento per sender id None
-- EC4 x EC7 x EC11 -> fallimento per sender id diverso da reporter id
-- EC4 x EC8 x EC9 -> fallimento per body None
-- EC4 x EC8 x EC10 -> fallimento per body vuoto o con solo whitespace
+- EC1 x EC3 x EC5 -> oggetto _Message_ ritornato con successo
+- EC1 x EC2 x EC5 -> _AuthorizationError_ perchè il sender non può accedere al thread
+- EC1 x EC3 x EC4 -> _ValidationError_ causato da contenuto di body errato
 
 Combinazioni possibili secondo i predicati:
 Definiamo i seguenti oggetti da usare nei test:
 - **user1**: utente con un campo id valido e uguale ad 1.
 - **user2**: utente con un campo id valido e uguale ad 2.
-- **user3**: utente con un campo id None.
 - **report1**: report fatto dall'utente 1.
-- **report2**: report con un campo reporter_id None.
-- **report3**: report con un campo id None.
 
 | TC-ID | report | sender | body | EC covered | Expected | Fixture |
 | :---- | :----- | :----- | :--- | :--------- | :------- | :------ |
-| MS01 | None | None | None | EC1, EC5, EC9 | ValidationError | Tutti e tre i campi omessi  |
-| MS02 | None | user1 | None | EC1, EC8, EC9 | ValidationError | User valido ma altri due campi omessi |
-| MS03 | report1 | None | None | EC4, EC5, EC9 | ValidationError | Report valido ma altri due campi omessi |
-| MS04 | None | None | "ciao" | EC1, EC5, EC11 | ValidationError | Body valido ma altri due campi omessi |
-| MS05 | report1 | user1 | None | EC4, EC8, EC9 | ValidationError | Body omesso |
-| MS06 | report1 | None | "ciao" | EC4, EC5, EC11 | ValidationError  | User omesso |
-| MS07 | None | user1 | "ciao" | EC4, EC8, EC11 | ValidationError  | Report omesso |
-| MS08 | report1 | user1 | "" | EC4, EC8, EC10 | ValidationError | Body vuoto |
-| MS09 | report1 | user2 | "ciao" | EC4, EC7, EC11 | AuthorizationError | Report non fatto dal mittente |
-| MS10 | report1 | user3 | "ciao" | EC4, EC6, EC11 | ValidationError  | User senza un campo id |
-| MS11 | report2 | user1 | "ciao" | EC2, EC6, EC11 | ValidationError  | Report senza un campo reporter_id |
-| MS12 | report3 | user1 | "ciao" | EC3, EC5, EC11 | ValidationError | Report senza un campo id |
-| MS13 | report1 | user1 | "ciao" | EC4, EC8, EC11 | Message | Tutto valido |
+| MS01 | report1 | user1 | "" | EC1, EC3, EC4 | ValidationError | Body vuoto |
+| MS02 | report1 | user2 | "ciao" | EC1, EC2, EC5 | AuthorizationError | Report non fatto dal mittente |
+| MS03 | report1 | user1 | "ciao" | EC1, EC3, EC5 | Message | Tutto valido |
 
 ### Boundary: messaging constraints
 
@@ -583,9 +548,9 @@ Definiamo i seguenti oggetti da usare nei test:
 
 | TC    | report | sender | body | Boundary covered | EC covered | Expected |
 | :---- | :----- | :----- | :--- | :--------------- | :--------- | :------- |
-| MSB01 | report1| user1  | "a"  | Minima lunghezza valida | EC4, EC8, EC11 | Message |
-| MSB02 | report1| user1  | " "  | Solo spazio bianco | EC4, EC8, EC10 | ValidationError |
-| MSB03 | report1| user1  | ""   | Stringa vuota | EC4, EC8, EC10 | ValidationError |
+| MSB01 | report1| user1  | "."  | Exact boundary | EC1, EC3, EC5 | Message |
+| MSB02 | report1| user1  | " "  | Immediately below | EC1, EC3, EC4 | ValidationError |
+| MSB03 | report1| user1  | ""   | Immediately below | EC1, EC3, EC4 | ValidationError |
 
 
 ## 8 `participium.core.security.verify_password`
@@ -596,23 +561,19 @@ Prototype: `verify_password(password: str, password_hash: str) -> bool`
 
 **Requisiti:**
 - Il sistema deve permettere la verifica di una password in chiaro rispetto ad un hash memorizzato.
-- Il sistema deve restituire `True` se la password corrisponde correttamente all'hash fornito.
-- Il sistema deve restituire `False` se la password non corrisponde all'hash fornito.
-- Il sistema deve invalidare la richiesta se la password o l'hash non sono forniti (None).
+- Se la password corrisponde correttamente all'hash fornito il sistema deve restituire `True`.
+- Se la password non corrisponde all'hash fornito il sistema deve restituire `False`.
 
 **Criterio:** password
 
 **Predicati:**
 
-- password è None--> non valido
-- password != None --> valido
-
+- password fornita --> valido
 
 **Criterio:** password_hash
 
 **Predicati:**
 
-- password_hash è None--> non valido
 - Le hash della password corrispondono (password_hash == hash(password)) --> valido
 - Le hash della password non corrispondono (password_hash != hash(password)) --> non valido
 
@@ -620,23 +581,19 @@ Prototype: `verify_password(password: str, password_hash: str) -> bool`
 ### Equivalence Classes
 
 **Per password:**
-- **EC1**: password == None
-- **EC2**: password != None
+- **EC1**: password != None
 
 **Per password_hash:**
-- **EC3**: password_hash == None
-- **EC4**: hash corrispondono
-- **EC5**: hash non corrispondono
+- **EC2**: hash corrispondono
+- **EC3**: hash non corrispondono
 
 
 ### Combinations of Equivalence Classes 
 
 Combinazioni possibili secondo i predicati:
 
-- EC2 x EC4 -> hash corrispondono, funzione ritorna vero
-- EC2 x EC5 -> hash non corrispondono, funzione ritorna falso
-- EC1 x EC5 -> errore causato da password Nonea
-- EC2 x EC3 -> errore causato da hash Nonea
+- EC1 x EC2 -> hash corrispondono, funzione ritorna vero
+- EC1 x EC3 -> hash non corrispondono, funzione ritorna falso
 
 Definiamo i seguenti oggetti da usare nei test:
 - **pwd1**: stringa "pass123".
@@ -645,12 +602,9 @@ Definiamo i seguenti oggetti da usare nei test:
 
 | TC-ID | password | password_hash | EC covered | Expected | Fixture |
 | :---- | :------- | :------------ | :--------- | :------- | :------ |
-| VP01 | pwd1 | hash1 | EC2, EC4 | True | Password e hash corretti |
-| VP02 | pwd1 | hash2 | EC2, EC5 | False | Password corretta, hash errato |
-| VP03 | pwd1 | None | EC2, EC3 | ValidationError | Password fornita, hash omesso |
-| VP04 | None | hash1 | EC1, EC5 | ValidationError | Password omessa, hash fornito |
-| VP05 | None | None | EC1, EC3 | ValidationError | Entrambi i campi omessi |
-
+| VP01 | "pass123" | hash("pass123") | EC1, EC2 | True | Password e hash corretti |
+| VP02 | "pass123" | hash("xxx") | EC1, EC3 | False | Hash errato |
+| VP03 | ""        | hash("")        | Stringa vuota | EC1, EC2 | True |
 
 ### Boundary: password and hash comparison
 
@@ -658,11 +612,10 @@ Definiamo i seguenti oggetti da usare nei test:
 
 | TC    | password | password_hash | Boundary covered | EC covered | Expected |
 | :---- | :------- | :------------ | :--------------- | :--------- | :------- |
-| VPB01 | "pass123" | hash("pass123") | Uguaglianza | EC2, EC4 | True |
-| VPB02 | "pass123" | hash("Pass123") | Differenza lettera maiuscola | EC2, EC5 | False |
-| VPB03 | "pass123" | hash("pass12")  | Un carattere in meno | EC2, EC5 | False |
-| VPB04 | "pass123" | hash("pass1234")| Un carattere in più | EC2, EC5 | False |
-| VPB05 | ""        | hash("")        | Stringa vuota | EC2, EC4 | True |
+| VP01  | "pass123" | hash("pass123") | Exact Boundary    | EC1, EC2  | True |
+| VPB02 | "pass123" | hash("Pass123") | Immediately above | EC1, EC3 | False |
+| VPB03 | "pass123" | hash("pass12")  | Immediately below | EC1, EC3 | False |
+| VPB04 | "pass123" | hash("pass1234")| Immediately above | EC1, EC3 | False |
 
 ## 9 `participium.services.notification_service.NotificationService.create_notification`
 

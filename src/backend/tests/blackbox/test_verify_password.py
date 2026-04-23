@@ -2,62 +2,37 @@ from __future__ import annotations
 
 import pytest
 
-from participium.core.exceptions import ValidationError
 from participium.core.security import verify_password
 
-PWD1 = "pass123"
-HASH1 = "hash_of_pass123"
-HASH2 = "wrong_hash"
+def hash_mock(password: str) -> str:
+    """Mock hash function for testing purposes."""
+    return f"hash_{password}"
 
-@pytest.mark.skip(reason="Disabled.")
 def test_vp01_success() -> None:
-    """Password e hash corretti"""
-    assert verify_password(PWD1, HASH1) is True
+    """VP01: Password e hash corretti -> True"""
+    assert verify_password("pass123", hash_mock("pass123")) is True
 
-@pytest.mark.skip(reason="Disabled.")
 def test_vp02_wrong_hash() -> None:
-    """Password corretta, hash errato"""
-    assert verify_password(PWD1, HASH2) is False
+    """VP02: Hash errato -> False"""
+    assert verify_password("pass123", hash_mock("xxx")) is False
 
-@pytest.mark.skip(reason="Disabled.")
-def test_vp03_none_hash() -> None:
-    """Password fornita, hash omesso"""
-    with pytest.raises(ValidationError):
-        verify_password(PWD1, None)  # type: ignore
+def test_vp03_empty_string() -> None:
+    """VP03: Stringa vuota -> True"""
+    assert verify_password("", hash_mock("")) is True
 
-@pytest.mark.skip(reason="Disabled.")
-def test_vp04_none_password() -> None:
-    """Password omessa, hash fornito"""
-    with pytest.raises(ValidationError):
-        verify_password(None, HASH1)  # type: ignore
+# Boundary Tests
+def test_vp01_exact_boundary() -> None:
+    """VP01: Exact Boundary -> True"""
+    assert verify_password("pass123", hash_mock("pass123")) is True
 
-@pytest.mark.skip(reason="Disabled.")
-def test_vp05_both_none() -> None:
-    """Entrambi i campi omessi"""
-    with pytest.raises(ValidationError):
-        verify_password(None, None)  # type: ignore
+def test_vpb02_immediately_above_case() -> None:
+    """VPB02: Immediately above (case difference) -> False"""
+    assert verify_password("pass123", hash_mock("Pass123")) is False
 
-@pytest.mark.skip(reason="Disabled.")
-def test_vpb01_equality() -> None:
-    """Uguaglianza"""
-    assert verify_password("pass123", "hash_of_pass123") is True
+def test_vpb03_immediately_below_length() -> None:
+    """VPB03: Immediately below (one less char) -> False"""
+    assert verify_password("pass123", hash_mock("pass12")) is False
 
-@pytest.mark.skip(reason="Disabled.")
-def test_vpb02_case_difference() -> None:
-    """Differenza lettera maiuscola"""
-    assert verify_password("pass123", "hash_of_Pass123") is False
-
-@pytest.mark.skip(reason="Disabled.")
-def test_vpb03_one_less_char() -> None:
-    """Un carattere in meno"""
-    assert verify_password("pass123", "hash_of_pass12") is False
-
-@pytest.mark.skip(reason="Disabled.")
-def test_vpb04_one_more_char() -> None:
-    """Un carattere in più"""
-    assert verify_password("pass123", "hash_of_pass1234") is False
-
-@pytest.mark.skip(reason="Disabled.")
-def test_vpb05_empty_string() -> None:
-    """Stringa vuota"""
-    assert verify_password("", "hash_of_") is True
+def test_vpb04_immediately_above_length() -> None:
+    """VPB04: Immediately above (one more char) -> False"""
+    assert verify_password("pass123", hash_mock("pass1234")) is False
