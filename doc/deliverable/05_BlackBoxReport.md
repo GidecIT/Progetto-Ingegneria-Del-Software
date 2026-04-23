@@ -559,11 +559,9 @@ Prototype: `create_notification(user: User | None, notification_type: Notificati
 
 
 **Requisiti:**
-- Se title o body sono None-->Il sistema restituisce un ValidationError.
-- Se notification_type è None o il tipo a cui fa riferimento è sconosciuto-->Il sistema restituisce un ValidationError.
-- Se user non ha un id valido(diverso da None)-->Il sistema restituisce un ValidationError.
-- Se report non ha un id valido-->Il sistema restituisce un ValidationError.
-- Se tutti i cambi obbligaotiri sono presenti e validi e i campi opzionali sono validi o omessi --> Il sistema restituisce un oggetto Notification
+- Se user ha un id diverso da None --> Il sistema restituisce un oggetto Notification persistente.
+- Se user ha id None-->Il sistema restituisce un None.
+- Se tutti i cambi obbligatori sono presenti e validi e i campi opzionali sono validi o omessi --> Il sistema restituisce un oggetto Notification.
 
 
 **Criterio:** user
@@ -571,22 +569,7 @@ Prototype: `create_notification(user: User | None, notification_type: Notificati
 **Predicati:**
 
 - user è un utente con id-->valido
-- user è None--> valido (esempio di messaggio broadcast)?
-- user è fornito ma non ha un id valido--> non valido
-
-**Criterio:** notification_type
-
-**Predicati:**
-
-- notification_type è un tipo valido dell'enum-->valido
-- notification_type è None o sconosciuti--> non valido
-
-**Criterio:** title e body
-
-**Predicati:**
-
-- title o body sono None o vuoti-->non valido
-- title e body sono stringhe non vuote-->valido
+- user è None--> valido
 
 **Criterio:** report
 
@@ -594,72 +577,33 @@ Prototype: `create_notification(user: User | None, notification_type: Notificati
 
 - report è fornito e con un valido id-->valido
 - reort è None-->valido
-- report è fornito ma non ha un id valido-->non valido
 
 ### Equivalence Classes
 
 **Per user:**
-- **EC1**: user valido (con id)
-- **EC2**: user == None
-- **EC3**: user non valido (senza id)
-
-**Per notification_type:**
-- **EC4**: tipo di notification_type è valido
-- **EC5**: tipo di notification_type non è valido o è None
-
-**Per title e body:**
-- **EC6**: title e body sono stringhe valide
-- **EC7**: title o body None
-- **EC8**: title o body stringhe vuote 
+- **EC1**: user valido
+- **EC2**: user is None
 
 **Per report:**
-- **EC9**: report valido (con id)
-- **EC10**: report == None
-- **EC11**: report non valido (senza id)
+- **EC3**: report valido
+- **EC4**: report is None
 
 ### Combinations of Equivalence Classes 
 
 Combinazioni possibili secondo i predicati:
 
-- EC1 x EC4 x EC6 x EC9 -> Successo con utente e report completi
-- EC2 x EC4 x EC6 x EC10 -> Successo con campi opzionali a None
-- EC3 x EC4 x EC6 x EC9 -> Fallimento per user senza id
-- EC1 x EC5 x EC6 x EC9 -> Fallimento per type non valido
-- EC1 x EC4 x EC7 x EC9 -> Fallimento per title/body None
-- EC1 x EC4 x EC8 x EC9 -> Fallimento per title/body vuoti
-- EC1 x EC4 x EC6 x EC11 -> Fallimento per report senza id
+- EC1 × EC3 -> Creazione con utente e report forniti
+- EC1 × EC4 -> Creazione con utente fornito e report omesso
+- EC2 × EC3 -> Creazione con utente omesso e report fornito
+- EC2 × EC4 -> Creazione con utente e report omessi
 
-
-Definiamo i seguenti oggetti da usare nei test:
-- **user1**: utente con id valido.
-- **user_invalid**: utente con campo id uguale a None.
-- **report1**: report con id valido.
-- **report_invalid**: report con campo id uguale a None.
-- **type1**: tipo di notifica valido
 
 | TC-ID | user | notification_type | title | body | report | Expected | Fixture |
 | :---- | :--- | :---------------- | :---- | :--- | :----- | :------- | :------ |
-| CN01 | user1 | type1 | "Nuovo aggiornamento" | "Il tuo report è in lavorazione" | report1 | Notification | Tutti i parametri validi forniti |
-| CN02 | None  | type1 | "Manutenzione" | " I server saranno offline" | None | Notification | Parametri opzionali omessi |
-| CN03 | user_invalid | type1 | "Titolo" | "Corpo" | report1 | ValidationError | user fornito ma senza id |
-| CN04 | user1 | None | "Titolo" | "Corpo" | report1 | ValidationError | NotificationType omesso |
-| CN05 | user1 | type1 | None |	"Corpo" | report1 | ValidationError | Titolo omesso |
-| CN06 | user1 | type1 | "Titolo" | None | report1 | ValidationError | Body omesso |
-| CN07 | user1 | type1 | "" | "Corpo" | report1 | ValidationError | Titolo vuoto |
-| CN08 | user1 | type1 | "Titolo" | "" | report1 | ValidationError | Body vuoto |
-| CN09 | user1 | type1 | "Titolo" | "Corpo" | report_invalid | ValidationError | Report fornito ma senza id |
-
-### Boundary: title and body content
-
-**Boundary around string lengths (title/body)**:
-
-| TC | user | notification_type | title | body | report | Boundary covered | EC covered | Expected |
-| :- | :--- | :---------------- | :---- | :--- | :----- | :--------------- | :--------- | :------- |
-| CNB01 | user1 | type1 | "A" |	"B" | report1 |	Minima lunghezza valida | EC1, EC4, EC6, EC9 | Notification |
-| CNB02	| user1 | type1 | " " | "B" | report1 |	Solo spazio bianco (titolo) | EC1, EC4, EC8, EC9 | ValidationError |
-| CNB03 | user1 | type1 | " " | "B" | report1 |	Stringa vuota (titolo) | EC1, EC4, EC8, EC9 | ValidationError |
-| CNB04 | user1 | type1 | "A" | " " | report1 | Solo spazio bianco (body) | EC1, EC4, EC8, EC9 | ValidationError |
-
+| CN01 | user1 | type1 | "Aggiornamento" | "Messaggio" | report1 | Notification | Utente presente, report presente |
+| CN02 | user1 | type1 | "Aggiornamento" | "Messaggio" | None | Notification | Utente presente, report omesso |
+| CN03 | None | type1 | "Aggiornamento" | "Messaggio" | report1 | None | Utente omesso, report presente|
+| CN04 | None | type1 | "Aggiornamento" | "Messaggio" | None | None | Sia utente che report omessi |
 
 ## 10 `participium.services.user_service.UserService.update_profile`
 
@@ -674,85 +618,49 @@ Prototype: `update_profile(user: User, username: str | None = None, first_name: 
 - Se l'utente è valido e tutti i campi opzionali forniti sono validi, il sistema aggiorna il profilo e restituisce l'oggetto User aggiornato.
 - Se l'utente è valido e tutti i campi opzionali sono None, il sistema restituisce l'oggetto User senza apportare modifiche.
 
-**Criterio**: user
+**Criterio**: username
 
 **Predicati**:
 
-- user è un utente con id valido -> valido
-- user è None -> non valido
-- user è fornito ma non ha un id valido -> non valido
+- username is None -> valido
+- username è fornito e non è in uso -> valido
+- username è fornito ma è già in uso -> non valido
 
-**Criterio**: campi testuali (username, first_name, last_name)
+**Criterio**: campi opzionali (first_name, last_name, email_notifications_enabled, profile_picture)
 
 **Predicati**:
 
-- I campi forniti sono stringhe valide non vuote -> valido
+- Almeno un campo opzionale è fornito -> valido
 - Tutti i campi sono None -> valido
-- Almeno uno dei campi forniti è una stringa vuota o composta solo da spazi -> non valido
 
-**Criterio**: profile_picture
-
-**Predicati**:
-
-- Il file fornito è un'immagine valida -> valido
-- Il parametro è None -> valido
-- Il file fornito non è valido o è di un formato non supportato -> non valido
-
-
-### Equivalence Classes
+### Equivalence Classes.
 
 **Per user**:
 
-- **EC1**: user valido (con id)
-- **EC2**: user == None
-- **EC3**: user non valido (senza id)
+- **EC1**: username valido
+- **EC2**: username non valido
 
-**Per campi testuali (username, first_name, last_name)**:
+**Per tutti i campi opzionali**:
 
-- **EC4**: tutti i campi testuali forniti sono validi
-- **EC5**: tutti i campi testuali sono None
-- **EC6**: almeno un campo testuale fornito è vuoto o malformato
-
-**Per email_notifications_enabled**:
-
-- **EC7**: valore booleano (True/False)
-- **EC8**: valore None
-
-**Per profile_picture**:
-
-- **EC9**: file immagine valido
-- **EC10**: None
-- **EC11**: file non valido (es. formato errato)
+- **EC3**: tutti i campi opzionali sono None
+- **EC4**: Almeno uno dei campi ha un valore inserito
 
 ### Combinations of Equivalence Classes 
 
 Combinazioni possibili secondo i predicati:
 
-- EC1 x EC4 x EC7 x EC9 -> Successo con tutti i campi forniti
-- EC1 x EC5 x EC8 x EC10 -> Successo senza nessun campo da aggiornare
-- EC2 x EC4 x EC7 x EC9 -> Fallimento per user None
-- EC3 x EC4 x EC7 x EC9 -> Fallimento per user senza id
-- EC1 x EC6 x EC7 x EC9 -> Fallimento per almeno un campo testuale vuoto
-- EC1 x EC4 x EC7 x EC11 -> Fallimento per immagine non valida
-
-Definiamo i seguenti oggetti da usare nei test:
-
-- **user1**: utente con id valido.
-- **user_invalid**: utente con campo id uguale a None.
-- **valid_pic**: oggetto FileStorage contenente un'immagine JPEG valida.
-- **invalid_pic**: oggetto FileStorage contenente un file .txt non valido.
+- EC1 × EC4 -> username disponibile e tutti i campi opzionali forniti 
+- EC1 × EC3 -> username disponibile e alcuni campi forniti 
+- EC2 × EC5 -> username non valido e tutti i campi opzionali forniti
+- EC2 × EC4 -> username non valido e alcuni campi opzionali forniti
 
 
 | TC-ID | user | username | first_name | last_name | email_notifications_enabled | profile_picture | Expected | Fixture |
 | :---- | :--- | :------- | :--------- | :-------- | :-------------------------- | :-------------- | :------- | :------ |
-| UP01 | user1 | "mario_rossi" | "Mario" |	"Rossi" | True | valid_pic | User |	Tutti i parametri validi e forniti |
-| UP02 | user1 | None |	None | None | None | None | User | Solo user fornito, campi opzionali a None |
-| UP03 | None | "mario_rossi" | "Mario" | "Rossi" | True | valid_pic | ValidationError|	Parametro user omesso (None) |
-| UP04 | user_invalid | "mario_rossi" | "Mario" | "Rossi" |	False |	valid_pic | ValidationError | User fornito ma privo di id |
-| UP05 | user1 | "" | "Mario" |	"Rossi" | True | valid_pic | ValidationError | Parametro username vuoto |
-| UP06 | user1 | "mario_rossi" | "" | "Rossi" |	True | valid_pic | ValidationError | Parametro first_name vuoto |
-| UP07 | user1 | "mario_rossi" | "Mario" | "" | True | valid_pic | ValidationError | Parametro last_name vuoto |
-| UP08 | user1 | "mario_rossi" | "Mario" | "Rossi" | True | invalid_pic | ValidationError | File di profile_picture non valido |
+| UP01 | user_target | "nuovo_username" | "Mario" | "Rossi" | True | valid_pic | User |	Username disponibile, altri campi popolati |
+| UP02 | user_target | "utente_occupato" | "Mario" | "Rossi" | True | valid_pic | ValidationError	Username già in uso da user_other |
+| UP03 | user_target | None | "Mario" |	"Rossi" | None | valid_pic | User |	Username omesso, solo altri campi aggiornati |
+| UP04 | user_target | None | None | None |	None | None | User | Nessun parametro da aggiornare fornito | 
 
 
 ### Boundary: text fields content
