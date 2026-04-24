@@ -116,17 +116,47 @@ User email non è verificata ( email_verified == False) --> non valido
 | AUB15 | `mario_r`  | `pass123` | is_active == False | Immediately below  | AuthenticationError     |
 | AUB16 | `mario_r`  | `pass123` | is_email_verified == False | Immediately below  | AuthenticationError     |
 
-
-
 ## 2 `participium.core.utils.parse_date`
 
 Suggested test file: `test_parse_date.py`
 
 Prototype: `parse_date(value: str | None) -> datetime | None`
 
-| TC-ID | value | Expected | Fixture |
-| :---- | :---- | :------- | :------ |
-|  |  |  |  |
+**Requisiti:**
+ Il sistema deve ricavare la data da una stringa in formato 'datetime'.
+ 
+- Se la stringa è vuota, il sistema restituisce None.
+- Se la stringa non è vuota, ma non è un formato ISO-8601 datetime valido, il sistema ritorna errore (ValueError).
+- Se la stringa è non vuota ed è un formato ISO-8601 datetime valido, restituisce l'oggetto 'datetime' corrispondente.
+
+**Criterio:** value
+
+**Predicati:**
+    - value è None--> non valido 
+    - value è un formato ISO-8601 datetime valido --> valido 
+    - value non è un formato ISO-8601 datetime valido --> non valido
+
+### Equivalence Classes
+
+**Per value:**
+- **EC1**: value valido
+- **EC2**: value non valido
+
+### Combinations of Equivalence Classes 
+
+Non sono presenti combinazioni valide, in quanto i predicati si escludono a vicenda
+
+### Boundary: value format
+**Boundary around "value":**
+
+| TC    | value        | Boundary covered  | Expected |
+|:------|:-------------|:------------------|:---------|
+| DTB01 | `2002-12-31` | Exact boundary    | datetime |
+| DTB02 | None         | Immediately below | None     |
+| DTB03 | `2017-31-04` | Immediately below | ValueError |
+| DTB04 | `1980-00-04` | Immediately below | ValueError |
+| DTB05 | `0000-12-04` | Immediately above | ValueError |
+| DTB04 | `1998+03/04` | Immediately below | ValueError |
 
 ## 3 `participium.core.status_flow.ensure_transition_allowed`
 
@@ -180,18 +210,18 @@ Allowed transitions:
 
 Combinazioni possibili secondo i predicati:
 
-    EC01 × EC07 --> transizione ammessa per Pending Approval
-    EC01 × EC08 --> transizione non ammessa per Pending Approval
-    EC02 × EC07 --> transizione ammessa per Assigned
-    EC02 × EC08 --> transizione non ammessa per Assigned
-    EC03 × EC07 --> transizione ammessa per In Progress
-    EC03 × EC08 --> transizione non ammessa per In Progress
-    EC04 × EC07 --> transizione ammessa per Suspended
-    EC04 × EC08 --> transizione non ammessa per Suspended
-    EC05 × EC07 --> transizione ammessa per Rejected
-    EC05 × EC08 --> transizione non ammessa per Rejected
-    EC06 × EC07 --> transizione ammessa per Resolved
-    EC06 × EC08 --> transizione non ammessa per Resolved
+EC01 × EC07 --> transizione ammessa per Pending Approval
+EC01 × EC08 --> transizione non ammessa per Pending Approval
+EC02 × EC07 --> transizione ammessa per Assigned
+EC02 × EC08 --> transizione non ammessa per Assigned
+EC03 × EC07 --> transizione ammessa per In Progress
+EC03 × EC08 --> transizione non ammessa per In Progress
+EC04 × EC07 --> transizione ammessa per Suspended
+EC04 × EC08 --> transizione non ammessa per Suspended
+EC05 × EC07 --> transizione ammessa per Rejected
+EC05 × EC08 --> transizione non ammessa per Rejected
+EC06 × EC07 --> transizione ammessa per Resolved
+EC06 × EC08 --> transizione non ammessa per Resolved
 
 (NOTA: ridondanti? tutte quanti sono possibili)
 
@@ -221,8 +251,6 @@ Combinazioni possibili secondo i predicati:
 |TR20 | Resolved | Resolved | EC06, EC07 | True | Self-transition |
 |TR21 | Resolved | In Progress | EC06, EC08 | ValidationError | Transizione non valida |
 
-
-
 ## 4 `participium.services.report_service.ReportService.create_report`
 
 Suggested test file: `test_create_report.py`
@@ -239,34 +267,34 @@ Prototype: `create_report(reporter: User, category_id: int | str | None, title: 
 
 **Criterio:** reporter
 **Predicati:**
-reporter è None--> non valido
-reporter è un utente non autenticato --> non valido
-reporter è un utente auteenticato --> valido
+    - reporter è None--> non valido
+    - reporter è un utente non autenticato --> non valido
+    - reporter è un utente autenticato --> valido
 
 **Criterio:** category_id
 **Predicati:**
-category_id è None--> non valido
-category_id è malformato --> non valido
-category_id fa riferimento a una categoria sconosciuta --> non valido 
-category_id fa riferimento a una categoria inattiva --> non valido
-category_id è valido e attivo --> valido
+    - category_id è None--> non valido
+    - category_id è malformato --> non valido
+    - category_id fa riferimento a una categoria sconosciuta --> non valido 
+    - category_id fa riferimento a una categoria inattiva --> non valido
+    - category_id è valido e attivo --> valido
 
 **Criterio:** title e description
 **Predicati:**
-title o descriptionè None o vuoto --> non valido
-title e descrizione sono stringhe non vuote --> valid
+    - title o description è None o vuoto --> non valido
+    - title e descrizione sono stringhe non vuote --> valido
 
 **Criterio:** latitude / longitude
 **Predicati:**
-latitude o longitude è None --> non valido
-latitude o longitude non possono essere convertiti in valori numerici --> non valido
-latitude e longitude sono convertibili in valori numerici validi --> valid
+    - latitude o longitude è None --> non valido
+    - latitude o longitude non possono essere convertiti in valori numerici --> non valido
+    - latitude e longitude sono convertibili in valori numerici validi --> valido
 
 **Criterio:** photos
 **Predicati:**
-Non è presente alcuna foto valida --> non valido
-Sono presenti più di 3 foto valide --> non valido
-Sono presenti da 1 a 3 foto valide --> valid
+    - Non è presente alcuna foto valida --> non valido
+    - Sono presenti più di 3 foto valide --> non valido
+    - Sono presenti da 1 a 3 foto valide --> valido
 
 ### Equivalence Classes
 
@@ -294,7 +322,7 @@ Sono presenti da 1 a 3 foto valide --> valid
 - **EC13**:  1 <= numero di foto  <= 3
 
 ### Combinations of Equivalence Classes 
-- EC2 x EC5 x EC8 x EC11 x EC13 --> Report creato con successo
+- EC2 x EC5 x EC8 x EC11 x EC13 --> report creato con successo
 - EC1 x EC5 x EC8 x EC11 x EC13 --> reporter non valido
 - EC2 x EC3 x EC8 x EC11 x EC13 --> category_id None
 - EC2 x EC4 x EC8 x EC11 x EC13 --> category_id malformato o sconosciuto
@@ -351,11 +379,108 @@ Suggested test file: `test_update_status.py`
 Prototype: `update_status(report_id: int, operator: User, next_status_value: str, note: str | None = None) -> Report`
 
 Requisiti: 
+**Requisiti:**
+Il sistema deve potere permettere l'aggiornamento di stato di un report:
 
+- Se operator è None o non ha i permessi adatti, il sistema restituisce un errore di autorizzazione (AuthorizationError).
+- Se l'operatore tenta di aggiornare un report al di fuori della propria categoria assegnata, il sistema restituisce un errore di autorizzazione (AuthorizationError).
+- Se il report non esiste, il sistema restituisce errore (NotFoundError).
+- Se next_status_value non rispetta l'ordine del workflow o non esiste, il sistema restituisce un errore di validazione (ValidationError).
+- Se l'operatore respinge il report (next_status_value == REJECTED) senza una nota, il sistema restituisce un errore di validazione (ValidationError)
+- Se tutti gli input inseriti sono validi, il sistema restituisce l'oggetto Report con lo stato aggiornato.
 
-| TC-ID | report_id | operator | next_status_value | note | Expected | Fixture |
-| :---- | :-------- | :------- | :---------------- | :--- | :------- | :------ |
-|  |  |  |  |  |  |  |
+**Criterio**: report_id
+**Predicati**:
+    - report_id è None --> non valido
+    - report_id non corrisponde a un report esistente --> non valido
+    - report_id corrisponde a un report esistente --> valido
+
+**Criterio**: operator 
+**Predicati**:
+    - operator è None --> non valido
+    - operator non corrisponde a un operatore esistente --> non valido
+    - operator corrisponde a un operatore esistente senza i permessi adatti alla modifica (User.Role != Role.OPERATOR AND User.Role != Role.ADMIN ') --> non valido
+    - operator corrisponde a un operatore esistente con categoria diversa rispetto a quella del report (User.category_id != Report.category_id) --> non valido
+    - operator corrisponde a un operatore esistente con i permessi adatti alla modifica (User.Role == Role.OPERATOR OR User.Role != Role.ADMIN ') --> valido
+    - operator corrisponde a un operatore esistente con categoria uguale rispetto a quella del report (User.category_id == Report.category_id) --> valido
+
+NOTA: Che cosa intende con 'Operatore senza permessi adatti'? Accorpabile a 'Operatore con categoria diversa da quella del report'? Esplicabile con 'User.Role != Role.OPERATOR AND User.Role != Role.ADMIN'?
+
+**Criterio**: next_status_value
+**Predicati**:
+    - next_status è uno degli stati possibili ed è permesso dal workflow --> valido
+    - next_status non è uno stato permesso dal workflow oppure è None --> non valido
+
+**Criterio**: note 
+**Predicati**:
+    - note è None o "" e l'operatore non respinge il report (next_status_value != REJECTED) --> valido
+    - note è None o "" e l'operatore respinge il report (next_status_value == REJECTED) --> non valido
+    - note non è None --> valido
+
+### Equivalence Classes
+
+**Per report_id**
+- **EC1**: report_id valido
+- **EC2**: report_id non valido
+
+**Per operator**
+- **EC3**: operator valido
+- **EC4**: operator non valido
+
+**Per next_status_value**
+- **EC5*: next_status_value valido
+- **EC6**: next_status_value non valido
+
+**Per note**
+- **EC7**: note valido
+- **EC8**: note non valido
+
+### Combinations of Equivalence Classes
+
+- EC1 x EC3 x EC5 x EC7 --> aggiornamento riuscito
+- EC1 x EC4 --> operatore non autorizzato o con categoria errata
+- EC1 x EC3 x EC6 --> transizione di stato non ammessa
+- EC1 x EC3 x EC5 x EC8 --> nota mancante su report rifiutato
+
+| TC-ID | report_id | operator | next_status_value | note | EC covered | Expected | Fixture |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| US01 | 10 | op_cat_1 | "ASSIGNED" | None | EC1, EC3, EC6, EC10 | Report | Transizione valida, categoria corretta |
+| US02 | 999 | op_cat_1 | "ASSIGNED" | None | EC2 | NotFoundError | Report inesistente |
+| US03 | 10 | user_no_perm | "ASSIGNED" | None | EC1, EC4 | AuthorizationError | Utente senza privilegi |
+| US04 | 10 | op_cat_2 | "ASSIGNED" | None | EC1, EC4 | AuthorizationError | Categoria operatore diversa da report |
+| US05 | 10 | op_cat_1 | "REJECTED" | "Incompleto" | EC1, EC3, EC6, EC8 | Report | Rifiuto con nota valida |
+| US06 | 10 | op_cat_1 | "REJECTED" | None | EC1, EC3, EC6, EC9 | ValidationError | Rifiuto senza nota |
+| US07 | 10 | op_cat_1 | "RESOLVED" | None | EC1, EC3, EC7, EC10 | ValidationError | Transizione workflow non permessa |
+
+### Boundary
+
+**Boundary around report_id:**
+
+| TC | report_id | operator | next_status_value | Boundary covered | Expected |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| USB01 | 1 | op_valido | "ASSIGNED" | Exact boundary | Report |
+| USB02 | 0 | op_valido | "ASSIGNED" | Immediately below | NotFoundError |
+| USB03 | 2147483647 | op_valido | "ASSIGNED" | Immediately below | NotFoundError |
+
+**Boundary around operator:**
+
+| TC | report_id | operator | next_status_value | Boundary covered | Expected |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| USB04 | 10 | admin | "ASSIGNED" | Exact boundary | Report |
+| USB05 | 10 | op_cat_corretta| "ASSIGNED" | Exact boundary | Report |
+| USB06 | 10 | op_cat_errata | "ASSIGNED" | Immediately below | AuthorizationError |
+| USB07 | 10 | user_base | "ASSIGNED" | Immediately below | AuthorizationError |
+
+**Boundary around next_status_value and note:**
+
+| TC | report_id | operator | next_status_value | note | Boundary covered | Expected |
+| :--- | :--- | :--- | :--- |:-----| :--- | :--- |
+| USB08 | 10 | op_valido | Current Status | None |Exact boundary| Report |
+| USB09 | 10 | op_valido | "NON_EXISTENT" | "A"|Immediately above | ValidationError |
+| USB10 | 10 | op_valido | "REJECTED" | "A"| Exact boundary | Report |
+| USB11 | 10 | op_valido | "REJECTED" | "B"| Exact boundary | Report |
+| USB12 | 10 | op_valido | "REJECTED" | None | Immediately below | ValidationError |
+| USB13 | 10 | op_valido | "ASSIGNED" | ""| Exact boundary | Report |
 
 ## 6 `participium.services.report_service.ReportService.list_public_reports`
 
@@ -381,22 +506,22 @@ Predicati:
 Criterio: status 
 Predicati:
     - status è uno degli stati possibili --> valido 
-    - status non è presente --> valido(filtro assente)
+    - status non è presente --> valido (filtro assente)
 
 Criterio: date_from
 Predicati:
-    - date_from è None -> valido (filtro assente) 
-    - date_from è una datetime -> valido 
+    - date_from è None --> valido (filtro assente) 
+    - date_from è una datetime --> valido 
 
 Criterio: date_to 
 Predicati:
-    - date_to è None -> valido (filtro assente) 
-    - date_to è una datetime -> valido 
+    - date_to è None --> valido (filtro assente) 
+    - date_to è una datetime --> valido 
 
 Criterio: sort 
 Predicati:
-    - sort == "desc" -> valido 
-    - sort == "asc" -> valido 
+    - sort == "desc" --> valido 
+    - sort == "asc" --> valido 
 
 ### Equivalence Classes
 
@@ -448,8 +573,10 @@ Predicati:
 | PR-10  | 9999 | None | None | None | desc | Lista vuota | Lista di segnalazioni pubbliche con category_id diversa da 9999|
 NOTA: PR-09 copre lo stesso input di PR-01 ma con fixture vuota, per verificare il comportamento in assenza di dati
 
-### Boundary
+### Boundary: 
+
 **Boundary around "category_id":**
+
 | TC    | category_id  | Boundary covered  | Expected |
 | :---- | :-------- |:------------------|:---------|
 | PRB01 |  1 | Exact boundary   | Lista di segnalazioni pubbliche con category_id 1 |
@@ -458,6 +585,7 @@ NOTA: PR-09 copre lo stesso input di PR-01 ma con fixture vuota, per verificare 
 NOTA: considero come immediately above il 7 in quanto le categorie sono 6 e considero che gli id partano da 1
 
 **Boundary around "date_from":**
+
 | TC    | date_from  | Boundary covered  | Expected |
 | :---- | :-------- |:------------------|:---------|
 | PRB04 |  2024-02-01 00:00:00 | Exact boundary   | Lista di segnalazioni pubbliche con date da 2024-02-01 00:00:00 |
@@ -465,6 +593,7 @@ NOTA: considero come immediately above il 7 in quanto le categorie sono 6 e cons
 | PRB06 |  2024-01-31 23:59:59 | Immediately below   | Lista di segnalazioni pubbliche con date da 2024-01-31 23:59:59 |
 
 **Boundary around "date_to":**
+
 | TC    | date_to  | Boundary covered  | Expected |
 | :---- | :-------- |:------------------|:---------|
 | PRB07 |  2024-02-01 00:00:00 | Exact boundary   | Lista di segnalazioni pubbliche con date fino a 2024-02-01 00:00:00 |
@@ -472,6 +601,7 @@ NOTA: considero come immediately above il 7 in quanto le categorie sono 6 e cons
 | PRB09 |  2024-01-31 23:59:59 | Immediately below   | Lista di segnalazioni pubbliche  con date fino a 2024-01-31 23:59:59 |
 
 **Boundary around "date_from" and "date_to"**
+
 | TC    | date_from  | date_to | Boundary covered  | Expected |
 | :---- | :-------- |:--------|:------------------|:---------|
 | PRB10 |  2024-02-01 00:00:00 | 2024-02-01 00:00:00 | Exact boundary   | Lista di segnalazioni pubbliche in data 2024-02-01 |
@@ -501,14 +631,14 @@ Prototype: `send_message(report: Report, sender: User, body: str) -> Message`
 **Predicati:**
 
 - il sender non può accedere al thread
-- il sender può accedere al trhead
+- il sender può accedere al thread
 
 **Criterio:** body
 
 **Predicati:**
 
 - body è una stringa vuota --> non valido
-- body è una stringa contentente solo caratteri di tipo whitespace --> non valido
+- body è una stringa contenente solo caratteri di tipo whitespace --> non valido
 - body contiene non solo caratteri di tipo whitespace --> valido
 
 ### Equivalence Classes
@@ -542,7 +672,7 @@ Definiamo i seguenti oggetti da usare nei test:
 | MS02 | report1 | user2 | "ciao" | EC1, EC2, EC5 | AuthorizationError | Report non fatto dal mittente |
 | MS03 | report1 | user1 | "ciao" | EC1, EC3, EC5 | Message | Tutto valido |
 
-### Boundary: messaging constraints
+### Boundary
 
 **Boundary around body content:**
 
