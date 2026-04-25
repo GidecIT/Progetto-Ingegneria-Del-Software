@@ -333,44 +333,42 @@ Prototype: `create_report(reporter: User, category_id: int | str | None, title: 
 - EC2 x EC5 x EC8 x EC11 x EC12 --> numero di foto non valido
 
 
-| TC-ID | reporter | category_id | title | description | latitude | longitude | photos | is_anonymous | EC covered | Expected | Fixture |
-| :---- | :------- | :---------- | :---- | :---------- | :------- | :-------- | :----- | :----------- | :------- | :------- | :------ |
-|CR1| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | EC2, EC5, EC8, EC11, EC13  | Report |  |
-|CR2| None | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | EC1, EC5, EC8, EC11, EC13 | ValidationError | Reporter non valido |
-|CR3| user | "" | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC3, EC8, EC11, EC13| False | ValidationError | Categoria Nonea | 
-|CR4| user | df | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC4, EC8, EC11, EC13 | False | ValidationError | Categoria non vallida|
-|CR5| user | 4 | "" | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC5, EC6, EC11, EC13 | False | ValidationError | Titolo vuoto|
-|CR6| user | 4 | Buca profonda |&&&%&£/$"(")"$$&"| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC5, EC7, EC11, EC13 | False | ValidationError | Descrizione non valida |
-|CR8| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | "" | [foto_buca.jpg] | EC2,EC5,EC8,EC9,EC13 | False | ValidationError | Longitude Nonea |
+| TC-ID | reporter | category_id | title | description | latitude | longitude | photos | is_anonymous | EC covered | Expected | Fixture                           |
+| :---- | :------- | :---------- | :---- | :---------- | :------- | :-------- | :----- | :----------- | :------- | :------- |:----------------------------------|
+|CR1| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | EC2, EC5, EC8, EC11, EC13  | Report | Report creato con successo|
+|CR2| None | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | EC1, EC5, EC8, EC11, EC13 | ValidationError | Reporter non valido|
+|CR3| user | "" | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC3, EC8, EC11, EC13| False | ValidationError | Categoria None     | 
+|CR4| user | df | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC4, EC8, EC11, EC13 | False | ValidationError | Categoria non valida |
+|CR5| user | 4 | "" | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC5, EC6, EC11, EC13 | False | ValidationError | Titolo vuoto |
+|CR6| user | 4 | Buca profonda |&&&%&£/$"(")"$$&"| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC5, EC7, EC11, EC13 | False | ValidationError | Descrizione non valida|
+|CR8| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | "" | [foto_buca.jpg] | EC2,EC5,EC8,EC9,EC13 | False | ValidationError | Longitude None |
 |CR9| user | 4 | Buca profonda | Buca profonda in piazza Castello| Quarantacinque | "7.6856" | [foto_buca.jpg] | EC2,EC5,EC8,EC10,EC13 | False | ValidationError | Formato Latitude non convertibile |
-|CR10| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [] | EC2, EC5, EC8, EC11, EC12 | False | ValidationError | Nessuna foto presente |
+|CR10| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [] | EC2, EC5, EC8, EC11, EC12 | False | ValidationError | Nessuna foto presente|
 
 ### Boundary: identifier recognition
 
 **Boundary around "category_id":**
 Boundary test per 'category_id' realizzati considerando le 10 categorie descritte nella specifica iniziale, con id associati da 0 a 9.
 
-| TC    | category_id | Boundary covered  | Expected |
-| :---- | :---------- |:------------------|:---------|
-| AUB01 | 4           | Exact boundary    | Report obj |
+| TC    | category_id | Boundary covered  | Expected        |
+| :---- | :---------- |:------------------|:----------------|
+| AUB01 | 4           | Exact boundary    | Report          |
 | AUB02 | 10         | Immediately above | ValidationError |
 | AUB03 | -1          | Immediately below | ValidationError |
 
 **Boundary around "latitude/longitude":**
 | TC    | latitude/longitude | Boundary covered  | Expected |
 | :---- | :----------------- |:------------------|:---------|
-| AUB04 | 45.0710 / 7.6856   | Exact boundary    | Report obj |
+| AUB04 | 45.0710 / 7.6856   | Exact boundary    | Report |
 | AUB05 | 2324.52 / 7.6856 | Immediately above    | ValidationError |
 | AUB06 | 45.0710 / -235.89 | Immediately below    | ValidationError |
 
 **Boundary around "photos":**
 | TC    | photos | Boundary covered  | Expected |
 | :---- | :----- |:------------------|:---------|
-| AUB07 | [foto_buca.jpg] | Exact boundary    | Report obj |
+| AUB07 | [foto_buca.jpg] | Exact boundary    | Report|
 | AUB08 | [] | Immediately below    | ValidationError |
-| AUB09 | [foto1.jpg, foto2.jpg, foto3.jpg, foto4.jpg] | Immediately above    | ValidationError |
-
-
+| AUB09 | [foto1.jpg, foto2.jpg, foto3.jpg, foto4.jpg] | Immediately above | ValidationError |
 
 ## 5 `participium.services.report_service.ReportService.update_status`
 
@@ -378,7 +376,6 @@ Suggested test file: `test_update_status.py`
 
 Prototype: `update_status(report_id: int, operator: User, next_status_value: str, note: str | None = None) -> Report`
 
-Requisiti: 
 **Requisiti:**
 Il sistema deve potere permettere l'aggiornamento di stato di un report:
 
@@ -425,32 +422,34 @@ NOTA: Che cosa intende con 'Operatore senza permessi adatti'? Accorpabile a 'Ope
 
 **Per operator**
 - **EC3**: operator valido
-- **EC4**: operator non valido
+- **EC4**: operator non valido, senza permessi adatti
+- **EC5**: operator non valido, categoria di appartenenza diversa da quella del report
 
 **Per next_status_value**
-- **EC5*: next_status_value valido
-- **EC6**: next_status_value non valido
+- **EC6**: next_status_value valido
+- **EC7**: next_status_value non valido
 
 **Per note**
-- **EC7**: note valido
-- **EC8**: note non valido
+- **EC8**: note valido
+- **EC9**: note non valido
 
 ### Combinations of Equivalence Classes
 
-- EC1 x EC3 x EC5 x EC7 --> aggiornamento riuscito
-- EC1 x EC4 --> operatore non autorizzato o con categoria errata
-- EC1 x EC3 x EC6 --> transizione di stato non ammessa
-- EC1 x EC3 x EC5 x EC8 --> nota mancante su report rifiutato
+- EC2 x EC3 x EC6 x EC8 --> report inesistente
+- EC1 x EC3 x EC6 x EC8 --> aggiornamento riuscito
+- EC1 x EC4 x EC6 x EC8 --> operatore non autorizzato
+- EC1 x EC5 x EC6 x EC8 --> operatore al di fuori della propria categoria
+- EC1 x EC3 x EC7 x EC8 --> transizione di stato non ammessa
+- EC1 x EC3 x EC6 x EC9 --> nota mancante su report rifiutato
 
-| TC-ID | report_id | operator | next_status_value | note | EC covered | Expected | Fixture |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| US01 | 10 | op_cat_1 | "ASSIGNED" | None | EC1, EC3, EC6, EC10 | Report | Transizione valida, categoria corretta |
-| US02 | 999 | op_cat_1 | "ASSIGNED" | None | EC2 | NotFoundError | Report inesistente |
-| US03 | 10 | user_no_perm | "ASSIGNED" | None | EC1, EC4 | AuthorizationError | Utente senza privilegi |
-| US04 | 10 | op_cat_2 | "ASSIGNED" | None | EC1, EC4 | AuthorizationError | Categoria operatore diversa da report |
-| US05 | 10 | op_cat_1 | "REJECTED" | "Incompleto" | EC1, EC3, EC6, EC8 | Report | Rifiuto con nota valida |
-| US06 | 10 | op_cat_1 | "REJECTED" | None | EC1, EC3, EC6, EC9 | ValidationError | Rifiuto senza nota |
-| US07 | 10 | op_cat_1 | "RESOLVED" | None | EC1, EC3, EC7, EC10 | ValidationError | Transizione workflow non permessa |
+| TC-ID | report_id | operator | next_status_value | note | EC covered         | Expected | Fixture                                |
+|:------| :--- | :--- | :--- | :--- |:-------------------| :--- |:---------------------------------------|
+| US01  | 10 | op_cat_1 | "ASSIGNED" | None | EC1, EC3, EC6, EC8 | Report | Transizione valida, categoria corretta |
+| US02  | 999 | op_cat_1 | "ASSIGNED" | None | EC, EC, EC, EC8 | NotFoundError | Report inesistente                     |
+| US03  | 10 | user_no_perm | "ASSIGNED" | None | EC, EC, EC, EC8 | AuthorizationError | Operatore senza permessi               |
+| US04  | 10 | op_cat_2 | "ASSIGNED" | None | EC1, EC5, EC6, EC8 | AuthorizationError | Categoria operatore diversa da report  |
+| US05  | 10 | op_cat_1 | "REJECTED" | None | EC1, EC3, EC6, EC9 | ValidationError | Rifiuto senza nota                     |
+| US06  | 10 | op_cat_1 | "RESOLVED" | None | EC1, EC3, EC7, EC8 | ValidationError | Transizione workflow non permessa      |
 
 ### Boundary
 
