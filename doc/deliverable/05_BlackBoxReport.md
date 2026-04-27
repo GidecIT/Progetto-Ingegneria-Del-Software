@@ -502,13 +502,12 @@ Prototype: `list_public_reports(category_id: int | None = None, status: ReportSt
 
 **Requisiti:**
 - il sistema deve restituire una lista di segnalazioni pubbliche basata su filtri opzionali
-- se nessun filtro è fornito, deve restituire una lista con tutte le segnalazioni pubbliche
-- il sistema deve fornire una lista con tutte le segnalazioni pubbliche con categoria uguale a category_id (se fornito) 
-- il sistema deve fornire una lista con tutte le segnalazioni pubbliche con stato uguale a status (se fornito) 
-- il sistema deve fornire una lista con tutte le segnalazioni pubbliche con data di creazione uguale o successiva a date_from (se fornita)
-- il sistema deve fornire una lista con tutte le segnalazioni pubbliche con data di creazione uguale o precedente a date_to (se fornita)
-- il sistema deve fornire una lista con le segnalazioni pubbliche ordinate in base al parametro sort (di default decrescente)
-- il sistema deve fornire una lista vuota se date_from è maggiore di date_to
+- se nessun filtro è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche
+- se category_id è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con categoria uguale a category_id
+- se status è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con stato uguale a status
+- se date_from è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con data di creazione uguale o successiva a date_from
+- se date_to è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con data di creazione uguale o precedente a date_to
+- se sort è fornito, il sistema deve restituire una lista con le segnalazioni pubbliche ordinate in base al parametro sort (di default decrescente)
 
 **Criterio:** category_id
 
