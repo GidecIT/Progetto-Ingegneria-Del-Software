@@ -110,9 +110,41 @@ Suggested test file: `test_parse_date.py`
 
 Prototype: `parse_date(value: str | None) -> datetime | None`
 
-| TC-ID | value | Expected | Fixture |
-| :---- | :---- | :------- | :------ |
-|  |  |  |  |
+**Requisiti:**
+ Il sistema deve ricavare la data da una stringa in formato 'datetime'.
+ 
+- Se la stringa è vuota, il sistema restituisce None.
+- Se la stringa non è vuota, ma non è un formato ISO-8601 datetime valido, il sistema ritorna errore (ValueError).
+- Se la stringa è non vuota ed è un formato ISO-8601 datetime valido, restituisce l'oggetto 'datetime' corrispondente.
+
+**Criterio:** value
+
+**Predicati:**
+    - value è None--> non valido 
+    - value è un formato ISO-8601 datetime valido --> valido 
+    - value non è un formato ISO-8601 datetime valido --> non valido
+
+### Equivalence Classes
+
+**Per value:**
+- **EC1**: value valido
+- **EC2**: value non valido
+
+### Combinations of Equivalence Classes 
+
+Non sono presenti combinazioni valide, in quanto i predicati si escludono a vicenda
+
+### Boundary: value format
+**Boundary around "value":**
+
+| TC    | value        | Boundary covered  | Expected |
+|:------|:-------------|:------------------|:---------|
+| DTB01 | `2002-12-31` | Exact boundary    | datetime |
+| DTB02 | None         | Immediately below | None     |
+| DTB03 | `2017-31-04` | Immediately below | ValueError |
+| DTB04 | `1980-00-04` | Immediately below | ValueError |
+| DTB05 | `0000-12-04` | Immediately above | ValueError |
+| DTB04 | `1998+03/04` | Immediately below | ValueError |
 
 ## 3 `participium.core.status_flow.ensure_transition_allowed`
 
@@ -166,18 +198,18 @@ Allowed transitions:<br>
 
 Combinazioni possibili secondo i predicati:
 
-    EC01 × EC07 --> transizione ammessa per Pending Approval
-    EC01 × EC08 --> transizione non ammessa per Pending Approval
-    EC02 × EC07 --> transizione ammessa per Assigned
-    EC02 × EC08 --> transizione non ammessa per Assigned
-    EC03 × EC07 --> transizione ammessa per In Progress
-    EC03 × EC08 --> transizione non ammessa per In Progress
-    EC04 × EC07 --> transizione ammessa per Suspended
-    EC04 × EC08 --> transizione non ammessa per Suspended
-    EC05 × EC07 --> transizione ammessa per Rejected
-    EC05 × EC08 --> transizione non ammessa per Rejected
-    EC06 × EC07 --> transizione ammessa per Resolved
-    EC06 × EC08 --> transizione non ammessa per Resolved
+EC01 × EC07 --> transizione ammessa per Pending Approval
+EC01 × EC08 --> transizione non ammessa per Pending Approval
+EC02 × EC07 --> transizione ammessa per Assigned
+EC02 × EC08 --> transizione non ammessa per Assigned
+EC03 × EC07 --> transizione ammessa per In Progress
+EC03 × EC08 --> transizione non ammessa per In Progress
+EC04 × EC07 --> transizione ammessa per Suspended
+EC04 × EC08 --> transizione non ammessa per Suspended
+EC05 × EC07 --> transizione ammessa per Rejected
+EC05 × EC08 --> transizione non ammessa per Rejected
+EC06 × EC07 --> transizione ammessa per Resolved
+EC06 × EC08 --> transizione non ammessa per Resolved
 
 ### Combinations of Equivalence Classes 
 
@@ -205,8 +237,6 @@ Combinazioni possibili secondo i predicati:
 |TR20 | Resolved | Resolved | EC06, EC07 | True | Self-transition |
 |TR21 | Resolved | In Progress | EC06, EC08 | ValidationError | Transizione non valida |
 
-
-
 ## 4 `participium.services.report_service.ReportService.create_report`
 
 Suggested test file: `test_create_report.py`
@@ -223,9 +253,9 @@ Prototype: `create_report(reporter: User, category_id: int | str | None, title: 
 
 **Criterio:** reporter
 **Predicati:**
-- reporter è None--> non valido
-- reporter è un utente non autenticato --> non valido
-- reporter è un utente auteenticato --> valido
+    - reporter è None--> non valido
+    - reporter è un utente non autenticato --> non valido
+    - reporter è un utente autenticato --> valido
 
 **Criterio:** category_id
 
@@ -311,16 +341,16 @@ Prototype: `create_report(reporter: User, category_id: int | str | None, title: 
 |CR6| user | 4 | Buca profonda |""| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC5, EC7, EC11, EC13 | False | ValidationError | Descrizione non valida |
 |CR8| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | "" | [foto_buca.jpg] | EC2,EC5,EC8,EC9,EC13 | False | ValidationError | Longitude Nonea |
 |CR9| user | 4 | Buca profonda | Buca profonda in piazza Castello| Quarantacinque | "7.6856" | [foto_buca.jpg] | EC2,EC5,EC8,EC10,EC13 | False | ValidationError | Formato Latitude non convertibile |
-|CR10| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [] | EC2, EC5, EC8, EC11, EC12 | False | ValidationError | Nessuna foto presente |
+|CR10| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [] | EC2, EC5, EC8, EC11, EC12 | False | ValidationError | Nessuna foto presente|
 
 ### Boundary: identifier recognition
 
 **Boundary around "category_id":**
 Boundary test per 'category_id' realizzati considerando le 10 categorie descritte nella specifica iniziale, con id associati da 0 a 9.
 
-| TC    | category_id | Boundary covered  | Expected |
-| :---- | :---------- |:------------------|:---------|
-| AUB01 | 4           | Exact boundary    | Report obj |
+| TC    | category_id | Boundary covered  | Expected        |
+| :---- | :---------- |:------------------|:----------------|
+| AUB01 | 4           | Exact boundary    | Report          |
 | AUB02 | 10         | Immediately above | ValidationError |
 | AUB03 | -1          | Immediately below | ValidationError |
 
@@ -336,18 +366,16 @@ Boundary test per 'category_id' realizzati considerando le 10 categorie descritt
 **Boundary around "latitude/longitude":**
 | TC    | latitude/longitude | Boundary covered  | Expected |
 | :---- | :----------------- |:------------------|:---------|
-| AUB04 | 45.0710 / 7.6856   | Exact boundary    | Report obj |
+| AUB04 | 45.0710 / 7.6856   | Exact boundary    | Report |
 | AUB05 | 2324.52 / 7.6856 | Immediately above    | ValidationError |
 | AUB06 | 45.0710 / -235.89 | Immediately below    | ValidationError |
 
 **Boundary around "photos":**
 | TC    | photos | Boundary covered  | Expected |
 | :---- | :----- |:------------------|:---------|
-| AUB07 | [foto_buca.jpg] | Exact boundary    | Report obj |
+| AUB07 | [foto_buca.jpg] | Exact boundary    | Report|
 | AUB08 | [] | Immediately below    | ValidationError |
-| AUB09 | [foto1.jpg, foto2.jpg, foto3.jpg, foto4.jpg] | Immediately above    | ValidationError |
-
-
+| AUB09 | [foto1.jpg, foto2.jpg, foto3.jpg, foto4.jpg] | Immediately above | ValidationError |
 
 ## 5 `participium.services.report_service.ReportService.update_status`
 
@@ -361,10 +389,110 @@ Prototype: `update_status(report_id: int, operator: User, next_status_value: str
 
 **Predicati:**
 
+**Requisiti:**
+Il sistema deve potere permettere l'aggiornamento di stato di un report:
 
-| TC-ID | report_id | operator | next_status_value | note | Expected | Fixture |
-| :---- | :-------- | :------- | :---------------- | :--- | :------- | :------ |
-|  |  |  |  |  |  |  |
+- Se operator è None o non ha i permessi adatti, il sistema restituisce un errore di autorizzazione (AuthorizationError).
+- Se l'operatore tenta di aggiornare un report al di fuori della propria categoria assegnata, il sistema restituisce un errore di autorizzazione (AuthorizationError).
+- Se il report non esiste, il sistema restituisce errore (NotFoundError).
+- Se next_status_value non rispetta l'ordine del workflow o non esiste, il sistema restituisce un errore di validazione (ValidationError).
+- Se l'operatore respinge il report (next_status_value == REJECTED) senza una nota, il sistema restituisce un errore di validazione (ValidationError)
+- Se tutti gli input inseriti sono validi, il sistema restituisce l'oggetto Report con lo stato aggiornato.
+
+**Criterio**: report_id
+**Predicati**:
+    - report_id è None --> non valido
+    - report_id non corrisponde a un report esistente --> non valido
+    - report_id corrisponde a un report esistente --> valido
+
+**Criterio**: operator 
+**Predicati**:
+    - operator è None --> non valido
+    - operator non corrisponde a un operatore esistente --> non valido
+    - operator corrisponde a un operatore esistente senza i permessi adatti alla modifica (User.Role != Role.OPERATOR AND User.Role != Role.ADMIN ') --> non valido
+    - operator corrisponde a un operatore esistente con categoria diversa rispetto a quella del report (User.category_id != Report.category_id) --> non valido
+    - operator corrisponde a un operatore esistente con i permessi adatti alla modifica (User.Role == Role.OPERATOR OR User.Role != Role.ADMIN ') --> valido
+    - operator corrisponde a un operatore esistente con categoria uguale rispetto a quella del report (User.category_id == Report.category_id) --> valido
+
+NOTA: Che cosa intende con 'Operatore senza permessi adatti'? Accorpabile a 'Operatore con categoria diversa da quella del report'? Esplicabile con 'User.Role != Role.OPERATOR AND User.Role != Role.ADMIN'?
+
+**Criterio**: next_status_value
+**Predicati**:
+    - next_status è uno degli stati possibili ed è permesso dal workflow --> valido
+    - next_status non è uno stato permesso dal workflow oppure è None --> non valido
+
+**Criterio**: note 
+**Predicati**:
+    - note è None o "" e l'operatore non respinge il report (next_status_value != REJECTED) --> valido
+    - note è None o "" e l'operatore respinge il report (next_status_value == REJECTED) --> non valido
+    - note non è None --> valido
+
+### Equivalence Classes
+
+**Per report_id**
+- **EC1**: report_id valido
+- **EC2**: report_id non valido
+
+**Per operator**
+- **EC3**: operator valido
+- **EC4**: operator non valido, senza permessi adatti
+- **EC5**: operator non valido, categoria di appartenenza diversa da quella del report
+
+**Per next_status_value**
+- **EC6**: next_status_value valido
+- **EC7**: next_status_value non valido
+
+**Per note**
+- **EC8**: note valido
+- **EC9**: note non valido
+
+### Combinations of Equivalence Classes
+
+- EC2 x EC3 x EC6 x EC8 --> report inesistente
+- EC1 x EC3 x EC6 x EC8 --> aggiornamento riuscito
+- EC1 x EC4 x EC6 x EC8 --> operatore non autorizzato
+- EC1 x EC5 x EC6 x EC8 --> operatore al di fuori della propria categoria
+- EC1 x EC3 x EC7 x EC8 --> transizione di stato non ammessa
+- EC1 x EC3 x EC6 x EC9 --> nota mancante su report rifiutato
+
+| TC-ID | report_id | operator | next_status_value | note | EC covered         | Expected | Fixture                                |
+|:------| :--- | :--- | :--- | :--- |:-------------------| :--- |:---------------------------------------|
+| US01  | 10 | op_cat_1 | "ASSIGNED" | None | EC1, EC3, EC6, EC8 | Report | Transizione valida, categoria corretta |
+| US02  | 999 | op_cat_1 | "ASSIGNED" | None | EC, EC, EC, EC8 | NotFoundError | Report inesistente                     |
+| US03  | 10 | user_no_perm | "ASSIGNED" | None | EC, EC, EC, EC8 | AuthorizationError | Operatore senza permessi               |
+| US04  | 10 | op_cat_2 | "ASSIGNED" | None | EC1, EC5, EC6, EC8 | AuthorizationError | Categoria operatore diversa da report  |
+| US05  | 10 | op_cat_1 | "REJECTED" | None | EC1, EC3, EC6, EC9 | ValidationError | Rifiuto senza nota                     |
+| US06  | 10 | op_cat_1 | "RESOLVED" | None | EC1, EC3, EC7, EC8 | ValidationError | Transizione workflow non permessa      |
+
+### Boundary
+
+**Boundary around report_id:**
+
+| TC | report_id | operator | next_status_value | Boundary covered | Expected |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| USB01 | 1 | op_valido | "ASSIGNED" | Exact boundary | Report |
+| USB02 | 0 | op_valido | "ASSIGNED" | Immediately below | NotFoundError |
+| USB03 | 2147483647 | op_valido | "ASSIGNED" | Immediately below | NotFoundError |
+
+**Boundary around operator:**
+
+| TC | report_id | operator | next_status_value | Boundary covered | Expected |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| USB04 | 10 | admin | "ASSIGNED" | Exact boundary | Report |
+| USB05 | 10 | op_cat_corretta| "ASSIGNED" | Exact boundary | Report |
+| USB06 | 10 | op_cat_errata | "ASSIGNED" | Immediately below | AuthorizationError |
+| USB07 | 10 | user_base | "ASSIGNED" | Immediately below | AuthorizationError |
+
+**Boundary around next_status_value and note:**
+
+| TC | report_id | operator | next_status_value | note | Boundary covered | Expected |
+| :--- | :--- | :--- | :--- |:-----| :--- | :--- |
+| USB08 | 10 | op_valido | Current Status | None |Exact boundary| Report |
+| USB09 | 10 | op_valido | "NON_EXISTENT" | "A"|Immediately above | ValidationError |
+| USB10 | 10 | op_valido | "REJECTED" | "A"| Exact boundary | Report |
+| USB11 | 10 | op_valido | "REJECTED" | "B"| Exact boundary | Report |
+| USB12 | 10 | op_valido | "REJECTED" | None | Immediately below | ValidationError |
+| USB13 | 10 | op_valido | "ASSIGNED" | ""| Exact boundary | Report |
 
 ## 6 `participium.services.report_service.ReportService.list_public_reports`
 
@@ -462,8 +590,10 @@ Prototype: `list_public_reports(category_id: int | None = None, status: ReportSt
 | PR-10  | 9999 | None | None | None | desc | Lista vuota | Lista di segnalazioni pubbliche con category_id diversa da 9999|
 NOTA: PR-09 copre lo stesso input di PR-01 ma con fixture vuota, per verificare il comportamento in assenza di dati
 
-### Boundary
+### Boundary: 
+
 **Boundary around "category_id":**
+
 | TC    | category_id  | Boundary covered  | Expected |
 | :---- | :-------- |:------------------|:---------|
 | PRB01 |  1 | Exact boundary   | Lista di segnalazioni pubbliche con category_id 1 |
@@ -472,6 +602,7 @@ NOTA: PR-09 copre lo stesso input di PR-01 ma con fixture vuota, per verificare 
 NOTA: considero come immediately above il 7 in quanto le categorie sono 6 e considero che gli id partano da 1
 
 **Boundary around "date_from":**
+
 | TC    | date_from  | Boundary covered  | Expected |
 | :---- | :-------- |:------------------|:---------|
 | PRB04 |  2024-02-01 00:00:00 | Exact boundary   | Lista di segnalazioni pubbliche con date da 2024-02-01 00:00:00 |
@@ -479,6 +610,7 @@ NOTA: considero come immediately above il 7 in quanto le categorie sono 6 e cons
 | PRB06 |  2024-01-31 23:59:59 | Immediately below   | Lista di segnalazioni pubbliche con date da 2024-01-31 23:59:59 |
 
 **Boundary around "date_to":**
+
 | TC    | date_to  | Boundary covered  | Expected |
 | :---- | :-------- |:------------------|:---------|
 | PRB07 |  2024-02-01 00:00:00 | Exact boundary   | Lista di segnalazioni pubbliche con date fino a 2024-02-01 00:00:00 |
@@ -486,6 +618,7 @@ NOTA: considero come immediately above il 7 in quanto le categorie sono 6 e cons
 | PRB09 |  2024-01-31 23:59:59 | Immediately below   | Lista di segnalazioni pubbliche  con date fino a 2024-01-31 23:59:59 |
 
 **Boundary around "date_from" and "date_to"**
+
 | TC    | date_from  | date_to | Boundary covered  | Expected |
 | :---- | :-------- |:--------|:------------------|:---------|
 | PRB10 |  2024-02-01 00:00:00 | 2024-02-01 00:00:00 | Exact boundary   | Lista di segnalazioni pubbliche in data 2024-02-01 |
@@ -499,8 +632,6 @@ Suggested test file: `test_send_message.py`
 Prototype: `send_message(report: Report, sender: User, body: str) -> Message`
 
 **Requisiti**:
-- Se o il report o l'id del report sono None il sistema deve generare un ValidationError. 
-- Se o il mittente o l'id del mittente sono None il sistema deve generare un ValidationError.
 - Se il mittente non può accedere al thread di messaggistica del report in questione il sistema deve generare un AuthorizationError.
 - Se il testo del messaggio è vuoto il sistema deve generare un ValidationError.  
 - Se il sistema non riesce a risolvere un destinatario del messaggio deve generare un ValidationError.
@@ -510,96 +641,63 @@ Prototype: `send_message(report: Report, sender: User, body: str) -> Message`
 
 **Predicati:**
 
-- report è None--> non valido
-- report.id è None--> non valido 
-- report.reporter_id è None--> non valido 
-- report esiste con il proprio id e reporter id validi --> valido 
-
+- report esiste -> valido 
 
 **Criterio:** sender
 
 **Predicati:**
 
-- sender è None--> non valido
-- sender.id è None--> non valido
-- il sender non ha lo stesso id del reporter (sender.id != report.reporter_id) --> non valido
-- sender esiste e ha lo stesso id del reporter (sender.id == report.reporter_id) --> valido
-
+- il sender non può accedere al thread
+- il sender può accedere al thread
 
 **Criterio:** body
 
 **Predicati:**
 
-- body è None--> non valido
-- body è vuoto oppure contiene solo caratteri di tipo whitespace --> non valido
+- body è una stringa vuota --> non valido
+- body è una stringa contenente solo caratteri di tipo whitespace --> non valido
 - body contiene non solo caratteri di tipo whitespace --> valido
 
 ### Equivalence Classes
 
 **Per report:**
-- **EC1**: report == None
-- **EC2**: report.id == None
-- **EC3**: report.reporter_id == None
-- **EC4**: report id e reporter id validi
+- **EC1**: report valido
 
 **Per sender:**
-- **EC5**: sender == None
-- **EC6**: sender.id == None
-- **EC7**: sender.id != report.reporter_id
-- **EC8**: sender id valido
+- **EC2**: sender non può accedere al thread
+- **EC3**: sender può accedere al thread
 
 **Per body:**
-- **EC9**: body == None
-- **EC10**: body vuoto o con solo whitespace 
-- **EC11**: body valido 
-
+- **EC4**: body vuoto o con solo whitespace
+- **EC5**: body valido
 
 ### Combinations of Equivalence Classes 
 
-- EC4 x EC8 x EC11 -> oggetto messaggio ritornato con successo
-- EC1 x EC8 x EC11 -> fallimento per report None
-- EC2 x EC8 x EC11 -> fallimento per report id None
-- EC3 x EC8 x EC11 -> fallimento per reporter id None
-- EC4 x EC5 x EC11 -> fallimento per sender None
-- EC4 x EC6 x EC11 -> fallimento per sender id None
-- EC4 x EC7 x EC11 -> fallimento per sender id diverso da reporter id
-- EC4 x EC8 x EC9 -> fallimento per body None
-- EC4 x EC8 x EC10 -> fallimento per body vuoto o con solo whitespace
+- EC1 x EC3 x EC5 -> oggetto _Message_ ritornato con successo
+- EC1 x EC2 x EC5 -> _AuthorizationError_ perchè il sender non può accedere al thread
+- EC1 x EC3 x EC4 -> _ValidationError_ causato da contenuto di body errato
 
 Combinazioni possibili secondo i predicati:
 Definiamo i seguenti oggetti da usare nei test:
 - **user1**: utente con un campo id valido e uguale ad 1.
 - **user2**: utente con un campo id valido e uguale ad 2.
-- **user3**: utente con un campo id None.
 - **report1**: report fatto dall'utente 1.
-- **report2**: report con un campo reporter_id None.
-- **report3**: report con un campo id None.
 
 | TC-ID | report | sender | body | EC covered | Expected | Fixture |
 | :---- | :----- | :----- | :--- | :--------- | :------- | :------ |
-| MS01 | None | None | None | EC1, EC5, EC9 | ValidationError | Tutti e tre i campi omessi  |
-| MS02 | None | user1 | None | EC1, EC8, EC9 | ValidationError | User valido ma altri due campi omessi |
-| MS03 | report1 | None | None | EC4, EC5, EC9 | ValidationError | Report valido ma altri due campi omessi |
-| MS04 | None | None | "ciao" | EC1, EC5, EC11 | ValidationError | Body valido ma altri due campi omessi |
-| MS05 | report1 | user1 | None | EC4, EC8, EC9 | ValidationError | Body omesso |
-| MS06 | report1 | None | "ciao" | EC4, EC5, EC11 | ValidationError  | User omesso |
-| MS07 | None | user1 | "ciao" | EC4, EC8, EC11 | ValidationError  | Report omesso |
-| MS08 | report1 | user1 | "" | EC4, EC8, EC10 | ValidationError | Body vuoto |
-| MS09 | report1 | user2 | "ciao" | EC4, EC7, EC11 | AuthorizationError | Report non fatto dal mittente |
-| MS10 | report1 | user3 | "ciao" | EC4, EC6, EC11 | ValidationError  | User senza un campo id |
-| MS11 | report2 | user1 | "ciao" | EC2, EC6, EC11 | ValidationError  | Report senza un campo reporter_id |
-| MS12 | report3 | user1 | "ciao" | EC3, EC5, EC11 | ValidationError | Report senza un campo id |
-| MS13 | report1 | user1 | "ciao" | EC4, EC8, EC11 | Message | Tutto valido |
+| MS01 | report1 | user1 | "" | EC1, EC3, EC4 | ValidationError | Body vuoto |
+| MS02 | report1 | user2 | "ciao" | EC1, EC2, EC5 | AuthorizationError | Report non fatto dal mittente |
+| MS03 | report1 | user1 | "ciao" | EC1, EC3, EC5 | Message | Tutto valido |
 
-### Boundary: messaging constraints
+### Boundary
 
 **Boundary around body content:**
 
 | TC    | report | sender | body | Boundary covered | EC covered | Expected |
 | :---- | :----- | :----- | :--- | :--------------- | :--------- | :------- |
-| MSB01 | report1| user1  | "a"  | Minima lunghezza valida | EC4, EC8, EC11 | Message |
-| MSB02 | report1| user1  | " "  | Solo spazio bianco | EC4, EC8, EC10 | ValidationError |
-| MSB03 | report1| user1  | ""   | Stringa vuota | EC4, EC8, EC10 | ValidationError |
+| MSB01 | report1| user1  | "."  | Exact boundary | EC1, EC3, EC5 | Message |
+| MSB02 | report1| user1  | " "  | Immediately below | EC1, EC3, EC4 | ValidationError |
+| MSB03 | report1| user1  | ""   | Immediately below | EC1, EC3, EC4 | ValidationError |
 
 
 ## 8 `participium.core.security.verify_password`
@@ -610,23 +708,19 @@ Prototype: `verify_password(password: str, password_hash: str) -> bool`
 
 **Requisiti:**
 - Il sistema deve permettere la verifica di una password in chiaro rispetto ad un hash memorizzato.
-- Il sistema deve restituire `True` se la password corrisponde correttamente all'hash fornito.
-- Il sistema deve restituire `False` se la password non corrisponde all'hash fornito.
-- Il sistema deve invalidare la richiesta se la password o l'hash non sono forniti (None).
+- Se la password corrisponde correttamente all'hash fornito il sistema deve restituire `True`.
+- Se la password non corrisponde all'hash fornito il sistema deve restituire `False`.
 
 **Criterio:** password
 
 **Predicati:**
 
-- password è None--> non valido
-- password != None --> valido
-
+- password fornita --> valido
 
 **Criterio:** password_hash
 
 **Predicati:**
 
-- password_hash è None--> non valido
 - Le hash della password corrispondono (password_hash == hash(password)) --> valido
 - Le hash della password non corrispondono (password_hash != hash(password)) --> non valido
 
@@ -634,23 +728,19 @@ Prototype: `verify_password(password: str, password_hash: str) -> bool`
 ### Equivalence Classes
 
 **Per password:**
-- **EC1**: password == None
-- **EC2**: password != None
+- **EC1**: password != None
 
 **Per password_hash:**
-- **EC3**: password_hash == None
-- **EC4**: hash corrispondono
-- **EC5**: hash non corrispondono
+- **EC2**: hash corrispondono
+- **EC3**: hash non corrispondono
 
 
 ### Combinations of Equivalence Classes 
 
 Combinazioni possibili secondo i predicati:
 
-- EC2 x EC4 -> hash corrispondono, funzione ritorna vero
-- EC2 x EC5 -> hash non corrispondono, funzione ritorna falso
-- EC1 x EC5 -> errore causato da password Nonea
-- EC2 x EC3 -> errore causato da hash Nonea
+- EC1 x EC2 -> hash corrispondono, funzione ritorna vero
+- EC1 x EC3 -> hash non corrispondono, funzione ritorna falso
 
 Definiamo i seguenti oggetti da usare nei test:
 - **pwd1**: stringa "pass123".
@@ -659,12 +749,9 @@ Definiamo i seguenti oggetti da usare nei test:
 
 | TC-ID | password | password_hash | EC covered | Expected | Fixture |
 | :---- | :------- | :------------ | :--------- | :------- | :------ |
-| VP01 | pwd1 | hash1 | EC2, EC4 | True | Password e hash corretti |
-| VP02 | pwd1 | hash2 | EC2, EC5 | False | Password corretta, hash errato |
-| VP03 | pwd1 | None | EC2, EC3 | ValidationError | Password fornita, hash omesso |
-| VP04 | None | hash1 | EC1, EC5 | ValidationError | Password omessa, hash fornito |
-| VP05 | None | None | EC1, EC3 | ValidationError | Entrambi i campi omessi |
-
+| VP01 | "pass123" | hash("pass123") | EC1, EC2 | True | Password e hash corretti |
+| VP02 | "pass123" | hash("xxx") | EC1, EC3 | False | Hash errato |
+| VP03 | ""        | hash("")        | Stringa vuota | EC1, EC2 | True |
 
 ### Boundary: password and hash comparison
 
@@ -672,11 +759,10 @@ Definiamo i seguenti oggetti da usare nei test:
 
 | TC    | password | password_hash | Boundary covered | EC covered | Expected |
 | :---- | :------- | :------------ | :--------------- | :--------- | :------- |
-| VPB01 | "pass123" | hash("pass123") | Uguaglianza | EC2, EC4 | True |
-| VPB02 | "pass123" | hash("Pass123") | Differenza lettera maiuscola | EC2, EC5 | False |
-| VPB03 | "pass123" | hash("pass12")  | Un carattere in meno | EC2, EC5 | False |
-| VPB04 | "pass123" | hash("pass1234")| Un carattere in più | EC2, EC5 | False |
-| VPB05 | ""        | hash("")        | Stringa vuota | EC2, EC4 | True |
+| VP01  | "pass123" | hash("pass123") | Exact Boundary    | EC1, EC2  | True |
+| VPB02 | "pass123" | hash("Pass123") | Immediately above | EC1, EC3 | False |
+| VPB03 | "pass123" | hash("pass12")  | Immediately below | EC1, EC3 | False |
+| VPB04 | "pass123" | hash("pass1234")| Immediately above | EC1, EC3 | False |
 
 ## 9 `participium.services.notification_service.NotificationService.create_notification`
 
@@ -686,11 +772,9 @@ Prototype: `create_notification(user: User | None, notification_type: Notificati
 
 
 **Requisiti:**
-- Se title o body sono None-->Il sistema restituisce un ValidationError.
-- Se notification_type è None o il tipo a cui fa riferimento è sconosciuto-->Il sistema restituisce un ValidationError.
-- Se user non ha un id valido(diverso da None)-->Il sistema restituisce un ValidationError.
-- Se report non ha un id valido-->Il sistema restituisce un ValidationError.
-- Se tutti i cambi obbligaotiri sono presenti e validi e i campi opzionali sono validi o omessi --> Il sistema restituisce un oggetto Notification
+- Se user ha un id diverso da None --> Il sistema restituisce un oggetto Notification persistente.
+- Se user ha id None-->Il sistema restituisce un None.
+- Se tutti i cambi obbligatori sono presenti e validi e i campi opzionali sono validi o omessi --> Il sistema restituisce un oggetto Notification.
 
 
 **Criterio:** user
@@ -698,22 +782,7 @@ Prototype: `create_notification(user: User | None, notification_type: Notificati
 **Predicati:**
 
 - user è un utente con id-->valido
-- user è None--> valido (esempio di messaggio broadcast)?
-- user è fornito ma non ha un id valido--> non valido
-
-**Criterio:** notification_type
-
-**Predicati:**
-
-- notification_type è un tipo valido dell'enum-->valido
-- notification_type è None o sconosciuti--> non valido
-
-**Criterio:** title e body
-
-**Predicati:**
-
-- title o body sono None o vuoti-->non valido
-- title e body sono stringhe non vuote-->valido
+- user è None--> valido
 
 **Criterio:** report
 
@@ -721,72 +790,33 @@ Prototype: `create_notification(user: User | None, notification_type: Notificati
 
 - report è fornito e con un valido id-->valido
 - reort è None-->valido
-- report è fornito ma non ha un id valido-->non valido
 
 ### Equivalence Classes
 
 **Per user:**
-- **EC1**: user valido (con id)
-- **EC2**: user == None
-- **EC3**: user non valido (senza id)
-
-**Per notification_type:**
-- **EC4**: tipo di notification_type è valido
-- **EC5**: tipo di notification_type non è valido o è None
-
-**Per title e body:**
-- **EC6**: title e body sono stringhe valide
-- **EC7**: title o body None
-- **EC8**: title o body stringhe vuote 
+- **EC1**: user valido
+- **EC2**: user is None
 
 **Per report:**
-- **EC9**: report valido (con id)
-- **EC10**: report == None
-- **EC11**: report non valido (senza id)
+- **EC3**: report valido
+- **EC4**: report is None
 
 ### Combinations of Equivalence Classes 
 
 Combinazioni possibili secondo i predicati:
 
-- EC1 x EC4 x EC6 x EC9 -> Successo con utente e report completi
-- EC2 x EC4 x EC6 x EC10 -> Successo con campi opzionali a None
-- EC3 x EC4 x EC6 x EC9 -> Fallimento per user senza id
-- EC1 x EC5 x EC6 x EC9 -> Fallimento per type non valido
-- EC1 x EC4 x EC7 x EC9 -> Fallimento per title/body None
-- EC1 x EC4 x EC8 x EC9 -> Fallimento per title/body vuoti
-- EC1 x EC4 x EC6 x EC11 -> Fallimento per report senza id
+- EC1 × EC3 -> Creazione con utente e report forniti
+- EC1 × EC4 -> Creazione con utente fornito e report omesso
+- EC2 × EC3 -> Creazione con utente omesso e report fornito
+- EC2 × EC4 -> Creazione con utente e report omessi
 
-
-Definiamo i seguenti oggetti da usare nei test:
-- **user1**: utente con id valido.
-- **user_invalid**: utente con campo id uguale a None.
-- **report1**: report con id valido.
-- **report_invalid**: report con campo id uguale a None.
-- **type1**: tipo di notifica valido
 
 | TC-ID | user | notification_type | title | body | report | Expected | Fixture |
 | :---- | :--- | :---------------- | :---- | :--- | :----- | :------- | :------ |
-| CN01 | user1 | type1 | "Nuovo aggiornamento" | "Il tuo report è in lavorazione" | report1 | Notification | Tutti i parametri validi forniti |
-| CN02 | None  | type1 | "Manutenzione" | " I server saranno offline" | None | Notification | Parametri opzionali omessi |
-| CN03 | user_invalid | type1 | "Titolo" | "Corpo" | report1 | ValidationError | user fornito ma senza id |
-| CN04 | user1 | None | "Titolo" | "Corpo" | report1 | ValidationError | NotificationType omesso |
-| CN05 | user1 | type1 | None |	"Corpo" | report1 | ValidationError | Titolo omesso |
-| CN06 | user1 | type1 | "Titolo" | None | report1 | ValidationError | Body omesso |
-| CN07 | user1 | type1 | "" | "Corpo" | report1 | ValidationError | Titolo vuoto |
-| CN08 | user1 | type1 | "Titolo" | "" | report1 | ValidationError | Body vuoto |
-| CN09 | user1 | type1 | "Titolo" | "Corpo" | report_invalid | ValidationError | Report fornito ma senza id |
-
-### Boundary: password and hash comparison
-
-**Boundary around matching:**
-
-| TC | user | notification_type | title | body | report | Boundary covered | EC covered | Expected |
-| :- | :--- | :---------------- | :---- | :--- | :----- | :--------------- | :--------- | :------- |
-| CNB01 | user1 | type1 | "A" |	"B" | report1 |	Minima lunghezza valida | EC1, EC4, EC6, EC9 | Notification |
-| CNB02	| user1 | type1 | " " | "B" | report1 |	Solo spazio bianco (titolo) | EC1, EC4, EC8, EC9 | ValidationError |
-| CNB03 | user1 | type1 | " " | "B" | report1 |	Stringa vuota (titolo) | EC1, EC4, EC8, EC9 | ValidationError |
-| CNB04 | user1 | type1 | "A" | " " | report1 | Solo spazio bianco (body) | EC1, EC4, EC8, EC9 | ValidationError |
-
+| CN01 | user1 | type1 | "Aggiornamento" | "Messaggio" | report1 | Notification | Utente presente, report presente |
+| CN02 | user1 | type1 | "Aggiornamento" | "Messaggio" | None | Notification | Utente presente, report omesso |
+| CN03 | None | type1 | "Aggiornamento" | "Messaggio" | report1 | None | Utente omesso, report presente|
+| CN04 | None | type1 | "Aggiornamento" | "Messaggio" | None | None | Sia utente che report omessi |
 
 ## 10 `participium.services.user_service.UserService.update_profile`
 
@@ -794,6 +824,65 @@ Suggested test file: `test_update_profile.py`
 
 Prototype: `update_profile(user: User, username: str | None = None, first_name: str | None = None, last_name: str | None = None, email_notifications_enabled: bool | None = None, profile_picture: FileStorage | None = None) -> User`
 
+**Requisiti:**
+- Se user è None o non ha un id valido, il sistema restituisce un ValidationError.
+- Se username, first_name o last_name sono diversi da None ma sono stringhe vuote o contengono solo spazi, il sistema restituisce un ValidationError.
+- Se profile_picture è diverso da None ma non è un file valido, il sistema restituisce un ValidationError.
+- Se l'utente è valido e tutti i campi opzionali forniti sono validi, il sistema aggiorna il profilo e restituisce l'oggetto User aggiornato.
+- Se l'utente è valido e tutti i campi opzionali sono None, il sistema restituisce l'oggetto User senza apportare modifiche.
+
+**Criterio**: username
+
+**Predicati**:
+
+- username is None -> valido
+- username è fornito e non è in uso -> valido
+- username è fornito ma è già in uso -> non valido
+
+**Criterio**: campi opzionali (first_name, last_name, email_notifications_enabled, profile_picture)
+
+**Predicati**:
+
+- Almeno un campo opzionale è fornito -> valido
+- Tutti i campi sono None -> valido
+
+### Equivalence Classes.
+
+**Per user**:
+
+- **EC1**: username valido
+- **EC2**: username non valido
+
+**Per tutti i campi opzionali**:
+
+- **EC3**: tutti i campi opzionali sono None
+- **EC4**: Almeno uno dei campi ha un valore inserito
+
+### Combinations of Equivalence Classes 
+
+Combinazioni possibili secondo i predicati:
+
+- EC1 × EC4 -> username disponibile e tutti i campi opzionali forniti 
+- EC1 × EC3 -> username disponibile e alcuni campi forniti 
+- EC2 × EC5 -> username non valido e tutti i campi opzionali forniti
+- EC2 × EC4 -> username non valido e alcuni campi opzionali forniti
+
+
 | TC-ID | user | username | first_name | last_name | email_notifications_enabled | profile_picture | Expected | Fixture |
 | :---- | :--- | :------- | :--------- | :-------- | :-------------------------- | :-------------- | :------- | :------ |
-|  |  |  |  |  |  |  |  |  |
+| UP01 | user_target | "nuovo_username" | "Mario" | "Rossi" | True | valid_pic | User |	Username disponibile, altri campi popolati |
+| UP02 | user_target | "utente_occupato" | "Mario" | "Rossi" | True | valid_pic | ValidationError	Username già in uso da user_other |
+| UP03 | user_target | None | "Mario" |	"Rossi" | None | valid_pic | User |	Username omesso, solo altri campi aggiornati |
+| UP04 | user_target | None | None | None |	None | None | User | Nessun parametro da aggiornare fornito | 
+
+
+### Boundary: text fields content
+
+**Boundary around string lengths (username/first_name/last_name)**:
+
+| TC | user | username | first_name | last_name | email_notifications_enabled |	profile_picture | Boundary covered | EC covered | Expected |
+| :- | :--- | :------- | :--------- | :-------- | :-------------------------- | :-------------- | :--------------- | :--------- | :------- |
+| UPB01 | user1 | "a" |	"b" | "c" | None | None | Minima lunghezza valida | EC1, EC4, EC8, EC10 | User |
+| UPB02 | user1 | " " | "Mario" | "Rossi" |	None | None | Solo spazio bianco (username) | EC1, EC6, EC8, EC10 |	ValidationError |
+| UPB03 | user1 | "mario" | "" | "Rossi" | None | None | Stringa vuota (first_name) | EC1, EC6, EC8, EC10 | ValidationError |
+
