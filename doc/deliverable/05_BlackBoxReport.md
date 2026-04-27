@@ -4,7 +4,7 @@
 
 **Prototype:** `authenticate(identifier: str, password: str) -> User`
 
-**Requisiti:**
+**Requisiti:** <br>
  Il sistema deve autenticare un utente tramite username o email e una password.
  
 - Se le credenziali sono errate, il sistema deve restituire un errore di autenticazione (AuthenticationError).
@@ -14,107 +14,93 @@
 **Criterio:** identifier
 
 **Predicati:**
-identifier è None--> non valido
-identifier corrisponde a un username esistente --> valido
-identifier corrisponde a un'email esistente --> valido
-identifier non corrisponde ad un username o email esistente --> non valido
+- identifier è None--> non valido
+- identifier corrisponde a un username esistente --> valido
+- identifier corrisponde a un'email esistente --> valido
+- identifier non corrisponde ad un username o email esistente --> non valido
 
 **Criterio:** password
 
 **Predicati:**
-password è None--> non valido
-password corrisponde alla password hash dell'utente trovato --> valido
-password non corrisponde alla password hash dell'utente trovato --> non valido
+- password è None--> non valido
+- password corrisponde alla password hash dell'utente trovato --> valido
+- password non corrisponde alla password hash dell'utente trovato --> non valido
 
 **Criterio:** stato User
 
 **Predicati:**
-User è attivo e l'email è verificata ( is_active == True AND is_email_verified == True) --> valido
-User non è attivo ( is_active == False) --> non valido
-User email non è verificata ( email_verified == False) --> non valido
+- User è attivo e l'email è verificata ( is_active == True AND is_email_verified == True) --> valido
+- User non è attivo ( is_active == False) --> non valido
+- User email non è verificata ( email_verified == False) --> non valido
 
 ### Equivalence Classes
 
 **Per identifier:**
-- **EC1**: identifier valido (username)
-- **EC2**: identifier valido (email)
-- **EC3**: identifier non esistente
-- **EC4**: identifier == None
+- **EC1**: identifier valido
+- **EC2**: identifier non valido
 
 **Per password:**
-- **EC5**: password valida per l'utente inserito
-- **EC6**: password errata
-- **EC7**: password == None
+- **EC3**: password valida
+- **EC4**: password non valida
 
 **Per stato User:**
-- **EC8**: User attivo e email verificata
-- **EC9**: User non attivo
-- **EC10**: User email non verificata
+- **EC5**: User attivo e email verificata
+- **EC6**: User non attivo
+- **EC7**: User email non verificata
 
 ### Combinations of Equivalence Classes 
 
-- EC1 × EC5 × EC8 -> autenticazione riuscita con username
-- EC2 × EC5 × EC8 -> autenticazione riuscita con email
-- EC1/EC2 × EC6 × EC8 -> autenticazione fallita per password errata
-- EC1/EC2 × EC7 × EC8 -> autenticazione fallita per password ==  None
-- EC1/EC2 × EC5 × EC9-> autenticazione fallita per user non attivo
-- EC1/EC2 × EC5 × EC10 -> autenticazione fallita per user email non verificata
-- EC3 × qualsiasi password EC × qualsiasi stato User EC -> autenticazione fallita per identifier non valido
-- EC4 × qualsiasi password EC × qualsiasi stato User EC -> autenticazione fallita per identifier == None
+- EC1 x EC3 x EC5 --> autenticazione riuscita
+- EC2 x EC3 x EC5 --> identifier non valido
+- EC1 x EC4 x EC5 --> password non valida
+- EC1 x EC3 x EC6 --> User non attivo
+- EC1 x EC3 x EC7 --> User email non verificata
 
 
 
 | TC   | identifier        | password  | EC covered | Expected | Fixture                                             |
 |:-----|:------------------|:----------|:-----------|:---------|:----------------------------------------------------|
-| AU01 | `mario_r`         | `pass123` | EC1, EC5, EC8   | User obj | Username e password corretti, user attivo e email verificata |
-| AU02 | `mario.r@polito.it`   | `pass123` | EC2, EC5, EC8   | User obj | Email e password corretti, user attivo e email verificata |
-| AU03 | `mario_r`         | `wrong`   | EC1, EC6   | None | Username corretto, password errata  |
-| AU04 | `mario.r@polito.it`   | `wrong`   | EC2, EC6 | None | Email corretta, password errata |
-| AU05 | `mario_r`         | None      | EC1, EC7   | None | Username corretto, password omessa |
-| AU06 | `mario.r@polito.it`   | None      | EC2, EC7   | None | Email corretta, password omessa  |
-| AU07 | `unknown_user`    | `pass123` | EC3   | None| Username inesistente |
-| AU08 | `unknown@mail.it` | `pass123` | EC3| None| Email inesistente |
-| AU09 | None              | `pass123` | EC4 | None| Identifier omesso  |
-| AU10 | None              | None      | EC4, EC7   | None| Entrambi i campi omessi |
-| AU11 | `mario_r`         | `pass123` | EC1, EC5, EC9   | None | Username e password corretti, user non attivo |
-| AU12 | `mario_r`         | `pass123` | EC2, EC5, EC10   | None | Email e password corretti, user email non verificata |
+| AU01 | `mario_r`             | `pass123` | EC1, EC3, EC5   | User obj | Username e password corretti, user attivo e email verificata |
+| AU02 | `mario.r@polito.it`   | `pass123` | EC1, EC3, EC5   | User obj | Email e password corretti, user attivo e email verificata |
+| AU03 | `mario_r`             | `wrong`   | EC1, EC4, EC5   | AuthenticationError | Username corretto, password errata  |
+| AU04 | `mario.r@polito.it`   | `wrong`   | EC1, EC4, EC5   | AuthenticationError | Email corretta, password errata |
+| AU07 | `unknown_user`        | `pass123` | EC1, EC3, EC5   | AuthenticationError | Username inesistente |
+| AU08 | `unknown@mail.it`     | `pass123` | EC1, EC3, EC5   | AuthenticationError | Email inesistente |
+| AU11 | `mario_r`             | `pass123` | EC1, EC3, EC6   | AuthenticationError | Username e password corretti, user non attivo |
+| AU12 | `mario_r`             | `pass123` | EC1, EC3, EC7   | AuthenticationError | Email e password corretti, user email non verificata |
 
 ### Boundary: identifier recognition
 
-**Boundary around "username":**
+**Boundary around "identifier":**
+
+| AU09 | None              | `pass123` | EC4 | None| Identifier omesso  |
 
 | TC    | identifier | password  | Boundary covered  | Expected |
 | :---- | :--------- | :-------- |:------------------|:---------|
 | AUB01 | `mario_r`  | `pass123` | Exact boundary    | User obj |
-| AUB02 | `mario_rx` | `pass123` | Immediately above | AuthenticationError     |
-| AUB03 | `mario_`   | `pass123` | Immediately below | AuthenticationError     |
-| AUB04 | `MARIO_R`  | `pass123` | Immediately above  | AuthenticationError     |
+| AUB02 | `m.r@polito.it` | `pass123` | Exact boundary    | User obj |
+| AUB03 | None  | `pass123`  | Immediately below | AuthenticationError |
+| AUB04 | "" | `pass123`  | Immediately below | AuthenticationError |
+| AUB05 | " " | `pass123`  | Immediately below | AuthenticationError |
 
-**Boundary around "email":**
-
-| TC    | identifier          | password  | Boundary covered  | Expected |
-| :---- | :------------------ | :-------- |:------------------|:-----|
-| AUB05 | `m.r@polito.it`     | `pass123` | Exact boundary    | User obj |
-| AUB06 | `m.r@polito.it.com` | `pass123` | Immediately above | AuthenticationError |
-| AUB07 | `m.r@polito.i`      | `pass123` | Immediately below | AuthenticationError |
-| AUB08 | `m.r@polito.it `    | `pass123` | Immediately above | AuthenticationError |
-
-### Boundary: password comparison
+**Boundary around "password":**
 
 | TC    | identifier | password   | Boundary covered   | Expected |
 | :---- | :--------- | :--------- |:-------------------|:---------|
-| AUB09 | `mario_r`  | `pass123`  | Exact boundary     | User obj |
-| AUB10 | `mario_r`  | `Pass123`  | Immediately below  | AuthenticationError     |
-| AUB11 | `mario_r`  | `pass12`   | Immediately below  | AuthenticationError     |
-| AUB12 | `mario_r`  | `pass1234` | Immediately above  | AuthenticationError     |
-| AUB13 | `mario_r`  | `p@ss123`  | Immediately below  | AuthenticationError     |
+| AUB06 | `mario_r`  | `pass123`  | Exact boundary     | User obj |
+| AUB07 | `mario_r`   | None      | Immediately below  | AuthenticationError |
+| AUB08 | `m.r@polito.it` | None      | Immediately below  | AuthenticationError |
+| AUB09 | `mario_r`  | ""        | Immediately below  | AuthenticationError |
+| AUB10 | `mario_r`  | " "       | Immediately below  | AuthenticationError |
 
-### Boundary: stato User
+
+**Boundary around "stato User":**
+
 | TC    | identifier | password  | stato User | Boundary covered  | Expected |
 | :---- | :--------- | :------------- |:------------------|:------------------|:---------|
-| AUB14 | `mario_r`  | `pass123` | is_active == True AND is_email_verified == True | Exact boundary     | User obj |
-| AUB15 | `mario_r`  | `pass123` | is_active == False | Immediately below  | AuthenticationError     |
-| AUB16 | `mario_r`  | `pass123` | is_email_verified == False | Immediately below  | AuthenticationError     |
+| AUB11 | `mario_r`  | `pass123` | is_active == True AND is_email_verified == True | Exact boundary     | User obj |
+| AUB12 | `mario_r`  | `pass123` | is_active == False | Immediately below  | AuthenticationError     |
+| AUB13 | `mario_r`  | `pass123` | is_email_verified == False | Immediately below  | AuthenticationError     |
 
 
 
@@ -134,12 +120,12 @@ Suggested test file: `test_status_flow.py`
 
 Prototype: `ensure_transition_allowed(current_status: ReportStatus, next_status: ReportStatus) -> bool`
 
-Allowed transitions:
-`Pending Approval -> Pending Approval | Assigned | Rejected`;
-`Assigned -> Assigned | In Progress | Suspended | Resolved`;
-`In Progress -> In Progress | Suspended | Resolved`;
-`Suspended -> Suspended | In Progress | Resolved`;
-`Rejected -> Rejected`;
+Allowed transitions:<br>
+`Pending Approval -> Pending Approval | Assigned | Rejected`; <br>
+`Assigned -> Assigned | In Progress | Suspended | Resolved`;<br>
+`In Progress -> In Progress | Suspended | Resolved`;<br>
+`Suspended -> Suspended | In Progress | Resolved`;<br>
+`Rejected -> Rejected`;<br>
 `Resolved -> Resolved`.
 
 **Requisiti:**
@@ -193,8 +179,6 @@ Combinazioni possibili secondo i predicati:
     EC06 × EC07 --> transizione ammessa per Resolved
     EC06 × EC08 --> transizione non ammessa per Resolved
 
-(NOTA: ridondanti? tutte quanti sono possibili)
-
 ### Combinations of Equivalence Classes 
 
 | TC   | current_status     | next_status       | EC covered   | Expected          | Fixture                                |
@@ -239,34 +223,44 @@ Prototype: `create_report(reporter: User, category_id: int | str | None, title: 
 
 **Criterio:** reporter
 **Predicati:**
-reporter è None--> non valido
-reporter è un utente non autenticato --> non valido
-reporter è un utente auteenticato --> valido
+- reporter è None--> non valido
+- reporter è un utente non autenticato --> non valido
+- reporter è un utente auteenticato --> valido
 
 **Criterio:** category_id
+
 **Predicati:**
-category_id è None--> non valido
-category_id è malformato --> non valido
-category_id fa riferimento a una categoria sconosciuta --> non valido 
-category_id fa riferimento a una categoria inattiva --> non valido
-category_id è valido e attivo --> valido
+- category_id è None--> non valido
+- category_id è malformato --> non valido
+- category_id fa riferimento a una categoria sconosciuta --> non valido 
+- category_id fa riferimento a una categoria inattiva --> non valido
+- category_id è valido e attivo --> valido
 
 **Criterio:** title e description
+
 **Predicati:**
-title o descriptionè None o vuoto --> non valido
-title e descrizione sono stringhe non vuote --> valid
+- title o descriptionè None o vuoto --> non valido
+- title e descrizione sono stringhe non vuote --> valid
 
 **Criterio:** latitude / longitude
+
 **Predicati:**
-latitude o longitude è None --> non valido
-latitude o longitude non possono essere convertiti in valori numerici --> non valido
-latitude e longitude sono convertibili in valori numerici validi --> valid
+- latitude o longitude è None --> non valido
+- latitude o longitude non possono essere convertiti in valori numerici --> non valido
+- latitude e longitude sono convertibili in valori numerici validi --> valid
 
 **Criterio:** photos
+
 **Predicati:**
-Non è presente alcuna foto valida --> non valido
-Sono presenti più di 3 foto valide --> non valido
-Sono presenti da 1 a 3 foto valide --> valid
+- Non è presente alcuna foto valida --> non valido
+- Sono presenti più di 3 foto valide --> non valido
+- Sono presenti da 1 a 3 foto valide --> valid
+
+**Criterio:** is_anonymous
+
+**Predicati:**
+- is_anonymous == True --> valido
+- is_anonymous == False --> valido
 
 ### Equivalence Classes
 
@@ -275,34 +269,36 @@ Sono presenti da 1 a 3 foto valide --> valid
 - **EC2**: reporter è un utente autenticato e attivo
 - 
 **Per category_id:**
-- **EC3**: category_id is None
-- **EC4**: category_id non valido
-- **EC5**: category_id è valido e attivo
+- **EC3**: category_id non valido
+- **EC4**: category_id è valido e attivo
 
 **Per title e description:**
-- **EC6**: title o description è None 
-- **EC7**: title o description non valido
-- **EC8**: title e description sono validi
+- **EC5**: title o description non valido
+- **EC6**: title e description sono validi
 
 **Per latitude/longitude:**
-- **EC9**: latitude o longitude is None
-- **EC10**: latitude o longitude non validi
-- **EC11**: latitude e longitude validi
+- **EC7**: latitude o longitude non validi
+- **EC8**: latitude e longitude validi
 
 **Per photos:**
-- **EC12**: numero di foto non valido
-- **EC13**:  1 <= numero di foto  <= 3
+- **EC9**: numero di foto non valido
+- **EC10**:  1 <= numero di foto  <= 3
+
+**Per is_anonymous:**
+- **EC11**: is_anonymous è True o False --> valido
+- **EC12**: is_anonymous non è un valore valido --> non valido
 
 ### Combinations of Equivalence Classes 
-- EC2 x EC5 x EC8 x EC11 x EC13 --> Report creato con successo
-- EC1 x EC5 x EC8 x EC11 x EC13 --> reporter non valido
-- EC2 x EC3 x EC8 x EC11 x EC13 --> category_id None
-- EC2 x EC4 x EC8 x EC11 x EC13 --> category_id malformato o sconosciuto
-- EC2 x EC5 x EC6 x EC11 x EC13 --> title o description None o vuoti
-- EC2 x EC5 x EC7 x EC11 x EC13 --> title o description non validi
-- EC2 x EC5 x EC8 x EC9 x EC13 --> latitude o longitude None
-- EC2 x EC5 x EC8 x EC10 x EC13 --> latitude o longitude non validi
-- EC2 x EC5 x EC8 x EC11 x EC12 --> numero di foto non valido
+- EC2 x EC4 x EC6 x EC8 x EC10 x EC11 --> Report creato con successo
+- 
+- EC1 x EC4 x EC6 x EC8 x EC10 --> reporter non valido
+- EC2 x EC3 x EC8 x EC7 x EC9 --> category_id None
+- EC2 x EC4 x EC8 x EC7 x EC9 --> category_id malformato o sconosciuto
+- EC2 x EC5 x EC6 x EC7 x EC9 --> title o description None o vuoti
+- EC2 x EC5 x EC7 x EC7 x EC9 --> title o description non validi
+- EC2 x EC5 x EC8 x EC9 x EC10 --> latitude o longitude None
+- EC2 x EC5 x EC8 x EC10 x EC10 --> latitude o longitude non validi
+- EC2 x EC5 x EC8 x EC11 x EC9 --> numero di foto non valido
 
 
 | TC-ID | reporter | category_id | title | description | latitude | longitude | photos | is_anonymous | EC covered | Expected | Fixture |
@@ -312,7 +308,7 @@ Sono presenti da 1 a 3 foto valide --> valid
 |CR3| user | "" | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC3, EC8, EC11, EC13| False | ValidationError | Categoria Nonea | 
 |CR4| user | df | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC4, EC8, EC11, EC13 | False | ValidationError | Categoria non vallida|
 |CR5| user | 4 | "" | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC5, EC6, EC11, EC13 | False | ValidationError | Titolo vuoto|
-|CR6| user | 4 | Buca profonda |&&&%&£/$"(")"$$&"| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC5, EC7, EC11, EC13 | False | ValidationError | Descrizione non valida |
+|CR6| user | 4 | Buca profonda |""| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC5, EC7, EC11, EC13 | False | ValidationError | Descrizione non valida |
 |CR8| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | "" | [foto_buca.jpg] | EC2,EC5,EC8,EC9,EC13 | False | ValidationError | Longitude Nonea |
 |CR9| user | 4 | Buca profonda | Buca profonda in piazza Castello| Quarantacinque | "7.6856" | [foto_buca.jpg] | EC2,EC5,EC8,EC10,EC13 | False | ValidationError | Formato Latitude non convertibile |
 |CR10| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [] | EC2, EC5, EC8, EC11, EC12 | False | ValidationError | Nessuna foto presente |
@@ -327,6 +323,15 @@ Boundary test per 'category_id' realizzati considerando le 10 categorie descritt
 | AUB01 | 4           | Exact boundary    | Report obj |
 | AUB02 | 10         | Immediately above | ValidationError |
 | AUB03 | -1          | Immediately below | ValidationError |
+
+**Boundary around "title e description":**
+| TC    | title/description | Boundary covered  | Expected |
+| :---- | :----------------- |:------------------|:---------|
+| CR1 | "Buca profonda" / "Buca profonda in piazza Castello"   | Exact boundary    | Report obj |
+| CR5 | "" / "Buca profonda in piazza Castello" | Immediately below | ValidationError |
+| CR6 | "Buca profonda" / "" | Immediately below | ValidationError |
+| AUB04 | " " / "Buca profonda in piazza Castello" | Immediately below | ValidationError |
+| AUB05 | "Buca profonda" / " " | Immediately below | ValidationError |
 
 **Boundary around "latitude/longitude":**
 | TC    | latitude/longitude | Boundary covered  | Expected |
@@ -350,7 +355,11 @@ Suggested test file: `test_update_status.py`
 
 Prototype: `update_status(report_id: int, operator: User, next_status_value: str, note: str | None = None) -> Report`
 
-Requisiti: 
+**Requisiti:** 
+
+**Criterio:**
+
+**Predicati:**
 
 
 | TC-ID | report_id | operator | next_status_value | note | Expected | Fixture |
@@ -363,40 +372,45 @@ Suggested test file: `test_public_reports.py`
 
 Prototype: `list_public_reports(category_id: int | None = None, status: ReportStatus | None = None, date_from: datetime | None = None, date_to: datetime | None = None, sort: str = "desc") -> list[Report]`
 
-Requisiti:
-    - il sistema deve restituire una lista di segnalazioni pubbliche basata su filtri opzionali
-    - se nessun filtro è fornito, deve restituire una lista con tutte le segnalazioni pubbliche
-    - il sistema deve fornire una lista con tutte le segnalazioni pubbliche con categoria uguale a category_id (se fornito) 
-    - il sistema deve fornire una lista con tutte le segnalazioni pubbliche con stato uguale a status (se fornito) 
-    - il sistema deve fornire una lista con tutte le segnalazioni pubbliche con data di creazione uguale o successiva a date_from (se fornita)
-    - il sistema deve fornire una lista con tutte le segnalazioni pubbliche con data di creazione uguale o precedente a date_to (se fornita)
-    - il sistema deve fornire una lista con le segnalazioni pubbliche ordinate in base al parametro sort (di default decrescente)
-    - il sistema deve fornire una lista vuota se date_from è maggiore di date_to
+**Requisiti:**
+- il sistema deve restituire una lista di segnalazioni pubbliche basata su filtri opzionali
+- se nessun filtro è fornito, deve restituire una lista con tutte le segnalazioni pubbliche
+- il sistema deve fornire una lista con tutte le segnalazioni pubbliche con categoria uguale a category_id (se fornito) 
+- il sistema deve fornire una lista con tutte le segnalazioni pubbliche con stato uguale a status (se fornito) 
+- il sistema deve fornire una lista con tutte le segnalazioni pubbliche con data di creazione uguale o successiva a date_from (se fornita)
+- il sistema deve fornire una lista con tutte le segnalazioni pubbliche con data di creazione uguale o precedente a date_to (se fornita)
+- il sistema deve fornire una lista con le segnalazioni pubbliche ordinate in base al parametro sort (di default decrescente)
+- il sistema deve fornire una lista vuota se date_from è maggiore di date_to
 
-Criterio: category_id
-Predicati:
-    - category_id è int -> valido
-    - category_id è None -> valido (filtro assente)
+**Criterio:** category_id
 
-Criterio: status 
-Predicati:
-    - status è uno degli stati possibili --> valido 
-    - status non è presente --> valido(filtro assente)
+**Predicati:**
+- category_id è int -> valido
+- category_id è None -> valido (filtro assente)
 
-Criterio: date_from
-Predicati:
-    - date_from è None -> valido (filtro assente) 
-    - date_from è una datetime -> valido 
+**Criterio:** status 
 
-Criterio: date_to 
-Predicati:
-    - date_to è None -> valido (filtro assente) 
-    - date_to è una datetime -> valido 
+**Predicati:**
+- status è uno degli stati possibili --> valido 
+- status non è presente --> valido(filtro assente)
 
-Criterio: sort 
-Predicati:
-    - sort == "desc" -> valido 
-    - sort == "asc" -> valido 
+**Criterio:** date_from
+
+**Predicati:**
+- date_from è None -> valido (filtro assente) 
+- date_from è una datetime -> valido 
+
+**Criterio:** date_to 
+
+**Predicati:**
+- date_to è None -> valido (filtro assente) 
+- date_to è una datetime -> valido 
+
+**Criterio:** sort 
+
+**Predicati:**
+- sort == "desc" -> valido 
+- sort == "asc" -> valido 
 
 ### Equivalence Classes
 
