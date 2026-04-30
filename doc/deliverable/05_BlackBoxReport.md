@@ -488,7 +488,7 @@ Il sistema deve potere permettere l'aggiornamento di stato di un report.<br>
 - EC1 x EC3 x EC5 x EC7 x EC10 --> Categoria operatore non corrispondente a quella del report
 
 | TC-ID | report_id | operator | next_status_value | note | Expected | Fixture |
-|:------| :--- | :--- | :--- | :--- |:-------------------|:----------------|
+| :---- | :-------- | :------- | :---------------- | :--- | :------- | :------ |
 | US01  | 10 | op_cat_1 |   Assigned | None | Report| La segnalazione è in stato Pending Approval, l'operatore ha i permessi |
 | US02  | 10 | op_cat_1 |   Assigned | "Report già segnalato" | Report| La segnalazione è in stato Pending Approval, l'operatore ha i permessi|
 | US03  | 999 | op_cat_1 |   Assigned | None | NotFoundError| La segnalazione non esiste |
@@ -715,8 +715,8 @@ Il sistema deve permettere l'invio di un messaggio .
 - EC1 x EC3 x EC4 x EC7 -> Body non valido
 - EC1 x EC3 x EC5 x EC6 -> Recipient_id non risolvibile
 
-| TC-ID | report | sender | body  | Expected | Fixture |
-| :---- | :----- | :----- | :---  |
+| TC-ID | report | sender | body | Expected | Fixture |
+| :---- | :----- | :----- | :--- | :------- | :------ |
 | MS01 | report1 | user1 | "Segnalazione"    | Message | Segnalazione esistente, sender autorizzato, recipient_id risolvibile |
 | MS02 | report1 | user2 | "Segnalazione" | AuthorizationError | Segnalazione esistente, sender non autorizzato, recipient_id risolvibile |
 | MS03 | report1 | user1 | "" | ValidationError | Segnalazione esistente, sender autorizzato, recipient_id risolvibile |
@@ -786,11 +786,11 @@ Definiamo i seguenti oggetti da usare nei test:
 - **hash1**: hash corretto di "pass123".
 - **hash2**: hash non corrispondente a "pass123".
 
-| TC-ID | password | password_hash | EC covered | Expected | Fixture |
-| :---- | :------- | :------------ | :--------- | :------- | :------ |
-| VP01 | "pass123" | hash("pass123") | EC1, EC2 | True | Password e hash corretti |
-| VP02 | "pass123" | hash("xxx") | EC1, EC3 | False | Hash errato |
-| VP03 | ""        | hash("")        | Stringa vuota | EC1, EC2 | True |
+| TC-ID | password | password_hash | Expected | Fixture |
+| :---- | :------- | :------------ | :------- | :------ |
+| VP01 | "pass123" | hash("pass123") | True | Password e hash corretti |
+| VP02 | "pass123" | hash("xxx") | False | Hash errato |
+| VP03 | ""        | hash("")        | Stringa vuota  | True |
 
 ### Boundary: password and hash comparison
 
@@ -1010,8 +1010,8 @@ Prototype: `update_profile(user: User, username: str | None = None, first_name: 
 - EC1 × EC3 × EC4 × EC5 × EC6 -> username disponibile
 - EC2 × EC3 × EC4 × EC5 × EC6 -> username non valido
 
-| TC-ID | user | username | first_name | last_name | email_notifications_enabled | profile_picture | Expected       | Fixture            |
-| :---- | :--- | :------- | :--------- | :-------- |:-------------| :-------------- |:---------------|:-------------------|
+| TC-ID | user | username | first_name | last_name | email_notifications_enabled | profile_picture | Expected | Fixture |
+| :---- | :--- | :------- | :--------- | :-------- | :-------------------------- | :-------------- | :------- | :------ |
 | UP01 | user_target | "nuovo_username" | "Mario" | "Rossi" | True| valid_pic | User| User registrato|
 | UP02 | user_target | "utente_occupato" | "Mario" | "Rossi" | True | valid_pic | ValidationError| User già esistente |
 | UP03 | user_target | None | "Mario" |"Rossi" | None| valid_pic | User| User registrato|
