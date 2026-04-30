@@ -69,7 +69,8 @@
 | AU07 | `mario_r`             | `pass123` | AuthenticationError | Utente esiste, ma non è attivo |
 | AU08 | `mario_r`             | `pass123` | AuthenticationError | Utente esiste, ma email non verificata |
 
-### Boundary: identifier recognition
+### Boundary
+
 **Boundary around "identifier":**
 
 | TC    | identifier | password  | Boundary covered  | Expected |
@@ -95,7 +96,7 @@
 <br>
 
 
-**Boundary around "stato User":**
+**Boundary around User.is_active e User.is_mail_verified:**
 
 | TC    | identifier | password  | stato User | Boundary covered  | Expected |
 | :---- | :--------- | :------------- |:------------------|:------------------|:---------|
@@ -150,7 +151,7 @@ Prototype: `parse_date(value: str | None) -> datetime | None`
 
 **Boundary intorno a date valide**
 
-| TC    | value        | Boundary covered  | Expected |
+| TC    | date        | Boundary covered  | Expected |
 |:------|:-------------|:------------------|:---------|
 | DTB01 | 2024-02-29   | Exact boundary    | datetime |
 | DTB02 | 2024-02-30   | Immediately above | ValueError |
@@ -158,7 +159,7 @@ Prototype: `parse_date(value: str | None) -> datetime | None`
 
 **Boundary around months:**
 
-| TC    | value        | Boundary covered  | Expected |
+| TC    | date        | Boundary covered  | Expected |
 |:------|:-------------|:------------------|:---------|
 | DTB04 | 2024-12-31   | Exact boundary    | datetime |
 | DTB05 | 2024-13-01   | Immediately above | ValueError |
@@ -166,7 +167,7 @@ Prototype: `parse_date(value: str | None) -> datetime | None`
 
 **Boundary around days:**
 
-| TC    | value        | Boundary covered  | Expected |
+| TC    | date        | Boundary covered  | Expected |
 |:------|:-------------|:------------------|:---------|
 | DTB07 | 2024-04-30   | Exact boundary    | datetime |
 | DTB08 | 2024-04-31   | Immediately above | ValueError |
@@ -180,14 +181,17 @@ Suggested test file: `test_status_flow.py`
 Prototype: `ensure_transition_allowed(current_status: ReportStatus, next_status: ReportStatus) -> bool`
 
 Allowed transitions:<br>
-`Pending Approval -> Pending Approval | Assigned | Rejected`; <br>
-`Assigned -> Assigned | In Progress | Suspended | Resolved`;<br>
+`Pending  Approval -> Pending  Approval |  Assigned |  Rejected`; <br>
+` Assigned ->  Assigned | In Progress | Suspended | Resolved`;<br>
 `In Progress -> In Progress | Suspended | Resolved`;<br>
 `Suspended -> Suspended | In Progress | Resolved`;<br>
-`Rejected -> Rejected`;<br>
+` Rejected ->  Rejected`;<br>
 `Resolved -> Resolved`.
 
 **Requisiti:**
+
+Il sistema deve controllare se la transizione di stato è permessa secondo il workflow definito.
+
 - Se la transizione di stato è una auto-transizione (current_status == next_status), il sistema deve restituire `True`.
 - Se la transizione di stato è permessa, il sistema deve restituire `True`.
 - Se la transizione di stato non è permessa, il sistema deve restituire un errore di validazione (ValidationError).
@@ -208,11 +212,11 @@ Allowed transitions:<br>
 
 **Per current_status:**
 
-- **EC01**: current_status == Pending Approval
-- **EC02**: current_status == Assigned
+- **EC01**: current_status == Pending  Approval
+- **EC02**: current_status ==  Assigned
 - **EC03**: current_status == In Progress
 - **EC04**: current_status == Suspended
-- **EC05**: current_status == Rejected
+- **EC05**: current_status ==  Rejected
 - **EC06**: current_status == Resolved
 
 **Per next_status:**
@@ -225,44 +229,44 @@ Allowed transitions:<br>
 
 Combinazioni possibili secondo i predicati:
 
-EC01 × EC07 --> transizione ammessa per Pending Approval
-EC01 × EC08 --> transizione non ammessa per Pending Approval
-EC02 × EC07 --> transizione ammessa per Assigned
-EC02 × EC08 --> transizione non ammessa per Assigned
-EC03 × EC07 --> transizione ammessa per In Progress
-EC03 × EC08 --> transizione non ammessa per In Progress
-EC04 × EC07 --> transizione ammessa per Suspended
-EC04 × EC08 --> transizione non ammessa per Suspended
-EC05 × EC07 --> transizione ammessa per Rejected
-EC05 × EC08 --> transizione non ammessa per Rejected
-EC06 × EC07 --> transizione ammessa per Resolved
-EC06 × EC08 --> transizione non ammessa per Resolved
+- **EC01 × EC07** --> transizione ammessa per Pending  Approval
+- **EC01 × EC08** --> transizione non ammessa per Pending  Approval
+- **EC02 × EC07** --> transizione ammessa per  Assigned
+- **EC02 × EC08** --> transizione non ammessa per  Assigned
+- **EC03 × EC07** --> transizione ammessa per In Progress
+- **EC03 × EC08** --> transizione non ammessa per In Progress
+- **EC04 × EC07** --> transizione ammessa per Suspended
+- **EC04 × EC08** --> transizione non ammessa per Suspended
+- **EC05 × EC07** --> transizione ammessa per  Rejected
+- **EC05 × EC08** --> transizione non ammessa per  Rejected
+- **EC06 × EC07** --> transizione ammessa per Resolved
+- **EC06 × EC08** --> transizione non ammessa per Resolved
 
 ### Combinations of Equivalence Classes 
 
-| TC   | current_status     | next_status       | EC covered   | Expected          | Fixture                                |
-|:-----|:-------------------|:------------------|:-------------------------|:------------------|:---------------------------------------|
-|TR1 | Pending Approval | Pending Approval | EC01, EC07 | True | Self-transition |
-|TR2 | Pending Approval | Assigned | EC01, EC07 | True | Transizione valida|
-|TR3 | Pending Approval | Rejected | EC01, EC07 | True | Transizione valida|
-|TR4 | Pending Approval | Resolved | EC01, EC08 | ValidationError | Transizione non valida|
-|TR5 | Assigned | Assigned | EC02, EC07 | True | Self-transition |
-|TR6 | Assigned | In Progress | EC02, EC07 | True | Transizione valida|
-|TR7 | Assigned | Suspended | EC02, EC08 | True | Transizione valida|
-|TR8 | Assigned | Resolved | EC02, EC08 | True | Transizione valida|
-|TR9 | Assigned | Pending Approval | EC02, EC08 | ValidationError | Transizione non valida|
-|TR10 | In Progress | In Progress | EC03, EC07 | True | Self-transition |
-|TR11 | In Progress | Suspended | EC03, EC08 | True | Transizione valida|
-|TR12 | In Progress | Resolved | EC03, EC08 | True | Transizione valida|
-|TR13 | In Progress | Assigned | EC03, EC08 | ValidationError | Transizione non valida|
-|TR14 | Suspended | Suspended | EC04, EC07 | True | Self-transition|
-|TR15 | Suspended | In Progress | EC04, EC08 | True| Transizione valida|
-|TR16 | Suspended | Resolved | EC04, EC08 | True | Transizione valida|
-|TR17 | Suspended | Pending Approval | EC04, EC08 | ValidationError | Transizione non valida|
-|TR18 | Rejected | Rejected | EC05, EC07 | True | Self-transition |
-|TR19 | Rejected | Assigned | EC05, EC08 | ValidationError | Transizione non valida |
-|TR20 | Resolved | Resolved | EC06, EC07 | True | Self-transition |
-|TR21 | Resolved | In Progress | EC06, EC08 | ValidationError | Transizione non valida |
+| TC   | current_status     | next_status       | Expected          | Fixture                                |
+|:-----|:-------------------|:-------------------------|:------------------|:---------------------------------------|
+|TR1 | Pending  Approval | Pending  Approval | True | Esiste una segnalazione in stato Pending  Approval |
+|TR2 | Pending  Approval |  Assigned | True |  Esiste una segnalazione in stato Pending  Approval|
+|TR3 | Pending  Approval |  Rejected | True |  Esiste una segnalazione in stato Pending  Approval|
+|TR4 | Pending  Approval | Resolved | ValidationError |  Esiste una segnalazione in stato Pending  Approval|
+|TR5 |  Assigned |  Assigned | True |  Esiste una segnalazione in stato  Assigned |
+|TR6 |  Assigned | In Progress | True | Esiste una segnalazione in stato  Assigned|
+|TR7 |  Assigned | Suspended | True | Esiste una segnalazione in stato  Assigned|
+|TR8 |  Assigned | Resolved | True | Esiste una segnalazione in stato  Assigned|
+|TR9 |  Assigned | Pending  Approval | ValidationError | Esiste una segnalazione in stato  Assigned|
+|TR10 | In Progress | In Progress | True | Esiste una segnalazione in stato In Progress |
+|TR11 | In Progress | Suspended | True | Esiste una segnalazione in stato In Progress|
+|TR12 | In Progress | Resolved | True | Esiste una segnalazione in stato In Progress|
+|TR13 | In Progress |  Assigned | ValidationError | Esiste una segnalazione in stato In Progress|
+|TR14 | Suspended | Suspended | True | Esiste una segnalazione in stato Suspended|
+|TR15 | Suspended | In Progress | True| Esiste una segnalazione in stato Suspended|
+|TR16 | Suspended | Resolved | True | Esiste una segnalazione in stato Suspended|
+|TR17 | Suspended | Pending  Approval | ValidationError | Esiste una segnalazione in stato Suspended|
+|TR18 |  Rejected |  Rejected | True | Esiste una segnalazione in stato  Rejected |
+|TR19 |  Rejected |  Assigned | ValidationError | Esiste una segnalazione in stato  Rejected |
+|TR20 | Resolved | Resolved | True | Esiste una segnalazione in stato Resolved |
+|TR21 | Resolved | In Progress | ValidationError | Esiste una segnalazione in stato Resolved |
 
 ## 4 `participium.services.report_service.ReportService.create_report`
 
@@ -271,18 +275,14 @@ Suggested test file: `test_create_report.py`
 Prototype: `create_report(reporter: User, category_id: int | str | None, title: str | None, description: str | None, latitude: float | str | None, longitude: float | str | None, photos: list[FileStorage], is_anonymous: bool = False) -> Report`
 
 **Requisiti:**
-- Se il reporter è None o non ha un id valido, il sistema deve restituire un errore di validazione (ValidationError).
-- Se il category_id è None, malformato o si riferisce a una categoria sconosciuta o a una categoria inattiva, il sistema deve restituire un errore di validazione (ValidationError).
-- Se la descrizione o il titolo sono None o vuoti, il sistema deve restituire un errore di validazione (ValidationError).
+
+Il sistema deve permettere la creazione di un report da parte di un utente autenticato.
+
+- Se il category_id è None, malformato o si riferisce a una categoria sconosciuta o inattiva, il sistema deve restituire un errore di validazione (ValidationError).
+- Se la descrizione o il titolo sono None, vuoti o contengolo solo spazi, il sistema deve restituire un errore di validazione (ValidationError).
 - Se le coordinate geografiche sono None o non possono essere convertite in valori numerici, il sistema deve restituire un errore di validazione (ValidationError).
 - Se la lista di foto contiene zero foto valide  o più di 3 foto valide, il sistema deve restituire un errore di validazione (ValidationError).
 - Se tutti i campi sono validi, il sistema deve restituire un oggetto di tipo Report.
-
-**Criterio:** reporter
-**Predicati:**
-- reporter è None--> non valido
-- reporter è un utente non autenticato --> non valido
-- reporter è un utente autenticato --> valido
 
 **Criterio:** category_id
 
@@ -296,15 +296,15 @@ Prototype: `create_report(reporter: User, category_id: int | str | None, title: 
 **Criterio:** title e description
 
 **Predicati:**
-- title o description è None o vuoto --> non valido
-- title e descrizione sono stringhe non vuote --> valid
+- title o descriptione è None o vuoto --> non valido
+- title e descrizione sono stringhe non vuote --> valido
 
 **Criterio:** latitude / longitude
 
 **Predicati:**
 - latitude o longitude è None --> non valido
 - latitude o longitude non possono essere convertiti in valori numerici --> non valido
-- latitude e longitude sono convertibili in valori numerici validi --> valid
+- latitude e longitude sono convertibili in valori numerici validi --> valido
 
 **Criterio:** photos
 
@@ -321,88 +321,84 @@ Prototype: `create_report(reporter: User, category_id: int | str | None, title: 
 
 ### Equivalence Classes
 
-**Per reporter:**
-- **EC1**: reporter è un utente non autenticato o non attivo
-- **EC2**: reporter è un utente autenticato e attivo
-- 
 **Per category_id:**
-- **EC3**: category_id non valido
-- **EC4**: category_id è valido e attivo
+- **EC1**: category_id non valido
+- **EC2**: category_id è valido e attivo
 
 **Per title e description:**
-- **EC5**: title o description non valido
-- **EC6**: title e description sono validi
+- **EC3**: title o description non valido
+- **EC4**: title e description sono validi
 
 **Per latitude/longitude:**
-- **EC7**: latitude o longitude non validi
-- **EC8**: latitude e longitude validi
+- **EC5**: latitude o longitude non validi
+- **EC6**: latitude e longitude validi
 
 **Per photos:**
-- **EC9**: numero di foto non valido
-- **EC10**:  1 <= numero di foto  <= 3
+- **EC7**: numero di foto non valido
+- **EC8**:  1 <= numero di foto  <= 3
 
 **Per is_anonymous:**
-- **EC11**: is_anonymous è True o False --> valido
-- **EC12**: is_anonymous non è un valore valido --> non valido
+- **EC9**: is_anonymous è True o False --> valido
 
 ### Combinations of Equivalence Classes 
-- EC2 x EC4 x EC6 x EC8 x EC10 x EC11 --> Report creato con successo
-- 
-- EC1 x EC4 x EC6 x EC8 x EC10 --> reporter non valido
-- EC2 x EC3 x EC8 x EC7 x EC9 --> category_id None
-- EC2 x EC4 x EC8 x EC7 x EC9 --> category_id malformato o sconosciuto
-- EC2 x EC5 x EC6 x EC7 x EC9 --> title o description None o vuoti
-- EC2 x EC5 x EC7 x EC7 x EC9 --> title o description non validi
-- EC2 x EC5 x EC8 x EC9 x EC10 --> latitude o longitude None
-- EC2 x EC5 x EC8 x EC10 x EC10 --> latitude o longitude non validi
-- EC2 x EC5 x EC8 x EC11 x EC9 --> numero di foto non valido
+- EC2 x EC4 x EC6 x EC8 x EC9 --> Report creato con successo
+- EC1 x EC4 x EC6 x EC8 x EC9 --> Report non creato, category_id non valido
+- EC2 x EC3 x EC6 x EC8 x EC9 --> Report non creato, title o description non validi
+- EC2 x EC4 x EC5 x EC8 x EC9 --> Report non creato, latitude o longitude non validi
+- EC2 x EC4 x EC6 x EC7 x EC9 --> Report non creato, numero di foto non valido
+  
+<br>
+Test realizzati considerando le 10 categorie descritte nella specifica iniziale, considerando gli id associati da 0 a 9.
+<br><br>
 
-
-| TC-ID | reporter | category_id | title | description | latitude | longitude | photos | is_anonymous | EC covered | Expected | Fixture |
-| :---- | :------- | :---------- | :---- | :---------- | :------- | :-------- | :----- | :----------- | :------- | :------- | :------ |
-|CR1| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | EC2, EC5, EC8, EC11, EC13  | Report |  |
-|CR2| None | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | EC1, EC5, EC8, EC11, EC13 | ValidationError | Reporter non valido |
-|CR3| user | "" | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC3, EC8, EC11, EC13| False | ValidationError | Categoria Nonea | 
-|CR4| user | df | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC4, EC8, EC11, EC13 | False | ValidationError | Categoria non vallida|
-|CR5| user | 4 | "" | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC5, EC6, EC11, EC13 | False | ValidationError | Titolo vuoto|
-|CR6| user | 4 | Buca profonda |""| 45.0710 | 7.6856 | [foto_buca.jpg] | EC2, EC5, EC7, EC11, EC13 | False | ValidationError | Descrizione non valida |
-|CR8| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | "" | [foto_buca.jpg] | EC2,EC5,EC8,EC9,EC13 | False | ValidationError | Longitude Nonea |
-|CR9| user | 4 | Buca profonda | Buca profonda in piazza Castello| Quarantacinque | "7.6856" | [foto_buca.jpg] | EC2,EC5,EC8,EC10,EC13 | False | ValidationError | Formato Latitude non convertibile |
-|CR10| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [] | EC2, EC5, EC8, EC11, EC12 | False | ValidationError | Nessuna foto presente|
+| TC-ID | reporter | category_id | title | description | latitude | longitude | photos | is_anonymous | Expected | Fixture |
+| :---- | :------- | :---------- | :---- | :---------- | :------- | :-------- | :----- | :----------- | :------- | :------ |
+|CR1| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | Report |  L'utente è autenticato, la categoria 4 è valida e attiva |
+|CR2| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | True | Report |  L'utente è autenticato, la categoria 4 è valida e attiva |
+|CR3| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | True | ValidationError |  L'utente è autenticato, la categoria 4 è inattiva |
+|CR4| user | None | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | True | ValidationError |  L'utente è autenticato |
+|CR5| user | "" | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | ValidationError |  L'utente è autenticato | 
+|CR6| user | df | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | True | ValidationError |  L'utente è autenticato|
+|CR7| user | 4 | "" | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | ValidationError |  L'utente è autenticato, la categoria 4 è valida e attiva|
+|CR8| user | 4 | Buca profonda |None| 45.0710 | 7.6856 | [foto_buca.jpg] | False | ValidationError |  L'utente è autenticato, la categoria 4 è valida e attiva |
+|CR9| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | "" | [foto_buca.jpg] | True | ValidationError |  L'utente è autenticato, la categoria 4 è valida e attiva |
+|CR10| user | 4 | Buca profonda | Buca profonda in piazza Castello| Quarantacinque | 7.6856 | [foto_buca.jpg] | False | ValidationError |  L'utente è autenticato, la categoria 4 è valida e attiva |
+|CR11| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [] | False | ValidationError |  L'utente è autenticato, la categoria 4 è valida e attiva |
 
 ### Boundary
 
 **Boundary around "category_id":**
-Boundary test per 'category_id' realizzati considerando le 10 categorie descritte nella specifica iniziale, con id associati da 0 a 9.
 
 | TC    | category_id | Boundary covered  | Expected        |
 | :---- | :---------- |:------------------|:----------------|
-| AUB01 | 4           | Exact boundary    | Report          |
-| AUB02 | 10         | Immediately above | ValidationError |
-| AUB03 | -1          | Immediately below | ValidationError |
+| CRB01 | 0           | Exact boundary    | Report          |
+| CRB02 | 9           | Exact boundary    | Report          |
+| CRB04 | -1          | Immediately below | ValidationError |
+| CRB05 | 10          | Immediately above | ValidationError |
+
 
 **Boundary around "title e description":**
-| TC    | title/description | Boundary covered  | Expected |
-| :---- | :----------------- |:------------------|:---------|
-| CR1 | "Buca profonda" / "Buca profonda in piazza Castello"   | Exact boundary    | Report obj |
-| CR5 | "" / "Buca profonda in piazza Castello" | Immediately below | ValidationError |
-| CR6 | "Buca profonda" / "" | Immediately below | ValidationError |
-| AUB04 | " " / "Buca profonda in piazza Castello" | Immediately below | ValidationError |
-| AUB05 | "Buca profonda" / " " | Immediately below | ValidationError |
+
+| TC    | title | description | Boundary covered  | Expected |
+| :---- | :------------ | :----------------- |:------------------|:---------|
+| CRB06 | a  | a | Exact boundary    | Report |
+| CRB07 | ""  | a | Immediately below    | ValidationError |
+| CRB08 | a  | "" | Immediately below    | ValidationError |
 
 **Boundary around "latitude/longitude":**
-| TC    | latitude/longitude | Boundary covered  | Expected |
-| :---- | :----------------- |:------------------|:---------|
-| AUB04 | 45.0710 / 7.6856   | Exact boundary    | Report |
-| AUB05 | 2324.52 / 7.6856 | Immediately above    | ValidationError |
-| AUB06 | 45.0710 / -235.89 | Immediately below    | ValidationError |
+| TC    | latitude | longitude | Boundary covered  | Expected |
+| :---- | :----------------- |:-------- | :------------------|:---------|
+| CRB09 | 0.0  | 0.0  | Exact boundary    | Report |
+| CRB10 | "" | 0.0 | Immediately below    | ValidationError |
+| CRB11 | 0.0 | "" | Immediately below    | ValidationError |
 
 **Boundary around "photos":**
 | TC    | photos | Boundary covered  | Expected |
 | :---- | :----- |:------------------|:---------|
-| AUB07 | [foto_buca.jpg] | Exact boundary    | Report|
-| AUB08 | [] | Immediately below    | ValidationError |
-| AUB09 | [foto1.jpg, foto2.jpg, foto3.jpg, foto4.jpg] | Immediately above | ValidationError |
+| CR01 | [foto_buca.jpg] | Exact boundary    | Report|
+| CR11 | [] | Immediately below    | ValidationError |
+| CRB12 | [foto1.jpg, foto2.jpg, foto3.jpg] | Exact boundary    | Report |
+| CRB13 | [foto1.jpg, foto2.jpg, foto3.jpg, foto4.jpg] | Immediately above | ValidationError |
 
 ## 5 `participium.services.report_service.ReportService.update_status`
 
@@ -412,13 +408,14 @@ Prototype: `update_status(report_id: int, operator: User, next_status_value: str
 
 
 **Requisiti:** <br>
-Il sistema deve potere permettere l'aggiornamento di stato di un report.
+Il sistema deve potere permettere l'aggiornamento di stato di un report.<br>
+
 - Se l'operatore non ha i permessi adatti alla modifica del report (User.Role != Role.OPERATOR AND User.Role != Role.ADMIN), il sistema restituisce un errore di autorizzazione (AuthorizationError).
 - Se l'operatore è None, il sistema restituisce un errore di autorizzazione (AuthorizationError).
 - Se l'operatore tenta di aggiornare un report al di fuori della propria categoria assegnata, il sistema restituisce un errore di autorizzazione (AuthorizationError).
 - Se il report non esiste, il sistema restituisce errore (NotFoundError).
 - Se next_status_value non rispetta l'ordine del workflow o non esiste, il sistema restituisce un errore di validazione (ValidationError).
-- Se l'operatore respinge il report (next_status_value == REJECTED) senza una nota, il sistema restituisce un errore di validazione (ValidationError)
+- Se l'operatore respinge il report (next_status_value ==  Rejected) senza una nota, il sistema restituisce un errore di validazione (ValidationError)
 - Se tutti gli input inseriti sono validi, il sistema restituisce l'oggetto Report con lo stato aggiornato.
 
 **Criterio**: report_id
@@ -473,8 +470,8 @@ Il sistema deve potere permettere l'aggiornamento di stato di un report.
 - **EC6**: next_status_value non valido
 
 **Per note**
-- **EC7**: note valido
-- **EC8**: note non valido
+- **EC7**: note vuota o None
+- **EC8**: note valida
 
 **Per operator.category_id**
 - **EC9**: operator.category_id == report.category_id
@@ -482,21 +479,23 @@ Il sistema deve potere permettere l'aggiornamento di stato di un report.
 
 ### Combinations of Equivalence Classes
 
-- EC1 x EC3 x EC6 x EC8 x EC9 --> aggiornamento riuscito
-- EC2 x EC3 x EC5 x EC8 x EC9 --> report inesistente
-- EC1 x EC4 x EC6 x EC8 x EC9 --> operatore non autorizzato
-- EC1 x EC3 x EC7 x EC8 x EC9 --> transizione di stato non ammessa
-- EC1 x EC3 x EC6 x EC9 x EC9 --> nota mancante su report rifiutato
-- EC1 x EC5 x EC6 x EC8 x EC10 --> operatore al di fuori della propria categoria
+- EC1 x EC3 x EC5 x EC8 x EC9 --> Aggiornamento riuscito
+- EC1 x EC3 x EC5 x EC7 x EC9 --> Aggiornamento riuscito 
+- EC2 x EC3 x EC5 x EC7 x EC9 --> Report inesistente
+- EC1 x EC4 x EC5 x EC8 x EC9 --> Operatore non autorizzato
+- EC1 x EC3 x EC6 x EC8 x EC9 --> Transizione di stato non ammessa
+- EC1 x EC3 x EC5 x EC7 x EC9 --> Nota mancante per report rifiutato
+- EC1 x EC3 x EC5 x EC7 x EC10 --> Categoria operatore non corrispondente a quella del report
 
 | TC-ID | report_id | operator | next_status_value | note | Expected | Fixture |
 |:------| :--- | :--- | :--- | :--- |:-------------------|:----------------|
-| US01  | 10 | op_cat_1 | "ASSIGNED" | None | Report| Il report esiste|
-| US02  | 999 | op_cat_1 | "ASSIGNED" | None | NotFoundError| Il report non esiste |
-| US03  | 10 | user_no_perm | "ASSIGNED" | None | AuthorizationError | Il report esiste |
-| US04  | 10 | op_cat_2 | "ASSIGNED" | None | AuthorizationError | Il report esiste |
-| US05  | 10 | op_cat_1 | "REJECTED" | None | ValidationError| Il report esiste |
-| US06  | 10 | op_cat_1 | "RESOLVED" | None | ValidationError| Il report esiste |
+| US01  | 10 | op_cat_1 |   Assigned | None | Report| La segnalazione è in stato Pending Approval, l'operatore ha i permessi |
+| US02  | 10 | op_cat_1 |   Assigned | "Report già segnalato" | Report| La segnalazione è in stato Pending Approval, l'operatore ha i permessi|
+| US03  | 999 | op_cat_1 |   Assigned | None | NotFoundError| La segnalazione non esiste |
+| US04  | 10 | user_no_perm |   Assigned | None | AuthorizationError | La segnalazione esiste, l'operatore non ha i permessi |
+| US05  | 10 | op_cat_2 |   Assigned | None | AuthorizationError | La segnalazione esiste, l'operatore non appartiene alla stessa categoria del report |
+| US06  | 10 | op_cat_1 |  Rejected | "Report già segnalato" | ValidationError| La segnalazione esiste, l'operatore ha i permessi |
+| US07  | 10 | op_cat_1 | Resolved | None | ValidationError|La segnalazione è in stato Resolved, l'operatore ha i permessi |
 
 ### Boundary
 
@@ -504,20 +503,29 @@ Il sistema deve potere permettere l'aggiornamento di stato di un report.
 
 | TC | report_id | operator | next_status_value | Boundary covered  | Expected |
 | :--- |:----------| :--- | :--- |:------------------| :--- |
-| USB01 | 1 | op_valido | "ASSIGNED" | Exact boundary    | Report |
-| USB02 | 01 | op_valido | "ASSIGNED" | Immediately above | NotFoundError |
+| USB01 | 1 | op_valido  |   Assigned | Exact boundary    | Report |
+| USB02 | -1 | op_valido |   Assigned | Immediately below | NotFoundError |
 
 
 **Boundary around next_status_value and note:**
 
 | TC    | report_id | operator | next_status_value | note | Boundary covered  | Expected |
 |:------| :--- | :--- |:------------------|:-----|:------------------| :--- |
-| USB07 | 10 | op_valido | Current Status    | None | Exact boundary    | Report |
-| USB08 | 10 | op_valido | "RIFIUTATA"       | "A"  | Immediately below | ValidationError |
-| USB10 | 10 | op_valido | "REJECTED"        | "B"  | Exact boundary    | Report |
-| USB11 | 10 | op_valido | "REJECTED"        | None | Immediately below | ValidationError |
-| USB12 | 10 | op_valido | "REJECTED"        | ""   | Immediately below | ValidationError |
-| USB13 | 10 | op_valido | "ASSIGNED"        | ""   | Exact boundary    | Report |
+| USB02 | 10 | op_valido |   Rejected        | "N"  | Exact boundary    | Report |
+| USB03 | 10 | op_valido |   Rejected        | None | Immediately below | ValidationError |
+| USB04 | 10 | op_valido |   Rejected        | ""   | Immediately below | ValidationError |
+
+
+**Boundary around "operator.category_id" e "report.category_id":**
+
+| TC    | operator.category_id | report.category_id | Boundary covered  | Expected        |
+| :---- | :---------- | :----------------- |:------------------|:----------------|
+| USB05 | 0           | 0                  | Exact boundary    | Report          |
+| USB06 | 9           | 9                  | Exact boundary    | Report          |
+| USB07 | -1          | 0                  | Immediately below | ValidationError |
+| USB08 | 0           | -1                 | Immediately below | ValidationError |
+| USB09 | 10          | 10                 | Immediately above | ValidationError |
+
 
 ## 6 `participium.services.report_service.ReportService.list_public_reports`
 
@@ -526,37 +534,39 @@ Suggested test file: `test_public_reports.py`
 Prototype: `list_public_reports(category_id: int | None = None, status: ReportStatus | None = None, date_from: datetime | None = None, date_to: datetime | None = None, sort: str = "desc") -> list[Report]`
 
 **Requisiti:**
-- il sistema deve restituire una lista di segnalazioni pubbliche basata su filtri opzionali
-- se nessun filtro è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche
-- se category_id è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con categoria uguale a category_id
-- se status è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con stato uguale a status
-- se date_from è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con data di creazione uguale o successiva a date_from
-- se date_to è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con data di creazione uguale o precedente a date_to
-- se sort è fornito, il sistema deve restituire una lista con le segnalazioni pubbliche ordinate in base al parametro sort (di default decrescente)
+
+Il sistema deve restituire una lista di segnalazioni pubbliche basata su filtri opzionali<br>
+
+-  Se nessun filtro è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche
+-  Se category_id è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con categoria uguale a category_id
+- Se status è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con stato uguale a status
+- Se date_from è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con data di creazione uguale o successiva a date_from
+- Se date_to è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con data di creazione uguale o precedente a date_to
+- Se sort è fornito, il sistema deve restituire una lista con le segnalazioni pubbliche ordinate in base al parametro sort (di default decrescente)
 
 **Criterio:** category_id
 
 **Predicati:**
-- category_id è int -> valido
-- category_id è None -> valido (filtro assente)
+- category_id è presente -> valido
+- category_id non è presente -> valido (filtro assente)
 
 **Criterio:** status 
 
 **Predicati:**
 - status è uno degli stati possibili --> valido 
-- status non è presente --> valido(filtro assente)
+- status non è presente --> valido (filtro assente)
 
 **Criterio:** date_from
 
 **Predicati:**
-- date_from è None -> valido (filtro assente) 
-- date_from è una datetime -> valido 
+- date_from non è presente -> valido (filtro assente) 
+- date_from è presente -> valido 
 
 **Criterio:** date_to 
 
 **Predicati:**
-- date_to è None -> valido (filtro assente) 
-- date_to è una datetime -> valido 
+- date_to non è presente -> valido (filtro assente) 
+- date_to è presente -> valido 
 
 **Criterio:** sort 
 
@@ -567,51 +577,39 @@ Prototype: `list_public_reports(category_id: int | None = None, status: ReportSt
 ### Equivalence Classes
 
 **Per category_id**
-- **EC01**: category_id è None
-- **EC02**: category_id valido (int) ed esiste
-- **EC03**: category_id valido (int) ma non esiste
+- **EC01**: category_id valido 
 
 **Per status**
-- **EC04**: status è None 
-- **EC05**: status è un valore valido (ReportStatus)
+- **EC02**: status è valido 
 
 **Per date_from**
-- **EC06**: date_from è None
-- **EC07**: date_from è una data valida
+- **EC03**: date_from è valida
 
 **Per date_to**
-- **EC08**: date_to è None
-- **EC09**: date_to è una data valida
+- **EC04**: date_to è valida
 
 **Per sort**
-- **EC10**: "desc"
-- **EC11**: "asc"
+- **EC05**: ordinamento valido
 
 
 ### Combinations of Equivalence Classes 
-- EC01 x EC04 x EC06 x EC08 x EC10 --> nessun filtro attivo quindi tutti le segnalazioni pubbliche in ordine decrescente
-- EC02 x EC05 x EC07 x EC09 x EC11 --> tutti i filtri attivi, ordine crescente
-- EC02 x EC04 x EC06 x EC08 x EC11 --> solo category_id attivo, ordine crescente
-- EC01 x EC05 x EC06 x EC08 x EC10 --> solo status attivo, ordine decrescente
-- EC01 x EC04 x EC07 x EC08 x EC10 --> solo date_from attivo, ordine decrescente
-- EC01 x EC04 x EC06 x EC09 x EC10 --> solo date_to attivo, ordine decrescente
-- EC01 x EC04 x EC07 x EC09 x EC10 --> solo le date attive, ordine decrescente
-- EC03 x EC04 x EC06 x EC08 x EC10 --> category_id non esiste, ordine decrescente
-- EC02 x EC05 x EC06 x EC08 x EC11 --> category_id e status attivi, ordine crescente
+- EC01 x EC02 x EC03 x EC04 x EC05 --> Lista di segnalazioni pubbliche filtrata e ordinata
 
+Nota: la funzione 'list_public_reports' ritorna sempre list[Report]. Nella tabella seguente viene utilizzata la colonna "Expected" per descrivere il contenuto atteso della lista in riferimento ai filtri applicati e alla loro combinazione.
 
 | TC-ID | category_id | status | date_from | date_to | sort | Expected | Fixture |
 |-------|-------------|--------|-----------|---------|------|----------|---------|
-| PR-01  | None | None | None | None | desc |Tutti le segnalazioni pubbliche ordinate in modo decrescente | Lista di report  diversi tra di loro|
-| PR-02  | 1 | None | None | None | asc | Solo le segnalazioni pubbliche con category_id==1 in ordine crescente| Lista di report  diversi tra di loro|
-| PR-03  | None | ASSIGNED | None | None | desc | Solo le segnalazioni pubbliche con status ASSIGNED in ordine decrescente | Lista di report  diversi tra di loro|
-| PR-04  | None | None | 2024-02-01 | None | desc | Solo le segnalazioni pubbliche dopo la data 2024-02-01 (compresa) in ordine decrescente | Lista di report diversi tra di loro|
-| PR-05  | None | None | None | 2024-02-01 | desc | Solo le segnalazioni pubbliche prima della data 2024-02-01 (compresa) in ordine decrescente | Lista di report diversi tra di loro|
-| PR-06  | None | None | 2024-02-01 | 2024-03-01 | desc | Tutte le segnalazioni pubbliche dopo la data 2024-02-01 (compresa) e prima della data 2024-03-01 (compresa) in ordine decrescente | Lista di report diversi tra di loro|
-| PR-07  | 1 | SUSPENDED | None | None | asc| Tutte le segnalazioni pubbliche con category_id 1 e status SUSPENDED in ordine crescente | Lista di report diversi tra di loro|
-| PR-08  | 1 | SUSPENDED | 2024-02-01 | 2024-03-01 | asc| Tutte le segnalazioni pubbliche con category_id 1 e status SUSPENDED con data compresa (estremi inclusi) tra 2024-02-01 e 2024-03-01 in ordine crescente | Lista di report diversi tra di loro|
+| PR-01  | None | None | None | None | desc | Segnalazioni pubbliche ordinate in modo decrescente | Esistono segnalazioni pubbliche |
+| PR-02  | 1 | None | None | None | asc | Segnalazioni pubbliche con category_id==1 in ordine crescente|  Esistono segnalazioni pubblicheo|
+| PR-03  | None |  Assigned | None | None | desc | Segnalazioni pubbliche con status  Assigned in ordine decrescente |  Esistono segnalazioni pubblicheo|
+| PR-04  | None | None | 2024-02-01 | None | desc | Solo le segnalazioni pubbliche dopo la data 2024-02-01 (compresa) in ordine decrescente |  Esistono segnalazioni pubbliche|
+| PR-05  | None | None | None | 2024-02-01 | desc | Solo le segnalazioni pubbliche prima della data 2024-02-01 (compresa) in ordine decrescente |  Esistono segnalazioni pubbliche|
+| PR-06  | None | None | 2024-02-01 | 2024-03-01 | desc | Tutte le segnalazioni pubbliche dopo la data 2024-02-01 (compresa) e prima della data 2024-03-01 (compresa) in ordine decrescente |  Esistono segnalazioni pubbliche|
+| PR-07  | 1 | Suspended | None | None | asc| Tutte le segnalazioni pubbliche con category_id 1 e status Suspended in ordine crescente |  Esistono segnalazioni pubbliche|
+| PR-08  | 1 | Suspended | 2024-02-01 | 2024-03-01 | asc| Tutte le segnalazioni pubbliche con category_id 1 e status Suspended con data compresa (estremi inclusi) tra 2024-02-01 e 2024-03-01 in ordine crescente |  Esistono segnalazioni pubbliche|
 | PR-09  | None | None | None | None | desc | Lista vuota | Lista vuota |
-| PR-10  | 9999 | None | None | None | desc | Lista vuota | Lista di segnalazioni pubbliche con category_id diversa da 9999|
+| PR-10  | 9999 | None | None | None | desc | Lista vuota | Esistono segnalazioni pubbliche, nessuna segnalazione con category_id uguale a 9999|
+
 NOTA: PR-09 copre lo stesso input di PR-01 ma con fixture vuota, per verificare il comportamento in assenza di dati
 
 ### Boundary: 
@@ -620,33 +618,36 @@ NOTA: PR-09 copre lo stesso input di PR-01 ma con fixture vuota, per verificare 
 
 | TC    | category_id  | Boundary covered  | Expected |
 | :---- | :-------- |:------------------|:---------|
-| PRB01 |  1 | Exact boundary   | Lista di segnalazioni pubbliche con category_id 1 |
-| PRB02 |  7 | Immediately above   | Lista vuota |
-| PRB03 |  0 | Immediately below   | Lista vuota |
-NOTA: considero come immediately above il 7 in quanto le categorie sono 6 e considero che gli id partano da 1
+| PRB01 |  0 | Exact boundary   | Lista di segnalazioni pubbliche con category_id 0 |
+| PRB02 |  10 | Immediately above   | Lista vuota |
+| PRB03 |  -1 | Immediately below   | Lista vuota |
 
-**Boundary around "date_from":**
+**Boundary around "date_from" e "date_to":**
 
-| TC    | date_from  | Boundary covered  | Expected |
-| :---- | :-------- |:------------------|:---------|
-| PRB04 |  2024-02-01 00:00:00 | Exact boundary   | Lista di segnalazioni pubbliche con date da 2024-02-01 00:00:00 |
-| PRB05 |  2024-02-01 00:00:01 | Immediately above   | Lista di segnalazioni pubbliche con date da 2024-02-01 00:00:01 |
-| PRB06 |  2024-01-31 23:59:59 | Immediately below   | Lista di segnalazioni pubbliche con date da 2024-01-31 23:59:59 |
+**Boundary intorno a date valide**
 
-**Boundary around "date_to":**
+| TC    | date        | Boundary covered  | Expected |
+|:------|:-------------|:------------------|:---------|
+| PRB04 | 2024-02-29   | Exact boundary    | datetime |
+| PRB05 | 2024-02-30   | Immediately above | ValueError |
+| PRB06 | 2023-02-29   | Immediately below | ValueError |
 
-| TC    | date_to  | Boundary covered  | Expected |
-| :---- | :-------- |:------------------|:---------|
-| PRB07 |  2024-02-01 00:00:00 | Exact boundary   | Lista di segnalazioni pubbliche con date fino a 2024-02-01 00:00:00 |
-| PRB08 |  2024-02-01 00:00:01 | Immediately above   | Lista di segnalazioni pubbliche  con date fino a 2024-02-01 00:00:01 |
-| PRB09 |  2024-01-31 23:59:59 | Immediately below   | Lista di segnalazioni pubbliche  con date fino a 2024-01-31 23:59:59 |
+**Boundary around months:**
 
-**Boundary around "date_from" and "date_to"**
+| TC    | date        | Boundary covered  | Expected |
+|:------|:-------------|:------------------|:---------|
+| PRB07 | 2024-12-31   | Exact boundary    | datetime |
+| PRB08 | 2024-13-01   | Immediately above | ValueError |
+| PRB09 | 2024-00-01   | Immediately below | ValueError |
 
-| TC    | date_from  | date_to | Boundary covered  | Expected |
-| :---- | :-------- |:--------|:------------------|:---------|
-| PRB10 |  2024-02-01 00:00:00 | 2024-02-01 00:00:00 | Exact boundary   | Lista di segnalazioni pubbliche in data 2024-02-01 |
-| PRB11 |  2024-03-01 00:00:00 | 2024-02-01 00:00:00   | Inverted interval | Lista vuota |
+**Boundary around days:**
+
+| TC    | date        | Boundary covered  | Expected |
+|:------|:-------------|:------------------|:---------|
+| PRB10 | 2024-04-30   | Exact boundary    | datetime |
+| PRB11 | 2024-04-31   | Immediately above | ValueError |
+| PRB12 | 2024-04-00   | Immediately below | ValueError |
+
 
 
 ## 7 `participium.services.messaging_service.MessagingService.send_message`
@@ -656,9 +657,11 @@ Suggested test file: `test_send_message.py`
 Prototype: `send_message(report: Report, sender: User, body: str) -> Message`
 
 **Requisiti**:
-- Se il mittente non può accedere al thread di messaggistica del report in questione il sistema deve generare un AuthorizationError.
-- Se il testo del messaggio è vuoto il sistema deve generare un ValidationError.  
-- Se il sistema non riesce a risolvere un destinatario del messaggio deve generare un ValidationError.
+Il sistema deve permettere l'invio di un messaggio .
+
+- Se il mittente non può accedere al thread di messaggistica del report in questione il sistema deve generare un errore di validazione (ValidationError).
+- Se il testo del messaggio è vuoto il sistema deve generare un errore di validazione (ValidationError). 
+- Se il sistema non riesce a risolvere un destinatario del messaggio deve generare un errore di validazione (ValidationError).
 - Se sia l'utente che il report esistono e hanno un id valido, l'utente può accedere ai messaggi del report e il testo del messaggio non è vuoto, il sistema ritorna un oggetto di tipo Message.
 
 **Criterio:** report
@@ -671,8 +674,8 @@ Prototype: `send_message(report: Report, sender: User, body: str) -> Message`
 
 **Predicati:**
 
-- il sender non può accedere al thread
-- il sender può accedere al thread
+- il sender non può accedere al thread --> non valido
+- il sender può accedere al thread --> valido
 
 **Criterio:** body
 
@@ -680,7 +683,13 @@ Prototype: `send_message(report: Report, sender: User, body: str) -> Message`
 
 - body è una stringa vuota --> non valido
 - body è una stringa contenente solo caratteri di tipo whitespace --> non valido
-- body contiene non solo caratteri di tipo whitespace --> valido
+- body contiene caratteri validi --> valido
+
+**Criterio:** recipient_id
+
+**Predicati:**
+- recipient_id non risolvibile --> non valido
+- recipient_id risolvibile --> valido
 
 ### Equivalence Classes
 
@@ -692,36 +701,42 @@ Prototype: `send_message(report: Report, sender: User, body: str) -> Message`
 - **EC3**: sender può accedere al thread
 
 **Per body:**
-- **EC4**: body vuoto o con solo whitespace
+- **EC4**: body non valido
 - **EC5**: body valido
+
+**Per recipient_id:**
+- **EC6**: recipient_id non risolvibile
+- **EC7**: recipient_id risolvibile
 
 ### Combinations of Equivalence Classes 
 
-- EC1 x EC3 x EC5 -> oggetto _Message_ ritornato con successo
-- EC1 x EC2 x EC5 -> _AuthorizationError_ perchè il sender non può accedere al thread
-- EC1 x EC3 x EC4 -> _ValidationError_ causato da contenuto di body errato
+- EC1 x EC3 x EC5 x EC7 -> Messaggio inviato con successo
+- EC1 x EC2 x EC5 x EC7 -> Sender non può accedere al thread
+- EC1 x EC3 x EC4 x EC7 -> Body non valido
+- EC1 x EC3 x EC5 x EC6 -> Recipient_id non risolvibile
 
-Combinazioni possibili secondo i predicati:
-Definiamo i seguenti oggetti da usare nei test:
-- **user1**: utente con un campo id valido e uguale ad 1.
-- **user2**: utente con un campo id valido e uguale ad 2.
-- **report1**: report fatto dall'utente 1.
+| TC-ID | report | sender | body  | Expected | Fixture |
+| :---- | :----- | :----- | :---  |
+| MS01 | report1 | user1 | "Segnalazione"    | Message | Segnalazione esistente, sender autorizzato, recipient_id risolvibile |
+| MS02 | report1 | user2 | "Segnalazione" | AuthorizationError | Segnalazione esistente, sender non autorizzato, recipient_id risolvibile |
+| MS03 | report1 | user1 | "" | ValidationError | Segnalazione esistente, sender autorizzato, recipient_id risolvibile |
+| MS04 | report1 | user1 | "   " | ValidationError | Segnalazione esistente, sender autorizzato, recipient_id risolvibile |
+| MS05 | report1 | user1 | None | ValidationError | Segnalazione esistente, sender autorizzato, recipient_id risolvibile |
+| MS06 | report1 | user1 | "Segnalazione" | ValidationError | Segnalazione esistente, sender autorizzato, recipient_id non risolvibile |
 
-| TC-ID | report | sender | body | EC covered | Expected | Fixture |
-| :---- | :----- | :----- | :--- | :--------- | :------- | :------ |
-| MS01 | report1 | user1 | "" | EC1, EC3, EC4 | ValidationError | Body vuoto |
-| MS02 | report1 | user2 | "ciao" | EC1, EC2, EC5 | AuthorizationError | Report non fatto dal mittente |
-| MS03 | report1 | user1 | "ciao" | EC1, EC3, EC5 | Message | Tutto valido |
 
-### Boundary
+### Boundary:
+
 
 **Boundary around body content:**
 
-| TC    | report | sender | body | Boundary covered | EC covered | Expected |
+| TC    | report | sender | body | Boundary covered | Expected |
 | :---- | :----- | :----- | :--- | :--------------- | :--------- | :------- |
-| MSB01 | report1| user1  | "."  | Exact boundary | EC1, EC3, EC5 | Message |
-| MSB02 | report1| user1  | " "  | Immediately below | EC1, EC3, EC4 | ValidationError |
-| MSB03 | report1| user1  | ""   | Immediately below | EC1, EC3, EC4 | ValidationError |
+| MSB01 | report1 | user1 | "a"  | Exact boundary    | Message |
+| MS03 | report1 | user1 | ""   | Immediately below | ValidationError |
+| MS04   | report1 | user1 | "   "  | | Immediately below | ValidationError |
+
+
 
 
 ## 8 `participium.core.security.verify_password`
