@@ -212,35 +212,35 @@ Il sistema deve controllare se la transizione di stato è permessa secondo il wo
 
 **Per current_status:**
 
-- **EC01**: current_status == Pending  Approval
-- **EC02**: current_status ==  Assigned
-- **EC03**: current_status == In Progress
-- **EC04**: current_status == Suspended
-- **EC05**: current_status ==  Rejected
-- **EC06**: current_status == Resolved
+- **EC1**: current_status == Pending  Approval
+- **EC2**: current_status ==  Assigned
+- **EC3**: current_status == In Progress
+- **EC4**: current_status == Suspended
+- **EC5**: current_status ==  Rejected
+- **EC6**: current_status == Resolved
 
 **Per next_status:**
 
-- **EC07**: `next_status` è un valore di transizione permesso per lo stato corrente
-- **EC08**: `next_status` è un valore di transizione non permesso per lo stato corrente
+- **EC7**: `next_status` è un valore di transizione permesso per lo stato corrente
+- **EC8**: `next_status` è un valore di transizione non permesso per lo stato corrente
 
 
 ### Combinations of Equivalence Classes 
 
 Combinazioni possibili secondo i predicati:
 
-- **EC01 × EC07** --> transizione ammessa per Pending  Approval
-- **EC01 × EC08** --> transizione non ammessa per Pending  Approval
-- **EC02 × EC07** --> transizione ammessa per  Assigned
-- **EC02 × EC08** --> transizione non ammessa per  Assigned
-- **EC03 × EC07** --> transizione ammessa per In Progress
-- **EC03 × EC08** --> transizione non ammessa per In Progress
-- **EC04 × EC07** --> transizione ammessa per Suspended
-- **EC04 × EC08** --> transizione non ammessa per Suspended
-- **EC05 × EC07** --> transizione ammessa per  Rejected
-- **EC05 × EC08** --> transizione non ammessa per  Rejected
-- **EC06 × EC07** --> transizione ammessa per Resolved
-- **EC06 × EC08** --> transizione non ammessa per Resolved
+- **EC1 × EC7** --> transizione ammessa per Pending  Approval
+- **EC1 × EC8** --> transizione non ammessa per Pending  Approval
+- **EC2 × EC7** --> transizione ammessa per  Assigned
+- **EC2 × EC8** --> transizione non ammessa per  Assigned
+- **EC3 × EC7** --> transizione ammessa per In Progress
+- **EC3 × EC8** --> transizione non ammessa per In Progress
+- **EC4 × EC7** --> transizione ammessa per Suspended
+- **EC4 × EC8** --> transizione non ammessa per Suspended
+- **EC5 × EC7** --> transizione ammessa per  Rejected
+- **EC5 × EC8** --> transizione non ammessa per  Rejected
+- **EC6 × EC7** --> transizione ammessa per Resolved
+- **EC6 × EC8** --> transizione non ammessa per Resolved
 
 ### Combinations of Equivalence Classes 
 
@@ -577,40 +577,40 @@ Il sistema deve restituire una lista di segnalazioni pubbliche basata su filtri 
 ### Equivalence Classes
 
 **Per category_id**
-- **EC01**: category_id valido 
+- **EC1**: category_id valido 
 
 **Per status**
-- **EC02**: status è valido 
+- **EC2**: status è valido 
 
 **Per date_from**
-- **EC03**: date_from è valida
+- **EC3**: date_from è valida
 
 **Per date_to**
-- **EC04**: date_to è valida
+- **EC4**: date_to è valida
 
 **Per sort**
-- **EC05**: ordinamento valido
+- **EC5**: ordinamento valido
 
 
 ### Combinations of Equivalence Classes 
-- EC01 x EC02 x EC03 x EC04 x EC05 --> Lista di segnalazioni pubbliche filtrata e ordinata
+- EC1 x EC2 x EC3 x EC4 x EC5 --> Lista di segnalazioni pubbliche filtrata e ordinata
 
 Nota: la funzione 'list_public_reports' ritorna sempre list[Report]. Nella tabella seguente viene utilizzata la colonna "Expected" per descrivere il contenuto atteso della lista in riferimento ai filtri applicati e alla loro combinazione.
 
 | TC-ID | category_id | status | date_from | date_to | sort | Expected | Fixture |
 |-------|-------------|--------|-----------|---------|------|----------|---------|
-| PR-01  | None | None | None | None | desc | Segnalazioni pubbliche ordinate in modo decrescente | Esistono segnalazioni pubbliche |
-| PR-02  | 1 | None | None | None | asc | Segnalazioni pubbliche con category_id==1 in ordine crescente|  Esistono segnalazioni pubblicheo|
-| PR-03  | None |  Assigned | None | None | desc | Segnalazioni pubbliche con status  Assigned in ordine decrescente |  Esistono segnalazioni pubblicheo|
-| PR-04  | None | None | 2024-02-01 | None | desc | Solo le segnalazioni pubbliche dopo la data 2024-02-01 (compresa) in ordine decrescente |  Esistono segnalazioni pubbliche|
-| PR-05  | None | None | None | 2024-02-01 | desc | Solo le segnalazioni pubbliche prima della data 2024-02-01 (compresa) in ordine decrescente |  Esistono segnalazioni pubbliche|
-| PR-06  | None | None | 2024-02-01 | 2024-03-01 | desc | Tutte le segnalazioni pubbliche dopo la data 2024-02-01 (compresa) e prima della data 2024-03-01 (compresa) in ordine decrescente |  Esistono segnalazioni pubbliche|
-| PR-07  | 1 | Suspended | None | None | asc| Tutte le segnalazioni pubbliche con category_id 1 e status Suspended in ordine crescente |  Esistono segnalazioni pubbliche|
-| PR-08  | 1 | Suspended | 2024-02-01 | 2024-03-01 | asc| Tutte le segnalazioni pubbliche con category_id 1 e status Suspended con data compresa (estremi inclusi) tra 2024-02-01 e 2024-03-01 in ordine crescente |  Esistono segnalazioni pubbliche|
-| PR-09  | None | None | None | None | desc | Lista vuota | Lista vuota |
-| PR-10  | 9999 | None | None | None | desc | Lista vuota | Esistono segnalazioni pubbliche, nessuna segnalazione con category_id uguale a 9999|
+| PR01  | None | None | None | None | desc | Segnalazioni pubbliche ordinate in modo decrescente | Esistono segnalazioni pubbliche |
+| PR02  | 1 | None | None | None | asc | Segnalazioni pubbliche con category_id==1 in ordine crescente|  Esistono segnalazioni pubblicheo|
+| PR03  | None |  Assigned | None | None | desc | Segnalazioni pubbliche con status  Assigned in ordine decrescente |  Esistono segnalazioni pubblicheo|
+| PR04  | None | None | 2024-02-01 | None | desc | Solo le segnalazioni pubbliche dopo la data 2024-02-01 (compresa) in ordine decrescente |  Esistono segnalazioni pubbliche|
+| PR05  | None | None | None | 2024-02-01 | desc | Solo le segnalazioni pubbliche prima della data 2024-02-01 (compresa) in ordine decrescente |  Esistono segnalazioni pubbliche|
+| PR06  | None | None | 2024-02-01 | 2024-03-01 | desc | Tutte le segnalazioni pubbliche dopo la data 2024-02-01 (compresa) e prima della data 2024-03-01 (compresa) in ordine decrescente |  Esistono segnalazioni pubbliche|
+| PR07  | 1 | Suspended | None | None | asc| Tutte le segnalazioni pubbliche con category_id 1 e status Suspended in ordine crescente |  Esistono segnalazioni pubbliche|
+| PR08  | 1 | Suspended | 2024-02-01 | 2024-03-01 | asc| Tutte le segnalazioni pubbliche con category_id 1 e status Suspended con data compresa (estremi inclusi) tra 2024-02-01 e 2024-03-01 in ordine crescente |  Esistono segnalazioni pubbliche|
+| PR09  | None | None | None | None | desc | Lista vuota | Lista vuota |
+| PR10  | 9999 | None | None | None | desc | Lista vuota | Esistono segnalazioni pubbliche, nessuna segnalazione con category_id uguale a 9999|
 
-NOTA: PR-09 copre lo stesso input di PR-01 ma con fixture vuota, per verificare il comportamento in assenza di dati
+NOTA: PR09 copre lo stesso input di PR01 ma con fixture vuota, per verificare il comportamento in assenza di dati
 
 ### Boundary: 
 
@@ -724,9 +724,7 @@ Il sistema deve permettere l'invio di un messaggio .
 | MS05 | report1 | user1 | None | ValidationError | Segnalazione esistente, sender autorizzato, recipient_id risolvibile |
 | MS06 | report1 | user1 | "Segnalazione" | ValidationError | Segnalazione esistente, sender autorizzato, recipient_id non risolvibile |
 
-
 ### Boundary:
-
 
 **Boundary around body content:**
 
@@ -737,8 +735,6 @@ Il sistema deve permettere l'invio di un messaggio .
 | MS04   | report1 | user1 | "   "  | | Immediately below | ValidationError |
 
 
-
-
 ## 8 `participium.core.security.verify_password`
 
 Suggested test file: `test_verify_password.py`
@@ -746,7 +742,8 @@ Suggested test file: `test_verify_password.py`
 Prototype: `verify_password(password: str, password_hash: str) -> bool`
 
 **Requisiti:**
-- Il sistema deve permettere la verifica di una password in chiaro rispetto ad un hash memorizzato.
+Il sistema deve permettere la verifica di una password in chiaro rispetto ad un hash memorizzato.
+
 - Se la password corrisponde correttamente all'hash fornito il sistema deve restituire `True`.
 - Se la password non corrisponde all'hash fornito il sistema deve restituire `False`.
 
@@ -760,48 +757,39 @@ Prototype: `verify_password(password: str, password_hash: str) -> bool`
 
 **Predicati:**
 
-- Le hash della password corrispondono (password_hash == hash(password)) --> valido
-- Le hash della password non corrispondono (password_hash != hash(password)) --> non valido
-
+- password hash fornita --> valido
 
 ### Equivalence Classes
 
 **Per password:**
-- **EC1**: password != None
+- **EC1**: password valida
 
 **Per password_hash:**
-- **EC2**: hash corrispondono
-- **EC3**: hash non corrispondono
+- **EC2**: password hash valida
 
 
 ### Combinations of Equivalence Classes 
 
 Combinazioni possibili secondo i predicati:
 
-- EC1 x EC2 -> hash corrispondono, funzione ritorna vero
-- EC1 x EC3 -> hash non corrispondono, funzione ritorna falso
+- EC1 x EC2 -> Verifica password riuscita o fallita a seconda della corrispondenza tra password e hash
 
-Definiamo i seguenti oggetti da usare nei test:
-- **pwd1**: stringa "pass123".
-- **hash1**: hash corretto di "pass123".
-- **hash2**: hash non corrispondente a "pass123".
 
 | TC-ID | password | password_hash | Expected | Fixture |
-| :---- | :------- | :------------ | :------- | :------ |
-| VP01 | "pass123" | hash("pass123") | True | Password e hash corretti |
-| VP02 | "pass123" | hash("xxx") | False | Hash errato |
-| VP03 | ""        | hash("")        | Stringa vuota  | True |
+| :--- | :-------- | :------------    | :---- | :------ |
+| VP01 | "pass123" | hash("pass123")  | True  | - |
+| VP02 | "pass123" | hash("xxx")      | False | - |
+
 
 ### Boundary: password and hash comparison
+**Boundary around password and password_hash:**
 
-**Boundary around matching:**
-
-| TC    | password | password_hash | Boundary covered | EC covered | Expected |
-| :---- | :------- | :------------ | :--------------- | :--------- | :------- |
-| VP01  | "pass123" | hash("pass123") | Exact Boundary    | EC1, EC2  | True |
-| VPB02 | "pass123" | hash("Pass123") | Immediately above | EC1, EC3 | False |
-| VPB03 | "pass123" | hash("pass12")  | Immediately below | EC1, EC3 | False |
-| VPB04 | "pass123" | hash("pass1234")| Immediately above | EC1, EC3 | False |
+| TC    | password | password_hash | Boundary covered | Expected |
+| :---- | :------- | :------------ | :--------------- | :------- |
+| VP01  | "pass123" | hash("pass123") | Exact Boundary    | True |
+| VPB01 | "pass123" | hash("Pass123") | Immediately above | False |
+| VPB02 | "pass123" | hash("pass12")  | Immediately below | False |
+| VPB03 | "pass123" | hash("pass1234")| Immediately above | False |
 
 ## 9 `participium.services.notification_service.NotificationService.create_notification`
 
@@ -811,62 +799,79 @@ Prototype: `create_notification(user: User | None, notification_type: Notificati
 
 
 **Requisiti:**
-- Se user ha un id diverso da None --> Il sistema restituisce un oggetto Notification persistente.
-- Se user ha id None-->Il sistema restituisce un None.
-- Se tutti i cambi obbligatori sono presenti e validi e i campi opzionali sono validi o omessi --> Il sistema restituisce un oggetto Notification.
+
+Il sisema deve permettere la creazione di una notifica, opzionalmente associata a una segnalazione.
+
+- Se user ha un id diverso da None, il sistema restituisce un oggetto Notification persistente.
+- Se user ha id None, il sistema restituisce un None.
+- Se report è fornito, la notifica è associata alla segnalazione.
 
 
 **Criterio:** user
 
 **Predicati:**
 
-- user è un utente con id-->valido
-- user è None--> valido
+- user è fornito --> valido
+- user è None --> valido
+
+**Criterio:** notification_type
+
+**Predicati:**
+
+- notification_type è uno dei tipi di notifica definiti --> valido
+
+**Criterio:** title e body
+
+**Predicati:**
+
+- title e body sono stringhe --> valido
 
 **Criterio:** report
 
 **Predicati:**
 
 - report è fornito e con un valido id-->valido
-- reort è None-->valido
+- report è None-->valido
 
 ### Equivalence Classes
 
 **Per user:**
 - **EC1**: user valido
-- **EC2**: user is None
+
+**Per title e body:**
+- **EC2**: title e body validi
+
+**Per notification_type:**
+- **EC3**: notification_type valido
 
 **Per report:**
-- **EC3**: report valido
-- **EC4**: report is None
+- **EC4**: report valido
+
 
 ### Combinations of Equivalence Classes 
 
 Combinazioni possibili secondo i predicati:
 
-- EC1 × EC3 -> Creazione con utente e report forniti
-- EC1 × EC4 -> Creazione con utente fornito e report omesso
-- EC2 × EC3 -> Creazione con utente omesso e report fornito
-- EC2 × EC4 -> Creazione con utente e report omessi
+- EC1 × EC2 x EC3 x EC4 -> Notifica creata con successo
 
 
-| TC-ID | user | notification_type | title | body | report | Expected | Fixture |
-| :---- | :--- | :---------------- | :---- | :--- | :----- | :------- | :------ |
-| CN01 | user1 | type1 | "Aggiornamento" | "Messaggio" | report1 | Notification | Utente presente, report presente |
-| CN02 | user1 | type1 | "Aggiornamento" | "Messaggio" | None | Notification | Utente presente, report omesso |
-| CN03 | None | type1 | "Aggiornamento" | "Messaggio" | report1 | None | Utente omesso, report presente|
-| CN04 | None | type1 | "Aggiornamento" | "Messaggio" | None | None | Sia utente che report omessi |
+| TC-ID | user | notification_type | title | body| report | Expected | Fixture |
+| :---- | :--- | :---------------- | :---- | :---| :----- | :------- | :------ |
+| CN01 | user1 | MESSAGE | Aggiornamento | "Messaggio" | report1 | Notification | Utente esiste, Segnalazione presente |
+| CN02 | user1 | MESSAGE | Aggiornamento | "Messaggio" | None | Notification | utente esiste|
+| CN03 | None | MESSAGE | Aggiornamento | "Messaggio" | report1 | None | Segnalazione presente|
+| CN04 | None | MESSAGE | Aggiornamento | "Messaggio" | None | None | - |
 
 ### Boundary: text fields content
 
 
-**Boundary around text field**
+**Boundary around title and body**
+| TC    | user | title | body | Boundary covered  | Expected |
+| :---- | :--- | :---- | :--- | :------------------| :------- |
+| CNB01 | user1 | "a"  | "b"  | Exact boundary    | Notification |
+| CNB02 | user1 | ""   | "b"  | Immediately below | Notification |
+| CNB03 | user1 | "a"  | ""   | Immediately below | Notification |
 
-| TC-ID | user | notification_type | title | body | report | Boundary covered | Expected |
-| :---- | :--- | :---------------- | :---- | :--- | :----- | :--------------- | :------- |
-| CNB01 | user1 | type1 | "A" |	"B" | report1 |	Minima lunghezza valida | Notification |
-| CNB02	| user1 | type1 | "" | "B" | report1 | Stringa vuota per titolo | Notification |
-| CNB03 | user1 | type1 | "A" |	"" | report1 | Stringa vuota per body |	Notification |
 
 ## 10 `participium.services.user_service.UserService.update_profile`
 
@@ -875,9 +880,17 @@ Suggested test file: `test_update_profile.py`
 Prototype: `update_profile(user: User, username: str | None = None, first_name: str | None = None, last_name: str | None = None, email_notifications_enabled: bool | None = None, profile_picture: FileStorage | None = None) -> User`
 
 **Requisiti:**
+
+Il sistema deve permettere l'aggiornamento dei campi modificabili del profilo utente.
+
 - Se l'aggiornamento va a buon fine, il sistema deve restituire l'oggetto User aggiornato.
 - Se il parametro username fornito è già in uso da un altro account all'interno del sistema, il sistema deve sollevare un'eccezione (ValidationError).
 - I parametri opzionali omessi (None) non devono modificare il valore preesistente nel profilo dell'utente.
+
+**Criterio**: user
+
+**Predicati**:
+- user è fornito -> valido
 
 **Criterio**: username
 
@@ -913,118 +926,58 @@ Prototype: `update_profile(user: User, username: str | None = None, first_name: 
 
 ### Equivalence Classes
 
+**Per user:**
+- **EC1**: user valido
+
 **Per username:**
-- **EC1**: username valido
-- **EC2**: username non valido
+- **EC2**: username valido
+- **EC3**: username non valido
 
 **Per first_name:**
-- **EC3**: first_name valido
+- **EC4**: first_name valido
 
 **Per last_name:**
-- **EC4**: last_name valido
+- **EC5**: last_name valido
 
 **Per email_notifications_enabled:**
-- **EC5**: email_notifications_enabled valido
+- **EC6**: email_notifications_enabled valido
 
 **Per profile_picture:**
-- **EC6**: profile_picture valido
+- **EC7**: profile_picture valido
 
 ### Combinations of Equivalence Classes
 
-- EC1 × EC3 × EC4 × EC5 × EC6 -> username disponibile
-- EC2 × EC3 × EC4 × EC5 × EC6 -> username non valido
-
-| TC-ID | user | username | first_name | last_name | email_notifications_enabled | profile_picture | Expected       | Fixture            |
-| :---- | :--- | :------- | :--------- | :-------- | :-------------------------- | :-------------- |:---------------|:-------------------|
-| UP01 | user_target | "nuovo_username" | "Mario" | "Rossi" | True | valid_pic | User| User registrato|
-| UP02 | user_target | "utente_occupato" | "Mario" | "Rossi" | True | valid_pic | ValidationError| User già esistente |
-| UP03 | user_target | None | "Mario" |	"Rossi" | None | valid_pic | User| User registrato|
-| UP04 | user_target | None | None | None |	None | None | User  | User registrato| 
-
-
-### Boundary
-
-## 10 `participium.services.user_service.UserService.update_profile`
-
-Suggested test file: `test_update_profile.py`
-
-Prototype: `update_profile(user: User, username: str | None = None, first_name: str | None = None, last_name: str | None = None, email_notifications_enabled: bool | None = None, profile_picture: FileStorage | None = None) -> User`
-
-**Requisiti:**
-- Se l'aggiornamento va a buon fine, il sistema deve restituire l'oggetto User aggiornato.
-- Se il parametro username fornito è già in uso da un altro account all'interno del sistema, il sistema deve sollevare un'eccezione (ValidationError).
-- I parametri opzionali omessi (None) non devono modificare il valore preesistente nel profilo dell'utente.
-
-**Criterio**: username
-
-**Predicati**:
-
-- username è None -> valido
-- username è fornito e non è in uso -> valido
-- username è fornito ma è già in uso -> non valido
-
-**Criterio**: first_name
-
-**Predicati**:
-- firstname è None -> valido
-- firstname è fornito -> valido
-
-**Criterio**: last_name
-
-**Predicati**:
-- lastname è None -> valido
-- lastname è fornito -> valido
-
-**Criterio**: email_notifications_enabled
-
-**Predicati**:
-- email_notifications_enabled è None -> valido
-- email_notifications_enabled è fornito -> valido
-
-**Criterio**: profile_picture
-
-**Predicati**:
-- profile_picture è None -> valido
-- profile_picture è fornito -> valido
-
-### Equivalence Classes
-
-**Per username:**
-- **EC1**: username valido
-- **EC2**: username non valido
-
-**Per first_name:**
-- **EC3**: first_name valido
-
-**Per last_name:**
-- **EC4**: last_name valido
-
-**Per email_notifications_enabled:**
-- **EC5**: email_notifications_enabled valido
-
-**Per profile_picture:**
-- **EC6**: profile_picture valido
-
-### Combinations of Equivalence Classes
-
-- EC1 × EC3 × EC4 × EC5 × EC6 -> username disponibile
-- EC2 × EC3 × EC4 × EC5 × EC6 -> username non valido
+- EC1 × EC2 x EC4 x EC5 x EC6 x EC7 -> Profilo aggiornato con successo
+- EC1 × EC3 x EC4 x EC5 x EC6 x EC7 -> Username già in uso
 
 | TC-ID | user | username | first_name | last_name | email_notifications_enabled | profile_picture | Expected | Fixture |
 | :---- | :--- | :------- | :--------- | :-------- | :-------------------------- | :-------------- | :------- | :------ |
-| UP01 | user_target | "nuovo_username" | "Mario" | "Rossi" | True| valid_pic | User| User registrato|
-| UP02 | user_target | "utente_occupato" | "Mario" | "Rossi" | True | valid_pic | ValidationError| User già esistente |
-| UP03 | user_target | None | "Mario" |"Rossi" | None| valid_pic | User| User registrato|
-| UP04 | user_target | None | None | None | False| None | User  | User registrato| 
+| UP01 | user1 | "nuovo" | "Mario" | "Rossi" | True| valid_pic | User| User1 esiste|
+| UP02 | user2 | "nuovo" | "Mario" | "Rossi" | True | valid_pic | ValidationError| User2 esiste, l'username "nuovo" è già in uso|
+| UP03 | user1 | None    | "Mario" |"Rossi"  | None | valid_pic | User  | User1 esiste|
+| UP04 | user1 | None     | None   | None    | False| None      | User  | User1 esiste| 
 
 
 ### Boundary
 
 **Boundary around "username"**:
 
-| TC    | user| username| first_name | last_name | email_notifications_enabled |profile_picture | Boundary covered  | Expected        |
-|:------|:------------|:------|:-----------|:----------|:---------| :-------------- |:------|:--------|
-| UPB01 | user_target | "a" | "b" | "c" | None|None | Exact Boundary    | User|
-| UPB02 | user_target | " "|"Mario"|"Rossi"|None | None | Immediately below | User|
-| UPB03 | user_target | "" | "" | "" |False| None | Immediately below | User|
-| UPB04 | user_target | "existing_user"| "Luigi" | "Verdi"| None | None | Immediately above | ValidationError |
+| TC    | user | username | Boundary covered  | Expected |
+| :---- | :--- | :------- | :------------------| :------- |
+| UPB01 | user1 | "a"  | Exact boundary    | User |
+| UPB02 | user1 | ""   | Immediately below | User |
+| UP04  | user1 | None  | Immediately below | User |
+
+**Boundary around "first_name"**:
+| TC    | user | first_name | Boundary covered  | Expected |
+| :---- | :--- | :--------- | :------------------| :------- |
+| UPB03 | user1 | "a"  | Exact boundary    | User |
+| UPB04 | user1 | ""   | Immediately below | User |
+| UP04  | user1 | None  | Immediately below | User |
+
+**Boundary around "last_name"**:
+| TC    | user | last_name | Boundary covered  | Expected |
+| :---- | :--- | :-------- | :------------------| :------- |
+| UPB05 | user1 | "a"  | Exact boundary    | User |
+| UPB06 | user1 | ""   | Immediately below | User |
+| UP04  | user1 | None  | Immediately below | User |
