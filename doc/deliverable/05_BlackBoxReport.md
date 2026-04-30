@@ -861,62 +861,155 @@ Prototype: `update_profile(user: User, username: str | None = None, first_name: 
 
 **Requisiti:**
 - Se l'aggiornamento va a buon fine, il sistema deve restituire l'oggetto User aggiornato.
-- Se il parametro username fornito è già in uso da un altro account all'interno del sistema, il metodo deve sollevare un'eccezione ValidationError.
-- I parametri opzionali omessi (passati come None) non devono modificare il valore preesistente nel profilo dell'utente. (?)
-
+- Se il parametro username fornito è già in uso da un altro account all'interno del sistema, il sistema deve sollevare un'eccezione (ValidationError).
+- I parametri opzionali omessi (None) non devono modificare il valore preesistente nel profilo dell'utente.
 
 **Criterio**: username
 
 **Predicati**:
 
-- username is None -> valido
+- username è None -> valido
 - username è fornito e non è in uso -> valido
 - username è fornito ma è già in uso -> non valido
 
-**Criterio**: campi opzionali (first_name, last_name, email_notifications_enabled, profile_picture)
+**Criterio**: first_name
 
 **Predicati**:
+- firstname è None -> valido
+- firstname è fornito -> valido
 
-- Almeno un campo opzionale è fornito -> valido
-- Tutti i campi sono None -> valido
+**Criterio**: last_name
 
-### Equivalence Classes.
+**Predicati**:
+- lastname è None -> valido
+- lastname è fornito -> valido
 
-**Per user**:
+**Criterio**: email_notifications_enabled
 
+**Predicati**:
+- email_notifications_enabled è None -> valido
+- email_notifications_enabled è fornito -> valido
+
+**Criterio**: profile_picture
+
+**Predicati**:
+- profile_picture è None -> valido
+- profile_picture è fornito -> valido
+
+### Equivalence Classes
+
+**Per username:**
 - **EC1**: username valido
 - **EC2**: username non valido
 
-**Per tutti i campi opzionali**:
+**Per first_name:**
+- **EC3**: first_name valido
 
-- **EC3**: tutti i campi opzionali sono None
-- **EC4**: Almeno uno dei campi ha un valore inserito
+**Per last_name:**
+- **EC4**: last_name valido
 
-### Combinations of Equivalence Classes 
+**Per email_notifications_enabled:**
+- **EC5**: email_notifications_enabled valido
 
-Combinazioni possibili secondo i predicati:
+**Per profile_picture:**
+- **EC6**: profile_picture valido
 
-- EC1 × EC4 -> username disponibile e tutti i campi opzionali forniti 
-- EC1 × EC3 -> username disponibile e alcuni campi forniti 
-- EC2 × EC5 -> username non valido e tutti i campi opzionali forniti
-- EC2 × EC4 -> username non valido e alcuni campi opzionali forniti
+### Combinations of Equivalence Classes
+
+- EC1 × EC3 × EC4 × EC5 × EC6 -> username disponibile
+- EC2 × EC3 × EC4 × EC5 × EC6 -> username non valido
+
+| TC-ID | user | username | first_name | last_name | email_notifications_enabled | profile_picture | Expected       | Fixture            |
+| :---- | :--- | :------- | :--------- | :-------- | :-------------------------- | :-------------- |:---------------|:-------------------|
+| UP01 | user_target | "nuovo_username" | "Mario" | "Rossi" | True | valid_pic | User| User registrato|
+| UP02 | user_target | "utente_occupato" | "Mario" | "Rossi" | True | valid_pic | ValidationError| User già esistente |
+| UP03 | user_target | None | "Mario" |	"Rossi" | None | valid_pic | User| User registrato|
+| UP04 | user_target | None | None | None |	None | None | User  | User registrato| 
 
 
-| TC-ID | user | username | first_name | last_name | email_notifications_enabled | profile_picture | Expected | Fixture |
-| :---- | :--- | :------- | :--------- | :-------- | :-------------------------- | :-------------- | :------- | :------ |
-| UP01 | user_target | "nuovo_username" | "Mario" | "Rossi" | True | valid_pic | User |	Username disponibile, altri campi popolati |
-| UP02 | user_target | "utente_occupato" | "Mario" | "Rossi" | True | valid_pic | ValidationError	Username già in uso da user_other |
-| UP03 | user_target | None | "Mario" |	"Rossi" | None | valid_pic | User |	Username omesso, solo altri campi aggiornati |
-| UP04 | user_target | None | None | None |	None | None | User | Nessun parametro da aggiornare fornito | 
+### Boundary
+
+## 10 `participium.services.user_service.UserService.update_profile`
+
+Suggested test file: `test_update_profile.py`
+
+Prototype: `update_profile(user: User, username: str | None = None, first_name: str | None = None, last_name: str | None = None, email_notifications_enabled: bool | None = None, profile_picture: FileStorage | None = None) -> User`
+
+**Requisiti:**
+- Se l'aggiornamento va a buon fine, il sistema deve restituire l'oggetto User aggiornato.
+- Se il parametro username fornito è già in uso da un altro account all'interno del sistema, il sistema deve sollevare un'eccezione (ValidationError).
+- I parametri opzionali omessi (None) non devono modificare il valore preesistente nel profilo dell'utente.
+
+**Criterio**: username
+
+**Predicati**:
+
+- username è None -> valido
+- username è fornito e non è in uso -> valido
+- username è fornito ma è già in uso -> non valido
+
+**Criterio**: first_name
+
+**Predicati**:
+- firstname è None -> valido
+- firstname è fornito -> valido
+
+**Criterio**: last_name
+
+**Predicati**:
+- lastname è None -> valido
+- lastname è fornito -> valido
+
+**Criterio**: email_notifications_enabled
+
+**Predicati**:
+- email_notifications_enabled è None -> valido
+- email_notifications_enabled è fornito -> valido
+
+**Criterio**: profile_picture
+
+**Predicati**:
+- profile_picture è None -> valido
+- profile_picture è fornito -> valido
+
+### Equivalence Classes
+
+**Per username:**
+- **EC1**: username valido
+- **EC2**: username non valido
+
+**Per first_name:**
+- **EC3**: first_name valido
+
+**Per last_name:**
+- **EC4**: last_name valido
+
+**Per email_notifications_enabled:**
+- **EC5**: email_notifications_enabled valido
+
+**Per profile_picture:**
+- **EC6**: profile_picture valido
+
+### Combinations of Equivalence Classes
+
+- EC1 × EC3 × EC4 × EC5 × EC6 -> username disponibile
+- EC2 × EC3 × EC4 × EC5 × EC6 -> username non valido
+
+| TC-ID | user | username | first_name | last_name | email_notifications_enabled | profile_picture | Expected       | Fixture            |
+| :---- | :--- | :------- | :--------- | :-------- |:-------------| :-------------- |:---------------|:-------------------|
+| UP01 | user_target | "nuovo_username" | "Mario" | "Rossi" | True| valid_pic | User| User registrato|
+| UP02 | user_target | "utente_occupato" | "Mario" | "Rossi" | True | valid_pic | ValidationError| User già esistente |
+| UP03 | user_target | None | "Mario" |"Rossi" | None| valid_pic | User| User registrato|
+| UP04 | user_target | None | None | None | False| None | User  | User registrato| 
 
 
-### Boundary: text fields content
+### Boundary
 
-**Boundary around string lengths (username/first_name/last_name)**:
+**Boundary around "username"**:
 
-| TC | user | username | first_name | last_name | email_notifications_enabled |	profile_picture | Expected |
-| :- | :--- | :------- | :--------- | :-------- | :-------------------------- | :-------------- | :------- |
-| UPB01 | user_target | "a" |	"b" | "c" | None | None | Minima lunghezza valida | User |
-| UPB02 | user_target | " " | "Mario" | "Rossi" |	None | None | Solo spazio bianco | User |
-| UPB03 | user_target | "" | "" | "" | None | None | Stringa vuota | User |
-
+| TC    | user| username| first_name | last_name | email_notifications_enabled |profile_picture | Boundary covered  | Expected        |
+|:------|:------------|:------|:-----------|:----------|:---------| :-------------- |:------|:--------|
+| UPB01 | user_target | "a" | "b" | "c" | None|None | Exact Boundary    | User|
+| UPB02 | user_target | " "|"Mario"|"Rossi"|None | None | Immediately below | User|
+| UPB03 | user_target | "" | "" | "" |False| None | Immediately below | User|
+| UPB04 | user_target | "existing_user"| "Luigi" | "Verdi"| None | None | Immediately above | ValidationError |
