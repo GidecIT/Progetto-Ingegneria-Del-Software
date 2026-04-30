@@ -26,12 +26,12 @@
 - password corretta --> valido
 - password non corretta --> non valido
 
-**Criterio:** stato User
+**Criterio:** User.is_active e User.is_mail_verified
 
 **Predicati:**
-- User è attivo e l'email è verificata ( is_active == True AND is_email_verified == True) --> valido
-- User non è attivo ( is_active == False) --> non valido
-- User email non è verificata ( email_verified == False) --> non valido
+- User è attivo e l'email è verificata (is_active == True AND is_email_verified == True) --> valido
+- User non è attivo (is_active == False) --> non valido
+- User email non è verificata (email_verified == False) --> non valido
 
 ### Equivalence Classes
 
@@ -43,7 +43,7 @@
 - **EC3**: password valida
 - **EC4**: password non valida
 
-**Per stato User:**
+**Per User.is_active e User.is_mail_verified:**
 - **EC5**: User attivo e email verificata
 - **EC6**: User non attivo
 - **EC7**: User email non verificata
@@ -123,7 +123,7 @@ Prototype: `parse_date(value: str | None) -> datetime | None`
 **Criterio:** value
 
 **Predicati:**
-- value è None--> non valido 
+- value è None --> non valido 
 - value è un formato ISO-8601 datetime valido --> valido 
 - value non è un formato ISO-8601 datetime valido --> non valido
 
@@ -147,6 +147,7 @@ Prototype: `parse_date(value: str | None) -> datetime | None`
 | DT06 | `1998/03/04` | ValueError | - |
 | DT07 | `2020-02-34` | ValueError | - |
 
+### Boundary
 ### Boundary
 
 **Boundary intorno a date valide**
@@ -366,6 +367,7 @@ Test realizzati considerando le 10 categorie descritte nella specifica iniziale,
 |CR11| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [] | False | ValidationError |  L'utente è autenticato, la categoria 4 è valida e attiva |
 
 ### Boundary
+### Boundary
 
 **Boundary around "category_id":**
 
@@ -445,8 +447,8 @@ Il sistema deve potere permettere l'aggiornamento di stato di un report.
 **Criterio**: note 
 
 **Predicati**:
-- note è None --> valido
-- note non è None --> valido
+- note è None o "" --> valido
+- note non è None o non è "" --> valido
 
 **Criterio**: operator.category_id
 
@@ -477,36 +479,44 @@ Il sistema deve potere permettere l'aggiornamento di stato di un report.
 - **EC9**: operator.category_id == report.category_id
 - **EC10**: operator.category_id != report.category_id
 
- 
+### Combinations of Equivalence Classes
+
+- EC1 x EC3 x EC6 x EC8 x EC9 --> aggiornamento riuscito
+- EC2 x EC3 x EC5 x EC8 x EC9 --> report inesistente
+- EC1 x EC4 x EC6 x EC8 x EC9 --> operatore non autorizzato
+- EC1 x EC3 x EC7 x EC8 x EC9 --> transizione di stato non ammessa
+- EC1 x EC3 x EC6 x EC9 x EC9 --> nota mancante su report rifiutato
+- EC1 x EC5 x EC6 x EC8 x EC10 --> operatore al di fuori della propria categoria
+
+| TC-ID | report_id | operator | next_status_value | note | Expected | Fixture |
+|:------| :--- | :--- | :--- | :--- |:-------------------|:----------------|
+| US01  | 10 | op_cat_1 | "ASSIGNED" | None | Report| Il report esiste|
+| US02  | 999 | op_cat_1 | "ASSIGNED" | None | NotFoundError| Il report non esiste |
+| US03  | 10 | user_no_perm | "ASSIGNED" | None | AuthorizationError | Il report esiste |
+| US04  | 10 | op_cat_2 | "ASSIGNED" | None | AuthorizationError | Il report esiste |
+| US05  | 10 | op_cat_1 | "REJECTED" | None | ValidationError| Il report esiste |
+| US06  | 10 | op_cat_1 | "RESOLVED" | None | ValidationError| Il report esiste |
+
 ### Boundary
 
 **Boundary around report_id:**
 
-| TC | report_id | operator | next_status_value | Boundary covered | Expected |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| USB01 | 1 | op_valido | "ASSIGNED" | Exact boundary | Report |
-| USB02 | 0 | op_valido | "ASSIGNED" | Immediately below | NotFoundError |
-| USB03 | 2147483647 | op_valido | "ASSIGNED" | Immediately below | NotFoundError |
+| TC | report_id | operator | next_status_value | Boundary covered  | Expected |
+| :--- |:----------| :--- | :--- |:------------------| :--- |
+| USB01 | 1 | op_valido | "ASSIGNED" | Exact boundary    | Report |
+| USB02 | 01 | op_valido | "ASSIGNED" | Immediately above | NotFoundError |
 
-**Boundary around operator:**
-
-| TC | report_id | operator | next_status_value | Boundary covered | Expected |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| USB04 | 10 | admin | "ASSIGNED" | Exact boundary | Report |
-| USB05 | 10 | op_cat_corretta| "ASSIGNED" | Exact boundary | Report |
-| USB06 | 10 | op_cat_errata | "ASSIGNED" | Immediately below | AuthorizationError |
-| USB07 | 10 | user_base | "ASSIGNED" | Immediately below | AuthorizationError |
 
 **Boundary around next_status_value and note:**
 
-| TC | report_id | operator | next_status_value | note | Boundary covered | Expected |
-| :--- | :--- | :--- | :--- |:-----| :--- | :--- |
-| USB08 | 10 | op_valido | Current Status | None |Exact boundary| Report |
-| USB09 | 10 | op_valido | "NON_EXISTENT" | "A"|Immediately above | ValidationError |
-| USB10 | 10 | op_valido | "REJECTED" | "A"| Exact boundary | Report |
-| USB11 | 10 | op_valido | "REJECTED" | "B"| Exact boundary | Report |
-| USB12 | 10 | op_valido | "REJECTED" | None | Immediately below | ValidationError |
-| USB13 | 10 | op_valido | "ASSIGNED" | ""| Exact boundary | Report |
+| TC    | report_id | operator | next_status_value | note | Boundary covered  | Expected |
+|:------| :--- | :--- |:------------------|:-----|:------------------| :--- |
+| USB07 | 10 | op_valido | Current Status    | None | Exact boundary    | Report |
+| USB08 | 10 | op_valido | "RIFIUTATA"       | "A"  | Immediately below | ValidationError |
+| USB10 | 10 | op_valido | "REJECTED"        | "B"  | Exact boundary    | Report |
+| USB11 | 10 | op_valido | "REJECTED"        | None | Immediately below | ValidationError |
+| USB12 | 10 | op_valido | "REJECTED"        | ""   | Immediately below | ValidationError |
+| USB13 | 10 | op_valido | "ASSIGNED"        | ""   | Exact boundary    | Report |
 
 ## 6 `participium.services.report_service.ReportService.list_public_reports`
 
