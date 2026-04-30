@@ -817,6 +817,17 @@ Combinazioni possibili secondo i predicati:
 | CN03 | None | type1 | "Aggiornamento" | "Messaggio" | report1 | None | Utente omesso, report presente|
 | CN04 | None | type1 | "Aggiornamento" | "Messaggio" | None | None | Sia utente che report omessi |
 
+### Boundary: text fields content
+
+
+**Boundary around text field**
+
+| TC-ID | user | notification_type | title | body | report | Boundary covered | Expected |
+| :---- | :--- | :---------------- | :---- | :--- | :----- | :--------------- | :------- |
+| CNB01 | user1 | type1 | "A" |	"B" | report1 |	Minima lunghezza valida | Notification |
+| CNB02	| user1 | type1 | "" | "B" | report1 | Stringa vuota per titolo | Notification |
+| CNB03 | user1 | type1 | "A" |	"" | report1 | Stringa vuota per body |	Notification |
+
 ## 10 `participium.services.user_service.UserService.update_profile`
 
 Suggested test file: `test_update_profile.py`
@@ -824,11 +835,10 @@ Suggested test file: `test_update_profile.py`
 Prototype: `update_profile(user: User, username: str | None = None, first_name: str | None = None, last_name: str | None = None, email_notifications_enabled: bool | None = None, profile_picture: FileStorage | None = None) -> User`
 
 **Requisiti:**
-- Se user è None o non ha un id valido, il sistema restituisce un ValidationError.
-- Se username, first_name o last_name sono diversi da None ma sono stringhe vuote o contengono solo spazi, il sistema restituisce un ValidationError.
-- Se profile_picture è diverso da None ma non è un file valido, il sistema restituisce un ValidationError.
-- Se l'utente è valido e tutti i campi opzionali forniti sono validi, il sistema aggiorna il profilo e restituisce l'oggetto User aggiornato.
-- Se l'utente è valido e tutti i campi opzionali sono None, il sistema restituisce l'oggetto User senza apportare modifiche.
+- Se l'aggiornamento va a buon fine, il sistema deve restituire l'oggetto User aggiornato.
+- Se il parametro username fornito è già in uso da un altro account all'interno del sistema, il metodo deve sollevare un'eccezione ValidationError.
+- I parametri opzionali omessi (passati come None) non devono modificare il valore preesistente nel profilo dell'utente. (?)
+
 
 **Criterio**: username
 
@@ -879,9 +889,9 @@ Combinazioni possibili secondo i predicati:
 
 **Boundary around string lengths (username/first_name/last_name)**:
 
-| TC | user | username | first_name | last_name | email_notifications_enabled |	profile_picture | Boundary covered | EC covered | Expected |
-| :- | :--- | :------- | :--------- | :-------- | :-------------------------- | :-------------- | :--------------- | :--------- | :------- |
-| UPB01 | user1 | "a" |	"b" | "c" | None | None | Minima lunghezza valida | EC1, EC4, EC8, EC10 | User |
-| UPB02 | user1 | " " | "Mario" | "Rossi" |	None | None | Solo spazio bianco (username) | EC1, EC6, EC8, EC10 |	ValidationError |
-| UPB03 | user1 | "mario" | "" | "Rossi" | None | None | Stringa vuota (first_name) | EC1, EC6, EC8, EC10 | ValidationError |
+| TC | user | username | first_name | last_name | email_notifications_enabled |	profile_picture | Expected |
+| :- | :--- | :------- | :--------- | :-------- | :-------------------------- | :-------------- | :------- |
+| UPB01 | user_target | "a" |	"b" | "c" | None | None | Minima lunghezza valida | User |
+| UPB02 | user_target | " " | "Mario" | "Rossi" |	None | None | Solo spazio bianco | User |
+| UPB03 | user_target | "" | "" | "" | None | None | Stringa vuota | User |
 
