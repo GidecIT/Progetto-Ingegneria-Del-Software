@@ -23,8 +23,8 @@
 
 **Predicati:**
 - password è None--> non valido
-- password corrisponde alla password hash dell'utente trovato --> valido
-- password non corrisponde alla password hash dell'utente trovato --> non valido
+- password corretta --> valido
+- password non corretta --> non valido
 
 **Criterio:** stato User
 
@@ -38,7 +38,7 @@
 **Per identifier:**
 - **EC1**: identifier valido
 - **EC2**: identifier non valido
-
+    
 **Per password:**
 - **EC3**: password valida
 - **EC4**: password non valida
@@ -58,49 +58,50 @@
 
 
 
-| TC   | identifier        | password  | EC covered | Expected | Fixture                                             |
-|:-----|:------------------|:----------|:-----------|:---------|:----------------------------------------------------|
-| AU01 | `mario_r`             | `pass123` | EC1, EC3, EC5   | User obj | Username e password corretti, user attivo e email verificata |
-| AU02 | `mario.r@polito.it`   | `pass123` | EC1, EC3, EC5   | User obj | Email e password corretti, user attivo e email verificata |
-| AU03 | `mario_r`             | `wrong`   | EC1, EC4, EC5   | AuthenticationError | Username corretto, password errata  |
-| AU04 | `mario.r@polito.it`   | `wrong`   | EC1, EC4, EC5   | AuthenticationError | Email corretta, password errata |
-| AU07 | `unknown_user`        | `pass123` | EC1, EC3, EC5   | AuthenticationError | Username inesistente |
-| AU08 | `unknown@mail.it`     | `pass123` | EC1, EC3, EC5   | AuthenticationError | Email inesistente |
-| AU11 | `mario_r`             | `pass123` | EC1, EC3, EC6   | AuthenticationError | Username e password corretti, user non attivo |
-| AU12 | `mario_r`             | `pass123` | EC1, EC3, EC7   | AuthenticationError | Email e password corretti, user email non verificata |
+| TC   | identifier        | password  | Expected | Fixture                                             |
+|:-----|:------------------|:----------|:-----------|:----------------------------------------------------|
+| AU01 | `mario_r`             | `pass123` | User | Utente esiste ed è attivo, email verificata|
+| AU02 | `mario.r@polito.it`   | `pass123` | User | Utente esiste ed è attivo, email verificata |
+| AU03 | `mario_r`             | `wrong`   | AuthenticationError | Utente esiste ed è attivo, email verificata |
+| AU04 | `mario.r@polito.it`   | `wrong`   | AuthenticationError | Utente esiste ed è attivo, email verificata |
+| AU05 | `unknown_user`        | `pass123` | AuthenticationError | Non esiste un utente con questo username |
+| AU06 | `unknown@mail.it`     | `pass123` | AuthenticationError | Non esiste un utente con questa email |
+| AU07 | `mario_r`             | `pass123` | AuthenticationError | Utente esiste, ma non è attivo |
+| AU08 | `mario_r`             | `pass123` | AuthenticationError | Utente esiste, ma email non verificata |
 
 ### Boundary: identifier recognition
-
 **Boundary around "identifier":**
-
-| AU09 | None              | `pass123` | EC4 | None| Identifier omesso  |
 
 | TC    | identifier | password  | Boundary covered  | Expected |
 | :---- | :--------- | :-------- |:------------------|:---------|
-| AUB01 | `mario_r`  | `pass123` | Exact boundary    | User obj |
-| AUB02 | `m.r@polito.it` | `pass123` | Exact boundary    | User obj |
-| AUB03 | None  | `pass123`  | Immediately below | AuthenticationError |
-| AUB04 | "" | `pass123`  | Immediately below | AuthenticationError |
-| AUB05 | " " | `pass123`  | Immediately below | AuthenticationError |
+| AU01 | `mario_r`  | `pass123` | Exact boundary    | User |
+| AU02 | `m.r@polito.it` | `pass123` | Exact boundary    | User |
+| AUB01 | None  | `pass123`  | Immediately below | AuthenticationError |
+| AUB02 | "" | `pass123`  | Immediately below | AuthenticationError |
+| AUB03 | " " | `pass123`  | Immediately below | AuthenticationError |
+
+<br>
 
 **Boundary around "password":**
 
-| TC    | identifier | password   | Boundary covered   | Expected |
-| :---- | :--------- | :--------- |:-------------------|:---------|
-| AUB06 | `mario_r`  | `pass123`  | Exact boundary     | User obj |
-| AUB07 | `mario_r`   | None      | Immediately below  | AuthenticationError |
-| AUB08 | `m.r@polito.it` | None      | Immediately below  | AuthenticationError |
-| AUB09 | `mario_r`  | ""        | Immediately below  | AuthenticationError |
-| AUB10 | `mario_r`  | " "       | Immediately below  | AuthenticationError |
+| TC    | identifier | password  | Boundary covered   | Expected |
+| :---- | :--------- | :---------|:-------------------|:---------|
+| AU01 | `mario_r`  | `pass123`  | Exact boundary     | User |
+| AUB04| `mario_r`   | None      | Immediately below  | AuthenticationError |
+| AUB05 | `m.r@polito.it` | None | Immediately below  | AuthenticationError |
+| AUB06 | `mario_r`  | ""        | Immediately below  | AuthenticationError |
+| AUB07 | `mario_r`  | " "       | Immediately below  | AuthenticationError |
+
+<br>
 
 
 **Boundary around "stato User":**
 
 | TC    | identifier | password  | stato User | Boundary covered  | Expected |
 | :---- | :--------- | :------------- |:------------------|:------------------|:---------|
-| AUB11 | `mario_r`  | `pass123` | is_active == True AND is_email_verified == True | Exact boundary     | User obj |
-| AUB12 | `mario_r`  | `pass123` | is_active == False | Immediately below  | AuthenticationError     |
-| AUB13 | `mario_r`  | `pass123` | is_email_verified == False | Immediately below  | AuthenticationError     |
+| AU01 | `mario_r`  | `pass123` | is_active == True AND is_email_verified == True | Exact boundary     | User |
+| AUB08 | `mario_r`  | `pass123` | is_active == False | Immediately below  | AuthenticationError     |
+| AUB09 | `mario_r`  | `pass123` | is_email_verified == False | Immediately below  | AuthenticationError     
 
 
 
@@ -111,6 +112,7 @@ Suggested test file: `test_parse_date.py`
 Prototype: `parse_date(value: str | None) -> datetime | None`
 
 **Requisiti:**
+
  Il sistema deve ricavare la data da una stringa in formato 'datetime'.
  
 - Se la stringa è vuota, il sistema restituisce None.
@@ -120,9 +122,9 @@ Prototype: `parse_date(value: str | None) -> datetime | None`
 **Criterio:** value
 
 **Predicati:**
-    - value è None--> non valido 
-    - value è un formato ISO-8601 datetime valido --> valido 
-    - value non è un formato ISO-8601 datetime valido --> non valido
+- value è None--> non valido 
+- value è un formato ISO-8601 datetime valido --> valido 
+- value non è un formato ISO-8601 datetime valido --> non valido
 
 ### Equivalence Classes
 
@@ -131,20 +133,45 @@ Prototype: `parse_date(value: str | None) -> datetime | None`
 - **EC2**: value non valido
 
 ### Combinations of Equivalence Classes 
+- EC1 --> restituisce datetime
+- EC2 --> restituisce ValueError
 
-Non sono presenti combinazioni valide, in quanto i predicati si escludono a vicenda
+| TC   | value  |Expected | Fixture|
+|:-----|:------------------|:----------|:----------------------------------------------------|
+| DT01 | `2002-12-31` | datetime | -  |
+| DT02 | None | None     | - |
+| DT03 | "" | ValueError | - |
+| DT04 | `2056-31-04` | ValueError | - |
+| DT05 | `1980-00-04` | ValueError | - |
+| DT06 | `1998/03/04` | ValueError | - |
+| DT07 | `2020-02-34` | ValueError | - |
 
 ### Boundary: value format
-**Boundary around "value":**
+
+**Boundary intorno a date valide**
 
 | TC    | value        | Boundary covered  | Expected |
 |:------|:-------------|:------------------|:---------|
-| DTB01 | `2002-12-31` | Exact boundary    | datetime |
-| DTB02 | None         | Immediately below | None     |
-| DTB03 | `2017-31-04` | Immediately below | ValueError |
-| DTB04 | `1980-00-04` | Immediately below | ValueError |
-| DTB05 | `0000-12-04` | Immediately above | ValueError |
-| DTB04 | `1998+03/04` | Immediately below | ValueError |
+| DTB01 | 2024-02-29   | Exact boundary    | datetime |
+| DTB02 | 2024-02-30   | Immediately above | ValueError |
+| DTB03 | 2023-02-29   | Immediately below | ValueError |
+
+**Boundary around months:**
+
+| TC    | value        | Boundary covered  | Expected |
+|:------|:-------------|:------------------|:---------|
+| DTB04 | 2024-12-31   | Exact boundary    | datetime |
+| DTB05 | 2024-13-01   | Immediately above | ValueError |
+| DTB06 | 2024-00-01   | Immediately below | ValueError |
+
+**Boundary around days:**
+
+| TC    | value        | Boundary covered  | Expected |
+|:------|:-------------|:------------------|:---------|
+| DTB07 | 2024-04-30   | Exact boundary    | datetime |
+| DTB08 | 2024-04-31   | Immediately above | ValueError |
+| DTB09 | 2024-04-00   | Immediately below | ValueError |
+
 
 ## 3 `participium.core.status_flow.ensure_transition_allowed`
 
@@ -253,9 +280,9 @@ Prototype: `create_report(reporter: User, category_id: int | str | None, title: 
 
 **Criterio:** reporter
 **Predicati:**
-    - reporter è None--> non valido
-    - reporter è un utente non autenticato --> non valido
-    - reporter è un utente autenticato --> valido
+- reporter è None--> non valido
+- reporter è un utente non autenticato --> non valido
+- reporter è un utente autenticato --> valido
 
 **Criterio:** category_id
 
@@ -383,16 +410,11 @@ Suggested test file: `test_update_status.py`
 
 Prototype: `update_status(report_id: int, operator: User, next_status_value: str, note: str | None = None) -> Report`
 
-**Requisiti:** 
 
-**Criterio:**
-
-**Predicati:**
-
-**Requisiti:**
-Il sistema deve potere permettere l'aggiornamento di stato di un report:
-
-- Se operator è None o non ha i permessi adatti, il sistema restituisce un errore di autorizzazione (AuthorizationError).
+**Requisiti:** <br>
+Il sistema deve potere permettere l'aggiornamento di stato di un report.
+- Se l'operatore non ha i permessi adatti alla modifica del report (User.Role != Role.OPERATOR AND User.Role != Role.ADMIN), il sistema restituisce un errore di autorizzazione (AuthorizationError).
+- Se l'operatore è None, il sistema restituisce un errore di autorizzazione (AuthorizationError).
 - Se l'operatore tenta di aggiornare un report al di fuori della propria categoria assegnata, il sistema restituisce un errore di autorizzazione (AuthorizationError).
 - Se il report non esiste, il sistema restituisce errore (NotFoundError).
 - Se next_status_value non rispetta l'ordine del workflow o non esiste, il sistema restituisce un errore di validazione (ValidationError).
@@ -400,32 +422,41 @@ Il sistema deve potere permettere l'aggiornamento di stato di un report:
 - Se tutti gli input inseriti sono validi, il sistema restituisce l'oggetto Report con lo stato aggiornato.
 
 **Criterio**: report_id
+
 **Predicati**:
-    - report_id è None --> non valido
-    - report_id non corrisponde a un report esistente --> non valido
-    - report_id corrisponde a un report esistente --> valido
+- report_id è None --> non valido
+- report_id non corrisponde a un report esistente --> non valido
+- report_id corrisponde a un report esistente --> valido
 
 **Criterio**: operator 
-**Predicati**:
-    - operator è None --> non valido
-    - operator non corrisponde a un operatore esistente --> non valido
-    - operator corrisponde a un operatore esistente senza i permessi adatti alla modifica (User.Role != Role.OPERATOR AND User.Role != Role.ADMIN ') --> non valido
-    - operator corrisponde a un operatore esistente con categoria diversa rispetto a quella del report (User.category_id != Report.category_id) --> non valido
-    - operator corrisponde a un operatore esistente con i permessi adatti alla modifica (User.Role == Role.OPERATOR OR User.Role != Role.ADMIN ') --> valido
-    - operator corrisponde a un operatore esistente con categoria uguale rispetto a quella del report (User.category_id == Report.category_id) --> valido
 
-NOTA: Che cosa intende con 'Operatore senza permessi adatti'? Accorpabile a 'Operatore con categoria diversa da quella del report'? Esplicabile con 'User.Role != Role.OPERATOR AND User.Role != Role.ADMIN'?
+**Predicati**:
+- operator è None --> non valido
+- operator non corrisponde a un operatore esistente --> non valido
+- operator non possiede i permessi adatti alla modifica --> non valido
+- operator possiede una categoria diversa da quella del report --> non valido
+- operator corrisponde a un operatore esistente con i permessi adatti alla modifica  --> valido
+- operator corrisponde a un operatore esistente con categoria uguale rispetto a quella del report  --> valido
 
 **Criterio**: next_status_value
+
 **Predicati**:
-    - next_status è uno degli stati possibili ed è permesso dal workflow --> valido
-    - next_status non è uno stato permesso dal workflow oppure è None --> non valido
+- next_status_value è None --> non valido
+- next_status è uno degli stati possibili ed è permesso dal workflow --> valido
+- next_status non è uno stato permesso dal workflow oppure è None --> non valido
 
 **Criterio**: note 
+
 **Predicati**:
-    - note è None o "" e l'operatore non respinge il report (next_status_value != REJECTED) --> valido
-    - note è None o "" e l'operatore respinge il report (next_status_value == REJECTED) --> non valido
-    - note non è None --> valido
+- note è None --> valido
+- note non è None --> valido
+
+**Criterio**: operator.category_id
+
+**Predicati**:
+
+-  operator.category_id è None --> valido
+-  operator.category_id è valido --> valido
 
 ### Equivalence Classes
 
@@ -435,35 +466,21 @@ NOTA: Che cosa intende con 'Operatore senza permessi adatti'? Accorpabile a 'Ope
 
 **Per operator**
 - **EC3**: operator valido
-- **EC4**: operator non valido, senza permessi adatti
-- **EC5**: operator non valido, categoria di appartenenza diversa da quella del report
+- **EC4**: operator non valido
 
 **Per next_status_value**
-- **EC6**: next_status_value valido
-- **EC7**: next_status_value non valido
+- **EC5**: next_status_value valido
+- **EC6**: next_status_value non valido
 
 **Per note**
-- **EC8**: note valido
-- **EC9**: note non valido
+- **EC7**: note valido
+- **EC8**: note non valido
 
-### Combinations of Equivalence Classes
+**Per operator.category_id**
+- **EC9**: operator.category_id == report.category_id
+- **EC10**: operator.category_id != report.category_id
 
-- EC2 x EC3 x EC6 x EC8 --> report inesistente
-- EC1 x EC3 x EC6 x EC8 --> aggiornamento riuscito
-- EC1 x EC4 x EC6 x EC8 --> operatore non autorizzato
-- EC1 x EC5 x EC6 x EC8 --> operatore al di fuori della propria categoria
-- EC1 x EC3 x EC7 x EC8 --> transizione di stato non ammessa
-- EC1 x EC3 x EC6 x EC9 --> nota mancante su report rifiutato
-
-| TC-ID | report_id | operator | next_status_value | note | EC covered         | Expected | Fixture                                |
-|:------| :--- | :--- | :--- | :--- |:-------------------| :--- |:---------------------------------------|
-| US01  | 10 | op_cat_1 | "ASSIGNED" | None | EC1, EC3, EC6, EC8 | Report | Transizione valida, categoria corretta |
-| US02  | 999 | op_cat_1 | "ASSIGNED" | None | EC, EC, EC, EC8 | NotFoundError | Report inesistente                     |
-| US03  | 10 | user_no_perm | "ASSIGNED" | None | EC, EC, EC, EC8 | AuthorizationError | Operatore senza permessi               |
-| US04  | 10 | op_cat_2 | "ASSIGNED" | None | EC1, EC5, EC6, EC8 | AuthorizationError | Categoria operatore diversa da report  |
-| US05  | 10 | op_cat_1 | "REJECTED" | None | EC1, EC3, EC6, EC9 | ValidationError | Rifiuto senza nota                     |
-| US06  | 10 | op_cat_1 | "RESOLVED" | None | EC1, EC3, EC7, EC8 | ValidationError | Transizione workflow non permessa      |
-
+ 
 ### Boundary
 
 **Boundary around report_id:**
