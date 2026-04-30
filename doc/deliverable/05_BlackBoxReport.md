@@ -58,8 +58,8 @@
 
 
 
-| TC   | identifier        | password  | Expected | Fixture                                             |
-|:-----|:------------------|:----------|:-----------|:----------------------------------------------------|
+| TC-ID | identifier | password | Expected | Fixture |
+| :---- | :--------- | :------- | :------- | :------ |
 | AU01 | `mario_r`             | `pass123` | User | Utente esiste ed è attivo, email verificata|
 | AU02 | `mario.r@polito.it`   | `pass123` | User | Utente esiste ed è attivo, email verificata |
 | AU03 | `mario_r`             | `wrong`   | AuthenticationError | Utente esiste ed è attivo, email verificata |
@@ -137,8 +137,8 @@ Prototype: `parse_date(value: str | None) -> datetime | None`
 - EC1 --> restituisce datetime
 - EC2 --> restituisce ValueError
 
-| TC   | value  |Expected | Fixture|
-|:-----|:------------------|:----------|:----------------------------------------------------|
+| TC-ID | value | Expected | Fixture |
+| :---- | :---- | :------- | :------ |
 | DT01 | `2002-12-31` | datetime | -  |
 | DT02 | None | None     | - |
 | DT03 | "" | ValueError | - |
@@ -244,8 +244,8 @@ Combinazioni possibili secondo i predicati:
 
 ### Combinations of Equivalence Classes 
 
-| TC   | current_status     | next_status       | Expected          | Fixture                                |
-|:-----|:-------------------|:-------------------------|:------------------|:---------------------------------------|
+| TC-ID | current_status | next_status | Expected | Fixture |
+| :---- | :------------- | :---------- | :------- | :------ |
 |TR1 | Pending  Approval | Pending  Approval | True | Esiste una segnalazione in stato Pending  Approval |
 |TR2 | Pending  Approval |  Assigned | True |  Esiste una segnalazione in stato Pending  Approval|
 |TR3 | Pending  Approval |  Rejected | True |  Esiste una segnalazione in stato Pending  Approval|
