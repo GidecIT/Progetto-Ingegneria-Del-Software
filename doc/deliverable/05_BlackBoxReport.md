@@ -502,7 +502,7 @@ Il sistema deve potere permettere l'aggiornamento di stato di un report.<br>
 **Boundary around report_id:**
 
 | TC | report_id | operator | next_status_value | Boundary covered  | Expected |
-| :--- |:----------| :--- | :--- |:------------------| :--- |
+| :--- |:----------| :--- | :--- |:-----| :--- |
 | USB01 | 1 | op_valido  |   Assigned | Exact boundary    | Report |
 | USB02 | -1 | op_valido |   Assigned | Immediately below | NotFoundError |
 
@@ -510,7 +510,7 @@ Il sistema deve potere permettere l'aggiornamento di stato di un report.<br>
 **Boundary around next_status_value and note:**
 
 | TC    | report_id | operator | next_status_value | note | Boundary covered  | Expected |
-|:------| :--- | :--- |:------------------|:-----|:------------------| :--- |
+|:------| :--- | :--- |:-------|:-----|:------| :--- |
 | USB03 | 10 | op_valido | Rejected| "N"  | Exact boundary    | Report |
 | USB04 | 10 | op_valido | Rejected| None | Immediately below | ValidationError |
 | USB05 | 10 | op_valido | Rejected| ""   | Immediately below | ValidationError |
@@ -519,12 +519,10 @@ Il sistema deve potere permettere l'aggiornamento di stato di un report.<br>
 **Boundary around "operator.category_id" e "report.category_id":**
 
 | TC    | operator.category_id | report.category_id | Boundary covered  | Expected        |
-|:------|:---------------------| :----|:-------|:-------|
-| USB06 | 0| 0 | Exact boundary| Report |
-| USB07 | 9| 9 | Exact boundary | Report |
-| USB08 | -1| 0 | Immediately below | ValidationError |
-| USB09 | 0| -1| Immediately below | ValidationError |
-| USB10 | 1| 10| Immediately above | ValidationError |
+|:------|:-------|:-------|:------------------|:-------|
+| USB06 | 0| 0 | Exact boundary    | Report |
+| USB07 | -1| 0 | Immediately below | ValidationError |
+| USB08 | 0| 1 | Immediately above | ValidationError |
 
 
 ## 6 `participium.services.report_service.ReportService.list_public_reports`
@@ -537,8 +535,8 @@ Prototype: `list_public_reports(category_id: int | None = None, status: ReportSt
 
 Il sistema deve restituire una lista di segnalazioni pubbliche basata su filtri opzionali<br>
 
--  Se nessun filtro è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche
--  Se category_id è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con categoria uguale a category_id
+- Se nessun filtro è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche
+- Se category_id è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con categoria uguale a category_id
 - Se status è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con stato uguale a status
 - Se date_from è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con data di creazione uguale o successiva a date_from
 - Se date_to è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con data di creazione uguale o precedente a date_to
@@ -647,7 +645,6 @@ NOTA: PR09 copre lo stesso input di PR01 ma con fixture vuota, per verificare il
 | PRB10 | 2024-04-30   | Exact boundary    | datetime |
 | PRB11 | 2024-04-31   | Immediately above | ValueError |
 | PRB12 | 2024-04-00   | Immediately below | ValueError |
-
 
 
 ## 7 `participium.services.messaging_service.MessagingService.send_message`
