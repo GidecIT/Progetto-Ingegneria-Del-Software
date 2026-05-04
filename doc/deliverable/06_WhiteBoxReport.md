@@ -2,9 +2,21 @@
 
 ### Control Flow Graph
 
-- ![](../data/img/xxx.xxx)
+- ![](../../data/img/06_WhiteBoxCreateReport.png)
 
 ### Atomic Conditions
+- category_id is not None 
+- resolved_category_id
+- not category
+- not category.is_active
+- not title 
+- not description
+- latitude is None
+- longitude is None
+- not valid_photos
+- len(valid_photos) > 3
+- photo
+- photo.filename
 
 ### Structural Lower Bound
 
