@@ -98,13 +98,11 @@
 
 **Boundary around User.is_active e User.is_mail_verified:**
 
-| TC    | identifier | password  | stato User | Boundary covered  | Expected |
-| :---- | :--------- | :------------- |:------------------|:------------------|:---------|
-| AU01 | `mario_r`  | `pass123` | is_active == True AND is_email_verified == True | Exact boundary     | User |
-| AUB08 | `mario_r`  | `pass123` | is_active == False | Immediately below  | AuthenticationError     |
-| AUB09 | `mario_r`  | `pass123` | is_email_verified == False | Immediately below  | AuthenticationError     
-
-
+| TC    | identifier | password  | stato User | Boundary covered  | Expected|
+|:------|:-----------|:----------|:-----------|:------------------|:--------------------|
+| AU01  | `mario_r`  | `pass123` | is_active == True AND is_email_verified == True | Exact boundary    | User |
+| AUB08 | `mario_r`  | `pass123` | is_active == False | Immediately below | AuthenticationError |
+| AUB09 | `mario_r`  | `pass123` | is_email_verified == False | Immediately below | AuthenticationError |
 
 ## 2 `participium.core.utils.parse_date`
 
@@ -279,9 +277,9 @@ Prototype: `create_report(reporter: User, category_id: int | str | None, title: 
 Il sistema deve permettere la creazione di un report da parte di un utente autenticato.
 
 - Se il category_id è None, malformato o si riferisce a una categoria sconosciuta o inattiva, il sistema deve restituire un errore di validazione (ValidationError).
-- Se la descrizione o il titolo sono None, vuoti o contengolo solo spazi, il sistema deve restituire un errore di validazione (ValidationError).
+- Se la descrizione o il titolo sono None, vuoti o contengono solo spazi, il sistema deve restituire un errore di validazione (ValidationError).
 - Se le coordinate geografiche sono None o non possono essere convertite in valori numerici, il sistema deve restituire un errore di validazione (ValidationError).
-- Se la lista di foto contiene zero foto valide  o più di 3 foto valide, il sistema deve restituire un errore di validazione (ValidationError).
+- Se la lista di foto contiene zero foto valide o più di 3 foto valide, il sistema deve restituire un errore di validazione (ValidationError).
 - Se tutti i campi sono validi, il sistema deve restituire un oggetto di tipo Report.
 
 **Criterio:** category_id
@@ -296,7 +294,7 @@ Il sistema deve permettere la creazione di un report da parte di un utente auten
 **Criterio:** title e description
 
 **Predicati:**
-- title o descriptione è None o vuoto --> non valido
+- title o description è None o vuoto --> non valido
 - title e descrizione sono stringhe non vuote --> valido
 
 **Criterio:** latitude / longitude
@@ -335,7 +333,7 @@ Il sistema deve permettere la creazione di un report da parte di un utente auten
 
 **Per photos:**
 - **EC7**: numero di foto non valido
-- **EC8**:  1 <= numero di foto  <= 3
+- **EC8**: 1 <= numero di foto <= 3
 
 **Per is_anonymous:**
 - **EC9**: is_anonymous è True o False --> valido
@@ -386,6 +384,7 @@ Test realizzati considerando le 10 categorie descritte nella specifica iniziale,
 | CRB08 | a  | "" | Immediately below    | ValidationError |
 
 **Boundary around "latitude/longitude":**
+
 | TC    | latitude | longitude | Boundary covered  | Expected |
 | :---- | :----------------- |:-------- | :------------------|:---------|
 | CRB09 | 0.0  | 0.0  | Exact boundary    | Report |
@@ -393,6 +392,7 @@ Test realizzati considerando le 10 categorie descritte nella specifica iniziale,
 | CRB11 | 0.0 | "" | Immediately below    | ValidationError |
 
 **Boundary around "photos":**
+
 | TC    | photos | Boundary covered  | Expected |
 | :---- | :----- |:------------------|:---------|
 | CR01 | [foto_buca.jpg] | Exact boundary    | Report|
@@ -415,7 +415,7 @@ Il sistema deve potere permettere l'aggiornamento di stato di un report.<br>
 - Se l'operatore tenta di aggiornare un report al di fuori della propria categoria assegnata, il sistema restituisce un errore di autorizzazione (AuthorizationError).
 - Se il report non esiste, il sistema restituisce errore (NotFoundError).
 - Se next_status_value non rispetta l'ordine del workflow o non esiste, il sistema restituisce un errore di validazione (ValidationError).
-- Se l'operatore respinge il report (next_status_value ==  Rejected) senza una nota, il sistema restituisce un errore di validazione (ValidationError)
+- Se l'operatore respinge il report (next_status_value == Rejected) senza una nota, il sistema restituisce un errore di validazione (ValidationError)
 - Se tutti gli input inseriti sono validi, il sistema restituisce l'oggetto Report con lo stato aggiornato.
 
 **Criterio**: report_id
@@ -480,29 +480,29 @@ Il sistema deve potere permettere l'aggiornamento di stato di un report.<br>
 ### Combinations of Equivalence Classes
 
 - EC1 x EC3 x EC5 x EC8 x EC9 --> Aggiornamento riuscito
-- EC1 x EC3 x EC5 x EC7 x EC9 --> Aggiornamento riuscito 
+- EC1 x EC3 x EC5 x EC7 x EC9 --> Aggiornamento riuscito (senza nota)
 - EC2 x EC3 x EC5 x EC7 x EC9 --> Report inesistente
 - EC1 x EC4 x EC5 x EC8 x EC9 --> Operatore non autorizzato
 - EC1 x EC3 x EC6 x EC8 x EC9 --> Transizione di stato non ammessa
 - EC1 x EC3 x EC5 x EC7 x EC9 --> Nota mancante per report rifiutato
 - EC1 x EC3 x EC5 x EC7 x EC10 --> Categoria operatore non corrispondente a quella del report
 
-| TC-ID | report_id | operator | next_status_value | note | Expected | Fixture |
-| :---- | :-------- | :------- | :---------------- | :--- | :------- | :------ |
-| US01  | 10 | op_cat_1 |   Assigned | None | Report| La segnalazione è in stato Pending Approval, l'operatore ha i permessi |
-| US02  | 10 | op_cat_1 |   Assigned | "Report già segnalato" | Report| La segnalazione è in stato Pending Approval, l'operatore ha i permessi|
-| US03  | 999 | op_cat_1 |   Assigned | None | NotFoundError| La segnalazione non esiste |
-| US04  | 10 | user_no_perm |   Assigned | None | AuthorizationError | La segnalazione esiste, l'operatore non ha i permessi |
-| US05  | 10 | op_cat_2 |   Assigned | None | AuthorizationError | La segnalazione esiste, l'operatore non appartiene alla stessa categoria del report |
-| US06  | 10 | op_cat_1 |  Rejected | "Report già segnalato" | ValidationError| La segnalazione esiste, l'operatore ha i permessi |
-| US07  | 10 | op_cat_1 | Resolved | None | ValidationError|La segnalazione è in stato Resolved, l'operatore ha i permessi |
+| TC-ID | report_id | operator | next_status_value | note                    | Expected           | Fixture |
+| :---- | :-------- | :------- | :---------------- |:------------------------|:-------------------|:-----------|
+| US01  | 10 | op_cat_1 | Assigned | None | Report | La segnalazione è in stato Pending Approval, l'operatore ha i permessi |
+| US02  | 10 | op_cat_1 | Assigned | "Report già segnalato"  | Report | La segnalazione è in stato Pending Approval, l'operatore ha i permessi |
+| US03  | 999 | op_cat_1 | Assigned | None | NotFoundError | La segnalazione non esiste |
+| US04  | 10 | user_no_perm | Assigned | None | AuthorizationError | La segnalazione esiste, l'operatore non ha i permessi  |
+| US05  | 10 | op_cat_2 | Assigned | None | AuthorizationError | La segnalazione esiste, l'operatore non appartiene alla stessa categoria del report |
+| US06  | 10 | op_cat_1 | Rejected | None | ValidationError | La segnalazione esiste, l'operatore ha i permessi |
+| US07  | 10 | op_cat_1 | Rejected | "Lo stato non mi piace" | ValidationError | La segnalazione è in stato Resolved, l'operatore ha i permessi |
 
 ### Boundary
 
 **Boundary around report_id:**
 
 | TC | report_id | operator | next_status_value | Boundary covered  | Expected |
-| :--- |:----------| :--- | :--- |:------------------| :--- |
+| :--- |:----------| :--- | :--- |:-----| :--- |
 | USB01 | 1 | op_valido  |   Assigned | Exact boundary    | Report |
 | USB02 | -1 | op_valido |   Assigned | Immediately below | NotFoundError |
 
@@ -510,21 +510,19 @@ Il sistema deve potere permettere l'aggiornamento di stato di un report.<br>
 **Boundary around next_status_value and note:**
 
 | TC    | report_id | operator | next_status_value | note | Boundary covered  | Expected |
-|:------| :--- | :--- |:------------------|:-----|:------------------| :--- |
-| USB02 | 10 | op_valido |   Rejected        | "N"  | Exact boundary    | Report |
-| USB03 | 10 | op_valido |   Rejected        | None | Immediately below | ValidationError |
-| USB04 | 10 | op_valido |   Rejected        | ""   | Immediately below | ValidationError |
+|:------| :--- | :--- |:-------|:-----|:------| :--- |
+| USB03 | 10 | op_valido | Rejected| "N"  | Exact boundary    | Report |
+| USB04 | 10 | op_valido | Rejected| None | Immediately below | ValidationError |
+| USB05 | 10 | op_valido | Rejected| ""   | Immediately below | ValidationError |
 
 
 **Boundary around "operator.category_id" e "report.category_id":**
 
 | TC    | operator.category_id | report.category_id | Boundary covered  | Expected        |
-| :---- | :---------- | :----------------- |:------------------|:----------------|
-| USB05 | 0           | 0                  | Exact boundary    | Report          |
-| USB06 | 9           | 9                  | Exact boundary    | Report          |
-| USB07 | -1          | 0                  | Immediately below | ValidationError |
-| USB08 | 0           | -1                 | Immediately below | ValidationError |
-| USB09 | 10          | 10                 | Immediately above | ValidationError |
+|:------|:-------|:-------|:------------------|:-------|
+| USB06 | 0| 0 | Exact boundary    | Report |
+| USB07 | -1| 0 | Immediately below | ValidationError |
+| USB08 | 0| 1 | Immediately above | ValidationError |
 
 
 ## 6 `participium.services.report_service.ReportService.list_public_reports`
@@ -537,8 +535,8 @@ Prototype: `list_public_reports(category_id: int | None = None, status: ReportSt
 
 Il sistema deve restituire una lista di segnalazioni pubbliche basata su filtri opzionali<br>
 
--  Se nessun filtro è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche
--  Se category_id è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con categoria uguale a category_id
+- Se nessun filtro è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche
+- Se category_id è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con categoria uguale a category_id
 - Se status è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con stato uguale a status
 - Se date_from è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con data di creazione uguale o successiva a date_from
 - Se date_to è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con data di creazione uguale o precedente a date_to
@@ -547,8 +545,8 @@ Il sistema deve restituire una lista di segnalazioni pubbliche basata su filtri 
 **Criterio:** category_id
 
 **Predicati:**
-- category_id è presente -> valido
-- category_id non è presente -> valido (filtro assente)
+- category_id è presente --> valido
+- category_id non è presente --> valido (filtro assente)
 
 **Criterio:** status 
 
@@ -559,20 +557,20 @@ Il sistema deve restituire una lista di segnalazioni pubbliche basata su filtri 
 **Criterio:** date_from
 
 **Predicati:**
-- date_from non è presente -> valido (filtro assente) 
-- date_from è presente -> valido 
+- date_from non è presente --> valido (filtro assente) 
+- date_from è presente --> valido 
 
 **Criterio:** date_to 
 
 **Predicati:**
-- date_to non è presente -> valido (filtro assente) 
-- date_to è presente -> valido 
+- date_to non è presente --> valido (filtro assente) 
+- date_to è presente --> valido 
 
 **Criterio:** sort 
 
 **Predicati:**
-- sort == "desc" -> valido 
-- sort == "asc" -> valido 
+- sort == "desc" --> valido 
+- sort == "asc" --> valido 
 
 ### Equivalence Classes
 
@@ -612,7 +610,7 @@ Nota: la funzione 'list_public_reports' ritorna sempre list[Report]. Nella tabel
 
 NOTA: PR09 copre lo stesso input di PR01 ma con fixture vuota, per verificare il comportamento in assenza di dati
 
-### Boundary: 
+### Boundary 
 
 **Boundary around "category_id":**
 
@@ -649,7 +647,6 @@ NOTA: PR09 copre lo stesso input di PR01 ma con fixture vuota, per verificare il
 | PRB12 | 2024-04-00   | Immediately below | ValueError |
 
 
-
 ## 7 `participium.services.messaging_service.MessagingService.send_message`
 
 Suggested test file: `test_send_message.py`
@@ -657,7 +654,8 @@ Suggested test file: `test_send_message.py`
 Prototype: `send_message(report: Report, sender: User, body: str) -> Message`
 
 **Requisiti**:
-Il sistema deve permettere l'invio di un messaggio .
+
+Il sistema deve permettere l'invio di un messaggio.
 
 - Se il mittente non può accedere al thread di messaggistica del report in questione il sistema deve generare un errore di validazione (ValidationError).
 - Se il testo del messaggio è vuoto il sistema deve generare un errore di validazione (ValidationError). 
@@ -668,7 +666,7 @@ Il sistema deve permettere l'invio di un messaggio .
 
 **Predicati:**
 
-- report esiste -> valido 
+- report esiste --> valido 
 
 **Criterio:** sender
 
@@ -710,10 +708,10 @@ Il sistema deve permettere l'invio di un messaggio .
 
 ### Combinations of Equivalence Classes 
 
-- EC1 x EC3 x EC5 x EC7 -> Messaggio inviato con successo
-- EC1 x EC2 x EC5 x EC7 -> Sender non può accedere al thread
-- EC1 x EC3 x EC4 x EC7 -> Body non valido
-- EC1 x EC3 x EC5 x EC6 -> Recipient_id non risolvibile
+- EC1 x EC3 x EC5 x EC7 --> Messaggio inviato con successo
+- EC1 x EC2 x EC5 x EC7 --> Sender non può accedere al thread
+- EC1 x EC3 x EC4 x EC7 --> Body non valido
+- EC1 x EC3 x EC5 x EC6 --> Recipient_id non risolvibile
 
 | TC-ID | report | sender | body | Expected | Fixture |
 | :---- | :----- | :----- | :--- | :------- | :------ |
@@ -724,15 +722,15 @@ Il sistema deve permettere l'invio di un messaggio .
 | MS05 | report1 | user1 | None | ValidationError | Segnalazione esistente, sender autorizzato, recipient_id risolvibile |
 | MS06 | report1 | user1 | "Segnalazione" | ValidationError | Segnalazione esistente, sender autorizzato, recipient_id non risolvibile |
 
-### Boundary:
+### Boundary
 
 **Boundary around body content:**
 
-| TC    | report | sender | body | Boundary covered | Expected |
-| :---- | :----- | :----- | :--- | :--------------- | :--------- | :------- |
+| TC    | report | sender | body | Boundary covered  | Expected |
+|:------| :----- | :----- | :--- |:------------------| :--------- |
 | MSB01 | report1 | user1 | "a"  | Exact boundary    | Message |
-| MS03 | report1 | user1 | ""   | Immediately below | ValidationError |
-| MS04   | report1 | user1 | "   "  | | Immediately below | ValidationError |
+| MSB03 | report1 | user1 | ""   | Immediately below | ValidationError |
+| MSB04 | report1 | user1 | "   "  | Immediately below| ValidationError |
 
 
 ## 8 `participium.core.security.verify_password`
@@ -742,10 +740,11 @@ Suggested test file: `test_verify_password.py`
 Prototype: `verify_password(password: str, password_hash: str) -> bool`
 
 **Requisiti:**
-Il sistema deve permettere la verifica di una password in chiaro rispetto ad un hash memorizzato.
 
-- Se la password corrisponde correttamente all'hash fornito il sistema deve restituire `True`.
-- Se la password non corrisponde all'hash fornito il sistema deve restituire `False`.
+Il sistema deve permettere la verifica di una password in chiaro rispetto a un hash memorizzato.
+
+- Se la password corrisponde correttamente all' hash fornito il sistema deve restituire `True`.
+- Se la password non corrisponde all' hash fornito il sistema deve restituire `False`.
 
 **Criterio:** password
 
@@ -772,8 +771,7 @@ Il sistema deve permettere la verifica di una password in chiaro rispetto ad un 
 
 Combinazioni possibili secondo i predicati:
 
-- EC1 x EC2 -> Verifica password riuscita o fallita a seconda della corrispondenza tra password e hash
-
+- EC1 x EC2 --> Verifica password riuscita o fallita a seconda della corrispondenza tra password e hash
 
 | TC-ID | password | password_hash | Expected | Fixture |
 | :--- | :-------- | :------------    | :---- | :------ |
@@ -781,15 +779,16 @@ Combinazioni possibili secondo i predicati:
 | VP02 | "pass123" | hash("xxx")      | False | - |
 
 
-### Boundary: password and hash comparison
+### Boundary
+
 **Boundary around password and password_hash:**
 
 | TC    | password | password_hash | Boundary covered | Expected |
-| :---- | :------- | :------------ | :--------------- | :------- |
-| VP01  | "pass123" | hash("pass123") | Exact Boundary    | True |
-| VPB01 | "pass123" | hash("Pass123") | Immediately above | False |
-| VPB02 | "pass123" | hash("pass12")  | Immediately below | False |
-| VPB03 | "pass123" | hash("pass1234")| Immediately above | False |
+|:------| :------- | :------------ | :--------------- | :------- |
+| VPB01 | "pass123" | hash("pass123") | Exact Boundary    | True |
+| VPB02 | "pass123" | hash("Pass123") | Immediately above | False |
+| VPB03 | "pass123" | hash("pass12")  | Immediately below | False |
+| VPB04 | "pass123" | hash("pass1234")| Immediately above | False |
 
 ## 9 `participium.services.notification_service.NotificationService.create_notification`
 
@@ -800,7 +799,7 @@ Prototype: `create_notification(user: User | None, notification_type: Notificati
 
 **Requisiti:**
 
-Il sisema deve permettere la creazione di una notifica, opzionalmente associata a una segnalazione.
+Il sistema deve permettere la creazione di una notifica, opzionalmente associata a una segnalazione.
 
 - Se user ha un id diverso da None, il sistema restituisce un oggetto Notification persistente.
 - Se user ha id None, il sistema restituisce un None.
@@ -830,8 +829,8 @@ Il sisema deve permettere la creazione di una notifica, opzionalmente associata 
 
 **Predicati:**
 
-- report è fornito e con un valido id-->valido
-- report è None-->valido
+- report è fornito e con un valido id --> valido
+- report è None --> valido
 
 ### Equivalence Classes
 
@@ -852,8 +851,7 @@ Il sisema deve permettere la creazione di una notifica, opzionalmente associata 
 
 Combinazioni possibili secondo i predicati:
 
-- EC1 × EC2 x EC3 x EC4 -> Notifica creata con successo
-
+- EC1 × EC2 x EC3 x EC4 --> Notifica creata con successo
 
 | TC-ID | user | notification_type | title | body| report | Expected | Fixture |
 | :---- | :--- | :---------------- | :---- | :---| :----- | :------- | :------ |
@@ -862,10 +860,10 @@ Combinazioni possibili secondo i predicati:
 | CN03 | None | MESSAGE | Aggiornamento | "Messaggio" | report1 | None | Segnalazione presente|
 | CN04 | None | MESSAGE | Aggiornamento | "Messaggio" | None | None | - |
 
-### Boundary: text fields content
-
+### Boundary
 
 **Boundary around title and body**
+
 | TC    | user | title | body | Boundary covered  | Expected |
 | :---- | :--- | :---- | :--- | :------------------| :------- |
 | CNB01 | user1 | "a"  | "b"  | Exact boundary    | Notification |
@@ -890,39 +888,39 @@ Il sistema deve permettere l'aggiornamento dei campi modificabili del profilo ut
 **Criterio**: user
 
 **Predicati**:
-- user è fornito -> valido
+- user è fornito --> valido
 
 **Criterio**: username
 
 **Predicati**:
 
-- username è None -> valido
-- username è fornito e non è in uso -> valido
-- username è fornito ma è già in uso -> non valido
+- username è None --> valido
+- username è fornito e non è in uso --> valido
+- username è fornito ma è già in uso --> non valido
 
 **Criterio**: first_name
 
 **Predicati**:
-- firstname è None -> valido
-- firstname è fornito -> valido
+- firstname è None --> valido
+- firstname è fornito --> valido
 
 **Criterio**: last_name
 
 **Predicati**:
-- lastname è None -> valido
-- lastname è fornito -> valido
+- lastname è None --> valido
+- lastname è fornito --> valido
 
 **Criterio**: email_notifications_enabled
 
 **Predicati**:
-- email_notifications_enabled è None -> valido
-- email_notifications_enabled è fornito -> valido
+- email_notifications_enabled è None --> valido
+- email_notifications_enabled è fornito --> valido
 
 **Criterio**: profile_picture
 
 **Predicati**:
-- profile_picture è None -> valido
-- profile_picture è fornito -> valido
+- profile_picture è None --> valido
+- profile_picture è fornito --> valido
 
 ### Equivalence Classes
 
@@ -947,8 +945,8 @@ Il sistema deve permettere l'aggiornamento dei campi modificabili del profilo ut
 
 ### Combinations of Equivalence Classes
 
-- EC1 × EC2 x EC4 x EC5 x EC6 x EC7 -> Profilo aggiornato con successo
-- EC1 × EC3 x EC4 x EC5 x EC6 x EC7 -> Username già in uso
+- EC1 × EC2 x EC4 x EC5 x EC6 x EC7 --> Profilo aggiornato con successo
+- EC1 × EC3 x EC4 x EC5 x EC6 x EC7 --> Username già in uso
 
 | TC-ID | user | username | first_name | last_name | email_notifications_enabled | profile_picture | Expected | Fixture |
 | :---- | :--- | :------- | :--------- | :-------- | :-------------------------- | :-------------- | :------- | :------ |
@@ -969,6 +967,7 @@ Il sistema deve permettere l'aggiornamento dei campi modificabili del profilo ut
 | UP04  | user1 | None  | Immediately below | User |
 
 **Boundary around "first_name"**:
+
 | TC    | user | first_name | Boundary covered  | Expected |
 | :---- | :--- | :--------- | :------------------| :------- |
 | UPB03 | user1 | "a"  | Exact boundary    | User |
@@ -976,6 +975,7 @@ Il sistema deve permettere l'aggiornamento dei campi modificabili del profilo ut
 | UP04  | user1 | None  | Immediately below | User |
 
 **Boundary around "last_name"**:
+
 | TC    | user | last_name | Boundary covered  | Expected |
 | :---- | :--- | :-------- | :------------------| :------- |
 | UPB05 | user1 | "a"  | Exact boundary    | User |

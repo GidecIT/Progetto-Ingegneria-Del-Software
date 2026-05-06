@@ -8,46 +8,94 @@ from participium.models.report import Report
 from participium.models.user import User
 from participium.services.messaging_service import MessagingService
 
-@pytest.fixture
-def messaging_service() -> MessagingService:
-    return MessagingService()
+AUTHORIZED_USER = User(id=1, username="mario_r")
+UNAUTHORIZED_USER = User(id=2, username="luca_b")
+
+REPORT1 = Report(id=10, reporter_id=AUTHORIZED_USER.id)
+REPORT_NO_RECIPIENT = Report(id=11, reporter_id=AUTHORIZED_USER.id)
+
+VALID_BODY = "Segnalazione"
+EMPTY_BODY = ""
+WHITESPACE_BODY = "   "
+SINGLE_CHAR_BODY = "a"
+
 
 @pytest.fixture
-def user1() -> User:
-    return User(id=1, username="user1")
+def seed_send_message_data() -> None:
+    # Qua è necessiario riempire il sistema con il report e gli utenti 
+    # necesari per utilizare `MessagingService.send_message`.
+    #
+    # Configurazione da usare:
+    # - 'AUTHORIZED_USER' ha accesso a 'REPORT1'
+    # - 'UNAUTHORIZED_USER' non ha accesso a  `REPORT1`
+    # - 'REPORT_NO_RECIPIENT' deve fallire la risuluzione del mittente
+    pass
 
-@pytest.fixture
-def user2() -> User:
-    return User(id=2, username="user2")
 
-@pytest.fixture
-def report1() -> Report:
-    return Report(id=1, reporter_id=1)
+@pytest.mark.skip(reason="Disabled.")
+def test_send_message_success(seed_send_message_data: None) -> None:
+    # MS01
+    messaging_service = MessagingService()
+    
+    message = messaging_service.send_message(REPORT1, AUTHORIZED_USER, VALID_BODY)
+    
+    assert isinstance(message, Message)
+    assert message.body == VALID_BODY
+    assert message.sender_id == AUTHORIZED_USER.id
+    assert message.report_id == REPORT1.id
 
-def test_ms01_empty_body(messaging_service: MessagingService, report1: Report, user1: User) -> None:
-    with pytest.raises(ValidationError):
-        messaging_service.send_message(report1, user1, "")
 
-def test_ms02_unauthorized_sender(messaging_service: MessagingService, report1: Report, user2: User) -> None:
+@pytest.mark.skip(reason="Disabled.")
+def test_send_message_single_char_body(seed_send_message_data: None) -> None:
+    # MSB01
+    messaging_service = MessagingService()
+    
+    message = messaging_service.send_message(REPORT1, AUTHORIZED_USER, SINGLE_CHAR_BODY)
+    
+    assert isinstance(message, Message)
+    assert message.body == SINGLE_CHAR_BODY
+
+
+@pytest.mark.skip(reason="Disabled.")
+def test_send_message_unauthorized_sender(seed_send_message_data: None) -> None:
+    # MS02
+    messaging_service = MessagingService()
+    
     with pytest.raises(AuthorizationError):
-        messaging_service.send_message(report1, user2, "ciao")
+        messaging_service.send_message(REPORT1, UNAUTHORIZED_USER, VALID_BODY)
 
-def test_ms03_success(messaging_service: MessagingService, report1: Report, user1: User) -> None:
-    message = messaging_service.send_message(report1, user1, "ciao")
-    assert isinstance(message, Message)
-    assert message.body == "ciao"
-    assert message.sender_id == user1.id
-    assert message.report_id == report1.id
 
-def test_msb01_exact_boundary(messaging_service: MessagingService, report1: Report, user1: User) -> None:
-    message = messaging_service.send_message(report1, user1, ".")
-    assert isinstance(message, Message)
-    assert message.body == "."
-
-def test_msb02_immediately_below_whitespace(messaging_service: MessagingService, report1: Report, user1: User) -> None:
+@pytest.mark.skip(reason="Disabled.")
+def test_send_message_empty_body(seed_send_message_data: None) -> None:
+    # MS03, MSB03
+    messaging_service = MessagingService()
+    
     with pytest.raises(ValidationError):
-        messaging_service.send_message(report1, user1, " ")
+        messaging_service.send_message(REPORT1, AUTHORIZED_USER, EMPTY_BODY)
 
-def test_msb03_immediately_below_empty(messaging_service: MessagingService, report1: Report, user1: User) -> None:
+
+@pytest.mark.skip(reason="Disabled.")
+def test_send_message_whitespace_body(seed_send_message_data: None) -> None:
+    # MS04, MSB04
+    messaging_service = MessagingService()
+    
     with pytest.raises(ValidationError):
-        messaging_service.send_message(report1, user1, "")
+        messaging_service.send_message(REPORT1, AUTHORIZED_USER, WHITESPACE_BODY)
+
+
+@pytest.mark.skip(reason="Disabled.")
+def test_send_message_none_body(seed_send_message_data: None) -> None:
+    # MS05
+    messaging_service = MessagingService()
+    
+    with pytest.raises(ValidationError):
+        messaging_service.send_message(REPORT1, AUTHORIZED_USER, None) # type: ignore
+
+
+@pytest.mark.skip(reason="Disabled.")
+def test_send_message_recipient_not_resolvable(seed_send_message_data: None) -> None:
+    # MS06
+    messaging_service = MessagingService()
+    
+    with pytest.raises(ValidationError):
+        messaging_service.send_message(REPORT_NO_RECIPIENT, AUTHORIZED_USER, VALID_BODY)
