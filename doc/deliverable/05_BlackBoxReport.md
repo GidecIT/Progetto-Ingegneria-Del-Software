@@ -66,8 +66,8 @@
 | AU04 | `mario.r@polito.it`   | `wrong`   | AuthenticationError | Utente esiste ed è attivo, email verificata |
 | AU05 | `unknown_user`        | `pass123` | AuthenticationError | Non esiste un utente con questo username |
 | AU06 | `unknown@mail.it`     | `pass123` | AuthenticationError | Non esiste un utente con questa email |
-| AU07 | `mario_r`             | `pass123` | AuthenticationError | Utente esiste, ma non è attivo |
-| AU08 | `mario_r`             | `pass123` | AuthenticationError | Utente esiste, ma email non verificata |
+| AU07 | `mario_rossi`             | `pass123` | AuthenticationError | Utente esiste, ma non è attivo |
+| AU08 | `mario_rossi@polito.it`             | `pass123` | AuthenticationError | Utente esiste, ma email non verificata |
 
 ### Boundary
 
