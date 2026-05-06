@@ -80,23 +80,62 @@ nota: CRC-09 usa una lista eterogenea per coprire tutte le condizioni atomiche (
 
 ### Control Flow Graph
 
-- ![](../data/img/xxx.xxx)
+- ![](../../data/img/resolve-recipient-cfg.png)
 
 ### Atomic Conditions
+- **C1**: `sender.role == Role.ADMIN`
+- **C2**: `sender.role == Role.OPERATOR`
+- **C3**: `message.sender is not None`
+- **C4**: `message.sender.role == Role.ADMIN`
+- **C5**: `message.sender.role == Role.OPERATOR`
+- **C6**: `status_event.changed_by is not None`
+- **C7**: `status_event.changed_by.role == Role.ADMIN`
+- **C8**: `status_event.changed_by.role == Role.OPERATOR`
 
 ### Structural Lower Bound
+Il metodo presenta 4 punti di uscita mutualmente esclusivi (3 return di un oggetto User e un return None). Per coprire tutti i rami dei cicli e le condizioni atomiche, sono necessari almeno 4 test case. Questo valore corrisponde allo structural lower bound.
 
 ### Node Coverage
+| ID | Sender Role | Messages (reversed) | Status History (reversed) | Outcome | Note |
+|---|---|---|---|---|---|
+| RR-N1 | ADMIN | - | - | report.reporter | Mittente è Admin (C1=T). Ritorna il reporter originale. |
+| RR-N2 | CITIZEN | [Msg(ADMIN)] | - | Msg.sender | Mittente cittadino, trovato messaggio da Admin (C4=T). |
+| RR-N3 | CITIZEN | [Msg(CITIZEN)] | [Status(OPERATOR)] | Status.changed_by | Nessun messaggio da OP/Admin, trovato cambio stato da Operatore (C8=T). |
+| RR-N4 | CITIZEN | [] | [] | None | Nessun riscontro trovato in messaggi o cronologia. |
 
 ### Edge Coverage
+Coperta dagli stessi test della Node Coverage.
 
 ### Condition Coverage
+| ID | C1 | C2 | C3 | C4 | C5 | C6 | C7 | C8 | Outcome |
+|---|---|---|---|---|---|---|---|---|---|
+| RR-C1 | T | - | - | - | - | - | - | - | report.reporter |
+| RR-C2 | F | T | - | - | - | - | - | - | report.reporter |
+| RR-C3 | F | F | T | T | - | - | - | - | message.sender |
+| RR-C4 | F | F | T | F | T | - | - | - | message.sender |
+| RR-C5 | F | F | F | - | - | T | T | - | status_event.changed_by |
+| RR-C6 | F | F | T | F | F | T | F | T | status_event.changed_by |
+| RR-C7 | F | F | F | - | - | F | - | - | None |
 
 ### Loop Coverage
+- **Messages Loop**:
+    - Saltato: RR-N4
+    - Trovata corrispondenza : RR-N2, RR-C4 
+    - Completato senza corrispondenza: RR-N3
+- **Status History Loop**:
+    - Saltato: RR-N4
+    - Trovata corrispondenza: RR-N3, RR-C6
+    - Completato senza corrispondenza: RR-C7
 
 ### Path Coverage
+I percorsi principali sono definiti dai punti di uscita, quindi coperto dai test sopra.
 
 ### Minimal Suite Test
+1. **RR-01**: `sender` è ADMIN. Verifica il ritorno del reporter.
+2. **RR-02**: `sender` è CITIZEN, `messages` contiene un OPERATOR. Verifica la risoluzione tramite messaggi.
+3. **RR-03**: `sender` è CITIZEN, `messages` vuoto (o senza OP), `status_history` contiene un ADMIN. Verifica la risoluzione tramite cronologia stati.
+4. **RR-04**: `sender` è CITIZEN, liste vuote. Verifica il ritorno `None`.
+5. **RR-05**: Gestisce i casi con mittenti o autori di stato `None` (C3/C6 = False).
 
 ## 3 `NotificationService.notify_status_change`
 
