@@ -80,34 +80,34 @@ nota: CRC-09 usa una lista eterogenea per coprire tutte le condizioni atomiche (
 
 ### Control Flow Graph
 
-- ![](../../data/img/resolve-recipient-cfg.png)
+- ![](../../data/img/resolve_recipient-CFG.png)
 
 ### Atomic Conditions
-- **C1**: `sender.role == Role.ADMIN`
-- **C2**: `sender.role == Role.OPERATOR`
-- **C3**: `message.sender is not None`
-- **C4**: `message.sender.role == Role.ADMIN`
-- **C5**: `message.sender.role == Role.OPERATOR`
-- **C6**: `status_event.changed_by is not None`
-- **C7**: `status_event.changed_by.role == Role.ADMIN`
-- **C8**: `status_event.changed_by.role == Role.OPERATOR`
+- C1: `sender.role == Role.ADMIN`
+- C2: `sender.role == Role.OPERATOR`
+- C3: `message.sender is not None`
+- C4: `message.sender.role == Role.ADMIN`
+- C5: `message.sender.role == Role.OPERATOR`
+- C6: `status_event.changed_by is not None`
+- C7: `status_event.changed_by.role == Role.ADMIN`
+- C8: `status_event.changed_by.role == Role.OPERATOR`
 
 ### Structural Lower Bound
-Il metodo presenta 4 punti di uscita mutualmente esclusivi (3 return di un oggetto User e un return None). Per coprire tutti i rami dei cicli e le condizioni atomiche, sono necessari almeno 4 test case. Questo valore corrisponde allo structural lower bound.
+Il metodo ha 4 punti di uscita mutualmente esclusivi (3 return di un oggetto User e un return None). Per coprire tutti i rami dei cicli e le condizioni atomiche, sono necessari almeno 4 test case, e quindi lo questo corrisponde allo structural lower bound.
 
 ### Node Coverage
-| ID | Sender Role | Messages (reversed) | Status History (reversed) | Outcome | Note |
-|---|---|---|---|---|---|
-| RR-N1 | ADMIN | - | - | report.reporter | Mittente è Admin (C1=T). Ritorna il reporter originale. |
-| RR-N2 | CITIZEN | [Msg(ADMIN)] | - | Msg.sender | Mittente cittadino, trovato messaggio da Admin (C4=T). |
-| RR-N3 | CITIZEN | [Msg(CITIZEN)] | [Status(OPERATOR)] | Status.changed_by | Nessun messaggio da OP/Admin, trovato cambio stato da Operatore (C8=T). |
-| RR-N4 | CITIZEN | [] | [] | None | Nessun riscontro trovato in messaggi o cronologia. |
+| ID | `sender.role` | `reversed(messages)` | `reversed(report.status_history)` | Risultato atteso |
+|---|---|---|---|---|
+| RR-N1 | ADMIN | - | - | report.reporter |
+| RR-N2 | CITIZEN | [Msg(ADMIN)] | - | Msg.sender |
+| RR-N3 | CITIZEN | [Msg(CITIZEN)] | [Status(OPERATOR)] | Status.changed_by |
+| RR-N4 | CITIZEN | [] | [] | None |
 
 ### Edge Coverage
 Coperta dagli stessi test della Node Coverage.
 
 ### Condition Coverage
-| ID | C1 | C2 | C3 | C4 | C5 | C6 | C7 | C8 | Outcome |
+| ID | C1 | C2 | C3 | C4 | C5 | C6 | C7 | C8 | Risultato atteso |
 |---|---|---|---|---|---|---|---|---|---|
 | RR-C1 | T | - | - | - | - | - | - | - | report.reporter |
 | RR-C2 | F | T | - | - | - | - | - | - | report.reporter |
@@ -118,17 +118,26 @@ Coperta dagli stessi test della Node Coverage.
 | RR-C7 | F | F | F | - | - | F | - | - | None |
 
 ### Loop Coverage
-- **Messages Loop**:
-    - Saltato: RR-N4
-    - Trovata corrispondenza : RR-N2, RR-C4 
-    - Completato senza corrispondenza: RR-N3
-- **Status History Loop**:
-    - Saltato: RR-N4
-    - Trovata corrispondenza: RR-N3, RR-C6
-    - Completato senza corrispondenza: RR-C7
+- loop su `messages`
+    - 0 iterazioni: `messages` vuoto (RR-L1)
+    - 1 iterazione: `messages` con un elemento (RR-L2)
+    - 2+ iterazioni: `messages` con due o più elementi, ricerca continua oltre il primo (RR-L3)
+- lop su `report.status_history`
+    - 0 iterazioni: `status_history` vuoto (RR-L4)
+    - 1 iterazione: `status_history` con un elemento (RR-L5)
+    - 2+ iterazioni: `status_history` con due o più elementi, ricerca continua oltre il primo (RR-L6)
+
+| ID | `messages` (roles) | `status_history` (roles) | Risultato atteso |
+|---|---|---|---|
+| RR-L1 | [] | [ADMIN] | status_history[0].changed_by |
+| RR-L2 | [ADMIN] | [] | messages[0].sender |
+| RR-L3 | [ADMIN, CITIZEN] | [] | messages[0].sender |
+| RR-L4 | [CITIZEN] | [] | None |
+| RR-L5 | [CITIZEN] | [OPERATOR] | status_history[0].changed_by |
+| RR-L6 | [CITIZEN] | [OPERATOR, CITIZEN] | status_history[0].changed_by |
 
 ### Path Coverage
-I percorsi principali sono definiti dai punti di uscita, quindi coperto dai test sopra.
+Coperto dai test sopra.
 
 ### Minimal Suite Test
 1. **RR-01**: `sender` è ADMIN. Verifica il ritorno del reporter.
