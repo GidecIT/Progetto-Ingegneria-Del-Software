@@ -146,27 +146,81 @@ Coperto dai test sopra.
 4. **RR-04**: `sender` è CITIZEN, liste vuote. Verifica il ritorno `None`.
 5. **RR-05**: Gestisce i casi con mittenti o autori di stato `None` (C3/C6 = False).
 
-## 3 `NotificationService.notify_status_change`
+# 3 NotificationService.notify_status_change
 
 ### Control Flow Graph
 
-- ![](../data/img/xxx.xxx)
+![Control flow graph notify_status_change](../../data/img/notify_status_change.png)
 
-### Atomic Conditions
+## Atomic conditions
+* **C1:** `i < len(recipients)` (loop guard)
+* **C2:** `recipient is None`
+* **C3:** `recipient.id in seen`
 
 ### Structural Lower Bound
 
-### Node Coverage
+La funzione non restituisce valori espliciti e non solleva eccezioni nel flusso mostrato. 
 
-### Edge Coverage
+Il comportamento minimo significativo richiede di coprire tre casi distinti:
+- nessuna notifica creata 
+- almeno una notifica creata 
+- corretta gestione dei duplicati 
 
-### Condition Coverage
+Lo Structural Lower Bound è quindi pari a 3 test
+
+
+## Node coverage
+
+| Test |recipients | report | body| Output | Comportamento atteso |
+| :--- | :---  | :--- | :--- | :--- | :--- | :--- |
+| N1 | [User1] | Report1 | "Test notifica" | None | 1 notifica creata per User1 |
+
+
+## Edge coverage
+
+| Test | recipients | report | body | Output | Comportamento atteso | Edges |
+|:-----|:-----------|:-------|:-------|:-------|:------------|:------|
+| E1 | [] | Report1 | "Test notifica" | None | 0 notifiche create | C1 -> F |
+| E2 | [None] | Report1 | "Test notifica" | None | 0 notifiche create | C1 -> T, C2 -> T |
+| E3 | [User1] | Report1 | "Test notifica" | None | 1 notifica creata | C1 -> T, C2 -> F, C3 -> F |
+
+## Condition coverage
+| Test | recipients | report | body | Output | Conditions evaluated | Comportamento atteso |
+|:-----|:-----------|:-------|:-----|:-------|:------|:-----|
+| C1t | [] | Report1 | "Test notifica" | None | C1=F | 0 notifiche create |
+| C2t | [None] | Report1 | "Test notifica" | None | C1 = T, C2 = T | 0 notifiche create |
+| C3t | [User1] | Report1 | "Test notifica" | None | C1 = T, C2= F, C3 = F | 1 notifica creata |
+| C4t | [User1, User1] | Report1 | "Test notifica" | None | C1 = T, C2= F, C3 = T | 1 notifica creata |
 
 ### Loop Coverage
+Tre tests: 0, 1, 2+ iterazioni
+| Loop | recipients | report | body | iterations | Comportamento atteso |
+|:-----|:-----------|:-------|:-----|:-------|:------|
+| L0   | [] | Report1 | "Test notifica" | 0 | immediate exit |
+| L1   | [User1] | Report1 | "Test notifica" | 1 | 1 notifica creata |
+| L2   | [User1, User1] | Report1 | "Test notifica" | 2 | 1 notifica creata |
 
-### Path Coverage
+## Path coverage
+Il numero di iterazioni dipende dalla lunghezza della lista recipients, che non ha un limite predefinito. In ogni iterazione il flusso può prendere due strade diverse (creazione notifica o continue). I percorsi completi sono quindi infiniti.
+
+**Approssimazione:** si seleziona un sottoinsieme rappresentativo basato sul principio di equivalenza comportamentale: due percorsi sono equivalenti se producono la stessa evoluzione dello stato rilevante per l’oracolo (qui: seen e le notifiche create). Testare il ciclo con 0, 1 e 2 o più iterazioni — e, nel caso di 2 o più iterazioni, combinando sia il ramo continue (utente None o già visto) sia il ramo che invoca create_notification(...) — cattura tutti i tipi qualitativamente distinti di transizione di stato che il ciclo può produrre.
+
+0 iterazioni: stato iniziale invariato, nessuna notifica creata.
+1 iterazione: prima transizione
+2+ iterazioni con rami misti → interazione tra transizioni consecutive (cattura bug di offset di uno e di ripristino dello stato)  
+
+I tre test di copertura del ciclo riportati di seguito sono considerati una valida approssimazione della copertura dei percorsi per questa funzione.
+
 
 ### Minimal Suite Test
+
+| Test ID | recipients       | report    | body                    | Risultato Atteso       | Copertura                    |
+| :------ | :--------------- | :-------- | :---------------------- | :--------------------- | :--------------------------- |
+| MS1 | []             | Report1 | "Test notifica" | 0 notifiche create     | C1=F, loop 0 iterazioni      |
+| MS2 | [None]         | Report1 | "Test notifica" | 0 notifiche create     | C1=T, C2=T, short-circuit OR |
+| MS3 | [User1]        | Report1 | "Test notifica" | 1 notifica creata      | C1=T, C2=F, C3=F             |
+| MS4 | [User1, User1] | Report1 | "Test notifica" | 1 sola notifica creata | C1=T, C2=F, C3=T            |
+
 
 
 ## 4 `NotificationService.count_unread_message_notifications_by_report`
