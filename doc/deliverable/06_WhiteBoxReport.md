@@ -2,7 +2,7 @@
 
 ### Control Flow Graph
 
-- ![](../../data/img/06_WhiteBoxCreateReport.png)
+![](../../data/img/06_WhiteBoxCreateReport.png)
 
 ### Atomic Conditions
 - C1: category_id is not None 
@@ -81,7 +81,7 @@ nota: CRC-09 usa una lista eterogenea per coprire tutte le condizioni atomiche (
 
 ### Control Flow Graph
 
-- ![](../../data/img/resolve_recipient-CFG.png)
+![](../../data/img/resolve_recipient-CFG.png)
 
 ### Atomic Conditions
 - C1: `sender.role == Role.ADMIN`
@@ -123,7 +123,7 @@ Coperta dagli stessi test della Node Coverage.
     - 0 iterazioni: `messages` vuoto (RR-L1)
     - 1 iterazione: `messages` con un elemento (RR-L2)
     - 2+ iterazioni: `messages` con due o più elementi, ricerca continua oltre il primo (RR-L3)
-- lop su `report.status_history`
+- loop su `report.status_history`
     - 0 iterazioni: `status_history` vuoto (RR-L4)
     - 1 iterazione: `status_history` con un elemento (RR-L5)
     - 2+ iterazioni: `status_history` con due o più elementi, ricerca continua oltre il primo (RR-L6)
@@ -172,10 +172,9 @@ Lo Structural Lower Bound è quindi pari a 3 test
 
 ## Node coverage
 
-| Test |recipients | report | body| Output | Comportamento atteso |
-| :--- | :---  | :--- | :--- | :--- | :--- | :--- |
+| Test | recipients | report | body| Output | Comportamento atteso |
+| :--- | :---  | :--- | :--- | :--- | :--- | 
 | N1 | [User1] | Report1 | "Test notifica" | None | 1 notifica creata per User1 |
-
 
 ## Edge coverage
 
@@ -195,6 +194,7 @@ Lo Structural Lower Bound è quindi pari a 3 test
 
 ### Loop Coverage
 Tre tests: 0, 1, 2+ iterazioni
+
 | Loop | recipients | report | body | iterations | Comportamento atteso |
 |:-----|:-----------|:-------|:-----|:-------|:------|
 | L0   | [] | Report1 | "Test notifica" | 0 | immediate exit |
@@ -223,12 +223,11 @@ I tre test di copertura del ciclo riportati di seguito sono considerati una vali
 | MS4 | [User1, User1] | Report1 | "Test notifica" | 1 sola notifica creata | C1=T, C2=F, C3=T            |
 
 
-
 ## 4 `NotificationService.count_unread_message_notifications_by_report`
 
 ### Control Flow Graph
 
-- ![](../../data/img/06_WhiteBoxCountUnreadMessageNotificationsByReport.png)
+![](../../data/img/06_WhiteBoxCountUnreadMessageNotificationsByReport.png)
 
 ### Atomic Conditions
 - **C1**: `for notification in notifications` (esistono ancora elementi in notifications)
@@ -242,6 +241,7 @@ La funzione produce solo 1 return finale di successo. Pertanto il valore dello s
 ***Lista mock aggiuntiva***
 - NOTIFICATION_REPOSITORY_LIST_UNREAD_SUCCESS: configura il metodo `list_unread_message_notifications` per restituire una lista di oggetti Notification: almeno uno con ID 10 e uno con ID None.
 - NOTIFICATION_REPOSITORY_EMPTY: configura il metodo `list_unread_message_notifications` per restituire una lista vuota.
+- NOTIFICATION_REPO_NULL_ID: configura il metodo `list_unread_message_notifications` per restituire una lista di oggetti Notification con report_id None.
 
 ### Node Coverage
 
@@ -283,7 +283,7 @@ Coperta dagli stessi test della Node Coverage.
 
 ### Control Flow Graph
 
-- ![](../data/img/xxx.xxx)
+![](../data/img/xxx.xxx)
 
 ### Atomic Conditions
 
