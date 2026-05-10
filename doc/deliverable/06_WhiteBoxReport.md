@@ -81,34 +81,34 @@ nota: CRC-09 usa una lista eterogenea per coprire tutte le condizioni atomiche (
 
 ### Control Flow Graph
 
-- ![](../../data/img/resolve-recipient-cfg.png)
+- ![](../../data/img/resolve_recipient-CFG.png)
 
 ### Atomic Conditions
-- **C1**: `sender.role == Role.ADMIN`
-- **C2**: `sender.role == Role.OPERATOR`
-- **C3**: `message.sender is not None`
-- **C4**: `message.sender.role == Role.ADMIN`
-- **C5**: `message.sender.role == Role.OPERATOR`
-- **C6**: `status_event.changed_by is not None`
-- **C7**: `status_event.changed_by.role == Role.ADMIN`
-- **C8**: `status_event.changed_by.role == Role.OPERATOR`
+- C1: `sender.role == Role.ADMIN`
+- C2: `sender.role == Role.OPERATOR`
+- C3: `message.sender is not None`
+- C4: `message.sender.role == Role.ADMIN`
+- C5: `message.sender.role == Role.OPERATOR`
+- C6: `status_event.changed_by is not None`
+- C7: `status_event.changed_by.role == Role.ADMIN`
+- C8: `status_event.changed_by.role == Role.OPERATOR`
 
 ### Structural Lower Bound
-Il metodo presenta 4 punti di uscita mutualmente esclusivi (3 return di un oggetto User e un return None). Per coprire tutti i rami dei cicli e le condizioni atomiche, sono necessari almeno 4 test case. Questo valore corrisponde allo structural lower bound.
+Il metodo ha 4 punti di uscita mutualmente esclusivi (3 return di un oggetto User e un return None). Per coprire tutti i rami dei cicli e le condizioni atomiche, sono necessari almeno 4 test case, e quindi lo questo corrisponde allo structural lower bound.
 
 ### Node Coverage
-| ID | Sender Role | Messages (reversed) | Status History (reversed) | Outcome | Note |
-|---|---|---|---|---|---|
-| RR-N1 | ADMIN | - | - | report.reporter | Mittente è Admin (C1=T). Ritorna il reporter originale. |
-| RR-N2 | CITIZEN | [Msg(ADMIN)] | - | Msg.sender | Mittente cittadino, trovato messaggio da Admin (C4=T). |
-| RR-N3 | CITIZEN | [Msg(CITIZEN)] | [Status(OPERATOR)] | Status.changed_by | Nessun messaggio da OP/Admin, trovato cambio stato da Operatore (C8=T). |
-| RR-N4 | CITIZEN | [] | [] | None | Nessun riscontro trovato in messaggi o cronologia. |
+| ID | `sender.role` | `reversed(messages)` | `reversed(report.status_history)` | Risultato atteso |
+|---|---|---|---|---|
+| RR-N1 | ADMIN | - | - | report.reporter |
+| RR-N2 | CITIZEN | [Msg(ADMIN)] | - | Msg.sender |
+| RR-N3 | CITIZEN | [Msg(CITIZEN)] | [Status(OPERATOR)] | Status.changed_by |
+| RR-N4 | CITIZEN | [] | [] | None |
 
 ### Edge Coverage
 Coperta dagli stessi test della Node Coverage.
 
 ### Condition Coverage
-| ID | C1 | C2 | C3 | C4 | C5 | C6 | C7 | C8 | Outcome |
+| ID | C1 | C2 | C3 | C4 | C5 | C6 | C7 | C8 | Risultato atteso |
 |---|---|---|---|---|---|---|---|---|---|
 | RR-C1 | T | - | - | - | - | - | - | - | report.reporter |
 | RR-C2 | F | T | - | - | - | - | - | - | report.reporter |
@@ -119,17 +119,26 @@ Coperta dagli stessi test della Node Coverage.
 | RR-C7 | F | F | F | - | - | F | - | - | None |
 
 ### Loop Coverage
-- **Messages Loop**:
-    - Saltato: RR-N4
-    - Trovata corrispondenza : RR-N2, RR-C4 
-    - Completato senza corrispondenza: RR-N3
-- **Status History Loop**:
-    - Saltato: RR-N4
-    - Trovata corrispondenza: RR-N3, RR-C6
-    - Completato senza corrispondenza: RR-C7
+- loop su `messages`
+    - 0 iterazioni: `messages` vuoto (RR-L1)
+    - 1 iterazione: `messages` con un elemento (RR-L2)
+    - 2+ iterazioni: `messages` con due o più elementi, ricerca continua oltre il primo (RR-L3)
+- lop su `report.status_history`
+    - 0 iterazioni: `status_history` vuoto (RR-L4)
+    - 1 iterazione: `status_history` con un elemento (RR-L5)
+    - 2+ iterazioni: `status_history` con due o più elementi, ricerca continua oltre il primo (RR-L6)
+
+| ID | `messages` (roles) | `status_history` (roles) | Risultato atteso |
+|---|---|---|---|
+| RR-L1 | [] | [ADMIN] | status_history[0].changed_by |
+| RR-L2 | [ADMIN] | [] | messages[0].sender |
+| RR-L3 | [ADMIN, CITIZEN] | [] | messages[0].sender |
+| RR-L4 | [CITIZEN] | [] | None |
+| RR-L5 | [CITIZEN] | [OPERATOR] | status_history[0].changed_by |
+| RR-L6 | [CITIZEN] | [OPERATOR, CITIZEN] | status_history[0].changed_by |
 
 ### Path Coverage
-I percorsi principali sono definiti dai punti di uscita, quindi coperto dai test sopra.
+Coperto dai test sopra.
 
 ### Minimal Suite Test
 1. **RR-01**: `sender` è ADMIN. Verifica il ritorno del reporter.
@@ -138,27 +147,81 @@ I percorsi principali sono definiti dai punti di uscita, quindi coperto dai test
 4. **RR-04**: `sender` è CITIZEN, liste vuote. Verifica il ritorno `None`.
 5. **RR-05**: Gestisce i casi con mittenti o autori di stato `None` (C3/C6 = False).
 
-## 3 `NotificationService.notify_status_change`
+# 3 NotificationService.notify_status_change
 
 ### Control Flow Graph
 
-- ![](../data/img/xxx.xxx)
+![Control flow graph notify_status_change](../../data/img/notify_status_change.png)
 
-### Atomic Conditions
+## Atomic conditions
+* **C1:** `i < len(recipients)` (loop guard)
+* **C2:** `recipient is None`
+* **C3:** `recipient.id in seen`
 
 ### Structural Lower Bound
 
-### Node Coverage
+La funzione non restituisce valori espliciti e non solleva eccezioni nel flusso mostrato. 
 
-### Edge Coverage
+Il comportamento minimo significativo richiede di coprire tre casi distinti:
+- nessuna notifica creata 
+- almeno una notifica creata 
+- corretta gestione dei duplicati 
 
-### Condition Coverage
+Lo Structural Lower Bound è quindi pari a 3 test
+
+
+## Node coverage
+
+| Test |recipients | report | body| Output | Comportamento atteso |
+| :--- | :---  | :--- | :--- | :--- | :--- | :--- |
+| N1 | [User1] | Report1 | "Test notifica" | None | 1 notifica creata per User1 |
+
+
+## Edge coverage
+
+| Test | recipients | report | body | Output | Comportamento atteso | Edges |
+|:-----|:-----------|:-------|:-------|:-------|:------------|:------|
+| E1 | [] | Report1 | "Test notifica" | None | 0 notifiche create | C1 -> F |
+| E2 | [None] | Report1 | "Test notifica" | None | 0 notifiche create | C1 -> T, C2 -> T |
+| E3 | [User1] | Report1 | "Test notifica" | None | 1 notifica creata | C1 -> T, C2 -> F, C3 -> F |
+
+## Condition coverage
+| Test | recipients | report | body | Output | Conditions evaluated | Comportamento atteso |
+|:-----|:-----------|:-------|:-----|:-------|:------|:-----|
+| C1t | [] | Report1 | "Test notifica" | None | C1=F | 0 notifiche create |
+| C2t | [None] | Report1 | "Test notifica" | None | C1 = T, C2 = T | 0 notifiche create |
+| C3t | [User1] | Report1 | "Test notifica" | None | C1 = T, C2= F, C3 = F | 1 notifica creata |
+| C4t | [User1, User1] | Report1 | "Test notifica" | None | C1 = T, C2= F, C3 = T | 1 notifica creata |
 
 ### Loop Coverage
+Tre tests: 0, 1, 2+ iterazioni
+| Loop | recipients | report | body | iterations | Comportamento atteso |
+|:-----|:-----------|:-------|:-----|:-------|:------|
+| L0   | [] | Report1 | "Test notifica" | 0 | immediate exit |
+| L1   | [User1] | Report1 | "Test notifica" | 1 | 1 notifica creata |
+| L2   | [User1, User1] | Report1 | "Test notifica" | 2 | 1 notifica creata |
 
-### Path Coverage
+## Path coverage
+Il numero di iterazioni dipende dalla lunghezza della lista recipients, che non ha un limite predefinito. In ogni iterazione il flusso può prendere due strade diverse (creazione notifica o continue). I percorsi completi sono quindi infiniti.
+
+**Approssimazione:** si seleziona un sottoinsieme rappresentativo basato sul principio di equivalenza comportamentale: due percorsi sono equivalenti se producono la stessa evoluzione dello stato rilevante per l’oracolo (qui: seen e le notifiche create). Testare il ciclo con 0, 1 e 2 o più iterazioni — e, nel caso di 2 o più iterazioni, combinando sia il ramo continue (utente None o già visto) sia il ramo che invoca create_notification(...) — cattura tutti i tipi qualitativamente distinti di transizione di stato che il ciclo può produrre.
+
+0 iterazioni: stato iniziale invariato, nessuna notifica creata.
+1 iterazione: prima transizione
+2+ iterazioni con rami misti → interazione tra transizioni consecutive (cattura bug di offset di uno e di ripristino dello stato)  
+
+I tre test di copertura del ciclo riportati di seguito sono considerati una valida approssimazione della copertura dei percorsi per questa funzione.
+
 
 ### Minimal Suite Test
+
+| Test ID | recipients       | report    | body                    | Risultato Atteso       | Copertura                    |
+| :------ | :--------------- | :-------- | :---------------------- | :--------------------- | :--------------------------- |
+| MS1 | []             | Report1 | "Test notifica" | 0 notifiche create     | C1=F, loop 0 iterazioni      |
+| MS2 | [None]         | Report1 | "Test notifica" | 0 notifiche create     | C1=T, C2=T, short-circuit OR |
+| MS3 | [User1]        | Report1 | "Test notifica" | 1 notifica creata      | C1=T, C2=F, C3=F             |
+| MS4 | [User1, User1] | Report1 | "Test notifica" | 1 sola notifica creata | C1=T, C2=F, C3=T            |
+
 
 
 ## 4 `NotificationService.count_unread_message_notifications_by_report`
