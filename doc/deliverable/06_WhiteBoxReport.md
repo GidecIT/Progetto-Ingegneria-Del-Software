@@ -36,34 +36,35 @@ La funzione create_report produce 8 esiti mutualmente esclusivi, 7 corrispondent
 - REPORT_GET_SUCCESS: configura il metodo get_report(report_id) affinché restituisca l'istanza dell'oggetto Report creata durante l'esecuzione della funzione.
 
 ### Node Coverage
-Nota: per p si intende una foto con fileName invece per p_no_fn una foto senza fileName
-| ID   | `reporter` |`category_id`| `title`| `description` | `latitude` | `longitude` | `photos`| `is_anonymous` | Mock |Outcome atteso |
-|------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------| ---------------|------------------------------|
+Nota: per p si intende una foto con fileName invece per p_no_fn una foto senza fileName 
+
+| ID | `reporter` |`category_id`| `title`| `description` | `latitude` | `longitude` | `photos`| `is_anonymous` | Mock | Outcome atteso |
+|:------|:---------|:-----------|:-------|:-------------|:-----------|:-----------|:----------|:---------------|:------|:---------------|
 |CRN-01| reporter1(id=1) | "uno" | "Buca profonda" | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | - |ValidationError("A valid active category is required.") |
 |CRN-02| reporter1(id=1) | None | "Buca profonda" | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p]| True | - |ValidationError ("A valid active category is required.") |
-|CRN-03| reporter1(id=1) | 1 |  None  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True |  CATEGORY_REPOSITORY_ACTIVE | ValidationError ("Title and description are required.") |
-|CRN-04| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | None | 9.1900 | [p,p] (con filename presente)| True | CATEGORY_REPOSITORY_ACTIVE |  ValidationError ("Latitude and longitude are required.") |
-|CRN-05| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | "Quaranta" | 9.1900 | [p,p] (con filename presente)| True |  CATEGORY_REPOSITORY_ACTIVE | ValidationError ("Latitude and longitude must be valid numbers.") |
-|CRN-06| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [] | True | CATEGORY_REPOSITORY_ACTIVE |  ValidationError ("At least one photo is required.") |
+|CRN-03| reporter1(id=1) | 1 | None | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | CATEGORY_REPOSITORY_ACTIVE | ValidationError ("Title and description are required.") |
+|CRN-04| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | None | 9.1900 | [p,p] (con filename presente)| True | CATEGORY_REPOSITORY_ACTIVE | ValidationError ("Latitude and longitude are required.") |
+|CRN-05| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | "Quaranta" | 9.1900 | [p,p] (con filename presente)| True | CATEGORY_REPOSITORY_ACTIVE | ValidationError ("Latitude and longitude must be valid numbers.") |
+|CRN-06| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [] | True | CATEGORY_REPOSITORY_ACTIVE | ValidationError ("At least one photo is required.") |
 |CRN-07| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p, None, p_no_fn, p, p, p] | True | CATEGORY_REPOSITORY_ACTIVE | ValidationError ("A report can contain at most 3 photos.") |
-|CRN-08| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | CATEGORY_REPOSITORY_ACTIVE, REPORT_REPOSITORY_ADD_SUCCESS, DATABASE_SESSION_FLUSH_MOCK, STORAGE_SERVICE_SAVE_SUCCESS, REPORT_REPOSITORY_ADD_PHOTO_SUCCESS, REPORT_REPOSITORY_ADD_STATUS_SUCCESS, DATABASE_SESSION_COMMIT_MOCK, REPORT_GET_SUCCESS     | Report |
+|CRN-08| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | CATEGORY_REPOSITORY_ACTIVE, REPORT_REPOSITORY_ADD_SUCCESS, DATABASE_SESSION_FLUSH_MOCK, STORAGE_SERVICE_SAVE_SUCCESS, REPORT_REPOSITORY_ADD_PHOTO_SUCCESS, REPORT_REPOSITORY_ADD_STATUS_SUCCESS, DATABASE_SESSION_COMMIT_MOCK, REPORT_GET_SUCCESS | Report |
 
 ### Edge Coverage
 Stessi 8 test della Node coverage.
 
 ### Condition Coverage
-| Test |  `reporter` | `category_id` | `title` | `description` | `latitude` | `longitude` | `photos` | `is_anonymous` | C1 | C2 | C3 | C4 | C5 | C6 | C7 | C8 | C9 | C10 | C11 | C12 | C13 |C14 | Mock |Outcome atteso |
-| :--- |  :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---:| :---:| :---: | :---: | :---: | :---: | :---: |:--- |
-| CRC-01 | reporter1(id=1) | "uno" | "Buca profonda" | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | T | - | - | - | - | - | - | - | - | - | - |- | - | - | - | ValidationError("A valid active category is required.") |
-| CRC-02 | reporter1(id=1) | None | "Buca profonda" | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | F | F | T | -(SC) | - | - | - | - | - | - | - | - | - |- | - | ValidationError("A valid active category is required.") |
-| CRC-03 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | T | T | F | T | - | - | - | - | - | - | - | - |- | - |   CATEGORY_REPOSITORY_INACTIVE | ValidationError ("A valid active category is required.") |
-| CRC-04 | reporter1(id=1) | 1 |  None  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p]| True | T | T | F | F | T | -(SC) | - | - | - | - | - | - |- | - |   CATEGORY_REPOSITORY_ACTIVE | ValidationError ("Title and description are required.") |
-| CRC-05 | reporter1(id=1) | 1 |  "Buca profonda"  | None | 45.4642 | 9.1900 | [p,p]| True | T | T | F | F | F | T | - | - | - | - | - | - |- | - |   CATEGORY_REPOSITORY_ACTIVE | ValidationError ("Title and description are required.") |
-| CRC-06 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | None | 9.1900 | [p,p]| True | T | T | F | F | F | F | T | -(SC) | - | - | - |- | - | - |   CATEGORY_REPOSITORY_ACTIVE | ValidationError ("Latitude and longitude are required.") |
-| CRC-07 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | None | [p,p] | True | T | T | F | F | F | F | F | T | - | - | - | - |- | - |   CATEGORY_REPOSITORY_ACTIVE | ValidationError ("Latitude and longitude are required.") |
-| CRC-08 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [] | True | T | T | F | F | F | F | F | F | F | - | - | T |- | - | CATEGORY_REPOSITORY_ACTIVE | ValidationError ("At least one photo is required.") |
-| CRC-09 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p, None, p_no_fn, p, p, p]  | True | T | T | F | F | F | F | F | F | T/F | T/F | T/F | F | T |- |  CATEGORY_REPOSITORY_ACTIVE | ValidationError ("A report can contain at most 3 photos.") |
-| CRC-10 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p]  | True | T | T | F | F | F | F | F | F | T/F | T | T | F | F |T/F |  CATEGORY_REPOSITORY_ACTIVE, REPORT_REPOSITORY_ADD_SUCCESS, DATABASE_SESSION_FLUSH_MOCK, STORAGE_SERVICE_SAVE_SUCCESS, REPORT_REPOSITORY_ADD_PHOTO_SUCCESS, REPORT_REPOSITORY_ADD_STATUS_SUCCESS, DATABASE_SESSION_COMMIT_MOCK, REPORT_GET_SUCCESS  | Report |
+| Test |  `reporter` | `category_id` | `title` | `description` | `latitude` | `longitude` | `photos` | `is_anonymous` | C1   | C2   | C3   | C4    | C5   | C6    | C7   | C8    | C9  | C10 | C11  | C12  | C13  | C14  | Mock |Outcome atteso |
+| :--- |  :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |:-----|:-----|:-----|:------|:-----|:------|:-----|:------|:----|:----|:-----|:-----|:-----|:-----| :---: |:--- |
+| CRC-01 | reporter1(id=1) | "uno" | "Buca profonda" | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | T    | -    | -    | -     | -    | -     | -    | -     | -   | -   | -    | -    | -    | -    | - | ValidationError("A valid active category is required.") |
+| CRC-02 | reporter1(id=1) | None | "Buca profonda" | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | F    | F    | T    | -(SC) | -    | -     | -    | -     | -   | -   | -    | -    | -    | -    | - | ValidationError("A valid active category is required.") |
+| CRC-03 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | T    | T    | F    | T     | -    | -     | -    | -     | -   | -   | -    | -    | -    | -    |   CATEGORY_REPOSITORY_INACTIVE | ValidationError ("A valid active category is required.") |
+| CRC-04 | reporter1(id=1) | 1 |  None  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p]| True | T    | T    | F    | F     | T    | -(SC) | -    | -     | -   | -   | -    | -    | -    | -    |   CATEGORY_REPOSITORY_ACTIVE | ValidationError ("Title and description are required.") |
+| CRC-05 | reporter1(id=1) | 1 |  "Buca profonda"  | None | 45.4642 | 9.1900 | [p,p]| True | T    | T    | F    | F     | F    | T     | -    | -     | -   | -   | -    | -    | -    | -    |   CATEGORY_REPOSITORY_ACTIVE | ValidationError ("Title and description are required.") |
+| CRC-06 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | None | 9.1900 | [p,p]| True | T    | T    | F    | F     | F    | F     | T    | -(SC) | -   | -   | -    | -    | -    | -    |   CATEGORY_REPOSITORY_ACTIVE | ValidationError ("Latitude and longitude are required.") |
+| CRC-07 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | None | [p,p] | True | T    | T    | F    | F     | F    | F     | F    | T     | -   | -   | -    | -    | -    | -    |   CATEGORY_REPOSITORY_ACTIVE | ValidationError ("Latitude and longitude are required.") |
+| CRC-08 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [] | True | T    | T    | F    | F     | F    | F     | F    | F     | F   | -   | -    | T    | -    | -    | CATEGORY_REPOSITORY_ACTIVE | ValidationError ("At least one photo is required.") |
+| CRC-09 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p, None, p_no_fn, p, p, p]  | True | T    | T    | F    | F     | F    | F     | F    | F     | T/F | T/F | T/F  | F    | T    | -    |  CATEGORY_REPOSITORY_ACTIVE | ValidationError ("A report can contain at most 3 photos.") |
+| CRC-10 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p]  | True | T    | T    | F    | F     | F    | F     | F    | F     | T/F | T   | T    | F    | F    | T/F  |  CATEGORY_REPOSITORY_ACTIVE, REPORT_REPOSITORY_ADD_SUCCESS, DATABASE_SESSION_FLUSH_MOCK, STORAGE_SERVICE_SAVE_SUCCESS, REPORT_REPOSITORY_ADD_PHOTO_SUCCESS, REPORT_REPOSITORY_ADD_STATUS_SUCCESS, DATABASE_SESSION_COMMIT_MOCK, REPORT_GET_SUCCESS  | Report |
 
 
 nota: le condizioni dei cicli for (C9 e C14) sono indicate come T/F poiché il flusso esegue il corpo del ciclo (True) e prosegue verso l'istruzione successiva solo dopo che la lista è stata interamente scorsa (False). In assenza di interruzioni forzate (break o return), il test esercita necessariamente entrambi i rami della condizione di uscita
@@ -164,24 +165,56 @@ I percorsi principali sono definiti dai punti di uscita, quindi coperto dai test
 
 ### Control Flow Graph
 
-- ![](../data/img/xxx.xxx)
+- ![](../../data/img/06_WhiteBoxCountUnreadMessageNotificationsByReport.png)
 
 ### Atomic Conditions
+- **C1**: `for notification in notifications` (esistono ancora elementi in notifications)
+- **C2**: `notification.report_id is None`
+- **C3**: `notification.report_id`
+
 
 ### Structural Lower Bound
+La funzione produce solo 1 return finale di successo. Pertanto il valore dello structural lower bound è 1.
+
+***Lista mock aggiuntiva***
+- NOTIFICATION_REPOSITORY_LIST_UNREAD_SUCCESS: configura il metodo `list_unread_message_notifications` per restituire una lista di oggetti Notification: almeno uno con ID 10 e uno con ID None.
+- NOTIFICATION_REPOSITORY_EMPTY: configura il metodo `list_unread_message_notifications` per restituire una lista vuota.
 
 ### Node Coverage
 
+Nota: per N(report_id) rappresenta un'istanza della classe Notification, presente nella lista notifications
+
+| ID    | `notifications`        | Outcome   | Note                                                      |
+|-------|------------------------|-----------|-----------------------------------------------------------|
+| CN-N1 | `[N(report_id=10)]`      | `{10: 1}` | L'utente ha 1 notifica non letta per il report con id=10. |
+| CN-N2 | `[N(report_id is None)]` | `{}`| Tutte le notifiche non sono associate a un report.        |
+| CN-N3 | `[]`                     | `{}`| La lista delle notifiche è vuota.                         |
+
 ### Edge Coverage
 
+Coperta dagli stessi test della Node Coverage.
+
 ### Condition Coverage
+| Test | C1 | C2 | C3 | Mock | Outcome atteso |
+| :--- | :---: | :---: |:--:| :--- | :--- |
+| CNC-01 | F | - | -  | NOTIFICATION_REPO_EMPTY | `{}` |
+| CNC-02 | T | T | -  | NOTIFICATION_REPO_NULL_ID | `{}` |
+| CNC-03 | T | F | T  | NOTIFICATION_REPO_SUCCESS | `{10: 1}` |
 
 ### Loop Coverage
+- **Notifications Loop**:
+    - **Saltato**: CNC-01
+    - **Trovata corrispondenza (ID valido)**: CNC-03
+    - **Completato con salto interno (ID None)**: CNC-02, CNC-03
 
 ### Path Coverage
+1. **Path 1 (Lista vuota)**: `start -> C1(F) -> return count`
+2. **Path 2 (ID nullo)**: `start -> C1(T) -> C2(T) -> C1(F) -> return count`
+3. **Path 3 (ID valido)**: `start -> C1(T) -> C2(F) -> C1(F) -> return count`
 
 ### Minimal Suite Test
-
+1. **CN-01**: `user_id` con una lista di notifiche mista (es. `[N(report_id=None), N(report_id=10)]`). Questo test esercita sia il filtraggio che l'incremento del contatore, producendo l'unico esito di successo previsto (`{10: 1}`).
+2. **CN-02**: `user_id` senza notifiche (lista vuota), per verificare la gestione del caso limite e il salto del ciclo.
 
 ## 5 `UserService.update_user`
 
