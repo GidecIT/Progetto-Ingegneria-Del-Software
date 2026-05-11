@@ -1,16 +1,14 @@
 from __future__ import annotations
-
-from participium.services.user_service import UserService
-from __future__ import annotations
-
-from unittest.mock import Mock
-
-import pytest
 from werkzeug.datastructures import FileStorage
 
 from participium.core.exceptions import ValidationError
 from participium.models.user import User
 from participium.services.user_service import UserService
+
+from unittest.mock import Mock
+
+import pytest
+
 
 pytestmark = pytest.mark.blackbox
 
