@@ -620,32 +620,6 @@ NOTA: PR09 copre lo stesso input di PR01 ma con fixture vuota, per verificare il
 | PRB02 |  10 | Immediately above   | Lista vuota |
 | PRB03 |  -1 | Immediately below   | Lista vuota |
 
-**Boundary around "date_from" e "date_to":**
-
-**Boundary intorno a date valide**
-
-| TC    | date        | Boundary covered  | Expected |
-|:------|:-------------|:------------------|:---------|
-| PRB04 | 2024-02-29   | Exact boundary    | datetime |
-| PRB05 | 2024-02-30   | Immediately above | ValueError |
-| PRB06 | 2023-02-29   | Immediately below | ValueError |
-
-**Boundary around months:**
-
-| TC    | date        | Boundary covered  | Expected |
-|:------|:-------------|:------------------|:---------|
-| PRB07 | 2024-12-31   | Exact boundary    | datetime |
-| PRB08 | 2024-13-01   | Immediately above | ValueError |
-| PRB09 | 2024-00-01   | Immediately below | ValueError |
-
-**Boundary around days:**
-
-| TC    | date        | Boundary covered  | Expected |
-|:------|:-------------|:------------------|:---------|
-| PRB10 | 2024-04-30   | Exact boundary    | datetime |
-| PRB11 | 2024-04-31   | Immediately above | ValueError |
-| PRB12 | 2024-04-00   | Immediately below | ValueError |
-
 
 ## 7 `participium.services.messaging_service.MessagingService.send_message`
 
