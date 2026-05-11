@@ -14,15 +14,6 @@ pytestmark = pytest.mark.whitebox
 from unittest.mock import Mock
 from participium.models.enums import NotificationType
 
-##| Test ID | recipients       | report    | body                    | Risultato Atteso       | Copertura                    |
-##| :------ | :--------------- | :-------- | :---------------------- | :--------------------- | :--------------------------- |
-##| MS1 | []             | Report1 | "Test notifica" | 0 notifiche create     | C1=F, loop 0 iterazioni      |
-##| MS2 | [None]         | Report1 | "Test notifica" | 0 notifiche create     | C1=T, C2=T, short-circuit OR |
-##| MS3 | [User1]        | Report1 | "Test notifica" | 1 notifica creata      | C1=T, C2=F, C3=F             |
-##| MS4 | [User1, User1] | Report1 | "Test notifica" | 1 sola notifica creata | C1=T, C2=F, C3=T      
-##
-
-
 def _user(id: int) -> Mock:
     user = Mock()
     user.id = id
