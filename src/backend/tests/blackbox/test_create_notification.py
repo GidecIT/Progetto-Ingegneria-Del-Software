@@ -1,17 +1,14 @@
 from __future__ import annotations
-
-from participium.services.notification_service import NotificationService
-from __future__ import annotations
-
-from unittest.mock import Mock
-
-import pytest
-
 from participium.models.user import User
 from participium.models.report import Report
 from participium.models.notification import Notification
 from participium.models.enums import NotificationType
 from participium.services.notification_service import NotificationService
+
+from unittest.mock import Mock
+
+import pytest
+
 
 pytestmark = pytest.mark.blackbox
 
