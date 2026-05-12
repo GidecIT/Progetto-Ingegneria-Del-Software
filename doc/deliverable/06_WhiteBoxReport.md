@@ -154,7 +154,7 @@ Coperto dai test sopra.
 ![Control flow graph notify_status_change](../../data/img/notify_status_change.png)
 
 ## Atomic conditions
-* **C1:** `i < len(recipients)` (loop guard)
+* **C1:** `recipient in recipients` (loop guard)
 * **C2:** `recipient is None`
 * **C3:** `recipient.id in seen`
 
@@ -185,12 +185,12 @@ Lo Structural Lower Bound è quindi pari a 3 test
 | E3 | [User1] | Report1 | "Test notifica" | None | 1 notifica creata | C1 -> T, C2 -> F, C3 -> F |
 
 ## Condition coverage
-| Test | recipients | report | body | Output | Conditions evaluated | Comportamento atteso |
-|:-----|:-----------|:-------|:-----|:-------|:------|:-----|
-| C1t | [] | Report1 | "Test notifica" | None | C1=F | 0 notifiche create |
-| C2t | [None] | Report1 | "Test notifica" | None | C1 = T, C2 = T | 0 notifiche create |
-| C3t | [User1] | Report1 | "Test notifica" | None | C1 = T, C2= F, C3 = F | 1 notifica creata |
-| C4t | [User1, User1] | Report1 | "Test notifica" | None | C1 = T, C2= F, C3 = T | 1 notifica creata |
+| Test | recipients | report | body | Output | C1 | C2 | C3 | Comportamento atteso |
+|:-----|:-----------|:-------|:-----|:-------|:------|:-----|:-----| :------|
+| C1t | [] | Report1 | "Test notifica" | None | F | - | - | 0 notifiche create |
+| C2t | [None] | Report1 | "Test notifica" | None | T | T | - | 0 notifiche create |
+| C3t | [User1] | Report1 | "Test notifica" | None | T | F | F | 1 notifica creata |
+| C4t | [User1, User1] | Report1 | "Test notifica" | None | T | F | T | 1 notifica creata |
 
 ### Loop Coverage
 Tre tests: 0, 1, 2+ iterazioni

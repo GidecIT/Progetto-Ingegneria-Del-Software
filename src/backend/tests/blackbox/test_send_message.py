@@ -22,7 +22,7 @@ SINGLE_CHAR_BODY = "a"
 
 @pytest.fixture
 def seed_send_message_data() -> None:
-    # Qua è necessiario riempire il sistema con il report e gli utenti 
+    # È necessiario riempire il sistema con il report e gli utenti 
     # necesari per utilizare `MessagingService.send_message`.
     #
     # Configurazione da usare:
