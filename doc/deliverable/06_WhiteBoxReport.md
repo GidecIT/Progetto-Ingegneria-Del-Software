@@ -72,6 +72,19 @@ nota: le condizioni dei cicli for (C9 e C14) sono indicate come T/F poiché il f
 nota: CRC-09 usa una lista eterogenea per coprire tutte le condizioni atomiche (C10 e C11) in un solo ciclo. Anche in questo caso è valido lo short-circuit: se la foto manca (C10=F), il sistema non controlla il nome del file (C11)
 
 ### Loop Coverage
+| ID   | `reporter` |`category_id`| `title`| `description` | `latitude` | `longitude` | `photos`| `is_anonymous` | Mock |Outcome atteso |
+|------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------| ---------------|------------------------------|
+|CRL-01| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [] | True | CATEGORY_REPOSITORY_ACTIVE |  ValidationError ("At least one photo is required.") |
+|CRL-02| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p] | True | CATEGORY_REPOSITORY_ACTIVE, REPORT_REPOSITORY_ADD_SUCCESS, DATABASE_SESSION_FLUSH_MOCK, STORAGE_SERVICE_SAVE_SUCCESS, REPORT_REPOSITORY_ADD_PHOTO_SUCCESS, REPORT_REPOSITORY_ADD_STATUS_SUCCESS, DATABASE_SESSION_COMMIT_MOCK, REPORT_GET_SUCCESS |  Report |
+|CRL-03| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | CATEGORY_REPOSITORY_ACTIVE, REPORT_REPOSITORY_ADD_SUCCESS, DATABASE_SESSION_FLUSH_MOCK, STORAGE_SERVICE_SAVE_SUCCESS, REPORT_REPOSITORY_ADD_PHOTO_SUCCESS, REPORT_REPOSITORY_ADD_STATUS_SUCCESS, DATABASE_SESSION_COMMIT_MOCK, REPORT_GET_SUCCESS     | Report |
+
+NOTE:
+- CRL-01: esegue 0 iterazioni per il primo loop senza raggiungere il secondo
+- CRL-02: esegue una sola iterazione per entrambi i cicli
+- CRL-03: copre la classe di equivalenza 2+ iterazioni per entrambi i cicli
+- il secondo ciclo for non può mai essere eseguito con 0 iterazioni
+
+
 
 ### Path Coverage
 
