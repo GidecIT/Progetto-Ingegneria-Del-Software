@@ -94,7 +94,7 @@ nota: CRC-09 usa una lista eterogenea per coprire tutte le condizioni atomiche (
 - C8: `status_event.changed_by.role == Role.OPERATOR`
 
 ### Structural Lower Bound
-Il metodo ha 4 punti di uscita mutualmente esclusivi (3 return di un oggetto User e un return None). Per coprire tutti i rami dei cicli e le condizioni atomiche, sono necessari almeno 4 test case, e quindi lo questo corrisponde allo structural lower bound.
+Il metodo ha 4 punti di uscita mutualmente esclusivi (3 return di un oggetto User e un return None). Per coprire tutti i rami dei cicli e le condizioni atomiche, sono necessari almeno 4 test case, e quindi questo corrisponde allo structural lower bound.
 
 ### Node Coverage
 | ID | `sender.role` | `reversed(messages)` | `reversed(report.status_history)` | Risultato atteso |
