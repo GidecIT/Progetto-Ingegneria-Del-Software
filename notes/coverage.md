@@ -10,6 +10,9 @@ e per lanciare pytest e generare html per la coverage con tutti i test:
 python -m pytest --cov=participium --cov-report=html
 
 (windows)   start .\reports\coverage\html\index.html 
+oppure
+start .\htmlcov\index.html  
+
 (macOs)     open  .\reports\coverage\html\index.html 
 ```
 oppure per lanciare i test di cartelle specifiche:

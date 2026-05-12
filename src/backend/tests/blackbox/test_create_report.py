@@ -20,7 +20,12 @@ VALID_PHOTO4 = FileStorage(filename="foto_buca4.jpg")
 INVALID_PHOTO = FileStorage(filename="") 
 
 @pytest.fixture
-def seed_create_report_data() -> None:
+def seed_create_report_data(db_session) -> None:
+    # Popola il sistema con i dati nessesari per `create_report`.
+    #
+	# Le categorie 0-9 sono valide
+    # categoria 4 è valida e attiva
+	# categoria 5 è valida ma inattiva
     pass
 
 @pytest.mark.skip(reason="Disabled")
@@ -29,7 +34,7 @@ def seed_create_report_data() -> None:
 	[
 		(VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, None),  # CR1
 		(VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], True, None),   # CR2
-		(VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], True, ValidationError),   # CR3
+		(VALID_REPORTER, 5, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], True, ValidationError),   # CR3
 		(VALID_REPORTER, None, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], True, ValidationError),   # CR4
 		(VALID_REPORTER, "", "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, ValidationError),   # CR5
 		(VALID_REPORTER, "df", "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], True, ValidationError),   # CR6
@@ -58,9 +63,8 @@ def seed_create_report_data() -> None:
 		(VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO, VALID_PHOTO2, VALID_PHOTO3, VALID_PHOTO4], False, ValidationError),  # CRB13
 	],
 )
-def test_create_report(reporter, category_id, title, description, latitude, longitude, photos, is_anonymous, expected_exception):
+def test_create_report(reporter, category_id, title, description, latitude, longitude, photos, is_anonymous, expected_exception, seed_create_report_data):
 	report_service = ReportService()
-
 	if expected_exception:
 		with pytest.raises(expected_exception):
 			report_service.create_report(reporter, category_id, title, description, latitude, longitude, photos, is_anonymous)
