@@ -105,7 +105,7 @@ I cammini lineari della funzione (7 eccezioni + 1 return) sono già coperti dai 
 |CRM-11| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p] | True | CATEGORY_REPOSITORY_ACTIVE, REPORT_REPOSITORY_ADD_SUCCESS, DATABASE_SESSION_FLUSH_MOCK, STORAGE_SERVICE_SAVE_SUCCESS, REPORT_REPOSITORY_ADD_PHOTO_SUCCESS, REPORT_REPOSITORY_ADD_STATUS_SUCCESS, DATABASE_SESSION_COMMIT_MOCK, REPORT_GET_SUCCESS |  Report |
 | CRM-12 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p]  | True |  CATEGORY_REPOSITORY_ACTIVE, REPORT_REPOSITORY_ADD_SUCCESS, DATABASE_SESSION_FLUSH_MOCK, STORAGE_SERVICE_SAVE_SUCCESS, REPORT_REPOSITORY_ADD_PHOTO_SUCCESS, REPORT_REPOSITORY_ADD_STATUS_SUCCESS, DATABASE_SESSION_COMMIT_MOCK, REPORT_GET_SUCCESS  | Report |
 
-La test suit minima è ottenuta dalla condition coverage aggiungendo il caso in cui la category id esista ma mal formattata, il caso in cui non si riesca a fare la conversione a flaot della latitudine o longitudine e una sola foto della loop
+La suite di test minima è stata ottenuta estendendo la Condition Coverage per includere i cammini d'eccezione derivanti dai fallimenti di casting (ID malformati o coordinate non numeriche) e integrando la Loop Coverage tramite il caso a singola iterazione.
 
 
 
