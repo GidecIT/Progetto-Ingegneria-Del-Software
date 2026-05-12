@@ -94,7 +94,7 @@ nota: CRC-09 usa una lista eterogenea per coprire tutte le condizioni atomiche (
 - C8: `status_event.changed_by.role == Role.OPERATOR`
 
 ### Structural Lower Bound
-Il metodo ha 4 punti di uscita mutualmente esclusivi (3 return di un oggetto User e un return None). Per coprire tutti i rami dei cicli e le condizioni atomiche, sono necessari almeno 4 test case, e quindi lo questo corrisponde allo structural lower bound.
+Il metodo ha 4 punti di uscita mutualmente esclusivi (3 return di un oggetto User e un return None). Per coprire tutti i rami dei cicli e le condizioni atomiche, sono necessari almeno 4 test case, e quindi questo corrisponde allo structural lower bound.
 
 ### Node Coverage
 | ID | `sender.role` | `reversed(messages)` | `reversed(report.status_history)` | Risultato atteso |
@@ -286,18 +286,62 @@ Coperta dagli stessi test della Node Coverage.
 ![](../data/img/xxx.xxx)
 
 ### Atomic Conditions
-
+- C1: username is not None
+- C2: username != user.username
+- C3: user_repository.get_by_username(username) returns a user
+- C4: email is not None
+- C5: email != user.email
+- C6: user_repository.get_by_email(email) returns a user
+- C7: payload.get(field) is not None (nel ciclo for)
+- C8: isinstance(value, str) (nel ciclo for)
+- C9: payload.get("role") is not None
+- C10: "category_id" in payload
+- C11: category is not None (risultato di _resolve_operator_category)
+- C12: payload.get("is_active") is not None
+- C13: payload.get("email_notifications_enabled") is not None
 ### Structural Lower Bound
-
+La funzione update_user produce tre esiti mutualmente esclusivi. Due di
+questi sono eccezioni di tipo ValidationError. Il terzo esito corrisponde al completamento con successo dell'aggiornamento. Ogni esecuzione del test restituisce uno di questi esiti, quindi lo structural lower bound è 3.
 ### Node Coverage
-
+| ID | user_id | Stato iniziale utente | payload | Outcome atteso |
+| :--- | :--- | :--- | :--- | :--- |
+| UUN-01 | 1 | { "username": "old_user" } | {'username': 'new_user'} | ValidationError("Username already in use.") |
+| UUN-02 | 1 | { "email": "old@email.com" } | {'email': 'new@email.com'} | ValidationError("Email already in use.") |
+| UUN-03 | 1 | { "first_name": "Old Name" } | {'first_name': 'New Name', 'is_active': False} | User (oggetto aggiornato) |
 ### Edge Coverage
-
+Coperta dagli stessi test della Node Coverage.
 ### Condition Coverage
-
+| Test | user_id | Stato iniziale | payload | C1 | C2 | C3 | C4 | C5 | C6 | C7 | C8 | C9 | C10 | C11 | C12 | C13 | Outcome atteso |
+| :--- | :--- | :--- | :--- |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:--- |
+| UUC-01 | 1 | { "username": "u" } | {} | F | - | - | F | - | - | F | - | F | F | - | F | F | User (nessuna modifica) |
+| UUC-02 | 1 | { "username": "u" } | {'username': 'u'} | T | F | -(SC) | F | - | - | T | T | F | F | - | F | F | User (nessuna modifica) |
+| UUC-03 | 1 | { "username": "u1" } | {'username': 'u2'} | T | T | F | F | - | - | T | T | F | F | - | F | F | User (username aggiornato) |
+| UUC-04 | 1 | { "username": "u1" } | {'username': 'u2'} | T | T | T | F | - | - | - | - | - | - | - | - | - | ValidationError (username) |
+| UUC-05 | 1 | { "email": "e" } | {'email': 'e'} | F | - | - | T | F | -(SC) | T | T | F | F | - | F | F | User (nessuna modifica) |
+| UUC-06 | 1 | { "email": "e1" } | {'email': 'e2'} | F | - | - | T | T | F | T | T | F | F | - | F | F | User (email aggiornata) |
+| UUC-07 | 1 | { "email": "e1" } | {'email': 'e2'} | F | - | - | T | T | T | - | - | - | - | - | - | - | ValidationError (email) |
+| UUC-08 | 1 | { "role": "CITIZEN" } | {'role': 'OPERATOR'} | F | - | - | F | - | - | F | - | T | F | F | F | F | User (category_id a None) |
+| UUC-09 | 1 | { "role": "CITIZEN" } | {'role': 'OPERATOR', 'category_id': 1} | F | - | - | F | - | - | F | - | T | T | T | F | F | User (category_id a 1) |
+| UUC-10 | 1 | {} | {'is_active': False} | F | - | - | F | - | - | F | - | F | F | - | T | F | User (is_active a False) |
+| UUC-11 | 1 | {} | {'email_notifications_enabled': False} | F | - | - | F | - | - | F | - | F | F | - | F | T | User (notifiche a False) |
+| UUC-12 | 1 | {} | {'first_name': 123} | F | - | - | F | - | - | T | F | F | F | - | F | F | User (first_name a 123) |
 ### Loop Coverage
+- loop su ["username", "first_name", "last_name", "email"]
+  - 0 iterazioni: il payload non contiene nessuno dei campi testuali, quindi il ciclo viene saltato (UUL-01).
+  - 1 iterazione: il payload contiene solo uno dei campi testuali, eseguendo il ciclo una volta (UUL-02).
+  - 2+ iterazioni: il payload contiene due o più campi testuali, eseguendo il ciclo più volte (UUL-03).
 
+| ID | payload | Descrizione | Risultato atteso |
+| :- | :------ | :---------- | :--------------- |
+| UUL-01 | {'is_active': False} | 0 iterazioni: Il payload non contiene campi testuali, quindi il ciclo viene saltato. | User (oggetto aggiornato) |
+| UUL-02 | {'first_name': 'Mario'} | 1 iterazione: Il payload contiene un solo campo testuale, eseguendo il ciclo una volta. | User (oggetto aggiornato) |
+| UUL-03 | {'first_name': 'Mario', 'last_name': 'Rossi'} | 2+ iterazioni: Il payload contiene due campi testuali, eseguendo il ciclo più volte. | User (oggetto aggiornato) |
 ### Path Coverage
-
+Coperto dai test sopra.
 ### Minimal Suite Test
+1. **UU-01**: Verifica il percorso di successo con l'aggiornamento di più campi (es. first_name, is_active). Corrisponde al test UUN-03.
+2. **UU-02**: Testa la gestione di un conflitto di username e la conseguente ValidationError. Corrisponde al test UUN-01.
+UU-03: Testa la gestione di un conflitto di email e la conseguente ValidationError. Corrisponde al test UUN-02.
+UU-04: Verifica l'aggiornamento del ruolo a OPERATOR con assegnazione di category_id. Corrisponde al test UUC-09.
+UU-05: Testa il caso in cui il payload è vuoto, assicurando che non avvenga nessuna modifica. Corrisponde al test UUC-01.
 

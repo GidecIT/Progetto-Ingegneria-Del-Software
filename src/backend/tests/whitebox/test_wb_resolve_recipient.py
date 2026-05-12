@@ -8,7 +8,6 @@ from participium.models.enums import Role
 
 pytestmark = pytest.mark.whitebox
 
-@pytest.fixture
 def create_mocks(sender_role, msg_senders_roles, status_changers_roles):
     mock_reporter = Mock(spec=["id", "role"])
     mock_reporter.id = 999
@@ -67,7 +66,7 @@ def create_mocks(sender_role, msg_senders_roles, status_changers_roles):
         (Role.ADMIN, [], [], "reporter", None),
         # RR-C2
         (Role.OPERATOR, [], [], "reporter", None),
-        # RR-02
+        # RR-02 
         (Role.CITIZEN, [Role.ADMIN], [], "msg", 0),
         # RR-C4
         (Role.CITIZEN, [Role.OPERATOR], [], "msg", 0),
@@ -79,8 +78,8 @@ def create_mocks(sender_role, msg_senders_roles, status_changers_roles):
         (Role.CITIZEN, [], [], None, None),
         (Role.CITIZEN, [Role.CITIZEN], [Role.CITIZEN], None, None),
         # RR-05
-        (Role.CITIZEN, [None, Role.ADMIN], [], "msg", 1),
-        (Role.CITIZEN, [Role.CITIZEN], [None, Role.OPERATOR], "status", 1),
+        (Role.CITIZEN, [Role.ADMIN, None], [], "msg", 0),
+        (Role.CITIZEN, [Role.CITIZEN], [Role.OPERATOR, None], "status", 0),
 
         # RR-L1
         (Role.CITIZEN, [], [Role.ADMIN], "status", 0),
@@ -96,7 +95,8 @@ def create_mocks(sender_role, msg_senders_roles, status_changers_roles):
         (Role.CITIZEN, [Role.CITIZEN], [Role.OPERATOR, Role.CITIZEN], "status", 0),
     ],
 )
-def test_resolve_recipient(sender_role, msg_senders_roles, status_changers_roles, expected_key, expected_idx, mock_factory):
+
+def test_resolve_recipient(sender_role, msg_senders_roles, status_changers_roles, expected_key, expected_idx): 
     mocks = create_mocks(sender_role, msg_senders_roles, status_changers_roles)
     
     service = MessagingService(message_repository=mocks["msg_repo"])
