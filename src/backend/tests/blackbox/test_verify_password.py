@@ -4,8 +4,7 @@ import pytest
 
 from participium.core.security import verify_password
 
-# Utilizziamo stringhe costanti per effettuare i test a causa di una 
-# mancanza di una funzione che calcola l'hash realmente 
+# Utilizziamo stringhe costanti per effettuare i test a causa di una mancanza di una funzione che calcola l'hash realmente 
 PASSWORD = "pass123"
 CORRECT_HASH = "HASH_OF_pass123"
 WRONG_HASH = "HASH_OF_xxx"

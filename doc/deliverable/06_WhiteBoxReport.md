@@ -2,7 +2,7 @@
 
 ### Control Flow Graph
 
-![](../../data/img/06_WhiteBoxCreateReport.png)
+- ![](../../data/img/06_WhiteBoxCreateReport.png)
 
 ### Atomic Conditions
 - C1: category_id is not None 
@@ -23,59 +23,77 @@
 ### Structural Lower Bound
 La funzione create_report produce 8 esiti mutualmente esclusivi, 7 corrispondenti ad eccezioni di tipo ValidationError e 1 return finale di successo. Ogni esecuzione del test restituisce uno di questi esiti, quindi lo structural lower bound è 8.
 
-***Lista mock***
-- CATEGORY_REPOSITORY_ACTIVE: configura il metodo get_by_id affinchè torni un'istanza della classe Category con id=1 e is_active=True
-- CATEGORY_REPOSITORY_INACTIVE: configura il metodo get_by_id affinchè torni un'istanza della classe Category con id=1 e is_active=False
-- CATEGORY_REPOSITORY_NOT_FOUND: configura il metodo get_by_id affinchè torni None
-- REPORT_REPOSITORY_ADD_SUCCESS: configura il metodo add come una no-op (operazione nulla) che simula il successo
-- DATABASE_SESSION_FLUSH_MOCK: configura il metodo flush per completarsi senza eseguire operazioni reali sul database
-- STORAGE_SERVICE_SAVE_SUCCESS: il metodo viene configurato per restituire una stringa "/img/photo.jpg"
-- REPORT_REPOSITORY_ADD_PHOTO_SUCCESS: configura il metodo add_photo(photo) come una no-op (operazione nulla)
-- REPORT_REPOSITORY_ADD_STATUS_SUCCESS: configura il metodo add_status_entry come una no-op
-- DATABASE_SESSION_COMMIT_MOCK: configura il metodo commit() come una no-op (operazione nulla)
-- REPORT_GET_SUCCESS: configura il metodo get_report(report_id) affinché restituisca l'istanza dell'oggetto Report creata durante l'esecuzione della funzione.
-
 ### Node Coverage
-Nota: per p si intende una foto con fileName invece per p_no_fn una foto senza fileName 
-
-| ID | `reporter` |`category_id`| `title`| `description` | `latitude` | `longitude` | `photos`| `is_anonymous` | Mock | Outcome atteso |
-|:------|:---------|:-----------|:-------|:-------------|:-----------|:-----------|:----------|:---------------|:------|:---------------|
-|CRN-01| reporter1(id=1) | "uno" | "Buca profonda" | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | - |ValidationError("A valid active category is required.") |
-|CRN-02| reporter1(id=1) | None | "Buca profonda" | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p]| True | - |ValidationError ("A valid active category is required.") |
-|CRN-03| reporter1(id=1) | 1 | None | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | CATEGORY_REPOSITORY_ACTIVE | ValidationError ("Title and description are required.") |
-|CRN-04| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | None | 9.1900 | [p,p] (con filename presente)| True | CATEGORY_REPOSITORY_ACTIVE | ValidationError ("Latitude and longitude are required.") |
-|CRN-05| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | "Quaranta" | 9.1900 | [p,p] (con filename presente)| True | CATEGORY_REPOSITORY_ACTIVE | ValidationError ("Latitude and longitude must be valid numbers.") |
-|CRN-06| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [] | True | CATEGORY_REPOSITORY_ACTIVE | ValidationError ("At least one photo is required.") |
-|CRN-07| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p, None, p_no_fn, p, p, p] | True | CATEGORY_REPOSITORY_ACTIVE | ValidationError ("A report can contain at most 3 photos.") |
-|CRN-08| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | CATEGORY_REPOSITORY_ACTIVE, REPORT_REPOSITORY_ADD_SUCCESS, DATABASE_SESSION_FLUSH_MOCK, STORAGE_SERVICE_SAVE_SUCCESS, REPORT_REPOSITORY_ADD_PHOTO_SUCCESS, REPORT_REPOSITORY_ADD_STATUS_SUCCESS, DATABASE_SESSION_COMMIT_MOCK, REPORT_GET_SUCCESS | Report |
+Nota: per p si intende una foto con fileName invece per p_no_fn una foto senza fileName
+| ID   | `reporter` |`category_id`| `title`| `description` | `latitude` | `longitude` | `photos`| `is_anonymous` | Outcome atteso |
+|------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|------------------------------|
+|CRN-01| reporter1(id=1) | "uno" | "Buca profonda" | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | ValidationError("A valid active category is required.") |
+|CRN-02| reporter1(id=1) | None | "Buca profonda" | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p]| True | ValidationError ("A valid active category is required.") |
+|CRN-03| reporter1(id=1) | 1 |  None  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | ValidationError ("Title and description are required.") |
+|CRN-04| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | None | 9.1900 | [p,p]| True | ValidationError ("Latitude and longitude are required.") |
+|CRN-05| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | "Quaranta" | 9.1900 | [p,p] | True | ValidationError ("Latitude and longitude must be valid numbers.") |
+|CRN-06| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [] | True | ValidationError ("At least one photo is required.") |
+|CRN-07| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p, None, p_no_fn, p, p, p] | True | ValidationError ("A report can contain at most 3 photos.") |
+|CRN-08| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | Report |
 
 ### Edge Coverage
 Stessi 8 test della Node coverage.
 
 ### Condition Coverage
-| Test |  `reporter` | `category_id` | `title` | `description` | `latitude` | `longitude` | `photos` | `is_anonymous` | C1   | C2   | C3   | C4    | C5   | C6    | C7   | C8    | C9  | C10 | C11  | C12  | C13  | C14  | Mock |Outcome atteso |
-| :--- |  :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |:-----|:-----|:-----|:------|:-----|:------|:-----|:------|:----|:----|:-----|:-----|:-----|:-----| :---: |:--- |
-| CRC-01 | reporter1(id=1) | "uno" | "Buca profonda" | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | T    | -    | -    | -     | -    | -     | -    | -     | -   | -   | -    | -    | -    | -    | - | ValidationError("A valid active category is required.") |
-| CRC-02 | reporter1(id=1) | None | "Buca profonda" | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | F    | F    | T    | -(SC) | -    | -     | -    | -     | -   | -   | -    | -    | -    | -    | - | ValidationError("A valid active category is required.") |
-| CRC-03 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | T    | T    | F    | T     | -    | -     | -    | -     | -   | -   | -    | -    | -    | -    |   CATEGORY_REPOSITORY_INACTIVE | ValidationError ("A valid active category is required.") |
-| CRC-04 | reporter1(id=1) | 1 |  None  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p]| True | T    | T    | F    | F     | T    | -(SC) | -    | -     | -   | -   | -    | -    | -    | -    |   CATEGORY_REPOSITORY_ACTIVE | ValidationError ("Title and description are required.") |
-| CRC-05 | reporter1(id=1) | 1 |  "Buca profonda"  | None | 45.4642 | 9.1900 | [p,p]| True | T    | T    | F    | F     | F    | T     | -    | -     | -   | -   | -    | -    | -    | -    |   CATEGORY_REPOSITORY_ACTIVE | ValidationError ("Title and description are required.") |
-| CRC-06 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | None | 9.1900 | [p,p]| True | T    | T    | F    | F     | F    | F     | T    | -(SC) | -   | -   | -    | -    | -    | -    |   CATEGORY_REPOSITORY_ACTIVE | ValidationError ("Latitude and longitude are required.") |
-| CRC-07 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | None | [p,p] | True | T    | T    | F    | F     | F    | F     | F    | T     | -   | -   | -    | -    | -    | -    |   CATEGORY_REPOSITORY_ACTIVE | ValidationError ("Latitude and longitude are required.") |
-| CRC-08 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [] | True | T    | T    | F    | F     | F    | F     | F    | F     | F   | -   | -    | T    | -    | -    | CATEGORY_REPOSITORY_ACTIVE | ValidationError ("At least one photo is required.") |
-| CRC-09 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p, None, p_no_fn, p, p, p]  | True | T    | T    | F    | F     | F    | F     | F    | F     | T/F | T/F | T/F  | F    | T    | -    |  CATEGORY_REPOSITORY_ACTIVE | ValidationError ("A report can contain at most 3 photos.") |
-| CRC-10 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p]  | True | T    | T    | F    | F     | F    | F     | F    | F     | T/F | T   | T    | F    | F    | T/F  |  CATEGORY_REPOSITORY_ACTIVE, REPORT_REPOSITORY_ADD_SUCCESS, DATABASE_SESSION_FLUSH_MOCK, STORAGE_SERVICE_SAVE_SUCCESS, REPORT_REPOSITORY_ADD_PHOTO_SUCCESS, REPORT_REPOSITORY_ADD_STATUS_SUCCESS, DATABASE_SESSION_COMMIT_MOCK, REPORT_GET_SUCCESS  | Report |
+| Test |  `reporter` | `category_id` | `title` | `description` | `latitude` | `longitude` | `photos` | `is_anonymous` | C1 | C2 | C3 | C4 | C5 | C6 | C7 | C8 | C9 | C10 | C11 | C12 | C13 |C14 | Outcome atteso |
+| :--- |  :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---:| :---:| :---: | :---: | :---: | :---: |:--- |
+| CRC-01 | reporter1(id=1) | None | "Buca profonda" | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | F | F | T | -(SC) | - | - | - | - | - | - | - | - | - |- | ValidationError("A valid active category is required.") |
+| CRC-02 | reporter1(id=1)  | 1(inattiva) |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | T | T | F | T | - | - | - | - | - | - | - | - |- | - | ValidationError ("A valid active category is required.") |
+| CRC-03 | reporter1(id=1)   | 1 |  None  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p]| True | T | T | F | F | T | -(SC) | - | - | - | - | - | - |- | - | ValidationError ("Title and description are required.") |
+| CRC-04 | reporter1(id=1) | 1 |  "Buca profonda"  | None | 45.4642 | 9.1900 | [p,p]| True | T | T | F | F | F | T | - | - | - | - | - | - |- | - | ValidationError ("Title and description are required.") |
+| CRC-05 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | None | 9.1900 | [p,p]| True | T | T | F | F | F | F | T | -(SC) | - | - | - |- | - | - | ValidationError ("Latitude and longitude are required.") |
+| CRC-06 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | None | [p,p] | True | T | T | F | F | F | F | F | T | - | - | - | - |- | - | ValidationError ("Latitude and longitude are required.") |
+| CRC-07 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [] | True | T | T | F | F | F | F | F | F | F | - | - | T |- | - | ValidationError ("At least one photo is required.") |
+| CRC-08 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p, None, p_no_fn, p, p, p]  | True | T | T | F | F | F | F | F | F | T/F | T/F | T/F | F | T |- | ValidationError ("A report can contain at most 3 photos.") |
+| CRC-09 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p]  | True | T | T | F | F | F | F | F | F | T/F | T | T | F | F |T/F | Report |
 
-
-nota: le condizioni dei cicli for (C9 e C14) sono indicate come T/F poiché il flusso esegue il corpo del ciclo (True) e prosegue verso l'istruzione successiva solo dopo che la lista è stata interamente scorsa (False). In assenza di interruzioni forzate (break o return), il test esercita necessariamente entrambi i rami della condizione di uscita
-
-nota: CRC-09 usa una lista eterogenea per coprire tutte le condizioni atomiche (C10 e C11) in un solo ciclo. Anche in questo caso è valido lo short-circuit: se la foto manca (C10=F), il sistema non controlla il nome del file (C11)
+Note:
+- le condizioni dei cicli for (C9 e C14) sono indicate come T/F poiché il flusso esegue il corpo del ciclo (True) e prosegue verso l'istruzione successiva solo dopo che la lista è stata interamente scorsa (False). In assenza di interruzioni forzate (break o return), il test esercita necessariamente entrambi i rami della condizione di uscita
+- CRC-08 usa una lista eterogenea per coprire tutte le condizioni atomiche (C10 e C11) in un solo ciclo. Anche in questo caso è valido lo short-circuit: se la foto manca (C10=F), il sistema non controlla il nome del file (C11)
+- La tabella si focalizza esclusivamente sulle operazioni atomiche e sulle condizioni booleane esplicite. Le clausole try-except non sono state inserite come condizioni indipendenti
 
 ### Loop Coverage
+| ID   | `reporter` |`category_id`| `title`| `description` | `latitude` | `longitude` | `photos`| `is_anonymous` | Outcome atteso |
+|------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|------------------------------|
+|CRL-01| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [] | True | ValidationError ("At least one photo is required.") |
+|CRL-02| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p] | True | Report |
+|CRL-03| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | Report |
+
+NOTE:
+- CRL-01: esegue 0 iterazioni per il primo loop senza raggiungere il secondo
+- CRL-02: esegue una sola iterazione per entrambi i cicli
+- CRL-03: copre la classe di equivalenza 2+ iterazioni per entrambi i cicli
+- il secondo ciclo for non può mai essere eseguito con 0 iterazioni
 
 ### Path Coverage
+I cammini lineari della funzione (7 eccezioni + 1 return) sono già coperti dai test delle coverage precedenti. Poiché i due loop rendono il numero totale di cammini potenzialmente illimitato (dipende dalla lunghezza di photos), si adotta la loop coverage (0, 1, 2+ iterazioni) come approssimazione della path coverage:
+- 0 iterazioni (CRL-01): valid_photos è vuota e viene sollevata l'eccezione prima del secondo loop
+- 1 iterazione (CRL-02): entrambi i loop eseguono esattamente un'iterazione; verifica la prima transizione di stato (creazione report, salvataggio di una foto)
+- 2+ iterazioni (CRL-03): entrambi i loop eseguono più iterazioni; garantisce che lo stato non venga resettato erroneamente tra iterazioni consecutive
 
 ### Minimal Suite Test
+| ID   | `reporter` |`category_id`| `title`| `description` | `latitude` | `longitude` | `photos`| `is_anonymous` | Outcome atteso |
+|------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|------------------------------|
+|CRM-01| reporter1(id=1) | "uno" | "Buca profonda" | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | ValidationError("A valid active category is required.") |
+| CRM-02 | reporter1(id=1)  | None | "Buca profonda" | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | ValidationError("A valid active category is required.") |
+| CRM-03 | reporter1(id=1) | 1(inattiva) |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | ValidationError ("A valid active category is required.") |
+| CRM-04 | reporter1(id=1) | 1 |  None  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p]| True  | ValidationError ("Title and description are required.") |
+| CRM-05 | reporter1(id=1) | 1 |  "Buca profonda"  | None | 45.4642 | 9.1900 | [p,p]| True | ValidationError ("Title and description are required.") |
+| CRM-06 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | None | 9.1900 | [p,p]| True | ValidationError ("Latitude and longitude are required.") |
+| CRM-07 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | None | [p,p] | True | ValidationError ("Latitude and longitude are required.") |
+|CRM-08| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | "Quaranta" | 9.1900 | [p,p] | True | ValidationError ("Latitude and longitude must be valid numbers.") |
+| CRM-09 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [] | True | ValidationError ("At least one photo is required.") |
+| CRM-10 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p, None, p_no_fn, p, p, p]  | True | ValidationError ("A report can contain at most 3 photos.") |
+|CRM-11| reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p] | True | Report |
+| CRM-12 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p]  | True | Report |
+
+La suite di test minima è stata ottenuta estendendo la Condition Coverage per includere i cammini d'eccezione derivanti dai fallimenti di casting (ID malformati o coordinate non numeriche) e integrando la Loop Coverage tramite il caso a singola iterazione.
+
 
 ## 2 `MessagingService._resolve_recipient`
 
@@ -94,7 +112,7 @@ nota: CRC-09 usa una lista eterogenea per coprire tutte le condizioni atomiche (
 - C8: `status_event.changed_by.role == Role.OPERATOR`
 
 ### Structural Lower Bound
-Il metodo ha 4 punti di uscita mutualmente esclusivi (3 return di un oggetto User e un return None). Per coprire tutti i rami dei cicli e le condizioni atomiche, sono necessari almeno 4 test case, e quindi lo questo corrisponde allo structural lower bound.
+Il metodo ha 4 punti di uscita mutualmente esclusivi (3 return di un oggetto User e un return None). Per coprire tutti i rami dei cicli e le condizioni atomiche, sono necessari almeno 4 test case, e quindi questo corrisponde allo structural lower bound.
 
 ### Node Coverage
 | ID | `sender.role` | `reversed(messages)` | `reversed(report.status_history)` | Risultato atteso |
@@ -154,7 +172,7 @@ Coperto dai test sopra.
 ![Control flow graph notify_status_change](../../data/img/notify_status_change.png)
 
 ## Atomic conditions
-* **C1:** `i < len(recipients)` (loop guard)
+* **C1:** `recipient in recipients` (loop guard)
 * **C2:** `recipient is None`
 * **C3:** `recipient.id in seen`
 
@@ -185,12 +203,12 @@ Lo Structural Lower Bound è quindi pari a 3 test
 | E3 | [User1] | Report1 | "Test notifica" | None | 1 notifica creata | C1 -> T, C2 -> F, C3 -> F |
 
 ## Condition coverage
-| Test | recipients | report | body | Output | Conditions evaluated | Comportamento atteso |
-|:-----|:-----------|:-------|:-----|:-------|:------|:-----|
-| C1t | [] | Report1 | "Test notifica" | None | C1=F | 0 notifiche create |
-| C2t | [None] | Report1 | "Test notifica" | None | C1 = T, C2 = T | 0 notifiche create |
-| C3t | [User1] | Report1 | "Test notifica" | None | C1 = T, C2= F, C3 = F | 1 notifica creata |
-| C4t | [User1, User1] | Report1 | "Test notifica" | None | C1 = T, C2= F, C3 = T | 1 notifica creata |
+| Test | recipients | report | body | Output | C1 | C2 | C3 | Comportamento atteso |
+|:-----|:-----------|:-------|:-----|:-------|:------|:-----|:-----| :------|
+| C1t | [] | Report1 | "Test notifica" | None | F | - | - | 0 notifiche create |
+| C2t | [None] | Report1 | "Test notifica" | None | T | T | - | 0 notifiche create |
+| C3t | [User1] | Report1 | "Test notifica" | None | T | F | F | 1 notifica creata |
+| C4t | [User1, User1] | Report1 | "Test notifica" | None | T | F | T | 1 notifica creata |
 
 ### Loop Coverage
 Tre tests: 0, 1, 2+ iterazioni
