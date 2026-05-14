@@ -301,22 +301,21 @@ Coperta dagli stessi test della Node Coverage.
 
 ### Control Flow Graph
 
-![](../data/img/xxx.xxx)
+![](../data/img/WB5.drawio.png)
 
 ### Atomic Conditions
-- C1: username is not None
+- C1: username
 - C2: username != user.username
-- C3: user_repository.get_by_username(username) returns a user
-- C4: email is not None
+- C3: self.user_repository.get_by_username(username)
+- C4: email
 - C5: email != user.email
-- C6: user_repository.get_by_email(email) returns a user
-- C7: payload.get(field) is not None (nel ciclo for)
-- C8: isinstance(value, str) (nel ciclo for)
-- C9: payload.get("role") is not None
-- C10: "category_id" in payload
-- C11: category is not None (risultato di _resolve_operator_category)
-- C12: payload.get("is_active") is not None
-- C13: payload.get("email_notifications_enabled") is not None
+- C6: self.user_repository.get_by_email(email)
+- C7: payload.get(field) is not None
+- C8: payload.get("role") is not None
+- C9: "category_id" in payload
+- C10: category
+- C11: payload.get("is_active") is not None
+- C12: payload.get("email_notifications_enabled") is not None
 ### Structural Lower Bound
 La funzione update_user produce tre esiti mutualmente esclusivi. Due di
 questi sono eccezioni di tipo ValidationError. Il terzo esito corrisponde al completamento con successo dell'aggiornamento. Ogni esecuzione del test restituisce uno di questi esiti, quindi lo structural lower bound è 3.
@@ -329,20 +328,19 @@ questi sono eccezioni di tipo ValidationError. Il terzo esito corrisponde al com
 ### Edge Coverage
 Coperta dagli stessi test della Node Coverage.
 ### Condition Coverage
-| Test | user_id | Stato iniziale | payload | C1 | C2 | C3 | C4 | C5 | C6 | C7 | C8 | C9 | C10 | C11 | C12 | C13 | Outcome atteso |
-| :--- | :--- | :--- | :--- |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:--- |
-| UUC-01 | 1 | { "username": "u" } | {} | F | - | - | F | - | - | F | - | F | F | - | F | F | User (nessuna modifica) |
-| UUC-02 | 1 | { "username": "u" } | {'username': 'u'} | T | F | -(SC) | F | - | - | T | T | F | F | - | F | F | User (nessuna modifica) |
-| UUC-03 | 1 | { "username": "u1" } | {'username': 'u2'} | T | T | F | F | - | - | T | T | F | F | - | F | F | User (username aggiornato) |
-| UUC-04 | 1 | { "username": "u1" } | {'username': 'u2'} | T | T | T | F | - | - | - | - | - | - | - | - | - | ValidationError (username) |
-| UUC-05 | 1 | { "email": "e" } | {'email': 'e'} | F | - | - | T | F | -(SC) | T | T | F | F | - | F | F | User (nessuna modifica) |
-| UUC-06 | 1 | { "email": "e1" } | {'email': 'e2'} | F | - | - | T | T | F | T | T | F | F | - | F | F | User (email aggiornata) |
-| UUC-07 | 1 | { "email": "e1" } | {'email': 'e2'} | F | - | - | T | T | T | - | - | - | - | - | - | - | ValidationError (email) |
-| UUC-08 | 1 | { "role": "CITIZEN" } | {'role': 'OPERATOR'} | F | - | - | F | - | - | F | - | T | F | F | F | F | User (category_id a None) |
-| UUC-09 | 1 | { "role": "CITIZEN" } | {'role': 'OPERATOR', 'category_id': 1} | F | - | - | F | - | - | F | - | T | T | T | F | F | User (category_id a 1) |
-| UUC-10 | 1 | {} | {'is_active': False} | F | - | - | F | - | - | F | - | F | F | - | T | F | User (is_active a False) |
-| UUC-11 | 1 | {} | {'email_notifications_enabled': False} | F | - | - | F | - | - | F | - | F | F | - | F | T | User (notifiche a False) |
-| UUC-12 | 1 | {} | {'first_name': 123} | F | - | - | F | - | - | T | F | F | F | - | F | F | User (first_name a 123) |
+| Test | C1 | C2 | C3 | C4 | C5 | C6 | C7 | C8 | C9 | C10 | C11 | C12 |Outcome atteso |
+| :--- | :- | :- | :- | :- | :- | :- | :- | :- | :- | :-- | :-- | :-- | :--- |
+| UUC-01 | F | - | - | F | - | - | F | F | - | - | F | F | User (nessuna modifica) |
+| UUC-02 | T | F | -(SC) | F | - | - | T | F | - | - | F | F | User (nessuna modifica) |
+| UUC-03 | T | T | F | F | - | - | T | F | - | - | F | F | User (username aggiornato) |
+| UUC-04 | T | T | T | - | - | - | - | - | - | - | - | - | ValidationError (username) |
+| UUC-05 | F | - | - | T | F | -(SC) | T | F | - | - | F | F | User (nessuna modifica) |
+| UUC-06 | F | - | - | T | T | F | T | F | - | - | F | F | User (email aggiornata) |
+| UUC-07 | F | - | - | T | T | T | - | - | - | - | - | - | ValidationError (email) |
+| UUC-08 | F | - | - | F | - | - | F | T | F | F | F | F | User (category_id a None) |
+| UUC-09 | F | - | - | F | - | - | F | T | T | T | F | F | User (category_id a 1) |
+| UUC-10 | F | - | - | F | - | - | F | F | - | - | T | F | User (is_active a False) | 
+| UUC-11 | F | - | - | F | - | - | F | F | - | - | F | T | User (notifiche a False) |
 ### Loop Coverage
 - loop su ["username", "first_name", "last_name", "email"]
   - 0 iterazioni: il payload non contiene nessuno dei campi testuali, quindi il ciclo viene saltato (UUL-01).
