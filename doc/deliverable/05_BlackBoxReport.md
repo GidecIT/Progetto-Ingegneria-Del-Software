@@ -353,7 +353,7 @@ Test realizzati considerando le 10 categorie descritte nella specifica iniziale,
 | :---- | :------- | :---------- | :---- | :---------- | :------- | :-------- | :----- | :----------- | :------- | :------ |
 |CR1| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | Report |  L'utente è autenticato, la categoria 4 è valida e attiva |
 |CR2| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | True | Report |  L'utente è autenticato, la categoria 4 è valida e attiva |
-|CR3| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | True | ValidationError |  L'utente è autenticato, la categoria 4 è inattiva |
+|CR3| user | 5 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | True | ValidationError |  L'utente è autenticato, la categoria 5 è inattiva |
 |CR4| user | None | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | True | ValidationError |  L'utente è autenticato |
 |CR5| user | "" | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | ValidationError |  L'utente è autenticato | 
 |CR6| user | df | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | True | ValidationError |  L'utente è autenticato|
@@ -619,32 +619,6 @@ NOTA: PR09 copre lo stesso input di PR01 ma con fixture vuota, per verificare il
 | PRB01 |  0 | Exact boundary   | Lista di segnalazioni pubbliche con category_id 0 |
 | PRB02 |  10 | Immediately above   | Lista vuota |
 | PRB03 |  -1 | Immediately below   | Lista vuota |
-
-**Boundary around "date_from" e "date_to":**
-
-**Boundary intorno a date valide**
-
-| TC    | date        | Boundary covered  | Expected |
-|:------|:-------------|:------------------|:---------|
-| PRB04 | 2024-02-29   | Exact boundary    | datetime |
-| PRB05 | 2024-02-30   | Immediately above | ValueError |
-| PRB06 | 2023-02-29   | Immediately below | ValueError |
-
-**Boundary around months:**
-
-| TC    | date        | Boundary covered  | Expected |
-|:------|:-------------|:------------------|:---------|
-| PRB07 | 2024-12-31   | Exact boundary    | datetime |
-| PRB08 | 2024-13-01   | Immediately above | ValueError |
-| PRB09 | 2024-00-01   | Immediately below | ValueError |
-
-**Boundary around days:**
-
-| TC    | date        | Boundary covered  | Expected |
-|:------|:-------------|:------------------|:---------|
-| PRB10 | 2024-04-30   | Exact boundary    | datetime |
-| PRB11 | 2024-04-31   | Immediately above | ValueError |
-| PRB12 | 2024-04-00   | Immediately below | ValueError |
 
 
 ## 7 `participium.services.messaging_service.MessagingService.send_message`
