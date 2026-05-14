@@ -283,7 +283,7 @@ Coperta dagli stessi test della Node Coverage.
 
 ### Control Flow Graph
 
-![](../data/img/xxx.xxx)
+![](../data/img/WB5.drawio.png)
 
 ### Atomic Conditions
 - C1: username
