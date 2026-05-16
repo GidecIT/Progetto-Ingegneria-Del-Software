@@ -1,14 +1,5 @@
 from __future__ import annotations
 
-import pytest
-
-from participium.services.user_service import UserService
-
-
-pytestmark = pytest.mark.whitebox
-
-from __future__ import annotations
-
 from unittest.mock import MagicMock
 
 import pytest
@@ -45,7 +36,7 @@ def user_service(user_repository_mock, category_repository_mock, db_session_mock
     return UserService(
         user_repository=user_repository_mock,
         category_repository=category_repository_mock,
-        db_session=db_session_mock,
+        session=db_session_mock,
     )
 
 
@@ -70,7 +61,7 @@ def test_uu01_update_user_success(user_service, user_repository_mock):
     user_repository_mock.get_by_id.assert_called_once_with(1)
     assert updated_user.first_name == "New Name"
     assert updated_user.is_active is False
-    user_service.db_session.commit.assert_called_once()
+    user_service.session.commit.assert_called_once()
 
 
 def test_uu02_update_user_username_conflict(user_service, user_repository_mock):
@@ -93,7 +84,7 @@ def test_uu02_update_user_username_conflict(user_service, user_repository_mock):
 
     user_repository_mock.get_by_id.assert_called_once_with(1)
     user_repository_mock.get_by_username.assert_called_once_with("new_user")
-    user_service.db_session.commit.assert_not_called()
+    user_service.session.commit.assert_not_called()
 
 
 def test_uu03_update_user_email_conflict(user_service, user_repository_mock):
@@ -116,7 +107,7 @@ def test_uu03_update_user_email_conflict(user_service, user_repository_mock):
 
     user_repository_mock.get_by_id.assert_called_once_with(1)
     user_repository_mock.get_by_email.assert_called_once_with("new@email.com")
-    user_service.db_session.commit.assert_not_called()
+    user_service.session.commit.assert_not_called()
 
 
 def test_uu04_update_user_role_with_category(user_service, user_repository_mock, category_repository_mock):
@@ -145,7 +136,7 @@ def test_uu04_update_user_role_with_category(user_service, user_repository_mock,
     category_repository_mock.get_by_id.assert_called_once_with(5)
     assert updated_user.role == Role.OPERATOR
     assert updated_user.category_id == 5
-    user_service.db_session.commit.assert_called_once()
+    user_service.session.commit.assert_called_once()
 
 
 def test_uu05_update_user_empty_payload(user_service, user_repository_mock):
@@ -167,5 +158,5 @@ def test_uu05_update_user_empty_payload(user_service, user_repository_mock):
     # Assert
     user_repository_mock.get_by_id.assert_called_once_with(1)
     assert updated_user.first_name == "Test"  # Nessuna modifica
-    user_service.db_session.commit.assert_called_once()
+    user_service.session.commit.assert_called_once()
 

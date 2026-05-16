@@ -33,7 +33,12 @@ def test_update_profile_success_updates_fields_and_saves_picture(user_service_bu
     storage = user_service_bundle["storage_service"]
     session = user_service_bundle["session"]
 
-    user = User(id=1, username="olduser", first_name="Old", last_name="Name", email_notifications_enabled=False)
+    user = User()
+    user.id = 1
+    user.username = "olduser"
+    user.first_name = "Old"
+    user.last_name = "Name"
+    user.email_notifications_enabled = False
 
     # username not in use
     repo.get_by_username.return_value = None
@@ -67,10 +72,14 @@ def test_update_profile_raises_when_username_already_used(user_service_bundle):
     svc = user_service_bundle["service"]
     repo = user_service_bundle["user_repository"]
 
-    user = User(id=1, username="user1")
+    user = User()
+    user.id = 1
+    user.username = "user1"
 
-    # another user exists with requested username
-    repo.get_by_username.return_value = User(id=2, username="nuovo")
+    another_user = User()
+    another_user.id = 2
+    another_user.username = "nuovo"
+    repo.get_by_username.return_value = another_user
 
     with pytest.raises(ValidationError):
         svc.update_profile(user, username="nuovo")
@@ -81,7 +90,11 @@ def test_update_profile_none_username_does_not_change_existing_username(user_ser
     repo = user_service_bundle["user_repository"]
     session = user_service_bundle["session"]
 
-    user = User(id=1, username="user1", first_name="Old", last_name="Old")
+    user = User()
+    user.id = 1
+    user.username = "user1"
+    user.first_name = "Old"
+    user.last_name = "Old"
 
     # ensure get_by_username not triggered (or returns None)
     repo.get_by_username.return_value = None
@@ -99,14 +112,13 @@ def test_update_profile_optional_none_fields_do_not_change_except_provided_flags
     svc = user_service_bundle["service"]
     session = user_service_bundle["session"]
 
-    user = User(
-        id=1,
-        username="user1",
-        first_name="Jane",
-        last_name="Doe",
-        email_notifications_enabled=True,
-        profile_picture_path=None,
-    )
+    user = User()
+    user.id = 1
+    user.username = "user1"
+    user.first_name = "Jane"
+    user.last_name = "Doe"
+    user.email_notifications_enabled = True
+    user.profile_picture_path = None
 
     updated = svc.update_profile(user, username=None, first_name=None, last_name=None, email_notifications_enabled=False, profile_picture=None)
 
