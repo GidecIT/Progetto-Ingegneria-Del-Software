@@ -135,11 +135,11 @@ Prototype: `parse_date(value: str | None) -> datetime | None`
 - EC1 --> restituisce datetime
 - EC2 --> restituisce ValueError
 
-| TC-ID | value | Expected | Fixture |
-| :---- | :---- | :------- | :------ |
-| DT01 | `2002-12-31` | datetime | -  |
-| DT02 | None | None     | - |
-| DT03 | "" | ValueError | - |
+| TC-ID | value | Expected   | Fixture |
+| :---- | :---- |:-----------| :------ |
+| DT01 | `2002-12-31` | datetime   | -  |
+| DT02 | None | None       | - |
+| DT03 | "" | None       | - |
 | DT04 | `2056-31-04` | ValueError | - |
 | DT05 | `1980-00-04` | ValueError | - |
 | DT06 | `1998/03/04` | ValueError | - |
