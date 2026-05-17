@@ -227,10 +227,10 @@ Il sistema deve controllare se la transizione di stato è permessa secondo il wo
 
 Combinazioni possibili secondo i predicati:
 
-- **EC1 × EC7** --> transizione ammessa per Pending  Approval
-- **EC1 × EC8** --> transizione non ammessa per Pending  Approval
-- **EC2 × EC7** --> transizione ammessa per  Assigned
-- **EC2 × EC8** --> transizione non ammessa per  Assigned
+- **EC1 × EC7** --> transizione ammessa per Pending Approval
+- **EC1 × EC8** --> transizione non ammessa per Pending Approval
+- **EC2 × EC7** --> transizione ammessa per Assigned
+- **EC2 × EC8** --> transizione non ammessa per Assigned
 - **EC3 × EC7** --> transizione ammessa per In Progress
 - **EC3 × EC8** --> transizione non ammessa per In Progress
 - **EC4 × EC7** --> transizione ammessa per Suspended
