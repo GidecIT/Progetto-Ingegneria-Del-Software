@@ -23,7 +23,6 @@ USER_NO_PERM = User(id=103, username="generic_user", role=Role.CITIZEN)
 def seed_report_service() -> None:
     pass
 
-
 @pytest.fixture
 def report_context():
     session_mock = Mock()
@@ -144,6 +143,23 @@ def test_us07_update_status_invalid_workflow_transition(report_context, seed_rep
 
     with pytest.raises(ValidationError):
         service.update_status(VALID_REPORT_ID, OPERATOR_CAT_0, ReportStatus.RESOLVED.value)
+
+
+def test_us08_update_status_invalid_enum_value(report_context, seed_report_service: None) -> None:
+    service = report_context["service"]
+    repo = report_context["repo"]
+
+
+    mock_report = Report(id=VALID_REPORT_ID, category_id=0, status=ReportStatus.PENDING_APPROVAL)
+    mock_history = ReportStatusHistory(note=None)
+    mock_report.status_history = [mock_history]
+    mock_report.reporter = OPERATOR_CAT_0
+    mock_report.followers = []
+
+    repo.get_by_id.return_value = mock_report
+
+    with pytest.raises(ValidationError):
+        service.update_status(VALID_REPORT_ID, OPERATOR_CAT_0, "STATO_INVENTATO", note=None)
 
 
 def test_usb01_exact_boundary(report_context, seed_report_service: None) -> None:
