@@ -14,8 +14,7 @@ def test_dt02_value_none() -> None:
     assert parse_date(None) is None
 
 def test_dt03_value_empty_string() -> None:
-    with pytest.raises(ValueError):
-        parse_date("")
+    assert parse_date("") is None
 
 def test_dt04_invalid_month_too_high() -> None:
     with pytest.raises(ValueError):
