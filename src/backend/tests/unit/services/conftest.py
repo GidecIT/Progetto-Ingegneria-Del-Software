@@ -9,9 +9,15 @@ def report_service():
     """
     Fornisce l'istanza del servizio ReportService
     """    
+
+    report_repository = Mock()
+    
+    report_repository.get_follower.return_value = None  #false
+    report_repository.add_follower.return_value = None  #false
+
     return ReportService(
         session=Mock(),
-        report_repository=Mock(),
+        report_repository=report_repository,
         category_repository=Mock(),
         storage_service=Mock(),
         notification_service=Mock()
