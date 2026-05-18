@@ -32,6 +32,7 @@ def user_service(user_repository_mock, category_repository_mock, db_session_mock
         user_repository=user_repository_mock,
         category_repository=category_repository_mock,
         session=db_session_mock,
+        session=db_session_mock,
     )
 
 def test_uu01_update_user_success(user_service, user_repository_mock):
@@ -49,8 +50,8 @@ def test_uu01_update_user_success(user_service, user_repository_mock):
     user_repository_mock.get_by_id.assert_called_once_with(1)
     assert updated_user.first_name == "New Name"
     assert updated_user.is_active is False
-    # Verifichiamo il commit sulla sessione corretta
     user_service.session.commit.assert_called_once()
+
 
 def test_uu02_update_user_username_conflict(user_service, user_repository_mock):
     """UU-02: Testa il conflitto di username."""
@@ -67,6 +68,7 @@ def test_uu02_update_user_username_conflict(user_service, user_repository_mock):
 
     user_repository_mock.get_by_id.assert_called_once_with(1)
     user_repository_mock.get_by_username.assert_called_once_with("new_user")
+    user_service.session.commit.assert_not_called()
 
     user_service.session.commit.assert_not_called()
 
