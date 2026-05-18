@@ -135,11 +135,11 @@ Prototype: `parse_date(value: str | None) -> datetime | None`
 - EC1 --> restituisce datetime
 - EC2 --> restituisce ValueError
 
-| TC-ID | value | Expected | Fixture |
-| :---- | :---- | :------- | :------ |
-| DT01 | `2002-12-31` | datetime | -  |
-| DT02 | None | None     | - |
-| DT03 | "" | ValueError | - |
+| TC-ID | value | Expected   | Fixture |
+| :---- | :---- |:-----------| :------ |
+| DT01 | `2002-12-31` | datetime   | -  |
+| DT02 | None | None       | - |
+| DT03 | "" | None       | - |
 | DT04 | `2056-31-04` | ValueError | - |
 | DT05 | `1980-00-04` | ValueError | - |
 | DT06 | `1998/03/04` | ValueError | - |
@@ -227,10 +227,10 @@ Il sistema deve controllare se la transizione di stato è permessa secondo il wo
 
 Combinazioni possibili secondo i predicati:
 
-- **EC1 × EC7** --> transizione ammessa per Pending  Approval
-- **EC1 × EC8** --> transizione non ammessa per Pending  Approval
-- **EC2 × EC7** --> transizione ammessa per  Assigned
-- **EC2 × EC8** --> transizione non ammessa per  Assigned
+- **EC1 × EC7** --> transizione ammessa per Pending Approval
+- **EC1 × EC8** --> transizione non ammessa per Pending Approval
+- **EC2 × EC7** --> transizione ammessa per Assigned
+- **EC2 × EC8** --> transizione non ammessa per Assigned
 - **EC3 × EC7** --> transizione ammessa per In Progress
 - **EC3 × EC8** --> transizione non ammessa per In Progress
 - **EC4 × EC7** --> transizione ammessa per Suspended
@@ -487,15 +487,16 @@ Il sistema deve potere permettere l'aggiornamento di stato di un report.<br>
 - EC1 x EC3 x EC5 x EC7 x EC9 --> Nota mancante per report rifiutato
 - EC1 x EC3 x EC5 x EC7 x EC10 --> Categoria operatore non corrispondente a quella del report
 
-| TC-ID | report_id | operator | next_status_value | note                    | Expected           | Fixture |
-| :---- | :-------- | :------- | :---------------- |:------------------------|:-------------------|:-----------|
-| US01  | 10 | op_cat_1 | Assigned | None | Report | La segnalazione è in stato Pending Approval, l'operatore ha i permessi |
-| US02  | 10 | op_cat_1 | Assigned | "Report già segnalato"  | Report | La segnalazione è in stato Pending Approval, l'operatore ha i permessi |
-| US03  | 999 | op_cat_1 | Assigned | None | NotFoundError | La segnalazione non esiste |
-| US04  | 10 | user_no_perm | Assigned | None | AuthorizationError | La segnalazione esiste, l'operatore non ha i permessi  |
-| US05  | 10 | op_cat_2 | Assigned | None | AuthorizationError | La segnalazione esiste, l'operatore non appartiene alla stessa categoria del report |
-| US06  | 10 | op_cat_1 | Rejected | None | ValidationError | La segnalazione esiste, l'operatore ha i permessi |
-| US07  | 10 | op_cat_1 | Rejected | "Lo stato non mi piace" | ValidationError | La segnalazione è in stato Resolved, l'operatore ha i permessi |
+| TC-ID | report_id | operator | next_status_value | note                    | Expected           | Fixture                                                                             |
+|:------| :-------- | :------- |:------------------|:------------------------|:-------------------|:------------------------------------------------------------------------------------|
+| US01  | 10 | op_cat_1 | Assigned          | None                    | Report | La segnalazione è in stato Pending Approval, l'operatore ha i permessi              |
+| US02  | 10 | op_cat_1 | Assigned          | "Report già segnalato"  | Report | La segnalazione è in stato Pending Approval, l'operatore ha i permessi              |
+| US03  | 999 | op_cat_1 | Assigned          | None                    | NotFoundError | La segnalazione non esiste                                                          |
+| US04  | 10 | user_no_perm | Assigned          | None                    | AuthorizationError | La segnalazione esiste, l'operatore non ha i permessi                               |
+| US05  | 10 | op_cat_2 | Assigned          | None                    | AuthorizationError | La segnalazione esiste, l'operatore non appartiene alla stessa categoria del report |
+| US06  | 10 | op_cat_1 | Rejected          | None                    | ValidationError | La segnalazione esiste, l'operatore ha i permessi                                   |
+| US07  | 10 | op_cat_1 | Rejected          | "Lo stato non mi piace" | ValidationError | La segnalazione è in stato Resolved, l'operatore ha i permessi                      |
+| US08  | 10 | op_cat_1 | StatoInventato    | None                    | ValidationError | La segnalazione è in stato Pending Approval, l'operatore ha i permessi              |
 
 ### Boundary
 
@@ -516,7 +517,7 @@ Il sistema deve potere permettere l'aggiornamento di stato di un report.<br>
 | USB05 | 10 | op_valido | Rejected| ""   | Immediately below | ValidationError |
 
 
-**Boundary around "operator.category_id" e "report.category_id":**
+**Boundary around "operator.category_id" and "report.category_id":**
 
 | TC    | operator.category_id | report.category_id | Boundary covered  | Expected        |
 |:------|:-------|:-------|:------------------|:-------|
