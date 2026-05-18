@@ -5,6 +5,7 @@ from participium.models.report import Report
 from participium.models.user import User
 from participium.repositories.category_repository import CategoryRepository
 from participium.repositories.message_repository import MessageRepository
+from participium.repositories.notification_repository import NotificationRepository
 
 @pytest.fixture(scope="function")
 def db_session(monkeypatch):
@@ -18,17 +19,6 @@ def db_session(monkeypatch):
 
     session.close()
     close_connection()
-
-
-# REPOSITORY FIXTURES
-
-@pytest.fixture
-def category_repository(db_session):
-    return CategoryRepository(db_session)
-
-@pytest.fixture
-def message_repository(db_session):
-    return MessageRepository(db_session)
 
 # ENTITY FIXTURES 
 
@@ -56,3 +46,17 @@ def test_report(db_session, test_user, test_category):
     db_session.add(report)
     db_session.commit()
     return report
+
+# REPOSITORY FIXTURES
+
+@pytest.fixture
+def category_repository(db_session):
+    return CategoryRepository(db_session)
+
+@pytest.fixture
+def message_repository(db_session):
+    return MessageRepository(db_session)
+
+@pytest.fixture
+def notification_repository(db_session):
+    return NotificationRepository(db_session)
