@@ -165,7 +165,7 @@ Coperto dai test sopra.
 4. **RR-04**: `sender` è CITIZEN, liste vuote. Verifica il ritorno `None`.
 5. **RR-05**: Gestisce i casi con mittenti o autori di stato `None` (C3/C6 = False).
 
-# 3 NotificationService.notify_status_change
+## 3 `NotificationService.notify_status_change`
 
 ### Control Flow Graph
 
