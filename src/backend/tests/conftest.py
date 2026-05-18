@@ -6,6 +6,7 @@ from participium.models.user import User
 from participium.repositories.category_repository import CategoryRepository
 from participium.repositories.message_repository import MessageRepository
 from participium.repositories.notification_repository import NotificationRepository
+from participium.repositories.report_repository import ReportRepository
 
 @pytest.fixture(scope="function")
 def db_session(monkeypatch):
@@ -20,11 +21,20 @@ def db_session(monkeypatch):
     session.close()
     close_connection()
 
+@pytest.fixture
+def session(db_session):
+    """Alias di db_session per i test legacy/blackbox che cercano 'session'."""
+    return db_session
+
 # ENTITY FIXTURES 
 
 @pytest.fixture
+def report_repository(db_session):
+    return ReportRepository(db_session)
+
+@pytest.fixture
 def test_user(db_session):
-    user = User(username="tester", email="test@ex.com", first_name="T", last_name="T", password_hash="hash")
+    user = User(id= 1, username="tester", email="test@ex.com", first_name="T", last_name="T", password_hash="hash")
     db_session.add(user)
     db_session.commit()
     return user
