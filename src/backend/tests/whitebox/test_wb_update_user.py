@@ -3,7 +3,7 @@ from __future__ import annotations
 from unittest.mock import MagicMock
 import pytest
 
-from participium.core.exceptions import ValidationError
+from participium.core.exceptions import NotFoundError, ValidationError
 from participium.models.enums import Role
 from participium.services.user_service import UserService
 
@@ -119,4 +119,53 @@ def test_uu05_update_user_empty_payload(user_service, user_repository_mock):
     updated_user = user_service.update_user(1, payload)
 
     assert updated_user.first_name == "Test"
+    user_service.session.commit.assert_called_once()
+
+def test_uu06_update_user_not_found(user_service, user_repository_mock):
+    """UU-06: user_id inesistente lancia NotFoundError."""
+    user_repository_mock.get_by_id.return_value = None
+
+    with pytest.raises(NotFoundError, match="User not found."):
+        user_service.update_user(999, {})
+
+def test_uu07_update_user_same_username_no_conflict(user_service, user_repository_mock):
+    """UU-07: Username identico all'attuale non triggera il conflict check."""
+    user = MagicMock()
+    user.id = 1
+    user.username = "same_user"
+    user_repository_mock.get_by_id.return_value = user
+
+    payload = {"username": "same_user"}
+    user_service.update_user(1, payload)
+
+    user_repository_mock.get_by_username.assert_not_called()
+
+def test_uu08_update_user_role_to_citizen_clears_category(user_service, user_repository_mock):
+    """UU-08: Cambio ruolo a CITIZEN azzera category_id."""
+    user = MagicMock()
+    user.id = 1
+    user.role = Role.OPERATOR
+    user.category_id = 5
+    user_repository_mock.get_by_id.return_value = user
+
+    payload = {"role": Role.CITIZEN}
+
+    updated_user = user_service.update_user(1, payload)
+
+    assert updated_user.role == Role.CITIZEN
+    assert updated_user.category_id is None
+    user_service.session.commit.assert_called_once()
+
+def test_uu09_update_user_email_notifications(user_service, user_repository_mock):
+    """UU-09: Aggiornamento email_notifications_enabled."""
+    user = MagicMock()
+    user.id = 1
+    user.email_notifications_enabled = True
+    user_repository_mock.get_by_id.return_value = user
+
+    payload = {"email_notifications_enabled": False}
+
+    updated_user = user_service.update_user(1, payload)
+
+    assert updated_user.email_notifications_enabled is False
     user_service.session.commit.assert_called_once()
