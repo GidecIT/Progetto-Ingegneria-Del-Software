@@ -26,12 +26,10 @@ def db_session_mock():
 
 @pytest.fixture
 def user_service(user_repository_mock, category_repository_mock, db_session_mock):
-    """Fixture for the UserService with mocked dependencies."""
 
     return UserService(
         user_repository=user_repository_mock,
         category_repository=category_repository_mock,
-        session=db_session_mock,
         session=db_session_mock,
     )
 
