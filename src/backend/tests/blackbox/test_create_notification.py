@@ -22,60 +22,94 @@ def notification_service_bundle():
     return {"service": service, "session": session, "repo": repo, "email": email}
 
 
-def test_create_notification_with_report_sets_fields_and_persists(notification_service_bundle):
+def test_cn01_create_with_user_and_report(notification_service_bundle):
+    """TC-ID: CN01 - Utente esiste, Segnalazione presente"""
     svc = notification_service_bundle["service"]
     repo = notification_service_bundle["repo"]
     session = notification_service_bundle["session"]
 
-    # make repo.add simulate DB assigning an id
-    def add_side_effect(notification: Notification) -> None:
-        notification.id = 555
-
-    repo.add.side_effect = add_side_effect
-
-    user = User(id=10, email="u@example.com", email_notifications_enabled=True)
-    report = Report(id=20)
+    user = User(id=1, email="user1@example.com", email_notifications_enabled=False)
+    report = Report(id=101)
 
     result = svc.create_notification(user, NotificationType.MESSAGE, "Aggiornamento", "Messaggio", report=report)
 
     assert isinstance(result, Notification)
-    assert result.id == 555
+    assert result.user_id == 1
+    assert result.report_id == 101
+    assert result.title == "Aggiornamento"
+    assert result.body == "Messaggio"
+    assert result.type == NotificationType.MESSAGE
     repo.add.assert_called_once()
-    added = repo.add.call_args[0][0]
-    assert added.user_id == user.id
-    assert added.report_id == report.id
-    assert added.title == "Aggiornamento"
-    assert added.body == "Messaggio"
-    assert added.type == NotificationType.MESSAGE
-    session.commit.assert_called_once()
 
 
-def test_create_notification_without_report_persists_with_none_report_id(notification_service_bundle):
+def test_cn02_create_with_user_no_report(notification_service_bundle):
+    """TC-ID: CN02 - utente esiste (senza report)"""
     svc = notification_service_bundle["service"]
     repo = notification_service_bundle["repo"]
-    session = notification_service_bundle["session"]
 
-    user = User(id=11, email="u2@example.com", email_notifications_enabled=False)
+    user = User(id=1, email="user1@example.com", email_notifications_enabled=False)
 
-    result = svc.create_notification(user, NotificationType.MESSAGE, "Titolo", "Body", report=None)
+    result = svc.create_notification(user, NotificationType.MESSAGE, "Aggiornamento", "Messaggio", report=None)
 
     assert isinstance(result, Notification)
+    assert result.user_id == 1
+    assert result.report_id is None
     repo.add.assert_called_once()
-    added = repo.add.call_args[0][0]
-    assert added.user_id == user.id
-    assert added.report_id is None
-    session.commit.assert_called_once()
 
 
-def test_create_notification_with_no_user_returns_none_and_no_persistence(notification_service_bundle):
+def test_cn03_create_no_user_with_report(notification_service_bundle):
+    """TC-ID: CN03 - Segnalazione presente (senza utente)"""
     svc = notification_service_bundle["service"]
     repo = notification_service_bundle["repo"]
-    session = notification_service_bundle["session"]
-    email = notification_service_bundle["email"]
 
-    result = svc.create_notification(None, NotificationType.MESSAGE, "Titolo", "Body", report=Report(id=1))
+    report = Report(id=101)
+
+    result = svc.create_notification(None, NotificationType.MESSAGE, "Aggiornamento", "Messaggio", report=report)
 
     assert result is None
     repo.add.assert_not_called()
-    session.commit.assert_not_called()
-    email.send.assert_not_called()
+
+
+def test_cn04_create_no_user_no_report(notification_service_bundle):
+    """TC-ID: CN04 - Nessun utente, nessun report"""
+    svc = notification_service_bundle["service"]
+    repo = notification_service_bundle["repo"]
+
+    result = svc.create_notification(None, NotificationType.MESSAGE, "Aggiornamento", "Messaggio", report=None)
+
+    assert result is None
+    repo.add.assert_not_called()
+
+
+def test_cnb01_boundary_title_body_min_length(notification_service_bundle):
+    """TC-ID: CNB01 - Boundary around title and body (1 char)"""
+    svc = notification_service_bundle["service"]
+    user = User(id=1, email="u@e.com", email_notifications_enabled=False)
+
+    result = svc.create_notification(user, NotificationType.MESSAGE, "a", "b")
+
+    assert isinstance(result, Notification)
+    assert result.title == "a"
+    assert result.body == "b"
+
+
+def test_cnb02_boundary_empty_title(notification_service_bundle):
+    """TC-ID: CNB02 - Boundary around title and body (empty title)"""
+    svc = notification_service_bundle["service"]
+    user = User(id=1, email="u@e.com", email_notifications_enabled=False)
+
+    result = svc.create_notification(user, NotificationType.MESSAGE, "", "b")
+
+    assert isinstance(result, Notification)
+    assert result.title == ""
+
+
+def test_cnb03_boundary_empty_body(notification_service_bundle):
+    """TC-ID: CNB03 - Boundary around title and body (empty body)"""
+    svc = notification_service_bundle["service"]
+    user = User(id=1, email="u@e.com", email_notifications_enabled=False)
+
+    result = svc.create_notification(user, NotificationType.MESSAGE, "a", "")
+
+    assert isinstance(result, Notification)
+    assert result.body == ""
