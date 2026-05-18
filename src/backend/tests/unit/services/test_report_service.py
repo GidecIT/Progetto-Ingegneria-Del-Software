@@ -1,4 +1,5 @@
 from __future__ import annotations
+from unittest.mock import Mock
 
 import pytest
 from participium.core.exceptions import AuthorizationError, NotFoundError, ValidationError
@@ -16,7 +17,7 @@ class TestGetAccesibleReport:
         
         mock_report.status = ReportStatus.RESOLVED 
 
-        result = report_service.get_accessible_report(report_id=100, user=None)
+        result = report_service.get_accessible_report(report_id=mock_report.id, user=None)
 
         assert result == mock_report
 
@@ -28,7 +29,7 @@ class TestGetAccesibleReport:
 
 
         with pytest.raises(AuthorizationError) as exc_info:
-            report_service.get_accessible_report(report_id=100, user=None)
+            report_service.get_accessible_report(report_id=mock_report.id, user=None)
         
         assert "You do not have access to this report." in str(exc_info.value)
 
@@ -53,7 +54,7 @@ class TestGetAccesibleReport:
         mock_user.id = user_id
         mock_user.category_id = user_category
 
-        result = report_service.get_accessible_report(report_id=100, user=mock_user)
+        result = report_service.get_accessible_report(report_id=mock_report.id, user=mock_user)
 
         assert result == mock_report
 
@@ -86,11 +87,103 @@ class TestGetAccesibleReport:
         mock_user.category_id = user_category
 
         with pytest.raises(AuthorizationError) as exc_info:
-            report_service.get_accessible_report(report_id=100, user=mock_user)
+            report_service.get_accessible_report(report_id=mock_report.id, user=mock_user)
         
         assert "You do not have access to this report." in str(exc_info.value)
 
 
 
+class TestFollowReport:
+    def test_report_is_not_public_ValidationError(self, report_service, mock_report):
+        """
+        Il report non è pubblico. ValidationError
+        """
+      
+        report_service.report_repository.get_by_id.return_value = mock_report
+
+        with pytest.raises(ValidationError) as exc_info:
+            report_service.follow_report(report_id=mock_report.id, user=None)
+
+        assert "Only published reports can be followed." in str(exc_info.value)
+
+    def test_follow_report_not_found_raises_error(self, report_service):
+        """ Il report non esiste.  NotFoundError."""
+        report_service.report_repository.get_by_id.return_value = None
+
+        with pytest.raises(NotFoundError) as exc_info:
+            report_service.follow_report(report_id=999, user=None)
+
+        assert "Report not found." in str(exc_info.value)    
+
+    def test_follow_report_already_following_returns_report(self, report_service, mock_report, mock_user):
+        """L'utente segue già il report. Ritorna il report."""
+        report_service.report_repository.get_by_id.return_value = mock_report
+        mock_report.status = ReportStatus.RESOLVED  # Pubblico
+        
+        report_service.report_repository.get_follower.return_value = Mock() #true
+
+        result = report_service.follow_report(report_id=mock_report.id, user=mock_user)
+
+        assert result == mock_report
+        report_service.report_repository.add_follower.assert_not_called()
+
+    def test_follow_report(self, report_service, mock_report, mock_user):
+        """L'utente non segue già il report. Aggiunge follow."""
+        report_service.report_repository.get_by_id.return_value = mock_report
+        mock_report.status = ReportStatus.RESOLVED  # Pubblico
+        
+        result = report_service.follow_report(report_id=mock_report.id, user=mock_user)
+
+        assert result == mock_report
+
+        report_service.report_repository.add_follower.assert_called_once() #verifichiamo sia stata chiamata add_follower
+        called_args, _ = report_service.report_repository.add_follower.call_args
+        report_follower_passed = called_args[0]
+        assert report_follower_passed.report_id == mock_report.id
+        assert report_follower_passed.user_id == mock_user.id
+
+        report_service.session.commit.assert_called_once() #verifichiamo sia stata chiamata commit
+        assert report_service.report_repository.get_by_id.call_count == 2
 
     
+class TestUnfollowReport:
+    def test_unfollow_report_not_found_raises_error(self, report_service):
+        """
+        Il report cercato non esiste nel database. La funzione deve lanciare NotFoundError.
+        """
+        report_service.report_repository.get_by_id.return_value = None
+
+        with pytest.raises(NotFoundError) as exc_info:
+            report_service.unfollow_report(report_id=999, user=None)
+        
+        assert "Report not found." in str(exc_info.value)
+
+    def test_unfollow_report_not_following(self, report_service, mock_user, mock_report):
+        """ L'utente non segue il report, non fa modifiche e ritorna il report"""
+        report_service.report_repository.get_by_id.return_value = mock_report
+
+        report_service.report_repository.get_follower.return_value = None #false -> non entra nel if
+
+        result = report_service.unfollow_report(report_id = mock_report.id, user=mock_user)
+        assert result == mock_report
+        report_service.report_repository.remove_follower.assert_not_called()
+        report_service.session.commit.assert_not_called()
+
+    def test_unfollow_report(self, report_service, mock_user, mock_report):
+        """ L'utente segue il report, e avviene unfollow"""
+        report_service.report_repository.get_by_id.return_value = mock_report
+
+        mock_follower = Mock() #true
+        report_service.report_repository.get_follower.return_value = mock_follower # entra nel if
+
+        result = report_service.unfollow_report(report_id = mock_report.id, user=mock_user)
+        assert result == mock_report
+        report_service.report_repository.get_follower.assert_called_once_with(mock_report.id, mock_user.id)
+        report_service.report_repository.remove_follower.assert_called_once_with(mock_follower)
+
+        report_service.session.commit.assert_called_once()
+        assert report_service.report_repository.get_by_id.call_count == 2
+
+
+        
+
