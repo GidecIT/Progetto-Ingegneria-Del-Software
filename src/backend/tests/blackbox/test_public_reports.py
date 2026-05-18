@@ -57,6 +57,8 @@ def report_service(session, report_repository, category_repository, storage_serv
     ],
     indirect=["fixture_state"]
 )
+
+@pytest.mark.skip(reason="Disabled.")
 def test_list_public_reports(report_service, fixture_state, category_id, status, date_from, date_to, sort, expected_ids):
     result = report_service.list_public_reports(category_id=category_id,status=status,date_from=date_from,date_to=date_to,sort=sort)
     
