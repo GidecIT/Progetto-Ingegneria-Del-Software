@@ -1,3 +1,4 @@
+from participium.services.user_service import UserService
 from participium.models.enums import ReportStatus, Role
 import pytest
 from unittest.mock import Mock
@@ -18,13 +19,9 @@ def report_service():
     Fornisce l'istanza del servizio ReportService
     """    
 
-    report_repository = Mock()
-    report_repository.get_follower.return_value = None  #false
-    report_repository.add_follower.return_value = None  #false
-
     service =  ReportService(
         session=Mock(),
-        report_repository=report_repository,
+        report_repository=Mock(),
         category_repository=Mock(),
         storage_service=Mock(),
         notification_service=Mock()
@@ -102,4 +99,20 @@ def mock_admin(mock_user):
     mock_user.role = Role.ADMIN
     mock_user.category_id = None  
     return mock_user
+
+@pytest.fixture
+def user_service():
+    """
+    Fornisce l'istanza del servizio UserService con tutti i repository mockati.
+    Pronto per lo Unit Testing.
+    """
+    service = UserService(
+        session=Mock(),
+        user_repository=Mock(),
+        category_repository=Mock(),
+        token_repository=Mock(),
+        notification_repository=Mock(),
+        storage_service=Mock()
+    )
+    return service
 
