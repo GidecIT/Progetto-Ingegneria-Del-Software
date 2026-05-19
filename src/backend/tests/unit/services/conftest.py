@@ -86,3 +86,20 @@ def mock_user():
     user.verification_tokens = []
     
     return user
+
+@pytest.fixture
+def mock_operator(mock_user):
+    """Prende l'utente base e lo trasforma in un Operatore"""
+    mock_user.id = 2
+    mock_user.role = Role.OPERATOR
+    mock_user.category_id = 6
+    return mock_user
+
+@pytest.fixture
+def mock_admin(mock_user):
+    """Prende l'utente base e lo trasforma in un Admin"""
+    mock_user.id = 3
+    mock_user.role = Role.ADMIN
+    mock_user.category_id = None  
+    return mock_user
+

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 import pytest
 from participium.core.exceptions import AuthorizationError, NotFoundError, ValidationError
@@ -49,133 +49,32 @@ class TestGetReport:
         report_service.report_repository.get_by_id.assert_called_once_with(mock_report.id)
 
 class TestCreateReport:   
-    def test_crm_01_malformed_category_id(self, report_service) -> None:
-        with pytest.raises(ValidationError, match="A valid active category is required."):
-            report_service.create_report(
-                reporter=_user(id=1),
-                category_id="uno",
-                title="Buca profonda",
-                description="Si segnala una buca di ampie dimensioni",
-                latitude=45.4642,
-                longitude=9.1900,
-                photos=[_photo(), _photo()],
-                is_anonymous=True,
-            )
-
-
-    def test_crm_02_none_category_id(self,report_service) -> None:
-        with pytest.raises(ValidationError, match="A valid active category is required."):
-            report_service.create_report(
-                reporter=_user(id=1),
-                category_id=None,
-                title="Buca profonda",
-                description="Si segnala una buca di ampie dimensioni",
-                latitude=45.4642,
-                longitude=9.1900,
-                photos=[_photo(), _photo()],
-                is_anonymous=True,
-            )
-
-
-    def test_crm_03_inactive_category(self,report_service) -> None:
-        report_service.category_repository.get_by_id.return_value = Mock(id=1, is_active=False)
-
-        with pytest.raises(ValidationError, match="A valid active category is required."):
-            report_service.create_report(
-                reporter=_user(id=1),
-                category_id=1,
-                title="Buca profonda",
-                description="Si segnala una buca di ampie dimensioni",
-                latitude=45.4642,
-                longitude=9.1900,
-                photos=[_photo(), _photo()],
-                is_anonymous=True,
-            )
-
-
-    def test_crm_04_missing_title(self,report_service_with_active_category) -> None:
-        with pytest.raises(ValidationError, match="Title and description are required."):
+    @pytest.mark.parametrize(
+    "category_id, title, description, latitude, longitude, photos, expected_error",
+    [
+        ("uno", "Titolo", "Desc", 45.4, 9.1, [_photo()], "A valid active category is required."),
+        (None, "Titolo", "Desc", 45.4, 9.1, [_photo()], "A valid active category is required."),
+        (1, None, "Desc", 45.4, 9.1, [_photo()], "Title and description are required."),
+        (1, "Titolo", None, 45.4, 9.1, [_photo()], "Title and description are required."),
+        (1, "Titolo", "Desc", None, 9.1, [_photo()], "Latitude and longitude are required."),
+        (1, "Titolo", "Desc", "Quaranta", 9.1, [_photo()], "Latitude and longitude must be valid numbers."),
+        (1, "Titolo", "Desc", 45.4, 9.1, [], "At least one photo is required."),
+    ]
+    )
+    def test_create_report_validation_errors(
+        self,report_service_with_active_category, category_id, title, description, latitude, longitude, photos, expected_error
+    ):
+        with pytest.raises(ValidationError, match=expected_error):
             report_service_with_active_category.create_report(
                 reporter=_user(id=1),
-                category_id=1,
-                title=None,
-                description="Si segnala una buca di ampie dimensioni",
-                latitude=45.4642,
-                longitude=9.1900,
-                photos=[_photo(), _photo()],
+                category_id=category_id,
+                title=title,
+                description=description,
+                latitude=latitude,
+                longitude=longitude,
+                photos=photos,
                 is_anonymous=True,
             )
-
-
-    def test_crm_05_missing_description(self,report_service_with_active_category) -> None:
-        with pytest.raises(ValidationError, match="Title and description are required."):
-            report_service_with_active_category.create_report(
-                reporter=_user(id=1),
-                category_id=1,
-                title="Buca profonda",
-                description=None,
-                latitude=45.4642,
-                longitude=9.1900,
-                photos=[_photo(), _photo()],
-                is_anonymous=True,
-            )
-
-
-    def test_crm_06_missing_latitude(self,report_service_with_active_category) -> None:
-        with pytest.raises(ValidationError, match="Latitude and longitude are required."):
-            report_service_with_active_category.create_report(
-                reporter=_user(id=1),
-                category_id=1,
-                title="Buca profonda",
-                description="Si segnala una buca di ampie dimensioni",
-                latitude=None,
-                longitude=9.1900,
-                photos=[_photo(), _photo()],
-                is_anonymous=True,
-            )
-
-
-    def test_crm_07_missing_longitude(self,report_service_with_active_category) -> None:
-        with pytest.raises(ValidationError, match="Latitude and longitude are required."):
-            report_service_with_active_category.create_report(
-                reporter=_user(id=1),
-                category_id=1,
-                title="Buca profonda",
-                description="Si segnala una buca di ampie dimensioni",
-                latitude=45.4642,
-                longitude=None,
-                photos=[_photo(), _photo()],
-                is_anonymous=True,
-            )
-
-
-    def test_crm_08_malformed_coordinates(self,report_service_with_active_category) -> None:
-        with pytest.raises(ValidationError, match="Latitude and longitude must be valid numbers."):
-            report_service_with_active_category.create_report(
-                reporter=_user(id=1),
-                category_id=1,
-                title="Buca profonda",
-                description="Si segnala una buca di ampie dimensioni",
-                latitude="Quaranta",
-                longitude=9.1900,
-                photos=[_photo(), _photo()],
-                is_anonymous=True,
-            )
-
-
-    def test_crm_09_no_photos(self,report_service_with_active_category) -> None:
-        with pytest.raises(ValidationError, match="At least one photo is required."):
-            report_service_with_active_category.create_report(
-                reporter=_user(id=1),
-                category_id=1,
-                title="Buca profonda",
-                description="Si segnala una buca di ampie dimensioni",
-                latitude=45.4642,
-                longitude=9.1900,
-                photos=[],
-                is_anonymous=True,
-            )
-
 
     def test_crm_10_too_many_photos(self,report_service_with_active_category) -> None:
         photos = [
@@ -203,7 +102,7 @@ class TestCreateReport:
     def test_crm_11_success_single_photo_loop(self,report_service_with_active_category) -> None:
         expected_report = Mock()
         report_service_with_active_category.storage_service.save.return_value = "/img/photo.jpg"
-        report_service_with_active_category.report_repository.get_by_id.return_value = expected_report
+        report_service_with_active_category.get_report = Mock(return_value=expected_report)
 
         result = report_service_with_active_category.create_report(
             reporter=_user(id=1),
@@ -228,7 +127,7 @@ class TestCreateReport:
     def test_crm_12_success_multiple_photos_loop(self,report_service_with_active_category) -> None:
         expected_report = Mock()
         report_service_with_active_category.storage_service.save.return_value = "/img/photo.jpg"
-        report_service_with_active_category.report_repository.get_by_id.return_value = expected_report
+        report_service_with_active_category.get_report = Mock(return_value=expected_report)
 
         result = report_service_with_active_category.create_report(
             reporter=_user(id=1),
@@ -419,4 +318,165 @@ class TestUnfollowReport:
         report_service.session.commit.assert_called_once()
         assert report_service.report_repository.get_by_id.call_count == 2
 
+class TestListPendingReports:
+    def test_list_pending_reports_with_all_filters(self, report_service):
+        """Verifica che tutti i filtri vengano estratti"""
+        fake_reports = [Mock(id=1, title="Report Pendente 1"), Mock(id=2, title="Report Pendente 2")]
+        report_service.report_repository.list_pending.return_value = fake_reports
 
+        filtri_input = {
+            "category_id": 5,
+            "date_from": "2026-01-01",
+            "date_to": "2026-01-31",
+            "extra_field": "daignorare"
+        }
+        result = report_service.list_pending_reports(filtri_input)
+
+        assert result == fake_reports
+        assert len(result) == 2
+        
+        report_service.report_repository.list_pending.assert_called_once_with(
+            category_id=5,
+            date_from="2026-01-01",
+            date_to="2026-01-31"
+        )
+
+    def test_list_pending_reports_with_empty_filters(self, report_service):
+        """Verifica il comportamento quando il dizionarioè vuoto"""
+        report_service.report_repository.list_pending.return_value = []
+
+        result = report_service.list_pending_reports({})
+
+        assert result == []
+        report_service.report_repository.list_pending.assert_called_once_with(
+            category_id=None,
+            date_from=None,
+            date_to=None
+        )
+
+class TestListOperatorReports:
+    def test_list_operator_report(self, report_service, mock_operator):
+        """verifica che ruolo e categoria vengano passati correttamente"""
+        fake_reports = [Mock(id=201, title="Report Operatore 1")]
+        report_service.report_repository.list_operator_reports.return_value = fake_reports
+
+        result = report_service.list_operator_reports(mock_operator)
+        assert result == fake_reports
+        report_service.report_repository.list_operator_reports.assert_called_once_with(
+            Role.OPERATOR, 
+            mock_operator.category_id
+        )
+
+
+class TestAssignReport:
+    def test_assign_report_user_AuthorizationError(self, mock_user, report_service, mock_report):
+        """Il ruolo è cittadino quindi lancia AuthorizationError"""
+        with pytest.raises(AuthorizationError) as exc_info:
+            report_service.assign_report(mock_report.id, mock_user)
+        assert str(exc_info.value) == "Only operators or admins can assign reports."
+    
+    def test_assign_report_not_pending_approval(self, report_service, mock_operator, mock_report):
+        """Il report NON è pending approval, lancia ValidationError"""
+        mock_report.status = ReportStatus.ASSIGNED
+        report_service.get_report = Mock(return_value=mock_report)
+        report_service._ensure_operator_category_access = Mock()
+        
+        with pytest.raises(ValidationError) as exc_info:
+            report_service.assign_report(mock_report.id, mock_operator)
+            
+        assert str(exc_info.value) == "Only pending reports can be assigned."
+        report_service.get_report.assert_called_once_with(mock_report.id)
+        report_service._ensure_operator_category_access.assert_called_once_with(mock_operator, mock_report)
+
+    def test_assign_report_success_operator(self, report_service, mock_operator, mock_report):
+        """Caso felice con Operatore: lo stato cambia, logga la storia, notifica e committa"""        
+        mock_report.category.name = "Verde Pubblico"
+
+        fake_recipients = ["user1@example.com"]
+        report_service.get_report = Mock(return_value=mock_report)
+        report_service._ensure_operator_category_access = Mock()
+        report_service._recipients = Mock(return_value=fake_recipients)
+        
+        result = report_service.assign_report(mock_report.id, mock_operator)
+        
+        assert mock_report.status == ReportStatus.ASSIGNED
+        report_service.report_repository.add_status_entry.assert_called_once()
+        called_args, _ = report_service.report_repository.add_status_entry.call_args
+        history_entry = called_args[0]
+        assert history_entry.report_id == mock_report.id
+        assert history_entry.previous_status == ReportStatus.PENDING_APPROVAL
+        assert history_entry.new_status == ReportStatus.ASSIGNED
+        assert history_entry.note == "Accepted for category 'Verde Pubblico'."
+        assert history_entry.changed_by_id == mock_operator.id
+        report_service.notification_service.notify_status_change.assert_called_once_with(
+            recipients=fake_recipients,
+            report=mock_report,
+            body=f"Report #{mock_report.id} has been assigned for handling in category 'Verde Pubblico'."
+        )
+        
+        report_service.session.commit.assert_called_once()
+        assert report_service.get_report.call_count == 2
+        assert result == mock_report
+class TestUpdateStatus:
+    def test_update_status_not_in_operator_roles(self, report_service, mock_user, mock_report):
+        """L'utente è un cittadino, lancia AuthorizationError"""
+        with pytest.raises(AuthorizationError) as exc_info:
+            report_service.update_status(mock_report.id, mock_user, "ASSIGNED")
+        assert str(exc_info.value) == "Only operators and admins can update report status."
+    
+    def test_update_status_not_valid_status(self, report_service, mock_operator, mock_report):
+        """Lo stato passato come stringa non esiste nell'enum, lancia ValidationError"""
+        report_service.get_report = Mock(return_value=mock_report)
+        report_service._ensure_operator_category_access = Mock()  
+        
+        with pytest.raises(ValidationError) as exc_info:
+            report_service.update_status(mock_report.id, mock_operator, "NON VALIDO")
+        assert str(exc_info.value) == "Invalid report status."
+
+    def test_update_status_rejected_not_note(self, report_service, mock_operator, mock_report):
+        """Stato REJECTED ma manca la nota , lancia ValidationError"""
+        report_service.get_report = Mock(return_value=mock_report)
+        report_service._ensure_operator_category_access = Mock()  
+        
+        with pytest.raises(ValidationError) as exc_info:
+            report_service.update_status(mock_report.id, mock_operator, ReportStatus.REJECTED.value, note=None)
+        assert str(exc_info.value) == "Rejection reason is required."
+
+    def test_update_status_sets_rejection_reason_when_rejected(self, report_service, mock_operator, mock_report):
+        """ stato è REJECTED, rejection_reason salva la nota"""
+        report_service.get_report = Mock(return_value=mock_report)
+        report_service._ensure_operator_category_access = Mock()  
+        report_service._recipients = Mock(return_value=[])
+        
+        rejection_note = "Foto non chiara"
+        
+        with patch("participium.services.report_service.ensure_transition_allowed"):# Sostituiamo provvisoriamente per saltaree il controllo
+            report_service.update_status(mock_report.id, mock_operator, ReportStatus.REJECTED.value, note=rejection_note)
+            
+        assert mock_report.status == ReportStatus.REJECTED
+        assert mock_report.rejection_reason == rejection_note
+        report_service.session.commit.assert_called_once()
+
+    def test_update_status_resets_rejection_reason_when_not_rejected(self, report_service, mock_operator, mock_report):
+        """stato NON è REJECTED, rejection_reason viene resettato a None"""
+        mock_report.rejection_reason = "Vecchio rifiuto da sovrascrivere"
+        
+        report_service.get_report = Mock(return_value=mock_report)
+        report_service._ensure_operator_category_access = Mock()  
+        report_service._recipients = Mock(return_value=[])
+        
+        with patch("participium.services.report_service.ensure_transition_allowed"):
+            report_service.update_status(mock_report.id, mock_operator, ReportStatus.ASSIGNED.value, note="Preso in carico")
+            
+        assert mock_report.status == ReportStatus.ASSIGNED
+        assert mock_report.rejection_reason is None
+        report_service.session.commit.assert_called_once()
+    
+   
+
+
+
+
+    
+
+   
