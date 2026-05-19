@@ -4,6 +4,14 @@ from unittest.mock import Mock
 
 from participium.services.report_service import ReportService 
 
+
+@pytest.fixture
+def report_service_with_active_category(report_service):
+    """Configura una categoria attiva nel category_repository."""
+    category = Mock(id=1, is_active=True)
+    report_service.category_repository.get_by_id.return_value = category
+    return report_service
+
 @pytest.fixture
 def report_service():
     """
@@ -11,17 +19,19 @@ def report_service():
     """    
 
     report_repository = Mock()
-    
     report_repository.get_follower.return_value = None  #false
     report_repository.add_follower.return_value = None  #false
 
-    return ReportService(
+    service =  ReportService(
         session=Mock(),
         report_repository=report_repository,
         category_repository=Mock(),
         storage_service=Mock(),
         notification_service=Mock()
     )
+    
+
+    return service
 
 @pytest.fixture
 def mock_report():
