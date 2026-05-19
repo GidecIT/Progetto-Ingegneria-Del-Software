@@ -1,4 +1,5 @@
 from __future__ import annotations
+from datetime import datetime
 from unittest.mock import Mock, patch
 
 import pytest
@@ -472,9 +473,153 @@ class TestUpdateStatus:
         assert mock_report.rejection_reason is None
         report_service.session.commit.assert_called_once()
     
-   
+class TestExportRows:
+    def test_export_rows_success(self, report_service, mock_report):
+        """I report vengono estratti, formattati correttamente in dict e restituiti"""
+        faked_date = datetime(2026, 5, 19, 12, 0, 0)
+        mock_report.created_at = faked_date
+        mock_report.category.name = "Strade"
+        report_service.list_public_reports = Mock(return_value=[mock_report])
+
+        result = report_service.export_rows(
+            category_id=5,
+            status=ReportStatus.PENDING_APPROVAL,
+            date_from=faked_date,
+            sort="asc"
+        )
+
+        report_service.list_public_reports.assert_called_once_with(
+            category_id=5,
+            status=ReportStatus.PENDING_APPROVAL,
+            date_from=faked_date,
+            date_to=None,
+            sort="asc"
+        )
+        assert len(result) == 1
+        expected_row = {
+            "id": mock_report.id,
+            "title": mock_report.title,
+            "category": "Strade",
+            "status": "Pending Approval",
+            "created_at": "2026-05-19T12:00:00", 
+            "latitude": mock_report.latitude,
+            "longitude": mock_report.longitude,
+        }
+        assert result[0] == expected_row
+
+    def test_export_rows_empty(self, report_service):
+        """Se non ci sono report estratti, restituisce una lista vuota"""
+        report_service.list_public_reports = Mock(return_value=[])
+
+        result = report_service.export_rows(category_id=1)
 
 
+        assert result == []
+        report_service.list_public_reports.assert_called_once()
+
+
+class TestIsPublic:
+    def test_is_public_true(self, mock_report, report_service):
+        """Restituisce True se lo stato è tra quelli pubblici"""
+        mock_report.status = ReportStatus.ASSIGNED
+        
+        result = report_service.is_public(mock_report)
+        assert result is True
+
+    def test_is_public_false(self, mock_report,report_service):
+        """Restituisce False se lo stato NON è tra quelli pubblici"""
+        
+        result = report_service.is_public(mock_report)
+        assert result is False
+
+
+class TestRecipients:
+    def test_recipients_includes_reporter_and_followers(self, report_service, mock_report, mock_user):
+        mock_report.reporter = mock_user
+        
+        mock_follower_1 = Mock(user=Mock(id=10, email="follower1@test.com"))
+        mock_follower_2 = Mock(user=Mock(id=11, email="follower2@test.com"))
+        mock_report.followers = [mock_follower_1, mock_follower_2]
+
+        result = report_service._recipients(mock_report)
+
+        assert len(result) == 3
+        assert mock_user in result
+        assert mock_follower_1.user in result
+        assert mock_follower_2.user in result
+
+    def test_recipients_filters_out_none_values(self, report_service, mock_report):
+        mock_report.reporter = None
+
+        mock_follower_valido = Mock(user=Mock(id=10, email="valido@test.com"))
+        mock_follower_corrotto = Mock(user=None)
+        
+        mock_report.followers = [mock_follower_valido, mock_follower_corrotto]
+
+        result = report_service._recipients(mock_report)
+
+        assert len(result) == 1
+        assert result[0] == mock_follower_valido.user
+
+class TestEnsureOperatorCategoryAccess:
+    def test_access_granted_for_admin(self, report_service, mock_admin, mock_report):
+        """Un utente con ruolo ADMIN ha sempre accesso, a prescindere dalla categoria."""
+
+        report_service._ensure_operator_category_access(mock_admin, mock_report)
+
+    def test_access_denied_for_non_operator_roles(self, report_service, mock_user, mock_report):
+        """Un utente CITIZEN lancia AuthorizationError."""
+        with pytest.raises(AuthorizationError) as exc_info:
+            report_service._ensure_operator_category_access(mock_user, mock_report)
+
+        assert "Only operators and admins can manage reports." in str(exc_info.value)
+
+    def test_access_denied_for_operator_with_different_category(self, report_service, mock_operator, mock_report):
+        """Un operator con categoria diversa """
+        mock_operator.category_id = 6  # category id del report invece 5 DEFAULT
+
+        with pytest.raises(AuthorizationError) as exc_info:
+            report_service._ensure_operator_category_access(mock_operator, mock_report)
+
+        assert "This report does not belong to your category." in str(exc_info.value)
+
+    def test_access_granted_for_operator_with_same_category(self, report_service, mock_operator, mock_report):
+        """ operator con la stessa categoria del report """
+        mock_operator.category_id = 5
+        mock_report.category_id = 5
+
+        report_service._ensure_operator_category_access(mock_operator, mock_report)
+
+class TestListPublicReports:
+    def test_list_public_reports_with_all_filters(self, report_service, mock_report):
+        """Verifica che tutti i filtri e l'ordinamento vengano passati correttamente al repository con public_only=True."""
+        fake_reports = [mock_report]
+        report_service.report_repository.list_reports.return_value = fake_reports
+
+        faked_date_from = datetime(2026, 1, 1, 0, 0, 0)
+        faked_date_to = datetime(2026, 1, 31, 23, 59, 59)
+
+        result = report_service.list_public_reports(
+            category_id=5,
+            status=ReportStatus.ASSIGNED,
+            date_from=faked_date_from,
+            date_to=faked_date_to,
+            sort="asc"
+        )
+
+        assert result == fake_reports
+        report_service.report_repository.list_reports.assert_called_once_with(public_only=True,category_id=5,status=ReportStatus.ASSIGNED,date_from=faked_date_from,date_to=faked_date_to,sort="asc"
+        )
+
+    def test_list_public_reports_with_defaults(self, report_service):
+        """Verifica il comportamento con i parametri di default (nessun filtro e sort desc)."""
+        report_service.report_repository.list_reports.return_value = []
+
+        result = report_service.list_public_reports()
+
+        assert result == []
+        report_service.report_repository.list_reports.assert_called_once_with(public_only=True,category_id=None,status=None,date_from=None,date_to=None,sort="desc"
+        )
 
 
     
