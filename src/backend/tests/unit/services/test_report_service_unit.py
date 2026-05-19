@@ -443,7 +443,7 @@ class TestUpdateStatus:
         report_service._ensure_operator_category_access = Mock()  
         
         with pytest.raises(ValidationError) as exc_info:
-            report_service.update_status(mock_report.id, mock_operator, ReportStatus.REJECTED.value, note=None)
+            report_service.update_status(mock_report.id, mock_operator, ReportStatus.REJECTED, note=None)
         assert str(exc_info.value) == "Rejection reason is required."
 
     def test_update_status_sets_rejection_reason_when_rejected(self, report_service, mock_operator, mock_report):
@@ -455,7 +455,7 @@ class TestUpdateStatus:
         rejection_note = "Foto non chiara"
         
         with patch("participium.services.report_service.ensure_transition_allowed"):# Sostituiamo provvisoriamente per saltaree il controllo
-            report_service.update_status(mock_report.id, mock_operator, ReportStatus.REJECTED.value, note=rejection_note)
+            report_service.update_status(mock_report.id, mock_operator, ReportStatus.REJECTED, note=rejection_note)
             
         assert mock_report.status == ReportStatus.REJECTED
         assert mock_report.rejection_reason == rejection_note
@@ -470,7 +470,7 @@ class TestUpdateStatus:
         report_service._recipients = Mock(return_value=[])
         
         with patch("participium.services.report_service.ensure_transition_allowed"):
-            report_service.update_status(mock_report.id, mock_operator, ReportStatus.ASSIGNED.value, note="Preso in carico")
+            report_service.update_status(mock_report.id, mock_operator, ReportStatus.ASSIGNED, note="Preso in carico")
             
         assert mock_report.status == ReportStatus.ASSIGNED
         assert mock_report.rejection_reason is None
