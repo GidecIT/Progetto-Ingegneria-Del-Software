@@ -269,6 +269,7 @@ class TestFollowReport:
         """L'utente non segue già il report. Aggiunge follow."""
         mock_report.status = ReportStatus.ASSIGNED
         report_service.report_repository.get_by_id.return_value = mock_report
+        report_service.report_repository.get_follower.return_value = None
 
         result = report_service.follow_report(report_id=mock_report.id, user=mock_user)
 
@@ -299,6 +300,8 @@ class TestUnfollowReport:
     def test_unfollow_report_not_following(self, report_service, mock_user, mock_report):
         """L'utente non segue il report, non fa modifiche e ritorna il report."""
         report_service.report_repository.get_by_id.return_value = mock_report
+        report_service.report_repository.get_follower.return_value = None  #false
+
 
         result = report_service.unfollow_report(report_id=mock_report.id, user=mock_user)
         assert result == mock_report
