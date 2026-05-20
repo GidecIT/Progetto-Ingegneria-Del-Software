@@ -7,7 +7,6 @@ from participium.models.user import User
 from participium.models.enums import Role
 
 
-# Mock dei componenti minimi per l'esecuzione E2E orchestrata dal controllore
 class MockedUserRepository:
     def get_by_username(self, name): return None
 
@@ -17,7 +16,6 @@ class MockedUserRepository:
 
     def get_by_username_or_email(self, identifier):
         if identifier == "valid_citizen":
-            # Ritorna un utente valido pronto al login
             from participium.core.security import hash_password
             u = User(username="valid_citizen", first_name="A", last_name="B", email="v@t.com",
                      password_hash=hash_password("password123"), role=Role.CITIZEN)
@@ -56,8 +54,7 @@ def auth_controller():
     return AuthController(service)
 
 
-def test_controller_registration_e2e_flow(auth_controller):
-    """Testa il metodo di registrazione del controllore end-to-end."""
+def test_controller_registration_flow(auth_controller):
     payload = {
         "username": "new_user",
         "first_name": "E2E",
@@ -70,7 +67,7 @@ def test_controller_registration_e2e_flow(auth_controller):
     assert "https://participium.gov/verify/" in url
 
 
-def test_controller_login_e2e_success_and_failures(auth_controller):
+def test_controller_login_success_and_failures(auth_controller):
 
     logged_user = auth_controller.login("valid_citizen", "password123")
     assert logged_user.username == "valid_citizen"
@@ -82,7 +79,7 @@ def test_controller_login_e2e_success_and_failures(auth_controller):
         auth_controller.login("non_existent_user", "any_password")
 
 
-def test_controller_verify_email_e2e(auth_controller):
+def test_controller_verify_email(auth_controller):
     user = auth_controller.verify_email("valid_token")
     assert user.is_email_verified is True
 
