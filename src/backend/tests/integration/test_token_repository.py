@@ -7,33 +7,13 @@ from participium.models.user import User
 pytestmark = pytest.mark.integration
 
 
-def _make_token(
-    user_id: int,
-    *,
-    token: str = "token1",
-    is_used: bool = False,
-    expires_at: datetime | None = None,
-) -> EmailVerificationToken:
-    return EmailVerificationToken(
-        user_id=user_id,
-        token=token,
-        is_used=is_used,
-        expires_at=expires_at or datetime.now() + timedelta(hours=24),
-    )
-
-
-@pytest.fixture
-def token_repository(db_session):
-    return TokenRepository(db_session)
-
-
 # Test add() / get_by_token()
 # - aggiunta corretta
 # - token trovato tramite stringa
 # - token non trovato tramite stringa
 
-def test_add_token(db_session, token_repository, test_user):
-    added = token_repository.add(_make_token(test_user.id, token="Nuovo-token"))
+def test_add_token(db_session, token_repository, test_user, make_token):
+    added = token_repository.add(make_token(test_user.id, token="Nuovo-token"))
     db_session.commit()
 
     assert added.id is not None
@@ -42,8 +22,8 @@ def test_add_token(db_session, token_repository, test_user):
     assert added.user_id == test_user.id
 
 
-def test_get_by_token_found(db_session, token_repository, test_user):
-    db_session.add(_make_token(test_user.id, token="token2"))
+def test_get_by_token_found(db_session, token_repository, test_user, make_token):
+    db_session.add(make_token(test_user.id, token="token2"))
     db_session.commit()
 
     result = token_repository.get_by_token("token2")
@@ -64,14 +44,14 @@ def test_get_by_token_not_found(token_repository):
 # - token di altri utenti non restituiti
 
 
-def test_list_for_user_empty(token_repository, test_user):
+def test_list_for_user_empty(token_repository, test_user, make_token):
     assert token_repository.list_for_user(test_user.id) == []
 
 
-def test_list_for_user_returns_all_tokens(db_session, token_repository, test_user):
+def test_list_for_user_returns_all_tokens(db_session, token_repository, test_user, make_token):
     db_session.add_all([
-        _make_token(test_user.id, token="tok-1"),
-        _make_token(test_user.id, token="tok-2", is_used=True),
+        make_token(test_user.id, token="tok-1"),
+        make_token(test_user.id, token="tok-2", is_used=True),
     ])
     db_session.commit()
 
@@ -81,20 +61,10 @@ def test_list_for_user_returns_all_tokens(db_session, token_repository, test_use
     assert all(t.user_id == test_user.id for t in results)
 
 
-def test_list_for_user_isolation(db_session, token_repository, test_user):
-    other_user = User(
-        username="other",
-        email="other@ex.com",
-        first_name="0",
-        last_name="0",
-        password_hash="hash"
-    )
-    db_session.add(other_user)
-    db_session.commit()
-
+def test_list_for_user_isolation(db_session, token_repository, test_user, other_user, make_token):
     db_session.add_all([
-        _make_token(test_user.id,  token="token_mio"),
-        _make_token(other_user.id, token="tokeno_altro"),
+        make_token(test_user.id,  token="token_mio"),
+        make_token(other_user.id, token="tokeno_altro"),
     ])
     db_session.commit()
 

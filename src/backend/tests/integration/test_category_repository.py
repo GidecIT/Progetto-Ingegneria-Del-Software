@@ -4,10 +4,6 @@ from participium.repositories.category_repository import CategoryRepository
 
 pytestmark = pytest.mark.integration
 
-@pytest.fixture
-def repository(db_session):
-    return CategoryRepository(db_session)
-
 # Test add():
 # - aggiunta di una categoria
 # - categoria trovata correttamente tramite id
@@ -15,15 +11,12 @@ def repository(db_session):
 # - categoria trovata correttamente tramite nome
 # - categoria non trovata tramite nome
 
-def test_add_category(db_session, repository):
-   
+def test_add_category(db_session, category_repository):
     new_category = Category(name="Public Lighting", is_active=True)
-
     
-    added_category = repository.add(new_category)
+    added_category = category_repository.add(new_category)
     db_session.commit()
 
-    
     assert added_category.id is not None 
     assert added_category.name == "Public Lighting"
     assert added_category.is_active is True
@@ -37,24 +30,20 @@ def test_add_category(db_session, repository):
 # - trovato
 # - non trovato
 
-def test_get_by_id_found(db_session, repository):
-   
+def test_get_by_id_found(db_session, category_repository):
     category = Category(name="Sewerage", is_active=True)
     db_session.add(category)
     db_session.commit()
     
-    
-    result = repository.get_by_id(category.id)
+    result = category_repository.get_by_id(category.id)
 
-    
     assert result is not None
     assert result.id == category.id
     assert result.name == "Sewerage"
 
-def test_get_by_id_not_found(repository): 
+def test_get_by_id_not_found(category_repository): 
     
-    result = repository.get_by_id(999) 
-    
+    result = category_repository.get_by_id(1000) 
     
     assert result is None
 
@@ -63,22 +52,22 @@ def test_get_by_id_not_found(repository):
 # - trovato
 # - non trovato
 
-def test_get_by_name_found(db_session, repository):
+def test_get_by_name_found(db_session, category_repository):
    
     category = Category(name="Roads and Urban Furniture", is_active=False)
     db_session.add(category)
     db_session.commit()
         
-    result = repository.get_by_name("Roads and Urban Furniture")
+    result = category_repository.get_by_name("Roads and Urban Furniture")
 
     assert result is not None
     assert result.name == "Roads and Urban Furniture"
     assert result.is_active is False
 
 
-def test_get_by_name_not_found(repository):
+def test_get_by_name_not_found(category_repository):
     
-    result = repository.get_by_name("Categoria Inesistente")
+    result = category_repository.get_by_name("Categoria Inesistente")
 
     assert result is None
 
@@ -88,13 +77,13 @@ def test_get_by_name_not_found(repository):
 # - categorie in ordine alfabetico
 # - solo categorie attive in ordine alfabetico
 
-def test_list_all_returns_empty_when_no_categories(repository):
+def test_list_all_returns_empty_when_no_categories(category_repository):
     
-    results = repository.list_all()
+    results = category_repository.list_all()
 
     assert results == []
 
-def test_list_all_returns_all_ordered_by_name(db_session, repository):
+def test_list_all_returns_all_ordered_by_name(db_session, category_repository):
    
     db_session.add_all([
         Category(name="Waste", is_active=False),
@@ -103,7 +92,7 @@ def test_list_all_returns_all_ordered_by_name(db_session, repository):
     ])
     db_session.commit()
         
-    results = repository.list_all(active_only=False)
+    results = category_repository.list_all(active_only=False)
 
     assert len(results) == 3
     assert results[0].name == "Architectural Barriers"
@@ -111,7 +100,7 @@ def test_list_all_returns_all_ordered_by_name(db_session, repository):
     assert results[2].name == "Waste"
 
 
-def test_list_all_returns_only_active_ordered_by_name(db_session, repository):
+def test_list_all_returns_only_active_ordered_by_name(db_session, category_repository):
    
     db_session.add_all([
         Category(name="Inactive", is_active=False), 
@@ -120,7 +109,7 @@ def test_list_all_returns_only_active_ordered_by_name(db_session, repository):
     ])
     db_session.commit()
     
-    results = repository.list_all(active_only=True)
+    results = category_repository.list_all(active_only=True)
     
     assert len(results) == 2
     assert results[0].name == "Other"
