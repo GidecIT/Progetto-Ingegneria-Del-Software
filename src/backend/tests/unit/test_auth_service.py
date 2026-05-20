@@ -50,13 +50,11 @@ class StubEmailGateway:
         self.sent_mails.append({"recipient": recipient, "subject": subject, "body": body})
 
 
-# --- TEST CASES ---
 @pytest.mark.parametrize("missing_field", ["username", "first_name", "last_name", "email", "password"])
 def test_register_missing_fields_validation(missing_field):
 
     base_payload = {"username": "u", "first_name": "f", "last_name": "l", "email": "e@t.com", "password": "p"}
-    base_payload[missing_field] = ""  # Svuota il campo sotto test
-
+    base_payload[missing_field] = ""
     service = AuthService(StubSession(), StubUserRepository(), StubTokenRepository(), StubEmailGateway())
     with pytest.raises(ValidationError) as exc_info:
         service.register_user(base_payload)
