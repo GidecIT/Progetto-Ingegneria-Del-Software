@@ -1,11 +1,9 @@
 from __future__ import annotations
 from datetime import datetime
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
 import pytest
-from participium.models.user import User
-from participium.core.exceptions import AuthorizationError, NotFoundError, ValidationError
-from participium.models.enums import Role, ReportStatus
+
 
 class TestPublicStatistics:
     def test_public_statistics_empty(self,statistics_service):
