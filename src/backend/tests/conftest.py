@@ -7,6 +7,7 @@ from participium.repositories.category_repository import CategoryRepository
 from participium.repositories.message_repository import MessageRepository
 from participium.repositories.notification_repository import NotificationRepository
 from participium.repositories.report_repository import ReportRepository
+from participium.repositories.user_repository import UserRepository
 
 @pytest.fixture(scope="function")
 def db_session(monkeypatch):
@@ -70,3 +71,7 @@ def message_repository(db_session):
 @pytest.fixture
 def notification_repository(db_session):
     return NotificationRepository(db_session)
+
+@pytest.fixture
+def user_repository(db_session):
+    return UserRepository(db_session)

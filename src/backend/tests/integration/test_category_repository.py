@@ -33,7 +33,9 @@ def test_add_category(db_session, repository):
     assert db_category.name == "Public Lighting"
 
 
-# Test get_by_id()
+# Test get_by_id():
+# - trovato
+# - non trovato
 
 def test_get_by_id_found(db_session, repository):
    
@@ -57,27 +59,27 @@ def test_get_by_id_not_found(repository):
     assert result is None
 
 
-# Test get_by_name()
+# Test get_by_name():
+# - trovato
+# - non trovato
 
 def test_get_by_name_found(db_session, repository):
    
     category = Category(name="Roads and Urban Furniture", is_active=False)
     db_session.add(category)
     db_session.commit()
-    
-    
+        
     result = repository.get_by_name("Roads and Urban Furniture")
 
-    
     assert result is not None
     assert result.name == "Roads and Urban Furniture"
     assert result.is_active is False
+
 
 def test_get_by_name_not_found(repository):
     
     result = repository.get_by_name("Categoria Inesistente")
 
-    
     assert result is None
 
 
@@ -90,7 +92,6 @@ def test_list_all_returns_empty_when_no_categories(repository):
     
     results = repository.list_all()
 
-    
     assert results == []
 
 def test_list_all_returns_all_ordered_by_name(db_session, repository):
@@ -101,11 +102,9 @@ def test_list_all_returns_all_ordered_by_name(db_session, repository):
         Category(name="Public Green Areas and Playgrounds", is_active=True)
     ])
     db_session.commit()
-    
-    
+        
     results = repository.list_all(active_only=False)
 
-    
     assert len(results) == 3
     assert results[0].name == "Architectural Barriers"
     assert results[1].name == "Public Green Areas and Playgrounds"
@@ -121,9 +120,7 @@ def test_list_all_returns_only_active_ordered_by_name(db_session, repository):
     ])
     db_session.commit()
     
-    
     results = repository.list_all(active_only=True)
-
     
     assert len(results) == 2
     assert results[0].name == "Other"
