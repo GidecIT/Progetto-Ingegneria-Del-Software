@@ -1,3 +1,4 @@
+from participium.services.messaging_service import MessagingService
 from participium.services.statistics_service import StatisticsService
 from participium.services.user_service import UserService
 from participium.models.enums import ReportStatus, Role
@@ -121,3 +122,16 @@ def user_service():
 def statistics_service():
     """fornisce istanza di StatisticsService con il repository (mock)"""
     return StatisticsService(report_repository=Mock())
+
+@pytest.fixture
+def messaging_service():
+    """
+    Fornisce l'istanza del servizio MessagingService con tutti i repository mockati.
+    """
+    service = MessagingService(
+        session=Mock(),
+        report_repository=Mock(),
+        message_repository=Mock(),
+        notification_service=Mock()
+    )
+    return service
