@@ -10,7 +10,7 @@ from participium.models.enums import Role, ReportStatus
 
 class TestUpdateProfile:
     def test_update_profile_ValidationError(self,user_service, mock_user):
-        """Username presente, diverso da quello di user ed esiste già in repository"""
+        """username presente diverso da quello di user ed esiste già in repository"""
         nuovo_username = "luigi_verdi"
 
         user_service.user_repository.get_by_username.return_value = Mock()

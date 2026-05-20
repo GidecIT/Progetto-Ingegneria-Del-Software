@@ -1,3 +1,4 @@
+from participium.services.statistics_service import StatisticsService
 from participium.services.user_service import UserService
 from participium.models.enums import ReportStatus, Role
 import pytest
@@ -116,3 +117,7 @@ def user_service():
     )
     return service
 
+@pytest.fixture
+def statistics_service():
+    """fornisce istanza di StatisticsService con il repository (mock)"""
+    return StatisticsService(report_repository=Mock())
