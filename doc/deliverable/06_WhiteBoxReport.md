@@ -78,10 +78,10 @@ I cammini lineari della funzione (7 eccezioni + 1 return) sono già coperti dai 
 
 ### Minimal Suite Test
 | ID   | `reporter` |`category_id`| `title`| `description` | `latitude` | `longitude` | `photos`| `is_anonymous` | Outcome atteso |
-|------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|------------------------------|
+|------|---------------|--------------|---------------|---------------|---------------|---------------|---------------|---------------|------------------------------|
 |CRM-01| reporter1(id=1) | "uno" | "Buca profonda" | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | ValidationError("A valid active category is required.") |
 | CRM-02 | reporter1(id=1)  | None | "Buca profonda" | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | ValidationError("A valid active category is required.") |
-| CRM-03 | reporter1(id=1) | 1(inattiva) |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | ValidationError ("A valid active category is required.") |
+| CRM-03 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | ValidationError ("A valid active category is required.") |
 | CRM-04 | reporter1(id=1) | 1 |  None  | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p]| True  | ValidationError ("Title and description are required.") |
 | CRM-05 | reporter1(id=1) | 1 |  "Buca profonda"  | None | 45.4642 | 9.1900 | [p,p]| True | ValidationError ("Title and description are required.") |
 | CRM-06 | reporter1(id=1) | 1 |  "Buca profonda"  | "Si segnala una buca di ampie dimensioni" | None | 9.1900 | [p,p]| True | ValidationError ("Latitude and longitude are required.") |
