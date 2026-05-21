@@ -6,6 +6,8 @@ from participium.models.enums import Role
 from participium.models.user import User
 from participium.models.token import EmailVerificationToken
 
+pytestmark = pytest.mark.unit
+
 class StubSession:
     def __init__(self):
         self.flushed = False
