@@ -1,3 +1,4 @@
+from participium.services.category_service import CategoryService
 from participium.services.messaging_service import MessagingService
 from participium.services.statistics_service import StatisticsService
 from participium.services.user_service import UserService
@@ -31,6 +32,18 @@ def report_service():
     
 
     return service
+
+
+@pytest.fixture
+def mock_category():
+    """Fornisce un mock standard di una categoria"""
+    category = Mock()
+
+    category.id = 1
+    category.name = "Water"
+    category.is_active = True
+
+    return category
 
 @pytest.fixture
 def mock_report():
@@ -133,5 +146,16 @@ def messaging_service():
         report_repository=Mock(),
         message_repository=Mock(),
         notification_service=Mock()
+    )
+    return service
+
+@pytest.fixture
+def category_service():
+    """
+    Fornisce l'istanza del servizio category service
+    """
+    service = CategoryService(
+        session=Mock(),
+        category_repository = Mock()
     )
     return service
