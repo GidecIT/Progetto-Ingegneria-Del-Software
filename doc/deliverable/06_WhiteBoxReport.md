@@ -77,7 +77,7 @@ I cammini lineari della funzione (7 eccezioni + 1 return) sono già coperti dai 
 - 2+ iterazioni (CRL-03): entrambi i loop eseguono più iterazioni; garantisce che lo stato non venga resettato erroneamente tra iterazioni consecutive
 
 ### Minimal Suite Test
-| ID   | `reporter` |`category_id`| `title`| `description` | `latitude` | `longitude` | `photos`| `is_anonymous` | Outcome atteso |
+| ID   | `reporter` |`category_id`| `title`| `description` | `latitude` | `longitude` | `photos`| `is_anonymous` | `Outcome atteso` |
 |------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|------------------------------|
 |CRM-01| reporter1(id=1) | "uno" | "Buca profonda" | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | ValidationError("A valid active category is required.") |
 | CRM-02 | reporter1(id=1)  | None | "Buca profonda" | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | ValidationError("A valid active category is required.") |
@@ -301,7 +301,7 @@ Coperta dagli stessi test della Node Coverage.
 
 ### Control Flow Graph
 
-![](../data/img/WB5.drawio.png)
+![](../../data/img/WB5.drawio.png)
 
 ### Atomic Conditions
 - C1: username

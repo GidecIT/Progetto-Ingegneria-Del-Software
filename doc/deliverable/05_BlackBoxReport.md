@@ -346,7 +346,7 @@ Il sistema deve permettere la creazione di un report da parte di un utente auten
 - EC2 x EC4 x EC6 x EC7 x EC9 --> Report non creato, numero di foto non valido
   
 <br>
-Test realizzati considerando le 10 categorie descritte nella specifica iniziale, considerando gli id associati da 0 a 9.
+Test realizzati considerando le 9 categorie descritte nella specifica iniziale, considerando gli id associati da 0 a 8.
 <br><br>
 
 | TC-ID | reporter | category_id | title | description | latitude | longitude | photos | is_anonymous | Expected | Fixture |
@@ -370,9 +370,9 @@ Test realizzati considerando le 10 categorie descritte nella specifica iniziale,
 | TC    | category_id | Boundary covered  | Expected        |
 | :---- | :---------- |:------------------|:----------------|
 | CRB01 | 0           | Exact boundary    | Report          |
-| CRB02 | 9           | Exact boundary    | Report          |
+| CRB02 | 8           | Exact boundary    | Report          |
 | CRB04 | -1          | Immediately below | ValidationError |
-| CRB05 | 10          | Immediately above | ValidationError |
+| CRB05 | 9          | Immediately above | ValidationError |
 
 
 **Boundary around "title e description":**
