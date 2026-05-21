@@ -1,8 +1,10 @@
+from participium.services.storage_service import LocalFileStorageService, StorageService
+from participium.services.notification_service import NotificationService
 from participium.services.category_service import CategoryService
 from participium.services.messaging_service import MessagingService
 from participium.services.statistics_service import StatisticsService
 from participium.services.user_service import UserService
-from participium.models.enums import ReportStatus, Role
+from participium.models.enums import NotificationType, ReportStatus, Role
 import pytest
 from unittest.mock import Mock
 
@@ -44,6 +46,22 @@ def mock_category():
     category.is_active = True
 
     return category
+
+@pytest.fixture
+def mock_notification(mock_user, mock_report):
+    """fornisce un mock standard per notification"""
+    notification = Mock()
+
+    notification.id = 1
+    notification.user_id = mock_user.id
+    notification.report_id = mock_report.id
+    notification.type = NotificationType.MESSAGE
+    notification.title = "Titolo"
+    notification.body = "BOdy"
+    notification.is_read = False
+
+    return notification
+
 
 @pytest.fixture
 def mock_report():
@@ -159,3 +177,30 @@ def category_service():
         category_repository = Mock()
     )
     return service
+
+@pytest.fixture
+def notification_service():
+    """
+    Fornisce un istanza di NotificationService
+    """
+    service = NotificationService(
+        session=Mock(),
+        notification_repository=Mock(),
+        email_gateway=Mock()
+    )
+
+    return service
+
+@pytest.fixture
+def storage_service():
+    return StorageService()
+
+@pytest.fixture
+def local_file_storage_service(tmp_path):
+    return LocalFileStorageService(media_root=tmp_path)
+
+@pytest.fixture
+def mock_file():
+    file = Mock()
+    file.filename = "test.png"
+    return file
