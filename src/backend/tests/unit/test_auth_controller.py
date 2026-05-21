@@ -6,6 +6,7 @@ from participium.core.exceptions import ValidationError, AuthenticationError
 from participium.models.user import User
 from participium.models.enums import Role
 
+pytestmark = pytest.mark.unit
 
 class MockedUserRepository:
     def get_by_username(self, name): return None
