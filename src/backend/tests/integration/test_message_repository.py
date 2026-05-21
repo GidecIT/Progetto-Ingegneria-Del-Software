@@ -15,13 +15,13 @@ def test_add_message(db_session, message_repository, test_report, test_user):
         body="I'm sending more photos soon."
     )
 
-
     added = message_repository.add(new_message)
     db_session.commit()
 
     assert added.id is not None
     assert added.body == "I'm sending more photos soon."
     assert added.report_id == test_report.id
+
 
 # Test list_for_report():
 # - Messaggi restituiti in ordine di inserimento 
@@ -56,6 +56,7 @@ def test_list_for_report_ordering_and_isolation(db_session, message_repository, 
 
     assert messages_a[0].body == "First message"
     assert messages_a[1].body == "Second message"
+
 
 def test_list_for_report_empty(message_repository):
 
