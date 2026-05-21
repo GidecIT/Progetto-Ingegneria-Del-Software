@@ -1,6 +1,7 @@
 import pytest
 from participium.core.security import hash_password, verify_password, generate_token
 
+pytestmark = pytest.mark.unit
 
 def test_password_hashing_and_verification():
 
