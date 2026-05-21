@@ -33,7 +33,6 @@ python -m pytest --cov=participium --cov-append --cov-report=html tests/integrat
 
 ```
 
-
 ### Metodi da non fare in unit test per non duplicare i test
 Questi metodi sono già oggetto di test white/black box quindi per evitare duplicazione di codice non andrebbero messi tra gli unit test da aggiungere per la coverage:
 
