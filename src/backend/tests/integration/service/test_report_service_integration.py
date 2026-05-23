@@ -1,40 +1,35 @@
 from __future__ import annotations
-
 from datetime import datetime, timedelta
 from unittest.mock import Mock
 import pytest
 
 from participium.models.enums import ReportStatus, Role
+from participium.models.user import User
+from participium.models.message import Message
+from participium.models.token import EmailVerificationToken
 from participium.core.exceptions import AuthorizationError, NotFoundError, ValidationError
 
-
-
+@pytest.mark.integration
 class TestListPublicReportsIntegration:
 
     def test_list_public_reports_excludes_private_statuses(self, report_service, populated_db):
         results = report_service.list_public_reports()
-
         report_titles = [r.title for r in results]
         assert "Target Cat A" in report_titles
         assert "Privato Approvazione" not in report_titles
-        
         for report in results:
-            assert report.status != "PENDING_APPROVAL"
+            assert report.status != ReportStatus.PENDING_APPROVAL
 
     def test_list_public_reports_applies_category_filter(self, report_service, populated_db, test_category):
         results = report_service.list_public_reports(category_id=test_category.id)
-
         report_titles = [r.title for r in results]
         assert "Target Cat A" in report_titles
         assert "Escluso Cat B" not in report_titles
-        
         assert all(r.category_id == test_category.id for r in results)
 
     def test_list_public_reports_applies_date_range_filters(self, report_service, populated_db):
         date_from = datetime.utcnow() - timedelta(days=2)
-
         results = report_service.list_public_reports(date_from=date_from)
-
         report_titles = [r.title for r in results]
         assert "Target Cat A" in report_titles
         assert "Escluso Cat B" not in report_titles
@@ -43,26 +38,19 @@ class TestListPublicReportsIntegration:
         results_desc = report_service.list_public_reports(sort="desc")
         assert results_desc[0].title == "Target Cat A"
         assert results_desc[1].title == "Escluso Cat B"
-
         results_asc = report_service.list_public_reports(sort="asc")
         assert results_asc[0].title == "Escluso Cat B"
         assert results_asc[1].title == "Target Cat A"
 
     def test_list_public_reports_loads_relationships_correctly(self, report_service, populated_db, test_user):
         results = report_service.list_public_reports()
-        
         target_report = next(r for r in results if r.title == "Target Cat A")
-        
         assert target_report.reporter_id == test_user.id
         assert target_report.reporter.email == test_user.email
 
-
-
 class TestListUserReports:
-
     def test_list_user_reports_returns_correct_reports(self, report_service, populated_db, test_user):
         reports = report_service.list_user_reports(test_user)
-        
         assert len(reports) == 3
         assert all(r.reporter_id == test_user.id for r in reports)
 
@@ -70,10 +58,7 @@ class TestListUserReports:
         reports = report_service.list_user_reports(other_user)
         assert len(reports) == 0
 
-
-
 class TestGetReport:
-
     def test_get_existing_report(self, report_service, populated_db):
         report_id = populated_db["report_pubblico_a"].id
         report = report_service.get_report(report_id)
@@ -83,10 +68,7 @@ class TestGetReport:
         with pytest.raises(NotFoundError, match="Report not found."):
             report_service.get_report(9999)
 
-
-
 class TestGetAccessibleReport:
-
     def test_public_report_accessible_by_anyone(self, report_service, populated_db):
         report = populated_db["report_pubblico_a"]
         assert report_service.get_accessible_report(report.id) == report
@@ -105,30 +87,21 @@ class TestGetAccessibleReport:
         assert report_service.get_accessible_report(report.id, user=admin_user) == report
 
     def test_private_report_denied_when_user_is_none(self, report_service, populated_db):
-        """Copre: if user is None: raise AuthorizationError(...)"""
         report = populated_db["report_privato"]
         with pytest.raises(AuthorizationError, match="You do not have access to this report."):
             report_service.get_accessible_report(report.id, user=None)
 
     def test_operator_can_access_report_of_same_category(self, report_service, populated_db, other_user, db_session):
-        """Copre: if user.role == Role.OPERATOR and user.category_id == report.category_id"""
         report = populated_db["report_privato"]
-        
-        # Trasformiamo l'utente in un operatore assegnato alla stessa categoria del report
         other_user.role = Role.OPERATOR
         other_user.category_id = report.category_id
         db_session.commit()
-
         accessible_report = report_service.get_accessible_report(report.id, user=other_user)
         assert accessible_report == report
 
-
-
 class TestCreateReport:
-
-    def test_create_report_success(self, report_service, test_user, test_category, mock_file):
-        report_service.storage_service.save = Mock(return_value="uploads/report_1_photo.jpg")
-
+    def test_create_report_success(self, report_service, test_user, test_category, mock_file, media_root):
+        # Usiamo mock_file() per creare un file reale in memoria
         report = report_service.create_report(
             reporter=test_user,
             category_id=test_category.id,  
@@ -136,90 +109,84 @@ class TestCreateReport:
             description="Buca pericolosa in mezzo alla carreggiata",
             latitude=45.0,
             longitude=9.0,
-            photos=[mock_file]
+            photos=[mock_file(filename="test.jpg")]
         )
-        
         assert report.id is not None
         assert report.status == ReportStatus.PENDING_APPROVAL
         assert len(report.photos) == 1
-        assert report.photos[0].file_path == "uploads/report_1_photo.jpg"
+        # Verifica che il file sia stato effettivamente salvato su disco nella media_root
+        assert (media_root / report.photos[0].file_path).exists()
 
     def test_create_report_validation_errors(self, report_service, test_user, test_category, mock_file):
         with pytest.raises(ValidationError, match="Title and description are required."):
             report_service.create_report(
                 reporter=test_user,
                 category_id=test_category.id,
-                title="", 
-                description="",
-                latitude=45.0,
-                longitude=9.0,
-                photos=[mock_file]
+                title="", description="",
+                latitude=45.0, longitude=9.0,
+                photos=[mock_file()]
             )
 
     def test_create_report_invalid_photos_count(self, report_service, test_user, test_category, mock_file):
-        too_many_photos = [mock_file] * 4
-        
+        # Usiamo list comprehension con chiamata ()
+        too_many_photos = [mock_file(filename=f"test{i}.jpg") for i in range(4)]        
         with pytest.raises(ValidationError, match="at most 3 photos"):
             report_service.create_report(
                 reporter=test_user,
                 category_id=test_category.id,
-                title="Titolo Valido", 
-                description="Descrizione Valida",
-                latitude=1.0, 
-                longitude=1.0,
+                title="Titolo Valido", description="Descrizione Valida",
+                latitude=1.0, longitude=1.0,
                 photos=too_many_photos
             )
 
     def test_create_report_invalid_category_id_type(self, report_service, test_user, mock_file):
-        """Copre il blocco try/except per la conversione int(category_id)"""
         with pytest.raises(ValidationError, match="A valid active category is required."):
             report_service.create_report(
                 reporter=test_user,
-                category_id="not_a_number_at_all",
-                title="Titolo",
-                description="Descrizione",
-                latitude=45.0,
-                longitude=9.0,
-                photos=[mock_file]
+                category_id="not_a_number",
+                title="Titolo", description="Descrizione",
+                latitude=45.0, longitude=9.0,
+                photos=[mock_file()]
             )
 
     def test_create_report_non_existent_or_inactive_category(self, report_service, test_user, mock_file):
-        """Copre: if not category or not category.is_active:"""
         with pytest.raises(ValidationError, match="A valid active category is required."):
             report_service.create_report(
                 reporter=test_user,
-                category_id=99999,  # ID inesistente nel database
-                title="Titolo",
-                description="Descrizione",
-                latitude=45.0,
-                longitude=9.0,
-                photos=[mock_file]
+                category_id=99999,
+                title="Titolo", description="Descrizione",
+                latitude=45.0, longitude=9.0,
+                photos=[mock_file()]
             )
 
     def test_create_report_missing_coordinates(self, report_service, test_user, test_category, mock_file):
-        """Copre: if latitude is None or longitude is None:"""
         with pytest.raises(ValidationError, match="Latitude and longitude are required."):
             report_service.create_report(
                 reporter=test_user,
                 category_id=test_category.id,
-                title="Titolo",
-                description="Descrizione",
-                latitude=None,
-                longitude=9.0,
-                photos=[mock_file]
+                title="Titolo", description="Descrizione",
+                latitude=None, longitude=9.0,
+                photos=[mock_file()]
             )
 
     def test_create_report_invalid_coordinates_type(self, report_service, test_user, test_category, mock_file):
-        """Copre il blocco try/except float(latitude) o float(longitude)"""
         with pytest.raises(ValidationError, match="Latitude and longitude must be valid numbers."):
             report_service.create_report(
                 reporter=test_user,
                 category_id=test_category.id,
-                title="Titolo",
-                description="Descrizione",
-                latitude="stringa_invalida",
-                longitude=9.0,
-                photos=[mock_file]
+                title="Titolo", description="Descrizione",
+                latitude="stringa", longitude=9.0,
+                photos=[mock_file()]
+            )
+
+    def test_create_report_empty_photos_list(self, report_service, test_user, test_category):
+        with pytest.raises(ValidationError, match="At least one photo is required."):
+            report_service.create_report(
+                reporter=test_user,
+                category_id=test_category.id,
+                title="Titolo Valido", description="Descrizione Valida",
+                latitude=45.0, longitude=9.0,
+                photos=[]  
             )
 
     def test_create_report_empty_photos_list(self, report_service, test_user, test_category):
