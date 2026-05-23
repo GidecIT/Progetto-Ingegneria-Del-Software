@@ -2,10 +2,13 @@
 
 
 from datetime import datetime, timedelta
+import io
 from unittest.mock import Mock
 
 import pytest
 
+from participium.services.storage_service import LocalFileStorageService
+from werkzeug.datastructures import FileStorage
 from participium.services.category_service import CategoryService
 from participium.services.messaging_service import MessagingService
 from participium.services.statistics_service import StatisticsService
@@ -28,24 +31,24 @@ def notification_service(db_session, notification_repository):
     )
 
 @pytest.fixture
-def report_service(db_session, report_repository, category_repository, notification_service):
+def report_service(db_session, report_repository, category_repository, notification_service, storage_service): # <--- AGGIUNTO storage_service
     return ReportService(
         session=db_session,
         report_repository=report_repository,
         category_repository=category_repository,
-        storage_service=mock_storage_service,
+        storage_service=storage_service,
         notification_service=notification_service,
     )
 
 @pytest.fixture
-def user_service(db_session, user_repository, category_repository, token_repository, notification_repository, mock_storage_service):
+def user_service(db_session, user_repository, category_repository, token_repository, notification_repository, storage_service):
     return UserService(
         session=db_session,
         user_repository=user_repository,
         category_repository=category_repository,
         token_repository=token_repository,
         notification_repository=notification_repository,
-        storage_service=mock_storage_service,
+        storage_service=storage_service, 
     )
 
 @pytest.fixture
@@ -97,17 +100,21 @@ def populated_db(db_session, test_user, test_category, other_category, make_repo
     }
 
 @pytest.fixture
-def mock_storage_service():
-    storage = Mock()
-    storage.save.return_value = "uploads/test_saved_photo.jpg"
-    return storage
+def media_root(tmp_path):
+    """Crea una cartella temporanea per i file."""
+    return tmp_path / "media"
+
+@pytest.fixture
+def storage_service(media_root):
+    """Servizio reale che scrive su disco temporaneo."""
+    return LocalFileStorageService(media_root=media_root)
 
 @pytest.fixture
 def mock_file():
-    mock = Mock()
-    mock.filename = "test.jpg"
-    mock.content_type = "image/jpeg"
-    return mock
+    """Factory per generare file reali in memoria (FileStorage)."""
+    def _maker(filename="test.jpg", content=b"fake data"):
+        return FileStorage(stream=io.BytesIO(content), filename=filename)
+    return _maker
 
 @pytest.fixture
 def user_with_relations(db_session, test_user, test_category, make_report, make_notification):
@@ -172,13 +179,6 @@ def make_historical_report(db_session, make_report):
         return report
     return _make
 
-@pytest.fixture
-def notification_service(db_session, notification_repository):
-    return NotificationService(
-        session=db_session,
-        notification_repository=notification_repository,
-        email_gateway=Mock(),  
-    )
 
 @pytest.fixture
 def store_notification(db_session, make_notification):
