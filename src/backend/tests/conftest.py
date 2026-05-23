@@ -9,7 +9,7 @@ from participium.repositories.notification_repository import NotificationReposit
 from participium.repositories.report_repository import ReportRepository
 from participium.repositories.user_repository import UserRepository
 from participium.repositories.token_repository import TokenRepository
-from participium.models.enums import NotificationType
+from participium.models.enums import NotificationType, Role
 from participium.models.notification import Notification
 from participium.models.enums import ReportStatus
 from participium.models.token import EmailVerificationToken
@@ -41,6 +41,20 @@ def session(db_session):
 @pytest.fixture
 def test_user(db_session):
     user = User(id= 1, username="tester", email="test@ex.com", first_name="T", last_name="T", password_hash="hash")
+    db_session.add(user)
+    db_session.commit()
+    return user
+
+@pytest.fixture
+def test_operator(db_session, test_category):
+    user = User(username="operator", email="op@ex.com", first_name="O", last_name="P", password_hash="hash", role=Role.OPERATOR, category_id=test_category.id)
+    db_session.add(user)
+    db_session.commit()
+    return user
+
+@pytest.fixture
+def admin_user(db_session):
+    user = User(username="admin", email="admin@ex.com", first_name="A", last_name="A", password_hash="hash",role=Role.ADMIN  )
     db_session.add(user)
     db_session.commit()
     return user
@@ -162,3 +176,4 @@ def backdate():
         )
         session.commit()
     return _helper
+
