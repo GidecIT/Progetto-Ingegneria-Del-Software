@@ -6,6 +6,7 @@ from unittest.mock import Mock
 
 import pytest
 
+from participium.services.statistics_service import StatisticsService
 from participium.models.message import Message
 from participium.models.report import ReportFollower, ReportStatusHistory
 from participium.models.token import EmailVerificationToken
@@ -147,3 +148,24 @@ def user_with_relations(db_session, test_user, test_category, make_report, make_
         "notification": notification,
         "token": token
     }
+
+@pytest.fixture
+def statistics_service(report_repository):
+    return StatisticsService(report_repository=report_repository)
+
+@pytest.fixture
+def make_historical_report(db_session, make_report):
+    def _make(user_id, category_id, created_at, is_public=True, status=None):
+        if status is None:
+            if is_public:
+                status = next(iter(PUBLIC_VISIBLE_STATUSES))
+            else:
+                status = ReportStatus.PENDING_APPROVAL
+
+        report = make_report(user_id=user_id, category_id=category_id, status=status)
+        report.created_at = created_at
+        
+        db_session.add(report)
+        db_session.commit()
+        return report
+    return _make
