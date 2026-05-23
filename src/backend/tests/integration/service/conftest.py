@@ -6,6 +6,7 @@ from unittest.mock import Mock
 
 import pytest
 
+from participium.services.category_service import CategoryService
 from participium.services.messaging_service import MessagingService
 from participium.services.statistics_service import StatisticsService
 from participium.models.message import Message
@@ -196,3 +197,7 @@ def messaging_service(db_session, report_repository, message_repository, notific
         message_repository=message_repository,
         notification_service=notification_service
     )
+
+@pytest.fixture
+def category_service(db_session, category_repository):
+    return CategoryService(session=db_session, category_repository=category_repository)
