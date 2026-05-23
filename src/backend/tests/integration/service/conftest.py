@@ -169,3 +169,20 @@ def make_historical_report(db_session, make_report):
         db_session.commit()
         return report
     return _make
+
+@pytest.fixture
+def notification_service(db_session, notification_repository):
+    return NotificationService(
+        session=db_session,
+        notification_repository=notification_repository,
+        email_gateway=Mock(),  
+    )
+
+@pytest.fixture
+def store_notification(db_session, make_notification):
+    def _store(user_id: int, **kwargs):
+        notification = make_notification(user_id=user_id, **kwargs)
+        db_session.add(notification)
+        db_session.commit()
+        return notification
+    return _store
