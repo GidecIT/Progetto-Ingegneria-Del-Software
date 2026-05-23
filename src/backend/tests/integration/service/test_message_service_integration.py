@@ -9,19 +9,25 @@ from participium.models.report import ReportStatusHistory
 from participium.models.user import User
 
 
-class TestMessagingService:
+class TestCanAccessThread:
     def test_can_access_thread(
         self, messaging_service, test_report, test_user, admin_user, 
-        test_operator, other_user, other_category
+        test_operator, other_user, other_category, db_session
     ):
         assert messaging_service.can_access_thread(test_report, None) is False
         assert messaging_service.can_access_thread(test_report, admin_user) is True
         assert messaging_service.can_access_thread(test_report, test_user) is True
         assert messaging_service.can_access_thread(test_report, test_operator) is True
+
         test_report.category_id = other_category.id
+        db_session.commit()
+        db_session.refresh(test_report)
+
         assert messaging_service.can_access_thread(test_report, test_operator) is False
         assert messaging_service.can_access_thread(test_report, other_user) is False
 
+
+class TestListMessages:
     def test_list_messages_success_and_denied(
         self, messaging_service, test_report, test_user, other_user, db_session
     ):
@@ -41,6 +47,8 @@ class TestMessagingService:
         with pytest.raises(AuthorizationError, match="do not have access"):
             messaging_service.list_messages(test_report, other_user)
 
+
+class TestSendMessage:
     def test_send_message_validation_empty_body(
         self, messaging_service, test_report, test_user
     ):
@@ -98,6 +106,8 @@ class TestMessagingService:
         assert reply.sender_id == test_user.id
         assert reply.recipient_id == test_operator.id
 
+
+class TestResolveRecipient:
     def test_resolve_recipient_messages_loop_iterations(
         self, messaging_service, test_report, test_user, test_operator, db_session
     ):
@@ -122,7 +132,6 @@ class TestMessagingService:
         db_session.commit()
         
         assert messaging_service._resolve_recipient(test_report, test_user) == test_operator
-
 
     def test_resolve_recipient_status_history_loop_iterations(
         self, messaging_service, test_report, test_user, admin_user, db_session
@@ -152,6 +161,8 @@ class TestMessagingService:
         
         assert messaging_service._resolve_recipient(test_report, test_user) == admin_user
 
+
+class TestSenderNameFormatting:
     def test_sender_name_formatting(self, messaging_service, db_session):
         user_full = User(
             username="jdoe", first_name="John", last_name="Doe", 

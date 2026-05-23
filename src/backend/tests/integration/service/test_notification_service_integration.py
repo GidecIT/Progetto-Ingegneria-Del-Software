@@ -1,14 +1,11 @@
 from __future__ import annotations
-from unittest.mock import Mock
 import pytest
 
 from participium.core.exceptions import AuthorizationError, NotFoundError
 from participium.models.enums import NotificationType
 
 
-@pytest.mark.integration
-class TestNotificationServiceIntegration:
-
+class TestCreateNotification:
     def test_create_notification_success_with_email(
         self, notification_service, test_user, test_report, db_session
     ):
@@ -76,6 +73,8 @@ class TestNotificationServiceIntegration:
         db_session.flush()
         assert notification is not None
 
+
+class TestNotifyStatusChange:
     def test_notify_status_change_handles_duplicates_and_none(
         self, notification_service, test_user, test_report, db_session
     ):
@@ -92,6 +91,8 @@ class TestNotificationServiceIntegration:
         assert len(notifications) == 1
         assert notifications[0].type == NotificationType.STATUS_CHANGE
 
+
+class TestNotifyNewMessage:
     def test_notify_new_message(self, notification_service, test_user, test_report, db_session):
         notification_service.notify_new_message(
             recipient=test_user,
@@ -106,6 +107,8 @@ class TestNotificationServiceIntegration:
         assert notifications[0].type == NotificationType.MESSAGE
         assert "Operatore Mario" in notifications[0].body
 
+
+class TestUnreadMessageNotifications:
     def test_unread_message_notifications_counters_and_markdown_as_read(
         self, notification_service, test_user, test_report, store_notification
     ):
@@ -139,6 +142,8 @@ class TestNotificationServiceIntegration:
         )
         assert marked_count == 0
 
+
+class TestGetUserNotification:
     def test_get_user_notification_success_and_failures(
         self, notification_service, test_user, other_user, store_notification
     ):
@@ -153,6 +158,8 @@ class TestNotificationServiceIntegration:
         with pytest.raises(AuthorizationError):
             notification_service.get_user_notification(other_user.id, notification.id)
 
+
+class TestMarkAsRead:
     def test_mark_as_read(self, notification_service, test_user, store_notification):
         notification = store_notification(test_user.id, is_read=False)
         

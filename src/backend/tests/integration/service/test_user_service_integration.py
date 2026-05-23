@@ -2,16 +2,14 @@ from __future__ import annotations
 import pytest
 from unittest.mock import Mock
 
-from participium.models.enums import Role, ReportStatus
+from participium.models.enums import Role
 from participium.models.user import User
 from participium.models.message import Message
 from participium.models.token import EmailVerificationToken
 from participium.core.exceptions import ValidationError, NotFoundError
 
 
-@pytest.mark.integration
 class TestUpdateProfile:
-
     def test_update_profile_success(self, user_service, test_user):
         updated = user_service.update_profile(
             user=test_user,
@@ -38,9 +36,7 @@ class TestUpdateProfile:
             user_service.update_profile(user=test_user, username=other_user.username)
 
 
-@pytest.mark.integration
 class TestDeleteAccount:
-
     def test_delete_account_cascades_and_nullifies_relations(
         self, user_service, db_session, user_with_relations
     ):
@@ -104,9 +100,7 @@ class TestDeleteAccount:
         assert msg_recipient_only.recipient_id is None
 
 
-@pytest.mark.integration
 class TestListAndGetUser:
-
     def test_list_users_returns_all_records(self, user_service, test_user, other_user):
         users = user_service.list_users()
         assert len(users) >= 2
@@ -120,9 +114,7 @@ class TestListAndGetUser:
             user_service.get_user(99999)
 
 
-@pytest.mark.integration
 class TestCreateUser:
-
     def test_create_standard_user_success(self, user_service):
         payload = {
             "username": "fresh_clean_user",
@@ -207,9 +199,7 @@ class TestCreateUser:
             user_service.create_user(payload)
 
 
-@pytest.mark.integration
 class TestUpdateUser:
-
     def test_update_user_fields_success(self, user_service, test_user):
         payload = {
             "username": "updated_via_admin",

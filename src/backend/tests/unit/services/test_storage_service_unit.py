@@ -39,3 +39,4 @@ class TestLocalFileStorageService:
     
         assert "passwd.txt" in result
         assert ".." not in result
+        mock_file.save.assert_called_once()
