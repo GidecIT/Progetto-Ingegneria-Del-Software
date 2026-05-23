@@ -6,6 +6,7 @@ from unittest.mock import Mock
 
 import pytest
 
+from participium.services.messaging_service import MessagingService
 from participium.services.statistics_service import StatisticsService
 from participium.models.message import Message
 from participium.models.report import ReportFollower, ReportStatusHistory
@@ -186,3 +187,12 @@ def store_notification(db_session, make_notification):
         db_session.commit()
         return notification
     return _store
+
+@pytest.fixture
+def messaging_service(db_session, report_repository, message_repository, notification_service):
+    return MessagingService(
+        session=db_session,
+        report_repository=report_repository,
+        message_repository=message_repository,
+        notification_service=notification_service
+    )
