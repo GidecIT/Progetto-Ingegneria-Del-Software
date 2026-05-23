@@ -4,14 +4,11 @@ from unittest.mock import Mock
 import pytest
 
 from participium.models.enums import ReportStatus, Role
-from participium.models.user import User
-from participium.models.message import Message
-from participium.models.token import EmailVerificationToken
 from participium.core.exceptions import AuthorizationError, NotFoundError, ValidationError
 
-@pytest.mark.integration
-class TestListPublicReportsIntegration:
 
+
+class TestListPublicReports:
     def test_list_public_reports_excludes_private_statuses(self, report_service, populated_db):
         results = report_service.list_public_reports()
         report_titles = [r.title for r in results]
@@ -48,6 +45,7 @@ class TestListPublicReportsIntegration:
         assert target_report.reporter_id == test_user.id
         assert target_report.reporter.email == test_user.email
 
+
 class TestListUserReports:
     def test_list_user_reports_returns_correct_reports(self, report_service, populated_db, test_user):
         reports = report_service.list_user_reports(test_user)
@@ -58,6 +56,7 @@ class TestListUserReports:
         reports = report_service.list_user_reports(other_user)
         assert len(reports) == 0
 
+
 class TestGetReport:
     def test_get_existing_report(self, report_service, populated_db):
         report_id = populated_db["report_pubblico_a"].id
@@ -67,6 +66,7 @@ class TestGetReport:
     def test_get_non_existent_report_raises_error(self, report_service):
         with pytest.raises(NotFoundError, match="Report not found."):
             report_service.get_report(9999)
+
 
 class TestGetAccessibleReport:
     def test_public_report_accessible_by_anyone(self, report_service, populated_db):
@@ -99,9 +99,9 @@ class TestGetAccessibleReport:
         accessible_report = report_service.get_accessible_report(report.id, user=other_user)
         assert accessible_report == report
 
+
 class TestCreateReport:
     def test_create_report_success(self, report_service, test_user, test_category, mock_file, media_root):
-        # Usiamo mock_file() per creare un file reale in memoria
         report = report_service.create_report(
             reporter=test_user,
             category_id=test_category.id,  
@@ -114,7 +114,6 @@ class TestCreateReport:
         assert report.id is not None
         assert report.status == ReportStatus.PENDING_APPROVAL
         assert len(report.photos) == 1
-        # Verifica che il file sia stato effettivamente salvato su disco nella media_root
         assert (media_root / report.photos[0].file_path).exists()
 
     def test_create_report_validation_errors(self, report_service, test_user, test_category, mock_file):
@@ -128,7 +127,6 @@ class TestCreateReport:
             )
 
     def test_create_report_invalid_photos_count(self, report_service, test_user, test_category, mock_file):
-        # Usiamo list comprehension con chiamata ()
         too_many_photos = [mock_file(filename=f"test{i}.jpg") for i in range(4)]        
         with pytest.raises(ValidationError, match="at most 3 photos"):
             report_service.create_report(
@@ -189,27 +187,11 @@ class TestCreateReport:
                 photos=[]  
             )
 
-    def test_create_report_empty_photos_list(self, report_service, test_user, test_category):
-        """Copre: if not valid_photos: raise ValidationError("At least one photo is required.")"""
-        with pytest.raises(ValidationError, match="At least one photo is required."):
-            report_service.create_report(
-                reporter=test_user,
-                category_id=test_category.id,
-                title="Titolo Valido",
-                description="Descrizione Valida",
-                latitude=45.0,
-                longitude=9.0,
-                photos=[]  
-            )
-
 
 class TestFollowReport:
-
     def test_follow_public_report_success(self, report_service, populated_db, other_user, db_session):
         report = populated_db["report_pubblico_a"]
         updated_report = report_service.follow_report(report.id, other_user)
-        
-        # Rinfreschiamo l'istanza per popolare la relazione dopo il commit del servizio
         db_session.refresh(updated_report)
         assert any(f.user_id == other_user.id for f in updated_report.followers)
 
@@ -226,26 +208,20 @@ class TestFollowReport:
 
 
 class TestUnfollowReport:
-
     def test_unfollow_existing_follower_removes_relationship(self, report_service, populated_db, other_user, db_session):
         report = populated_db["report_pubblico_a"]
         report_service.follow_report(report.id, other_user)
-        
         updated_report = report_service.unfollow_report(report.id, other_user)
         db_session.refresh(updated_report)
-        
         assert not any(f.user_id == other_user.id for f in updated_report.followers)
 
     def test_unfollow_non_existent_follower_does_nothing(self, report_service, populated_db, other_user):
         report = populated_db["report_pubblico_a"]
-        
         updated_report = report_service.unfollow_report(report.id, other_user)
-        
         assert updated_report.id == report.id
 
 
 class TestListPendingReports:
-
     def test_list_pending_reports_filters_correctly(self, report_service, populated_db, test_category, db_session):
         report = populated_db["report_pubblico_a"]
         report.status = ReportStatus.PENDING_APPROVAL
@@ -259,12 +235,10 @@ class TestListPendingReports:
         }
         
         results = report_service.list_pending_reports(filters)
-        
         assert any(r.id == report.id for r in results)
 
 
 class TestListOperatorReports:
-
     def test_list_operator_reports_returns_matching_category(self, report_service, populated_db, test_operator, db_session):
         report = populated_db["report_pubblico_a"]
         report.status = ReportStatus.ASSIGNED
@@ -272,14 +246,11 @@ class TestListOperatorReports:
         db_session.commit()
 
         results = report_service.list_operator_reports(test_operator)
-        
         assert any(r.id == report.id for r in results)
 
 
 class TestAssignReport:
-
     def test_assign_report_success_as_operator(self, report_service, populated_db, test_operator, db_session):
-        # Prendiamo un report esistente e impostiamolo in stato di attesa approvazione
         report = populated_db["report_pubblico_a"]
         report.status = ReportStatus.PENDING_APPROVAL
         report.category_id = test_operator.category_id
@@ -309,7 +280,6 @@ class TestAssignReport:
             report_service.assign_report(report.id, test_operator)
 
     def test_assign_non_pending_report_raises_error(self, report_service, populated_db, admin_user, db_session):
-        # Impediamo che sia PENDING_APPROVAL per scatenare l'errore di validazione dello stato
         report = populated_db["report_pubblico_a"]
         report.status = ReportStatus.RESOLVED
         db_session.commit()
@@ -318,9 +288,7 @@ class TestAssignReport:
             report_service.assign_report(report.id, admin_user)
 
 
-
 class TestUpdateStatus:
-
     def test_update_status_success_operator(self, report_service, populated_db, test_operator, db_session):
         report = populated_db["report_pubblico_a"]
         report.status = ReportStatus.ASSIGNED
@@ -329,7 +297,6 @@ class TestUpdateStatus:
 
         report_service.notification_service.notify_status_change = Mock()
         updated = report_service.update_status(report.id, test_operator, "Resolved")
-        
         assert updated.status == ReportStatus.RESOLVED
 
     def test_update_status_invalid_role_raises_error(self, report_service, populated_db, test_user, db_session):
@@ -354,15 +321,12 @@ class TestUpdateStatus:
         db_session.commit()
         
         with pytest.raises(ValidationError, match="Rejection reason is required."):
-            # Passiamo il valore stringa esatto dell'enum: "Rejected"
             report_service.update_status(report.id, admin_user, "Rejected", note="")
 
 
 class TestExportRows:
-
     def test_export_rows_correctly_maps_fields(self, report_service, populated_db):
         report = populated_db["report_pubblico_a"]
-        
         rows = report_service.export_rows(category_id=report.category_id)
         
         assert len(rows) >= 1
@@ -373,16 +337,14 @@ class TestExportRows:
         assert target_row["latitude"] == report.latitude
         assert target_row["longitude"] == report.longitude
         assert isinstance(target_row["created_at"], str)
+        datetime.fromisoformat(target_row["created_at"])
 
 
 
 class TestEnsureOperatorCategoryAccess:
-
     def test_ensure_operator_category_access_raises_if_not_operator_or_admin(self, report_service, populated_db, test_user, db_session):
         report = populated_db["report_pubblico_a"]
-        
-        # Copre: if operator.role != Role.OPERATOR (quando non è nemmeno ADMIN)
-        test_user.role = "USER"  # Forza un ruolo comune non autorizzato a gestire i report
+        test_user.role = Role.CITIZEN
         db_session.commit()
 
         with pytest.raises(AuthorizationError, match="Only operators and admins can manage reports."):

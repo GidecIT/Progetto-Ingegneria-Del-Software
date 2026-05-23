@@ -5,9 +5,7 @@ import pytest
 from participium.models.enums import ReportStatus
 
 
-@pytest.mark.integration
 class TestPublicStatistics:
-
     def test_public_statistics_aggregates_only_public_reports(
         self, statistics_service, test_user, test_category, make_historical_report
     ):
@@ -41,9 +39,7 @@ class TestPublicStatistics:
         assert stats["trends"] == {"2026-05": 1}
 
 
-@pytest.mark.integration
 class TestAdminStatistics:
-
     def test_admin_statistics_includes_private_reports_and_complex_counters(
         self, statistics_service, test_user, test_category, make_historical_report
     ):
@@ -77,7 +73,6 @@ class TestAdminStatistics:
         day_date = datetime(2026, 5, 20, 12, 0)
         report = make_historical_report(test_user.id, test_category.id, day_date, is_public=True)
         
-        #simulazione dell'eliminazione
         report.reporter_id = None
         db_session.commit()
 

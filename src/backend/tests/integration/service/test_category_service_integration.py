@@ -5,10 +5,7 @@ from participium.models.category import Category
 
 
 class TestListCategories:
-    
     def test_list_categories(self, category_service, test_category, db_session):
-        """Verifica la lista delle categorie, testando anche il filtro active_only."""
-        # Creiamo una categoria inattiva a mano per testare il filtro
         inactive_cat = Category(name="Chiusa", is_active=False)
         db_session.add(inactive_cat)
         db_session.commit()
@@ -25,7 +22,6 @@ class TestListCategories:
 
 
 class TestGetCategory:
-
     def test_get_category_success(self, category_service, test_category):
         category = category_service.get_category(test_category.id)
         assert category.id == test_category.id
@@ -37,7 +33,6 @@ class TestGetCategory:
 
 
 class TestCreateCategory:
-
     def test_create_category_success(self, category_service):
         category = category_service.create_category("  Nuova Categoria  ")
         assert category.id is not None
@@ -49,13 +44,11 @@ class TestCreateCategory:
             category_service.create_category("   ")
 
     def test_create_category_duplicate_name(self, category_service, test_category):
-        """Verifica che un nome già esistente blocchi la creazione."""
         with pytest.raises(ValidationError, match="Category name already exists."):
             category_service.create_category(f"  {test_category.name}  ")
 
 
 class TestUpdateCategory:
-
     def test_update_category_success(self, category_service, test_category):
         updated = category_service.update_category(
             test_category.id, 
