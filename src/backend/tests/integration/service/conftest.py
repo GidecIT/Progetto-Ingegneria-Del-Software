@@ -1,10 +1,15 @@
 
 
 
+from datetime import datetime, timedelta
 from unittest.mock import Mock
 
 import pytest
 
+from participium.models.message import Message
+from participium.models.report import ReportFollower, ReportStatusHistory
+from participium.models.token import EmailVerificationToken
+from participium.services.user_service import UserService
 from participium.config.constants import PUBLIC_VISIBLE_STATUSES
 from participium.models.enums import ReportStatus
 from participium.services.notification_service import NotificationService
@@ -30,8 +35,18 @@ def report_service(db_session, report_repository, category_repository, notificat
     )
 
 @pytest.fixture
+def user_service(db_session, user_repository, category_repository, token_repository, notification_repository, mock_storage_service):
+    return UserService(
+        session=db_session,
+        user_repository=user_repository,
+        category_repository=category_repository,
+        token_repository=token_repository,
+        notification_repository=notification_repository,
+        storage_service=mock_storage_service,
+    )
+
+@pytest.fixture
 def populated_db(db_session, test_user, test_category, other_category, make_report, backdate):
-    """Popola il database reale in-memory rispettando i vincoli dei modelli Report e User."""
     
     public_status = next(iter(PUBLIC_VISIBLE_STATUSES))
 
@@ -80,7 +95,6 @@ def populated_db(db_session, test_user, test_category, other_category, make_repo
 
 @pytest.fixture
 def mock_storage_service():
-    """Simula lo storage service per evitare di scrivere file reali sul disco."""
     storage = Mock()
     storage.save.return_value = "uploads/test_saved_photo.jpg"
     return storage
@@ -91,3 +105,45 @@ def mock_file():
     mock.filename = "test.jpg"
     mock.content_type = "image/jpeg"
     return mock
+
+@pytest.fixture
+def user_with_relations(db_session, test_user, test_category, make_report, make_notification):
+    report = make_report(user_id=test_user.id, category_id=test_category.id)
+    db_session.add(report)
+    db_session.commit()
+    
+    follower = ReportFollower(report_id=report.id, user_id=test_user.id)
+    
+    message = Message(
+        report_id=report.id,
+        sender_id=test_user.id,
+        recipient_id=test_user.id,
+        body="Questo è un messaggio di test tra utenti dell'integrazione."
+    )
+    
+    history = ReportStatusHistory(
+        report_id=report.id,
+        changed_by_id=test_user.id,
+        previous_status=ReportStatus.ASSIGNED,
+        new_status=ReportStatus.RESOLVED
+    )
+    
+    notification = make_notification(user_id=test_user.id)
+    
+    token = EmailVerificationToken(
+        user_id=test_user.id, 
+        token="token-da-eliminare",
+        expires_at=datetime.now() + timedelta(days=1)
+    )
+    
+    db_session.add_all([follower, message, history, notification, token])
+    db_session.commit()
+    
+    return {
+        "user": test_user,
+        "report": report,
+        "message": message,
+        "history": history,
+        "notification": notification,
+        "token": token
+    }
