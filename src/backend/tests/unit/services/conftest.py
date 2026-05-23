@@ -19,24 +19,6 @@ def report_service_with_active_category(report_service):
     return report_service
 
 @pytest.fixture
-def report_service():
-    """
-    Fornisce l'istanza del servizio ReportService
-    """    
-
-    service =  ReportService(
-        session=Mock(),
-        report_repository=Mock(),
-        category_repository=Mock(),
-        storage_service=Mock(),
-        notification_service=Mock()
-    )
-    
-
-    return service
-
-
-@pytest.fixture
 def mock_category():
     """Fornisce un mock standard di una categoria"""
     category = Mock()
@@ -134,6 +116,28 @@ def mock_admin(mock_user):
     return mock_user
 
 @pytest.fixture
+def mock_file():
+    file = Mock()
+    file.filename = "test.png"
+    return file
+
+
+@pytest.fixture
+def report_service():
+    """ Fornisce l'istanza del servizio ReportService"""    
+
+    service =  ReportService(
+        session=Mock(),
+        report_repository=Mock(),
+        category_repository=Mock(),
+        storage_service=Mock(),
+        notification_service=Mock()
+    )
+    
+    return service
+
+
+@pytest.fixture
 def user_service():
     """
     Fornisce l'istanza del servizio UserService con tutti i repository mockati.
@@ -199,8 +203,3 @@ def storage_service():
 def local_file_storage_service(tmp_path):
     return LocalFileStorageService(media_root=tmp_path)
 
-@pytest.fixture
-def mock_file():
-    file = Mock()
-    file.filename = "test.png"
-    return file
