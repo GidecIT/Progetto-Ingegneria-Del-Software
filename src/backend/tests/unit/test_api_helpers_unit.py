@@ -2,6 +2,7 @@ import pytest
 from unittest.mock import MagicMock, patch
 from flask import Flask, request
 from participium.routes.api import _payload, _as_bool, _parse_report_status, _report_filters
+from participium.core.exceptions import ValidationError
 from participium.models.enums import ReportStatus
 
 def test_payload():
@@ -30,8 +31,10 @@ def test_parse_report_status():
     # quindi "PENDING APPROVAL" fallirà se il valore è "Pending Approval"
     with pytest.raises(ValidationError):
         _parse_report_status("PENDING APPROVAL")
-    assert _parse_report_status("invalid") is None
+    with pytest.raises(ValidationError):
+        _parse_report_status("invalid")
     assert _parse_report_status(None) is None
+    assert _parse_report_status("") is None
 
 def test_report_filters():
     app = Flask(__name__)
