@@ -1,13 +1,9 @@
 from __future__ import annotations
 
-import io
-
 import pytest
 from werkzeug.datastructures import FileStorage
-
 from participium.core.exceptions import ValidationError
-from participium.models.category import Category
-from participium.models.report import Report, ReportPhoto
+from participium.models.report import Report
 from participium.models.user import User
 from participium.services.report_service import ReportService
 
@@ -23,7 +19,7 @@ INVALID_PHOTO = FileStorage(filename="")
 def seed_create_report_data(db_session) -> None:
     # Popola il sistema con i dati nessesari per `create_report`.
     #
-	# Le categorie 0-9 sono valide
+	# Le categorie 0-8 sono valide
     # categoria 4 è valida e attiva
 	# categoria 5 è valida ma inattiva
     pass
@@ -45,9 +41,9 @@ def seed_create_report_data(db_session) -> None:
 		(VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 45.0710 , 7.6856, [], False , ValidationError),   # CR11
         # Boundary cases per category_id
 		(VALID_REPORTER, 0, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, None),  # CRB01
-		(VALID_REPORTER, 9, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, None),  # CRB02
+		(VALID_REPORTER, 8, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, None),  # CRB02
 		(VALID_REPORTER, -1, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, ValidationError),  # CRB04
-		(VALID_REPORTER, 10, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, ValidationError),  # CRB05
+		(VALID_REPORTER, 9, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, ValidationError),  # CRB05
 		# Boundary cases per title e description
 		(VALID_REPORTER, 4, "a", "a", 45.0710, 7.6856, [VALID_PHOTO], False, None),  # CRB06
 		(VALID_REPORTER, 4, "", "a", 45.0710, 7.6856, [VALID_PHOTO], False, ValidationError),  # CRB07
