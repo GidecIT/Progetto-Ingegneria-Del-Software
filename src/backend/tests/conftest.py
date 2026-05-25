@@ -15,6 +15,8 @@ from participium.models.enums import ReportStatus
 from participium.models.token import EmailVerificationToken
 from datetime import datetime, timedelta
 from sqlalchemy import update
+from unittest.mock import Mock
+from flask import Flask
 
 
 
@@ -177,3 +179,22 @@ def backdate():
         session.commit()
     return _helper
 
+@pytest.fixture
+def flask_app():
+    app = Flask("test_auth_core_app")
+    app.secret_key = "super_secret_key_for_testing"
+    return app
+
+@pytest.fixture
+def mock_citizen_user():
+    user = Mock()
+    user.id = 1
+    user.role = Role.CITIZEN
+    return user
+
+@pytest.fixture
+def mock_admin_user():
+    user = Mock()
+    user.id = 3
+    user.role = Role.ADMIN
+    return user
