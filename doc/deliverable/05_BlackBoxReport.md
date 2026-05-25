@@ -617,9 +617,9 @@ NOTA: PR09 copre lo stesso input di PR01 ma con fixture vuota, per verificare il
 
 | TC    | category_id  | Boundary covered  | Expected |
 | :---- | :-------- |:------------------|:---------|
-| PRB01 |  0 | Exact boundary   | Lista di segnalazioni pubbliche con category_id 0 |
-| PRB02 |  10 | Immediately above   | Lista vuota |
-| PRB03 |  -1 | Immediately below   | Lista vuota |
+| PRB01 |  1 | ID esistente | Lista di segnalazioni pubbliche con category_id 1 |
+| PRB02/PRB10 |  9999 | ID non esistente   | Lista vuota |
+| PRB03 |  -1 | ID invalido   | Lista vuota |
 
 
 ## 7 `participium.services.messaging_service.MessagingService.send_message`

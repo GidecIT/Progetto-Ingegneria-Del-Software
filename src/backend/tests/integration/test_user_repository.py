@@ -1,5 +1,4 @@
 import pytest
-from sqlalchemy import or_
 from participium.models.user import User
 from participium.models.enums import Role
 from datetime import datetime, timedelta
