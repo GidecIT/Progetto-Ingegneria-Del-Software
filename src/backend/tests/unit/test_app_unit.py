@@ -19,6 +19,7 @@ def mock_settings():
 
 def test_create_app(mock_settings):
     with patch("participium.app.open_connection"), \
+         patch("participium.app.create_all"), \
          patch("participium.app.AppContainer"), \
          patch("participium.app.init_swagger"), \
          patch("participium.app.register_blueprints"):
@@ -46,10 +47,28 @@ def test_create_app_with_db_init_selective(mock_settings):
         assert mock_seed_ref.called
         assert not mock_seed_demo.called
 
+def test_create_app_with_db_init_demo_data(mock_settings):
+    # Test case where both bootstrap_reference_data and bootstrap_demo_data are True
+    mock_settings.auto_init_db = True
+    mock_settings.bootstrap_reference_data = False
+    mock_settings.bootstrap_demo_data = True
+    
+    with patch("participium.app.open_connection"), \
+         patch("participium.app.AppContainer"), \
+         patch("participium.app.init_swagger"), \
+         patch("participium.app.register_blueprints"), \
+         patch("participium.app.create_all"), \
+         patch("participium.app.seed_demo_data") as mock_seed_demo, \
+         patch("participium.app.get_session"):
+        
+        create_app(mock_settings)
+        assert mock_seed_demo.called
+
 def test_create_app_no_settings():
     # Test create_app with None settings to trigger Settings.from_env()
     with patch("participium.app.Settings.from_env") as mock_from_env, \
          patch("participium.app.open_connection"), \
+         patch("participium.app.create_all"), \
          patch("participium.app.AppContainer"), \
          patch("participium.app.init_swagger"), \
          patch("participium.app.register_blueprints"), \
@@ -57,6 +76,7 @@ def test_create_app_no_settings():
         
         mock_settings = MagicMock()
         mock_settings.instance_path = "/tmp"
+        mock_settings.auto_init_db = False
         mock_from_env.return_value = mock_settings
         
         create_app(None)
