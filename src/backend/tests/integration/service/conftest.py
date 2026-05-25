@@ -1,12 +1,15 @@
 import io
 from datetime import datetime, timedelta
 from unittest.mock import Mock
+from flask import Flask
 
 import pytest
 from werkzeug.datastructures import FileStorage
 
+from participium.core.auth import login_required, roles_required
 from participium.config.constants import PUBLIC_VISIBLE_STATUSES
 from participium.models.enums import ReportStatus
+from participium.models.enums import Role
 from participium.models.message import Message
 from participium.models.report import ReportFollower, ReportStatusHistory
 from participium.models.token import EmailVerificationToken
@@ -202,3 +205,39 @@ def store_notification(db_session, make_notification):
         db_session.commit()
         return notification
     return _store
+
+
+import pytest
+from flask import Flask
+from participium.models.enums import Role
+from participium.core.auth import login_required, roles_required
+
+
+@pytest.fixture
+def test_app():
+    """Configura l'applicazione fittizia Flask per i test d'integrazione dei middleware."""
+    app = Flask("test_auth_middleware")
+    app.config["SECRET_KEY"] = "secret_key_test"
+
+    app.config["PROPAGATE_EXCEPTIONS"] = True
+
+    @app.route("/login", endpoint="web.login")
+    def mock_login():
+        return "login_page"
+
+    @app.route("/web/dashboard")
+    @login_required
+    def web_dashboard():
+        return "web_success"
+
+    @app.route("/api/v1/data")
+    @login_required
+    def api_data():
+        return "api_success"
+
+    @app.route("/api/admin")
+    @roles_required(Role.ADMIN)
+    def admin_route():
+        return "admin_success"
+
+    return app
