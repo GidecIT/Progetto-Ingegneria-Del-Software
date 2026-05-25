@@ -19,7 +19,6 @@ from participium.models.user import User
 
 pytestmark = pytest.mark.unit
 
-
 def test_current_user_helper(flask_app, mock_citizen_user):
     with flask_app.test_request_context():
         if hasattr(g, "current_user"):
@@ -48,6 +47,7 @@ def test_logout_user_behavior(flask_app):
 
 
 class TestLoginRequiredDecorator:
+
     def test_login_required_when_logged_in(self, flask_app, mock_citizen_user):
         mock_view = Mock(return_value="success_response")
         decorated_view = login_required(mock_view)
@@ -129,7 +129,6 @@ class TestRolesRequiredDecorator:
 
             assert result == "content"
             mock_view.assert_called_once()
-
 
 class TestAuthControllerDirect:
 

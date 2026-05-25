@@ -1,8 +1,15 @@
 import pytest
-from datetime import datetime, timedelta
+from datetime import timedelta
+from unittest.mock import Mock
+
 from participium.models.token import EmailVerificationToken
 from participium.repositories.token_repository import TokenRepository
 from participium.models.user import User
+from participium.repositories.user_repository import UserRepository
+from participium.core.exceptions import AuthenticationError, ValidationError
+from participium.core.utils import utcnow
+from participium.services.auth_service import AuthService
+from participium.controllers.auth_controller import AuthController
 
 pytestmark = pytest.mark.integration
 
@@ -72,3 +79,48 @@ def test_list_for_user_isolation(db_session, token_repository, test_user, other_
 
     assert len(results) == 1
     assert results[0].token == "token_mio"
+
+
+def test_auth_controller_and_service_full_flow(db_session, token_repository, test_user):
+    """
+    copre AuthController e AuthService,
+    sfruttando le relazioni native di SQLAlchemy (token.user).
+    """
+    user_repo = UserRepository(db_session)
+    mock_email_gateway = Mock()
+    auth_service = AuthService(db_session, user_repo, token_repository, mock_email_gateway)
+
+    auth_controller = AuthController(auth_service)
+
+    test_user.is_email_verified = False
+    db_session.commit()
+
+    payload = {
+        "username": "nuovo_utente_controller",
+        "first_name": "Mario",
+        "last_name": "Rossi",
+        "email": "controller@example.com",
+        "password": "Password123!"
+    }
+    user_reg, verify_url = auth_controller.register(payload, "https://example.com/verify")
+    assert user_reg.username == "nuovo_utente_controller"
+    assert verify_url is not None
+
+    db_token = token_repository.list_for_user(user_reg.id)[0]
+
+    db_token.expires_at = utcnow() - timedelta(hours=1)
+    db_session.commit()
+    with pytest.raises(ValidationError, match="Verification token has expired."):
+        auth_controller.verify_email(db_token.token)
+
+    db_token.expires_at = utcnow() + timedelta(hours=1)
+    db_session.commit()
+
+    verified_user = auth_controller.verify_email(db_token.token)
+    assert verified_user.is_email_verified is True
+
+    with pytest.raises(ValidationError, match="Verification token is invalid."):
+        auth_controller.verify_email(db_token.token)
+
+    logged_user = auth_controller.login("nuovo_utente_controller", "Password123!")
+    assert logged_user.id == user_reg.id
