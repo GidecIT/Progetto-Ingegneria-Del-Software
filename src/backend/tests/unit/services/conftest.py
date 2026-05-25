@@ -5,10 +5,12 @@ from participium.services.messaging_service import MessagingService
 from participium.services.statistics_service import StatisticsService
 from participium.services.user_service import UserService
 from participium.models.enums import NotificationType, ReportStatus, Role
+from participium.services.auth_service import AuthService
+from participium.models.token import EmailVerificationToken
 import pytest
 from unittest.mock import Mock
 
-from participium.services.report_service import ReportService 
+from participium.services.report_service import ReportService
 
 
 @pytest.fixture
@@ -17,6 +19,7 @@ def report_service_with_active_category(report_service):
     category = Mock(id=1, is_active=True)
     report_service.category_repository.get_by_id.return_value = category
     return report_service
+
 
 @pytest.fixture
 def mock_category():
@@ -28,6 +31,7 @@ def mock_category():
     category.is_active = True
 
     return category
+
 
 @pytest.fixture
 def mock_notification(mock_user, mock_report):
@@ -51,26 +55,27 @@ def mock_report():
     Fornisce un Mock standard globale di un Report.
     """
     report = Mock()
-    
+
     report.id = 100
     report.title = "Default Report Title"
     report.description = "This is a standard default test description."
     report.latitude = 45.4642
     report.longitude = 9.1900
     report.is_anonymous = False
-    report.status = ReportStatus.PENDING_APPROVAL #privato
+    report.status = ReportStatus.PENDING_APPROVAL  # privato
     report.rejection_reason = None
     report.reporter_id = 42
     report.category_id = 5
-    
+
     report.reporter = Mock()
     report.category = Mock()
     report.photos = []
     report.status_history = []
     report.followers = []
     report.messages = []
-    
+
     return report
+
 
 @pytest.fixture
 def mock_user():
@@ -78,26 +83,27 @@ def mock_user():
     Fornisce un Mock standard globale di uno User.
     """
     user = Mock()
-    
+
     user.id = 1
     user.username = "test_user"
     user.first_name = "Mario"
     user.last_name = "Rossi"
     user.email = "mario.rossi@example.com"
     user.password_hash = "hashed_password_123"
-    user.role = Role.CITIZEN  
+    user.role = Role.CITIZEN
     user.category_id = 99
     user.is_active = True
     user.is_email_verified = False
     user.email_notifications_enabled = True
     user.profile_picture_path = None
-    
+
     user.category = Mock()
     user.reports = []
     user.notifications = []
     user.verification_tokens = []
-    
+
     return user
+
 
 @pytest.fixture
 def mock_operator(mock_user):
@@ -107,13 +113,15 @@ def mock_operator(mock_user):
     mock_user.category_id = 6
     return mock_user
 
+
 @pytest.fixture
 def mock_admin(mock_user):
     """Prende l'utente base e lo trasforma in un Admin"""
     mock_user.id = 3
     mock_user.role = Role.ADMIN
-    mock_user.category_id = None  
+    mock_user.category_id = None
     return mock_user
+
 
 @pytest.fixture
 def mock_file():
@@ -124,16 +132,16 @@ def mock_file():
 
 @pytest.fixture
 def report_service():
-    """ Fornisce l'istanza del servizio ReportService"""    
+    """ Fornisce l'istanza del servizio ReportService"""
 
-    service =  ReportService(
+    service = ReportService(
         session=Mock(),
         report_repository=Mock(),
         category_repository=Mock(),
         storage_service=Mock(),
         notification_service=Mock()
     )
-    
+
     return service
 
 
@@ -153,10 +161,12 @@ def user_service():
     )
     return service
 
+
 @pytest.fixture
 def statistics_service():
     """fornisce istanza di StatisticsService con il repository (mock)"""
     return StatisticsService(report_repository=Mock())
+
 
 @pytest.fixture
 def messaging_service():
@@ -171,6 +181,7 @@ def messaging_service():
     )
     return service
 
+
 @pytest.fixture
 def category_service():
     """
@@ -178,9 +189,10 @@ def category_service():
     """
     service = CategoryService(
         session=Mock(),
-        category_repository = Mock()
+        category_repository=Mock()
     )
     return service
+
 
 @pytest.fixture
 def notification_service():
@@ -195,11 +207,41 @@ def notification_service():
 
     return service
 
+
 @pytest.fixture
 def storage_service():
     return StorageService()
+
 
 @pytest.fixture
 def local_file_storage_service(tmp_path):
     return LocalFileStorageService(media_root=tmp_path)
 
+@pytest.fixture
+def mock_token():
+    """Fornisce un mock standard di un EmailVerificationToken."""
+    token = Mock()
+
+    token.id = 1
+    token.user_id = 1
+    token.token = "fake-token-value-abc123"
+    token.is_used = False
+    token.expires_at = Mock()
+    token.user = Mock()
+
+    return token
+
+
+@pytest.fixture
+def auth_service():
+    """
+    Fornisce l'istanza del servizio AuthService con tutti i repository mockati.
+    Pronto per lo Unit Testing.
+    """
+    service = AuthService(
+        session=Mock(),
+        user_repository=Mock(),
+        token_repository=Mock(),
+        email_gateway=Mock()
+    )
+    return service
