@@ -1,15 +1,5 @@
 """
 Shared fixtures and helpers for the Participium Selenium suite.
-
-Helpers kept here are used by more than one test file:
-  - driver / page fixtures
-  - PageHelper wrapper
-  - seeded credentials
-  - unique_suffix()
-  - wait_for_report_rows()
-  - get_first_public_report_id()
-  - write_temp_image()
-  - create_report_and_get_id()
 """
 import os
 import tempfile
@@ -26,7 +16,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 # Configuration
 # ---------------------------------------------------------------------------
 BASE_URL = "http://localhost:5173"
-WAIT_TIMEOUT = 10  # seconds
+WAIT_TIMEOUT = 15  # seconds – increased to tolerate slower CI machines
 
 CITIZEN_EMAIL = "citizen@example.com"
 CITIZEN_PASSWORD = "Citizen123!"
@@ -135,14 +125,19 @@ class PageHelper:
 
     def login(self, email: str, password: str) -> None:
         self.go("/login")
-        self.by_id_visible("login-identifier").clear()
-        self.by_id_visible("login-identifier").send_keys(email)
-        self.by_id_visible("login-password").clear()
-        self.by_id_visible("login-password").send_keys(password)
+        # Clear any pre-filled demo values before typing
+        ident = self.by_id_visible("login-identifier")
+        ident.clear()
+        ident.send_keys(email)
+        pwd = self.by_id_visible("login-password")
+        pwd.clear()
+        pwd.send_keys(password)
         self.by_id_clickable("login-submit").click()
+        # Wait until the logout button appears: this confirms the React auth
+        # context has fully established the session and the redirect is done.
         self.wait.until(
-            lambda d: "/login" not in d.current_url,
-            message="Login did not redirect away from /login",
+            EC.presence_of_element_located((By.ID, "logout-button")),
+            message=f"Login failed or session not established for {email}",
         )
 
     def logout(self) -> None:
@@ -166,8 +161,7 @@ def unique_suffix() -> str:
 
 def wait_for_report_rows(page: PageHelper) -> None:
     """Wait until at least one public-report-row-* element appears in the DOM.
-    The home page loads reports asynchronously, so this explicit wait must be
-    called before reading the table body."""
+    The home page loads reports asynchronously."""
     page.wait.until(
         EC.presence_of_element_located(
             (By.XPATH, "//*[starts-with(@id,'public-report-row-')]")
@@ -189,7 +183,7 @@ def get_first_public_report_id(page: PageHelper) -> int:
 
 
 def write_temp_image() -> str:
-    """Write a minimal valid 1×1 PNG to a temp file and return its path.
+    """Write a minimal valid 1x1 PNG to a temp file and return its path.
     The caller is responsible for deleting the file after use."""
     png_bytes = (
         b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01'
@@ -204,8 +198,7 @@ def write_temp_image() -> str:
 
 
 def create_report_and_get_id(page: PageHelper) -> int:
-    """Log in as citizen, submit a new report, and return its numeric ID.
-    Used by tests that need an existing report to work with (e.g. messaging)."""
+    """Log in as citizen, submit a new report, and return its numeric ID."""
     img = write_temp_image()
     try:
         page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
@@ -214,7 +207,11 @@ def create_report_and_get_id(page: PageHelper) -> int:
         page.fill("report-description", "Created by Selenium test suite.")
         page.by_id("report-photos").send_keys(img)
         page.click("new-report-submit")
-        page.wait_for_url("/reports/")
+        # Wait for redirect to /reports/<id>  (NOT /reports/new)
+        page.wait.until(
+            lambda d: "/reports/" in d.current_url and "/new" not in d.current_url,
+            message="New report did not redirect to detail page",
+        )
         return int(page.driver.current_url.rstrip("/").split("/")[-1])
     finally:
         os.unlink(img)

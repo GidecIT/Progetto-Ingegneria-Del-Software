@@ -1,6 +1,4 @@
-"""
-UC-15  Admin manages report categories (create, edit, deactivate).
-"""
+"""UC-15  Admin manages report categories (create, edit, deactivate)."""
 import pytest
 from selenium.webdriver.common.by import By
 
@@ -10,79 +8,60 @@ from conftest import ADMIN_EMAIL, ADMIN_PASSWORD, PageHelper, unique_suffix
 class TestAdminCategories:
     """UC-15 – Admin category management."""
 
-    def test_uc15_categories_table_rendered(self, page: PageHelper):
+    def test_categories_table_rendered(self, page: PageHelper):
         """UC-15: Admin page shows the categories table."""
         page.login(ADMIN_EMAIL, ADMIN_PASSWORD)
         page.wait_for_url("/admin")
         page.by_id("admin-categories-section")
         page.by_id("admin-categories-table")
 
-    def test_uc15_create_new_category(self, page: PageHelper):
-        """UC-15: Filling the new-category form and submitting creates the
-        category and shows a success message."""
-        cat_name = f"Cat {unique_suffix()}"
-
+    def test_new_category_form_present(self, page: PageHelper):
+        """UC-15: The create-category form is present on the admin page."""
         page.login(ADMIN_EMAIL, ADMIN_PASSWORD)
         page.wait_for_url("/admin")
+        # Form ID from AdminPage.tsx: admin-category-form
+        page.by_id("admin-category-form")
+        page.by_id("admin-new-category-name")
+        page.by_id("admin-new-category-submit")
 
+    def test_create_new_category(self, page: PageHelper):
+        """UC-15: Submitting the create-category form shows a success message
+        and the category appears in the table."""
+        cat_name = f"Cat{unique_suffix()}"
+        page.login(ADMIN_EMAIL, ADMIN_PASSWORD)
+        page.wait_for_url("/admin")
         page.fill("admin-new-category-name", cat_name)
         page.click("admin-new-category-submit")
-
-        msg = page.by_id_visible("admin-status-message")
-        assert msg.text, "Expected a non-empty status message"
-
-        # New category should appear in the categories table
+        # success message ID from AdminPage.tsx is 'admin-success'
+        msg = page.by_id_visible("admin-success")
+        assert msg.text, "Expected a non-empty success message"
         tbody = page.by_id("admin-categories-table-body")
-        name_inputs = tbody.find_elements(
-            By.XPATH, f".//input[@value='{cat_name}']"
-        )
+        name_inputs = tbody.find_elements(By.XPATH, f".//input[@value='{cat_name}']")
         assert name_inputs, f"Newly created category '{cat_name}' not found in table"
 
-    def test_uc15_edit_category_name(self, page: PageHelper):
-        """UC-15: Editing an existing category name and saving persists the change."""
+    def test_edit_category_name(self, page: PageHelper):
+        """UC-15: Editing a category name and saving shows a success message."""
         page.login(ADMIN_EMAIL, ADMIN_PASSWORD)
         page.wait_for_url("/admin")
-
         tbody = page.by_id("admin-categories-table-body")
         rows = tbody.find_elements(By.TAG_NAME, "tr")
         assert rows, "Expected at least one category row"
-
-        first_row = rows[0]
-        row_id = first_row.get_attribute("id")  # admin-category-row-<id>
-        cat_id = row_id.split("-")[-1]
-
+        cat_id = rows[0].get_attribute("id").split("-")[-1]
         name_input = page.by_id(f"admin-category-name-{cat_id}")
-        new_name = f"Edited{unique_suffix()}"
         name_input.clear()
-        name_input.send_keys(new_name)
-
+        name_input.send_keys(f"Edited{unique_suffix()}")
         page.click(f"admin-category-save-{cat_id}")
-        msg = page.by_id_visible("admin-status-message")
-        assert msg.text, "Expected a non-empty status message"
+        msg = page.by_id_visible("admin-success")
+        assert msg.text
 
-    def test_uc15_toggle_category_active(self, page: PageHelper):
+    def test_toggle_category_active(self, page: PageHelper):
         """UC-15: Toggling the Active flag on a category and saving updates it."""
         page.login(ADMIN_EMAIL, ADMIN_PASSWORD)
         page.wait_for_url("/admin")
-
         tbody = page.by_id("admin-categories-table-body")
         rows = tbody.find_elements(By.TAG_NAME, "tr")
         assert rows, "Expected at least one category row"
-
-        first_row = rows[0]
-        row_id = first_row.get_attribute("id")
-        cat_id = row_id.split("-")[-1]
-
-        active_cb = page.by_id(f"admin-category-active-{cat_id}")
-        active_cb.click()
-
+        cat_id = rows[0].get_attribute("id").split("-")[-1]
+        page.by_id(f"admin-category-active-{cat_id}").click()
         page.click(f"admin-category-save-{cat_id}")
-        page.by_id_visible("admin-status-message")
-
-    def test_uc15_new_category_form_present(self, page: PageHelper):
-        """UC-15: The new-category form is present on the admin page."""
-        page.login(ADMIN_EMAIL, ADMIN_PASSWORD)
-        page.wait_for_url("/admin")
-        page.by_id("admin-new-category-form")
-        page.by_id("admin-new-category-name")
-        page.by_id("admin-new-category-submit")
+        page.by_id_visible("admin-success")
