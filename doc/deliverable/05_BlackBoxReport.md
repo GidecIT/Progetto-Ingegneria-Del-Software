@@ -244,27 +244,27 @@ Combinazioni possibili secondo i predicati:
 
 | TC-ID | current_status | next_status | Expected | Fixture |
 | :---- | :------------- | :---------- | :------- | :------ |
-|TR1 | Pending  Approval | Pending  Approval | True | Esiste una segnalazione in stato Pending  Approval |
-|TR2 | Pending  Approval |  Assigned | True |  Esiste una segnalazione in stato Pending  Approval|
-|TR3 | Pending  Approval |  Rejected | True |  Esiste una segnalazione in stato Pending  Approval|
-|TR4 | Pending  Approval | Resolved | ValidationError |  Esiste una segnalazione in stato Pending  Approval|
-|TR5 |  Assigned |  Assigned | True |  Esiste una segnalazione in stato  Assigned |
-|TR6 |  Assigned | In Progress | True | Esiste una segnalazione in stato  Assigned|
-|TR7 |  Assigned | Suspended | True | Esiste una segnalazione in stato  Assigned|
-|TR8 |  Assigned | Resolved | True | Esiste una segnalazione in stato  Assigned|
-|TR9 |  Assigned | Pending  Approval | ValidationError | Esiste una segnalazione in stato  Assigned|
-|TR10 | In Progress | In Progress | True | Esiste una segnalazione in stato In Progress |
-|TR11 | In Progress | Suspended | True | Esiste una segnalazione in stato In Progress|
-|TR12 | In Progress | Resolved | True | Esiste una segnalazione in stato In Progress|
-|TR13 | In Progress |  Assigned | ValidationError | Esiste una segnalazione in stato In Progress|
-|TR14 | Suspended | Suspended | True | Esiste una segnalazione in stato Suspended|
-|TR15 | Suspended | In Progress | True| Esiste una segnalazione in stato Suspended|
-|TR16 | Suspended | Resolved | True | Esiste una segnalazione in stato Suspended|
-|TR17 | Suspended | Pending  Approval | ValidationError | Esiste una segnalazione in stato Suspended|
-|TR18 |  Rejected |  Rejected | True | Esiste una segnalazione in stato  Rejected |
-|TR19 |  Rejected |  Assigned | ValidationError | Esiste una segnalazione in stato  Rejected |
-|TR20 | Resolved | Resolved | True | Esiste una segnalazione in stato Resolved |
-|TR21 | Resolved | In Progress | ValidationError | Esiste una segnalazione in stato Resolved |
+|TR1 | Pending  Approval | Pending  Approval | True | - |
+|TR2 | Pending  Approval |  Assigned | True |  -|
+|TR3 | Pending  Approval |  Rejected | True |  -|
+|TR4 | Pending  Approval | Resolved | ValidationError |  -|
+|TR5 |  Assigned |  Assigned | True |  - |
+|TR6 |  Assigned | In Progress | True | - |
+|TR7 |  Assigned | Suspended | True | -|
+|TR8 |  Assigned | Resolved | True | -|
+|TR9 |  Assigned | Pending  Approval | ValidationError | -|
+|TR10 | In Progress | In Progress | True | - |
+|TR11 | In Progress | Suspended | True | -|
+|TR12 | In Progress | Resolved | True | -|
+|TR13 | In Progress |  Assigned | ValidationError | -|
+|TR14 | Suspended | Suspended | True | -|
+|TR15 | Suspended | In Progress | True| -|
+|TR16 | Suspended | Resolved | True | -|
+|TR17 | Suspended | Pending  Approval | ValidationError | -|
+|TR18 |  Rejected |  Rejected | True | - |
+|TR19 |  Rejected |  Assigned | ValidationError | -|
+|TR20 | Resolved | Resolved | True | - |
+|TR21 | Resolved | In Progress | ValidationError | - |
 
 ## 4 `participium.services.report_service.ReportService.create_report`
 
