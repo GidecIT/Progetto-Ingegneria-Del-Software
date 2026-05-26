@@ -846,10 +846,11 @@ Combinazioni possibili secondo i predicati:
 
 | TC-ID | user | notification_type | title | body| report | Expected | Fixture |
 | :---- | :--- | :---------------- | :---- | :---| :----- | :------- | :------ |
-| CN01 | user1 | MESSAGE | Aggiornamento | "Messaggio" | report1 | Notification | Utente esiste, Segnalazione presente |
-| CN02 | user1 | MESSAGE | Aggiornamento | "Messaggio" | None | Notification | utente esiste|
-| CN03 | None | MESSAGE | Aggiornamento | "Messaggio" | report1 | None | Segnalazione presente|
-| CN04 | None | MESSAGE | Aggiornamento | "Messaggio" | None | None | - |
+| CN01 | user1 | MESSAGE | "Aggiornamento" | "Messaggio" | report1 | Notification (email inviata) | Utente esiste con notifiche email attive, Segnalazione presente |
+| CN02 | user1 | MESSAGE | "Aggiornamento" | "Messaggio" | None | Notification | utente esiste, con notifiche email non attive|
+| CN03 | None | MESSAGE | "Aggiornamento" | "Messaggio" | report1 | None | Segnalazione presente|
+| CN04 | None | MESSAGE | "Aggiornamento" | "Messaggio" | None | None | - |
+| CN05 | user1 | MESSAGE | "Aggiornamento" | "Messaggio" | None | Notification (eccezione Email) | Utente esiste, con notifiche email attive ma il gateway email fallisce  |
 
 ### Boundary
 
