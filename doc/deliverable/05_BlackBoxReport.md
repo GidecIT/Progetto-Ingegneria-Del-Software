@@ -346,7 +346,7 @@ Il sistema deve permettere la creazione di un report da parte di un utente auten
 - EC2 x EC4 x EC6 x EC7 x EC9 --> Report non creato, numero di foto non valido
   
 <br>
-Test realizzati considerando le 9 categorie descritte nella specifica iniziale, considerando gli id associati da 0 a 8.
+Test realizzati considerando le 9 categorie descritte nella specifica iniziale, considerando gli id associati da 1 a 9.
 <br><br>
 
 | TC-ID | reporter | category_id | title | description | latitude | longitude | photos | is_anonymous | Expected | Fixture |
@@ -359,7 +359,7 @@ Test realizzati considerando le 9 categorie descritte nella specifica iniziale, 
 |CR6| user | df | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | True | ValidationError |  L'utente è autenticato|
 |CR7| user | 4 | "" | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | ValidationError |  L'utente è autenticato, la categoria 4 è valida e attiva|
 |CR8| user | 4 | Buca profonda |None| 45.0710 | 7.6856 | [foto_buca.jpg] | False | ValidationError |  L'utente è autenticato, la categoria 4 è valida e attiva |
-|CR9| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | "" | [foto_buca.jpg] | True | ValidationError |  L'utente è autenticato, la categoria 4 è valida e attiva |
+|CR9| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | None | [foto_buca.jpg] | True | ValidationError |  L'utente è autenticato, la categoria 4 è valida e attiva |
 |CR10| user | 4 | Buca profonda | Buca profonda in piazza Castello| Quarantacinque | 7.6856 | [foto_buca.jpg] | False | ValidationError |  L'utente è autenticato, la categoria 4 è valida e attiva |
 |CR11| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [] | False | ValidationError |  L'utente è autenticato, la categoria 4 è valida e attiva |
 
@@ -369,27 +369,27 @@ Test realizzati considerando le 9 categorie descritte nella specifica iniziale, 
 
 | TC    | category_id | Boundary covered  | Expected        |
 | :---- | :---------- |:------------------|:----------------|
-| CRB01 | 0           | Exact boundary    | Report          |
-| CRB02 | 8           | Exact boundary    | Report          |
-| CRB04 | -1          | Immediately below | ValidationError |
-| CRB05 | 9          | Immediately above | ValidationError |
+| CRB01 | 1           | Exact boundary    | Report          |
+| CRB02 | 9           | Exact boundary    | Report          |
+| CRB03 | 0          | Immediately below | ValidationError |
+| CRB04 | 10          | Immediately above | ValidationError |
 
 
 **Boundary around "title e description":**
 
 | TC    | title | description | Boundary covered  | Expected |
 | :---- | :------------ | :----------------- |:------------------|:---------|
-| CRB06 | a  | a | Exact boundary    | Report |
-| CRB07 | ""  | a | Immediately below    | ValidationError |
-| CRB08 | a  | "" | Immediately below    | ValidationError |
+| CRB05 | a  | a | Exact boundary    | Report |
+| CRB06 | ""  | a | Immediately below    | ValidationError |
+| CRB07 | a  | "" | Immediately below    | ValidationError |
 
 **Boundary around "latitude/longitude":**
 
 | TC    | latitude | longitude | Boundary covered  | Expected |
 | :---- | :----------------- |:-------- | :------------------|:---------|
-| CRB09 | 0.0  | 0.0  | Exact boundary    | Report |
-| CRB10 | "" | 0.0 | Immediately below    | ValidationError |
-| CRB11 | 0.0 | "" | Immediately below    | ValidationError |
+| CRB08 | 0.0  | 0.0  | Exact boundary    | Report |
+| CRB09 | "" | 0.0 | Immediately below    | ValidationError |
+| CRB10 | 0.0 | "" | Immediately below    | ValidationError |
 
 **Boundary around "photos":**
 
@@ -397,8 +397,8 @@ Test realizzati considerando le 9 categorie descritte nella specifica iniziale, 
 | :---- | :----- |:------------------|:---------|
 | CR01 | [foto_buca.jpg] | Exact boundary    | Report|
 | CR11 | [] | Immediately below    | ValidationError |
-| CRB12 | [foto1.jpg, foto2.jpg, foto3.jpg] | Exact boundary    | Report |
-| CRB13 | [foto1.jpg, foto2.jpg, foto3.jpg, foto4.jpg] | Immediately above | ValidationError |
+| CRB11 | [foto1.jpg, foto2.jpg, foto3.jpg] | Exact boundary    | Report |
+| CRB12 | [foto1.jpg, foto2.jpg, foto3.jpg, foto4.jpg] | Immediately above | ValidationError |
 
 ## 5 `participium.services.report_service.ReportService.update_status`
 
@@ -595,6 +595,10 @@ Il sistema deve restituire una lista di segnalazioni pubbliche basata su filtri 
 - EC1 x EC2 x EC3 x EC4 x EC5 --> Lista di segnalazioni pubbliche filtrata e ordinata
 
 Nota: la funzione 'list_public_reports' ritorna sempre list[Report]. Nella tabella seguente viene utilizzata la colonna "Expected" per descrivere il contenuto atteso della lista in riferimento ai filtri applicati e alla loro combinazione.
+
+<br>
+Test realizzati considerando le 9 categorie descritte nella specifica iniziale, considerando gli id associati da 1 a 9.
+<br><br>
 
 | TC-ID | category_id | status | date_from | date_to | sort | Expected | Fixture |
 |-------|-------------|--------|-----------|---------|------|----------|---------|
