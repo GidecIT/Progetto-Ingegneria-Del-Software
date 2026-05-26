@@ -26,9 +26,9 @@ def test_cn01_create_with_user_and_report(notification_service_bundle):
     """TC-ID: CN01 - Utente esiste, Segnalazione presente"""
     svc = notification_service_bundle["service"]
     repo = notification_service_bundle["repo"]
-    session = notification_service_bundle["session"]
+    email_gw = notification_service_bundle["email"]
 
-    user = User(id=1, email="user1@example.com", email_notifications_enabled=False)
+    user = User(id=1, email="user1@example.com", email_notifications_enabled=True) #notifica mail abilitata
     report = Report(id=101)
 
     result = svc.create_notification(user, NotificationType.MESSAGE, "Aggiornamento", "Messaggio", report=report)
@@ -39,13 +39,15 @@ def test_cn01_create_with_user_and_report(notification_service_bundle):
     assert result.title == "Aggiornamento"
     assert result.body == "Messaggio"
     assert result.type == NotificationType.MESSAGE
-    repo.add.assert_called_once()
+    repo.add.assert_called_once_with(result)
+    email_gw.send.assert_called_once_with("user1@example.com", "Aggiornamento", "Messaggio")
 
 
 def test_cn02_create_with_user_no_report(notification_service_bundle):
     """TC-ID: CN02 - utente esiste (senza report)"""
     svc = notification_service_bundle["service"]
     repo = notification_service_bundle["repo"]
+    email_gw = notification_service_bundle["email"]
 
     user = User(id=1, email="user1@example.com", email_notifications_enabled=False)
 
@@ -54,6 +56,7 @@ def test_cn02_create_with_user_no_report(notification_service_bundle):
     assert isinstance(result, Notification)
     assert result.user_id == 1
     assert result.report_id is None
+    email_gw.send.assert_not_called()
     repo.add.assert_called_once()
 
 
@@ -79,6 +82,22 @@ def test_cn04_create_no_user_no_report(notification_service_bundle):
 
     assert result is None
     repo.add.assert_not_called()
+
+def test_cn05_email_failure_is_swallowed(notification_service_bundle):
+    """TC-ID: CN05 - Il gateway email fallisce (Exception), ma l'errore viene gestito internamente senza bloccare il sistema"""
+    svc = notification_service_bundle["service"]
+    repo = notification_service_bundle["repo"]
+    email_gw = notification_service_bundle["email"]
+
+    email_gw.send.side_effect = Exception("SMTP Gateway Error")
+
+    user = User(id=1, email="user1@example.com", email_notifications_enabled=True)
+
+    result = svc.create_notification(user, NotificationType.MESSAGE, "Aggiornamento", "Messaggio")
+
+    assert isinstance(result, Notification)
+    repo.add.assert_called_once_with(result)
+    email_gw.send.assert_called_once()
 
 
 def test_cnb01_boundary_title_body_min_length(notification_service_bundle):
