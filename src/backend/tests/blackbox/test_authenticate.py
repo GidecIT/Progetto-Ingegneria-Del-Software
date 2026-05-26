@@ -1,13 +1,13 @@
 from __future__ import annotations
 from unittest.mock import Mock
-  
 import pytest
-  
+
 from participium.services.auth_service import AuthService
 from participium.models.user import User
 from participium.core.exceptions import AuthenticationError
 from participium.core.security import hash_password
-  
+
+
 @pytest.fixture
 def auth_service() -> AuthService:
     user_repo = Mock()
@@ -22,7 +22,7 @@ def auth_service() -> AuthService:
                 is_active=True,
                 is_email_verified=True,
             )
-        if identifier == "mario_rossi":
+        if identifier in ("mario_rossi", "mario_inactive"):
             return User(
                 id=2,
                 username="mario_rossi",
@@ -31,7 +31,7 @@ def auth_service() -> AuthService:
                 is_active=False,
                 is_email_verified=True,
             )
-        if identifier == "mario_rossi@polito.it":
+        if identifier in ("mario_rossi@polito.it", "mario_unverified"):
             return User(
                 id=3,
                 username="mario_rossi_2",
@@ -49,40 +49,44 @@ def auth_service() -> AuthService:
         token_repository=Mock(),
         email_gateway=Mock(),
     )
-  
-##@pytest.mark.skip(reason="Disabled")
+
+
 @pytest.mark.parametrize(
-    "identifier,password,expected_exception",
+    "identifier, password, expected_exception",
     [
-        ("mario_r", "pass123", None),  # AU01: user exists, active, email verified
-        ("mario.r@polito.it", "pass123", None),  # AU02
-        ("mario_r", "wrong", AuthenticationError),  # AU03
+        ("mario_r", "pass123", None),                  # AU01
+        ("mario.r@polito.it", "pass123", None),          # AU02
+        ("mario_r", "wrong", AuthenticationError),      # AU03
         ("mario.r@polito.it", "wrong", AuthenticationError),  # AU04
-        ("unknown_user", "pass123", AuthenticationError),  # AU05
+        ("unknown_user", "pass123", AuthenticationError),# AU05
         ("unknown@mail.it", "pass123", AuthenticationError),  # AU06
+        ("mario_rossi", "pass123", AuthenticationError), # AU07
+        ("mario_rossi@polito.it", "pass123", AuthenticationError),  # AU08
 
-        # Boundary cases per "identifier"
-        (None, "pass123", AuthenticationError),  # AUB01
-        ("", "pass123", AuthenticationError),  # AUB02
-        (" ", "pass123", AuthenticationError),  # AUB03
+        ("", "pass123", AuthenticationError),           # AUB02
+        (" ", "pass123", AuthenticationError),          # AUB03
 
-        # Boundary cases per "password"
-        ("mario_r", None, AuthenticationError),  # AUB04
-        ("mario.r@polito.it", None, AuthenticationError),  # AUB05 
-        ("mario_r", "", AuthenticationError),  # AUB06
-        ("mario_r", " ", AuthenticationError),  # AUB07
+        ("mario_r", "", AuthenticationError),           # AUB06
+        ("mario_r", " ", AuthenticationError),          # AUB07
 
-        # Boundary cases per User.is_active e User.is_email_verified
-        ("mario_rossi", "pass123", AuthenticationError),  # AUB08 (is_active == False)
-        ("mario_rossi@polito.it", "pass123", AuthenticationError),  # AUB09 (is_email_verified == False)
+        ("mario_inactive", "pass123", AuthenticationError),   # AUB08
+        ("mario_unverified", "pass123", AuthenticationError), # AUB09
+
+        pytest.param(
+            None, "pass123", AuthenticationError,       # AUB01
+            marks=pytest.mark.xfail(reason="Username nullo: crasha con AttributeError su .strip()", raises=AttributeError)
+        ),
+        pytest.param(
+            "mario_r", None, AuthenticationError,       # AUB04
+            marks=pytest.mark.xfail(reason="Password nulla: Werkzeug crasha con AttributeError su .encode()", raises=AttributeError)
+        ),
+        pytest.param(
+            "mario.r@polito.it", None, AuthenticationError,  # AUB05
+            marks=pytest.mark.xfail(reason="Password nulla: Werkzeug crasha con AttributeError su .encode()", raises=AttributeError)
+        ),
     ],
 )
 def test_authenticate(auth_service, identifier, password, expected_exception):
-
-    if identifier is None or password is None:
-        with pytest.xfail():
-            auth_service.authenticate(identifier, password)
-
     if expected_exception is None:
         result = auth_service.authenticate(identifier, password)
         assert isinstance(result, User)
