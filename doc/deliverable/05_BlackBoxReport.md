@@ -76,7 +76,7 @@
 | TC    | identifier | password  | Boundary covered  | Expected |
 | :---- | :--------- | :-------- |:------------------|:---------|
 | AU01 | `mario_r`  | `pass123` | Exact boundary    | User |
-| AU02 | `m.r@polito.it` | `pass123` | Exact boundary    | User |
+| AU02 | `mario.r@polito.it` | `pass123` | Exact boundary    | User |
 | AUB01 | None  | `pass123`  | Immediately below | AuthenticationError |
 | AUB02 | "" | `pass123`  | Immediately below | AuthenticationError |
 | AUB03 | " " | `pass123`  | Immediately below | AuthenticationError |
@@ -89,7 +89,7 @@
 | :---- | :--------- | :---------|:-------------------|:---------|
 | AU01 | `mario_r`  | `pass123`  | Exact boundary     | User |
 | AUB04| `mario_r`   | None      | Immediately below  | AuthenticationError |
-| AUB05 | `m.r@polito.it` | None | Immediately below  | AuthenticationError |
+| AUB05 | `mario.r@polito.it` | None | Immediately below  | AuthenticationError |
 | AUB06 | `mario_r`  | ""        | Immediately below  | AuthenticationError |
 | AUB07 | `mario_r`  | " "       | Immediately below  | AuthenticationError |
 
@@ -101,8 +101,8 @@
 | TC    | identifier | password  | stato User | Boundary covered  | Expected|
 |:------|:-----------|:----------|:-----------|:------------------|:--------------------|
 | AU01  | `mario_r`  | `pass123` | is_active == True AND is_email_verified == True | Exact boundary    | User |
-| AUB08 | `mario_r`  | `pass123` | is_active == False | Immediately below | AuthenticationError |
-| AUB09 | `mario_r`  | `pass123` | is_email_verified == False | Immediately below | AuthenticationError |
+| AUB08 | `mario_inactive`  | `pass123` | is_active == False | Immediately below | AuthenticationError |
+| AUB09 | `mario_unverified`  | `pass123` | is_email_verified == False | Immediately below | AuthenticationError |
 
 ## 2 `participium.core.utils.parse_date`
 
@@ -351,15 +351,15 @@ Test realizzati considerando le 9 categorie descritte nella specifica iniziale, 
 
 | TC-ID | reporter | category_id | title | description | latitude | longitude | photos | is_anonymous | Expected | Fixture |
 | :---- | :------- | :---------- | :---- | :---------- | :------- | :-------- | :----- | :----------- | :------- | :------ |
-|CR1| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | Report |  L'utente è autenticato, la categoria 4 è valida e attiva |
-|CR2| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | True | Report |  L'utente è autenticato, la categoria 4 è valida e attiva |
-|CR3| user | 5 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | True | ValidationError |  L'utente è autenticato, la categoria 5 è inattiva |
-|CR4| user | None | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | True | ValidationError |  L'utente è autenticato |
-|CR5| user | "" | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | ValidationError |  L'utente è autenticato | 
-|CR6| user | df | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | True | ValidationError |  L'utente è autenticato|
-|CR7| user | 4 | "" | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | ValidationError |  L'utente è autenticato, la categoria 4 è valida e attiva|
-|CR8| user | 4 | Buca profonda |None| 45.0710 | 7.6856 | [foto_buca.jpg] | False | ValidationError |  L'utente è autenticato, la categoria 4 è valida e attiva |
-|CR9| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | None | [foto_buca.jpg] | True | ValidationError |  L'utente è autenticato, la categoria 4 è valida e attiva |
+|CR01| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | Report |  L'utente è autenticato, la categoria 4 è valida e attiva |
+|CR02| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | True | Report |  L'utente è autenticato, la categoria 4 è valida e attiva |
+|CR03| user | 5 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | True | ValidationError |  L'utente è autenticato, la categoria 5 è inattiva |
+|CR04| user | None | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | True | ValidationError |  L'utente è autenticato |
+|CR05| user | "" | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | ValidationError |  L'utente è autenticato | 
+|CR06| user | df | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | True | ValidationError |  L'utente è autenticato|
+|CR07| user | 4 | "" | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [foto_buca.jpg] | False | ValidationError |  L'utente è autenticato, la categoria 4 è valida e attiva|
+|CR08| user | 4 | Buca profonda |None| 45.0710 | 7.6856 | [foto_buca.jpg] | False | ValidationError |  L'utente è autenticato, la categoria 4 è valida e attiva |
+|CR09| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | None | [foto_buca.jpg] | True | ValidationError |  L'utente è autenticato, la categoria 4 è valida e attiva |
 |CR10| user | 4 | Buca profonda | Buca profonda in piazza Castello| Quarantacinque | 7.6856 | [foto_buca.jpg] | False | ValidationError |  L'utente è autenticato, la categoria 4 è valida e attiva |
 |CR11| user | 4 | Buca profonda | Buca profonda in piazza Castello| 45.0710 | 7.6856 | [] | False | ValidationError |  L'utente è autenticato, la categoria 4 è valida e attiva |
 
@@ -448,6 +448,8 @@ Il sistema deve potere permettere l'aggiornamento di stato di un report.<br>
 - note è None o "" --> valido
 - note non è None o non è "" --> valido
 
+**NOTA:** Una nota vuota o `None` non è sempre valida, se lo stato diventa `REJECTED`, la nota è obbligatoria. Di conseguenza, in questo caso specifico, una nota vuota diventa **non valida** e deve lanciare un `ValidationError`.
+
 **Criterio**: operator.category_id
 
 **Predicati**:
@@ -516,14 +518,6 @@ Il sistema deve potere permettere l'aggiornamento di stato di un report.<br>
 | USB04 | 10 | op_valido | Rejected| None | Immediately below | ValidationError |
 | USB05 | 10 | op_valido | Rejected| ""   | Immediately below | ValidationError |
 
-
-**Boundary around "operator.category_id" and "report.category_id":**
-
-| TC    | operator.category_id | report.category_id | Boundary covered  | Expected        |
-|:------|:-------|:-------|:------------------|:-------|
-| USB06 | 0| 0 | Exact boundary    | Report |
-| USB07 | -1| 0 | Immediately below | ValidationError |
-| USB08 | 0| 1 | Immediately above | ValidationError |
 
 
 ## 6 `participium.services.report_service.ReportService.list_public_reports`
@@ -652,7 +646,7 @@ Prototype: `send_message(report: Report, sender: User, body: str) -> Message`
 
 Il sistema deve permettere l'invio di un messaggio.
 
-- Se il mittente non può accedere al thread di messaggistica del report in questione il sistema deve generare un errore di validazione (ValidationError).
+- Se il mittente non può accedere al thread di messaggistica del report in questione il sistema deve generare un errore di validazione (AuthorizationError).
 - Se il testo del messaggio è vuoto il sistema deve generare un errore di validazione (ValidationError). 
 - Se il sistema non riesce a risolvere un destinatario del messaggio deve generare un errore di validazione (ValidationError).
 - Se sia l'utente che il report esistono e hanno un id valido, l'utente può accedere ai messaggi del report e il testo del messaggio non è vuoto, il sistema ritorna un oggetto di tipo Message.
@@ -715,7 +709,7 @@ Il sistema deve permettere l'invio di un messaggio.
 | MS03 | report1 | user1 | "" | ValidationError | Segnalazione esistente, sender autorizzato, recipient_id risolvibile |
 | MS04 | report1 | user1 | "   " | ValidationError | Segnalazione esistente, sender autorizzato, recipient_id risolvibile |
 | MS05 | report1 | user1 | None | ValidationError | Segnalazione esistente, sender autorizzato, recipient_id risolvibile |
-| MS06 | report1 | user1 | "Segnalazione" | ValidationError | Segnalazione esistente, sender autorizzato, recipient_id non risolvibile |
+| MS06 | report_no_recipient | user1 | "Segnalazione" | ValidationError | Segnalazione esistente, sender autorizzato, recipient_id non risolvibile |
 
 ### Boundary
 
@@ -724,8 +718,8 @@ Il sistema deve permettere l'invio di un messaggio.
 | TC    | report | sender | body | Boundary covered  | Expected |
 |:------| :----- | :----- | :--- |:------------------| :--------- |
 | MSB01 | report1 | user1 | "a"  | Exact boundary    | Message |
-| MSB03 | report1 | user1 | ""   | Immediately below | ValidationError |
-| MSB04 | report1 | user1 | "   "  | Immediately below| ValidationError |
+| MSB02 | report1 | user1 | ""   | Immediately below | ValidationError |
+| MSB03 | report1 | user1 | "   "  | Immediately below| ValidationError |
 
 
 ## 8 `participium.core.security.verify_password`
@@ -946,10 +940,10 @@ Il sistema deve permettere l'aggiornamento dei campi modificabili del profilo ut
 
 | TC-ID | user | username | first_name | last_name | email_notifications_enabled | profile_picture | Expected | Fixture |
 | :---- | :--- | :------- | :--------- | :-------- | :-------------------------- | :-------------- | :------- | :------ |
-| UP01 | user1 | "nuovo" | "Mario" | "Rossi" | True| valid_pic | User| User1 esiste|
-| UP02 | user2 | "nuovo" | "Mario" | "Rossi" | True | valid_pic | ValidationError| User2 esiste, l'username "nuovo" è già in uso|
-| UP03 | user1 | None    | "Mario" |"Rossi"  | None | valid_pic | User  | User1 esiste|
-| UP04 | user1 | None     | None   | None    | False| None      | User  | User1 esiste| 
+| UP01 | user1 | "nuovo" | "Mario" | "Rossi" | True| valid_pic | User (Update effettuato)| User1 esiste|
+| UP02 | user2 | "nuovo" | "Mario" | "Rossi" | True | valid_pic | ValidationError (No Update)| User2 esiste, l'username "nuovo" è già in uso|
+| UP03 | user1 | None    | "Mario" |"Rossi"  | None | valid_pic | User (Update effettuato)  | User1 esiste|
+| UP04 | user1 | None     | None   | None    | False| None      | User (Update effettuato)  | User1 esiste| 
 
 
 ### Boundary
@@ -958,22 +952,22 @@ Il sistema deve permettere l'aggiornamento dei campi modificabili del profilo ut
 
 | TC    | user | username | Boundary covered  | Expected |
 | :---- | :--- | :------- | :------------------| :------- |
-| UPB01 | user1 | "a"  | Exact boundary    | User |
-| UPB02 | user1 | ""   | Immediately below | User |
-| UP04  | user1 | None  | Immediately below | User |
+| UPB01 | user1 | "a"  | Exact boundary    | User (Update effettuato) |
+| UPB02 | user1 | ""   | Immediately below | User (No Update, valore invariato) |
+| UP04  | user1 | None  | Immediately below | User (No Update, valore invariato) |
 
 **Boundary around "first_name"**:
 
 | TC    | user | first_name | Boundary covered  | Expected |
 | :---- | :--- | :--------- | :------------------| :------- |
-| UPB03 | user1 | "a"  | Exact boundary    | User |
-| UPB04 | user1 | ""   | Immediately below | User |
-| UP04  | user1 | None  | Immediately below | User |
+| UPB03 | user1 | "a"  | Exact boundary    | User (Update effettuato) |
+| UPB04 | user1 | ""   | Immediately below | User (No Update, valore invariato) |
+| UP04  | user1 | None  | Immediately below | User (No Update, valore invariato) |
 
 **Boundary around "last_name"**:
 
 | TC    | user | last_name | Boundary covered  | Expected |
 | :---- | :--- | :-------- | :------------------| :------- |
-| UPB05 | user1 | "a"  | Exact boundary    | User |
-| UPB06 | user1 | ""   | Immediately below | User |
-| UP04  | user1 | None  | Immediately below | User |
+| UPB05 | user1 | "a"  | Exact boundary    | User (Update effettuato) |
+| UPB06 | user1 | ""   | Immediately below | User (No Update, valore invariato) |
+| UP04  | user1 | None  | Immediately below | User (No Update, valore invariato) |
