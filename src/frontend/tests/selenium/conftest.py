@@ -39,6 +39,7 @@ def driver():
     opts.add_argument("--no-sandbox")
     opts.add_argument("--disable-dev-shm-usage")
     opts.add_argument("--window-size=1400,900")
+    opts.add_argument("--log-level=3")
     drv = webdriver.Chrome(options=opts)
     drv.implicitly_wait(0)  # rely on explicit waits
     yield drv

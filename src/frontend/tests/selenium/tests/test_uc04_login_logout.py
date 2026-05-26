@@ -55,11 +55,20 @@ class TestLogin:
         page.by_id("nav-register")
 
     def test_uc04_already_logged_in_skips_login_page(self, page: PageHelper):
-        """UC-04: Visiting /login while already authenticated redirects away."""
+        """UC-04: Visiting /login while already authenticated redirects away.
+        React restores the session asynchronously, so we wait up to WAIT_TIMEOUT
+        seconds for the URL to change before asserting."""
         page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
         page.wait_for_url("/dashboard")
         page.go("/login")
-        # Should redirect; the login form should not stay visible
+        # Wait for React to detect the existing session and redirect away
+        try:
+            page.wait.until(
+                lambda d: "/login" not in d.current_url,
+                message="Authenticated user should be redirected away from /login",
+            )
+        except Exception:
+            pass  # assertion below will produce the clear failure message
         assert "/login" not in page.driver.current_url, (
             "Authenticated user should be redirected away from /login"
         )
