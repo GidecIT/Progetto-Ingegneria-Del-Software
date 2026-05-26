@@ -599,8 +599,8 @@ Nota: la funzione 'list_public_reports' ritorna sempre list[Report]. Nella tabel
 | TC-ID | category_id | status | date_from | date_to | sort | Expected | Fixture |
 |-------|-------------|--------|-----------|---------|------|----------|---------|
 | PR01  | None | None | None | None | desc | Segnalazioni pubbliche ordinate in modo decrescente | Esistono segnalazioni pubbliche |
-| PR02  | 1 | None | None | None | asc | Segnalazioni pubbliche con category_id==1 in ordine crescente|  Esistono segnalazioni pubblicheo|
-| PR03  | None |  Assigned | None | None | desc | Segnalazioni pubbliche con status  Assigned in ordine decrescente |  Esistono segnalazioni pubblicheo|
+| PR02  | 1 | None | None | None | asc | Segnalazioni pubbliche con category_id==1 in ordine crescente|  Esistono segnalazioni pubbliche|
+| PR03  | None |  Assigned | None | None | desc | Segnalazioni pubbliche con status  Assigned in ordine decrescente |  Esistono segnalazioni pubbliche|
 | PR04  | None | None | 2024-02-01 | None | desc | Solo le segnalazioni pubbliche dopo la data 2024-02-01 (compresa) in ordine decrescente |  Esistono segnalazioni pubbliche|
 | PR05  | None | None | None | 2024-02-01 | desc | Solo le segnalazioni pubbliche prima della data 2024-02-01 (compresa) in ordine decrescente |  Esistono segnalazioni pubbliche|
 | PR06  | None | None | 2024-02-01 | 2024-03-01 | desc | Tutte le segnalazioni pubbliche dopo la data 2024-02-01 (compresa) e prima della data 2024-03-01 (compresa) in ordine decrescente |  Esistono segnalazioni pubbliche|
@@ -620,6 +620,22 @@ NOTA: PR09 copre lo stesso input di PR01 ma con fixture vuota, per verificare il
 | PRB01 |  1 | ID esistente | Lista di segnalazioni pubbliche con category_id 1 |
 | PRB02/PRB10 |  9999 | ID non esistente   | Lista vuota |
 | PRB03 |  -1 | ID invalido   | Lista vuota |
+
+ **Boundary around "date_to":**
+
+| TC    | date_to | Boundary covered  | Expected |
+| :---- | :-------- |:------------------|:---------|
+| PRB04 | 2024-02-15 | Exact boundary | Lista contenente il report con data: 2024-2-15 |
+| PRB05 | 2024-02-14 23:59:59| Immediately below | Il report con data 2024-2-15 viene escluso |
+| PRB06 | 2024-02-15 00:00:01 | Immediately above | Il report con data 2024-2-15 viene incluso |
+
+ **Boundary around "date_from":**
+
+| TC    | date_from | Boundary covered  | Expected |
+| :---- | :-------- |:------------------|:---------|
+| PRB07 | 2024-02-15 | Exact boundary  | Lista contenente il report con data: 2024-2-15 |
+| PRB08 | 2024-02-14 23:59:59 | Immediately below | Il report con data 2024-2-15 viene incluso |
+| PRB09 | 2024-02-15 00:00:01 | Immediately above | Il report con data 2024-2-15 viene escluso |
 
 
 ## 7 `participium.services.messaging_service.MessagingService.send_message`
