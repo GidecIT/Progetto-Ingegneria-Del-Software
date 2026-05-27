@@ -1,0 +1,2915 @@
+{
+  "info": {
+    "_postman_id": "1cce6454-1e7b-4064-8de9-eb0b6caa8806",
+    "name": "Participium",
+    "description": "API acceptance test suite for the Participium backend.\n\nCovers all use cases defined in the official documentation (UC-01 through UC-16).\nRun the collection in order against a local backend started with seed data.\n\nSeed credentials assumed:\n  citizen@example.com / Citizen123!\n  operator@example.com / Operator123!\n  admin@example.com / Admin123!",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "55075627"
+  },
+  "item": [
+    {
+      "name": "01 - Authentication (UC-01, UC-02, UC-16)",
+      "item": [
+        {
+          "name": "Login citizen - success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Response has user object', () => pm.expect(json).to.have.property('user'));",
+                  "pm.test('Role is citizen', () => pm.expect(json.user.role).to.eql('citizen'));",
+                  "pm.test('Email matches', () => pm.expect(json.user.email).to.eql(pm.environment.get('citizen_email')));",
+                  "pm.environment.set('citizen_user_id', json.user.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{citizen_email}}\",\n  \"password\": \"{{citizen_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login citizen - wrong password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 401', () => pm.response.to.have.status(401));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{citizen_email}}\",\n  \"password\": \"WrongPassword!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login citizen - missing fields",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 401', () => pm.response.to.have.status(401));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login operator - success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Role is operator', () => pm.expect(json.user.role).to.eql('operator'));",
+                  "pm.environment.set('operator_user_id', json.user.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{operator_email}}\",\n  \"password\": \"{{operator_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login admin - success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Role is admin', () => pm.expect(json.user.role).to.eql('admin'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register new citizen - success (UC-01)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const ts = Date.now();",
+                  "pm.environment.set('new_user_username', 'testuser_' + ts);",
+                  "pm.environment.set('new_user_email', 'testuser_' + ts + '@acceptance.test');"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "//pm.test('Response has message', () => pm.expect(json).to.have.property('message'));",
+                  "pm.test('Username echoed back', () => pm.expect(JSON.stringify(json)).to.include(pm.environment.get('new_user_username')));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{new_user_username}}\",\n  \"email\": \"{{new_user_email}}\",\n  \"first_name\": \"Acceptance\",\n  \"last_name\": \"Tester\",\n  \"password\": \"Secure123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register - duplicate username",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 409 or 400', () => {",
+                  "  pm.expect([400, 409]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{new_user_username}}\",\n  \"email\": \"duplicate_different@acceptance.test\",\n  \"first_name\": \"Dup\",\n  \"last_name\": \"User\",\n  \"password\": \"Secure123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register - missing required fields",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 400', () => pm.response.to.have.status(400));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"username\": \"incomplete\" }"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout (UC-16)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Protected endpoint after logout - unauthenticated",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 401', () => pm.response.to.have.status(401));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Re-login citizen (restore session for later tests)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{citizen_email}}\",\n  \"password\": \"{{citizen_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02 - Categories (UC-14)",
+      "item": [
+        {
+          "name": "List categories - public, unauthenticated",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Response is array', () => pm.expect(json).to.be.an('array'));",
+                  "if (json.length > 0) {",
+                  "  pm.test('Category has id and name', () => {",
+                  "    pm.expect(json[0]).to.have.property('id');",
+                  "    pm.expect(json[0]).to.have.property('name');",
+                  "  });",
+                  "}",
+                  "pm.environment.set('valid_category_id', json[0].id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categories",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login admin (for category management)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create category - admin success",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.environment.set('new_category_name', 'Acceptance Cat ' + Date.now());"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.test('Category has id', () => pm.expect(json).to.have.property('id'));",
+                  "pm.test('Name matches', () => pm.expect(json.name).to.eql(pm.environment.get('new_category_name')));",
+                  "pm.environment.set('new_category_id', json.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{new_category_name}}\",\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/categories",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "categories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create category - duplicate name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 409 or 400', () => {",
+                  "  pm.expect([400, 409]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{new_category_name}}\",\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/categories",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "categories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create category - citizen forbidden",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Login as citizen before this request",
+                  "const loginReq = {",
+                  "  url: pm.environment.get('base_url') + '/auth/login',",
+                  "  method: 'POST',",
+                  "  header: { 'Content-Type': 'application/json' },",
+                  "  body: { mode: 'raw', raw: JSON.stringify({ identifier: pm.environment.get('citizen_email'), password: pm.environment.get('citizen_password') }) }",
+                  "};",
+                  "pm.sendRequest(loginReq, () => {});"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 403', () => pm.response.to.have.status(403));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Should Not Be Created\",\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/categories",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "categories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Re-login admin (restore session)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update category - admin success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('is_active updated', () => pm.expect(json.is_active).to.eql(false));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{new_category_name}}\",\n  \"is_active\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/categories/{{new_category_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "categories",
+                "{{new_category_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "03 - Public Reports (UC-04, UC-05, UC-06, UC-08, UC-09)",
+      "item": [
+        {
+          "name": "Login citizen (setup for report submission)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{citizen_email}}\",\n  \"password\": \"{{citizen_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Submit report - success (UC-03)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.environment.set('new_report_title', 'Acceptance Report ' + Date.now());"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.test('Report has id', () => pm.expect(json).to.have.property('id'));",
+                  "pm.test('Status is Pending Approval', () => pm.expect(json.status).to.eql('Pending Approval'));",
+                  "pm.test('Title matches', () => pm.expect(json.title).to.eql(pm.environment.get('new_report_title')));",
+                  "pm.environment.set('new_report_id', json.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "{{new_report_title}}",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Acceptance test report description.",
+                  "type": "text"
+                },
+                {
+                  "key": "latitude",
+                  "value": "45.07",
+                  "type": "text"
+                },
+                {
+                  "key": "longitude",
+                  "value": "7.69",
+                  "type": "text"
+                },
+                {
+                  "key": "category_id",
+                  "value": "{{valid_category_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "is_anonymous",
+                  "value": "false",
+                  "type": "text"
+                },
+                {
+                  "key": "photos",
+                  "type": "file",
+                  "src": "use-case-diagram.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/reports",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Submit anonymous report (UC-03, FR-05)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.environment.set('anon_report_title', 'Anon Report ' + Date.now());"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.test('is_anonymous is true', () => pm.expect(json.is_anonymous).to.eql(true));",
+                  "pm.environment.set('anon_report_id', json.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "{{anon_report_title}}",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Anonymous report for privacy test.",
+                  "type": "text"
+                },
+                {
+                  "key": "latitude",
+                  "value": "45.07",
+                  "type": "text"
+                },
+                {
+                  "key": "longitude",
+                  "value": "7.69",
+                  "type": "text"
+                },
+                {
+                  "key": "category_id",
+                  "value": "{{valid_category_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "is_anonymous",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "photos",
+                  "type": "file",
+                  "src": "use-case-diagram.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/reports",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Submit report - missing required fields",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 400', () => pm.response.to.have.status(400));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reports",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Submit report - unauthenticated forbidden",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.sendRequest({ url: pm.environment.get('base_url') + '/auth/logout', method: 'POST' }, () => {});"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 401', () => pm.response.to.have.status(401));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reports",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Re-login citizen",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{citizen_email}}\",\n  \"password\": \"{{citizen_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List public reports - unauthenticated (UC-05)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Response is array', () => pm.expect(json).to.be.an('array'));",
+                  "if (json.length > 0) {",
+                  "  const r = json[0];",
+                  "  pm.test('Report has required fields', () => {",
+                  "    pm.expect(r).to.have.property('id');",
+                  "    pm.expect(r).to.have.property('title');",
+                  "    pm.expect(r).to.have.property('status');",
+                  "    pm.expect(r).to.have.property('category');",
+                  "    pm.expect(r).to.have.property('latitude');",
+                  "    pm.expect(r).to.have.property('longitude');",
+                  "  });",
+                  "  pm.test('Status is not Pending Approval', () => {",
+                  "    pm.expect(r.status).to.not.eql('Pending Approval');",
+                  "  });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List public reports - filter by category (UC-05)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Response is array', () => pm.expect(json).to.be.an('array'));",
+                  "const catId = parseInt(pm.environment.get('valid_category_id'));",
+                  "json.forEach(r => {",
+                  "  pm.test('Report belongs to correct category', () => pm.expect(r.category.id).to.eql(catId));",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports?category_id={{valid_category_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports"
+              ],
+              "query": [
+                {
+                  "key": "category_id",
+                  "value": "{{valid_category_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get report detail - not found (UC-06)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 404', () => pm.response.to.have.status(404));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/{{nonexistent_report_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "{{nonexistent_report_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Export reports CSV - public (UC-08, FR-10)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Content-Type is text/csv or application/csv', () => {",
+                  "  const ct = pm.response.headers.get('Content-Type') || '';",
+                  "  pm.expect(ct).to.match(/csv/i);",
+                  "});",
+                  "const body = pm.response.text();",
+                  "pm.test('CSV has header row', () => pm.expect(body.length).to.be.greaterThan(0));",
+                  "pm.test('CSV does not expose password fields', () => {",
+                  "  pm.expect(body.toLowerCase()).to.not.include('password');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/export",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "export"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get public statistics (UC-09, FR-16)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Response is object', () => pm.expect(json).to.be.an('object'));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/stats/public",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "stats",
+                "public"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "04 - Operator Report Management (UC-10)",
+      "item": [
+        {
+          "name": "Login admin (to assign report)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List pending reports - admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Response is array', () => pm.expect(json).to.be.an('array'));",
+                  "json.forEach(r => {",
+                  "  pm.test('All reports are Pending Approval', () => pm.expect(r.status).to.eql('Pending Approval'));",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/operator/reports/pending",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "operator",
+                "reports",
+                "pending"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List pending reports - citizen forbidden",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.sendRequest({",
+                  "  url: pm.environment.get('base_url') + '/auth/login',",
+                  "  method: 'POST',",
+                  "  header: { 'Content-Type': 'application/json' },",
+                  "  body: { mode: 'raw', raw: JSON.stringify({ identifier: pm.environment.get('citizen_email'), password: pm.environment.get('citizen_password') }) }",
+                  "}, () => {});"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 403', () => pm.response.to.have.status(403));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/operator/reports/pending",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "operator",
+                "reports",
+                "pending"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Re-login admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Assign report - adminsuccess",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Status is Assigned', () => pm.expect(json.status).to.eql('Assigned'));",
+                  "pm.test('Report id matches', () => pm.expect(json.id).to.eql(parseInt(pm.environment.get('new_report_id'))));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/operator/reports/{{new_report_id}}/assign",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "operator",
+                "reports",
+                "{{new_report_id}}",
+                "assign"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update report status - In Progress",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Status is In Progress', () => pm.expect(json.status).to.eql('In Progress'));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"In Progress\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/operator/reports/{{new_report_id}}/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "operator",
+                "reports",
+                "{{new_report_id}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update report status - Rejected without note (FR-07)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 400', () => pm.response.to.have.status(400));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Rejected\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/operator/reports/{{new_report_id}}/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "operator",
+                "reports",
+                "{{new_report_id}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update report status - invalid status value",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 400', () => pm.response.to.have.status(400));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"NotAStatus\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/operator/reports/{{new_report_id}}/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "operator",
+                "reports",
+                "{{new_report_id}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update report status - Resolved",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Status is Resolved', () => pm.expect(json.status).to.eql('Resolved'));",
+                  "pm.test('Status history is non-empty', () => {",
+                  "  pm.expect(json.status_history).to.be.an('array').with.length.greaterThan(0);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Resolved\",\n  \"note\": \"Issue fixed.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/operator/reports/{{new_report_id}}/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "operator",
+                "reports",
+                "{{new_report_id}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get resolved report via public API - now visible (UC-06)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Status is Resolved', () => pm.expect(json.status).to.eql('Resolved'));",
+                  "pm.test('Has status_history', () => pm.expect(json.status_history).to.be.an('array'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/{{new_report_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "{{new_report_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "05 - Follow / Unfollow (UC-07)",
+      "item": [
+        {
+          "name": "Login citizen",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{citizen_email}}\",\n  \"password\": \"{{citizen_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Follow report - success (UC-07)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Report is returned', () => pm.expect(json).to.have.property('id'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/{{new_report_id}}/follow",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "{{new_report_id}}",
+                "follow"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Follow report - idempotent (no duplicate, FR-12)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200 (idempotent)', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/{{new_report_id}}/follow",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "{{new_report_id}}",
+                "follow"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Follow report - unauthenticated forbidden",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.sendRequest({ url: pm.environment.get('base_url') + '/auth/logout', method: 'POST' }, () => {});"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 401', () => pm.response.to.have.status(401));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/{{new_report_id}}/follow",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "{{new_report_id}}",
+                "follow"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Re-login citizen",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{citizen_email}}\",\n  \"password\": \"{{citizen_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unfollow report - success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/{{new_report_id}}/follow",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "{{new_report_id}}",
+                "follow"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "06 - Messaging (UC-11, UC-12)",
+      "item": [
+        {
+          "name": "Get pending report from seed data (setup for messaging)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Login as admin to access pending reports",
+                  "pm.sendRequest({",
+                  "  url: pm.environment.get('base_url') + '/auth/login',",
+                  "  method: 'POST',",
+                  "  header: { 'Content-Type': 'application/json' },",
+                  "  body: { mode: 'raw', raw: JSON.stringify({ identifier: pm.environment.get('admin_email'), password: pm.environment.get('admin_password') }) }",
+                  "}, () => {});"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('At least one pending report exists in seed data', () => pm.expect(json.length).to.be.greaterThan(0));",
+                  "// Pick first pending report for messaging tests",
+                  "pm.environment.set('msg_report_id', json[0].id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/operator/reports/pending",
+              "host": ["{{base_url}}"],
+              "path": ["operator", "reports", "pending"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login admin (assign messaging report)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Assign messaging report (admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Status is Assigned', () => pm.expect(pm.response.json().status).to.eql('Assigned'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/operator/reports/{{msg_report_id}}/assign",
+              "host": ["{{base_url}}"],
+              "path": ["operator", "reports", "{{msg_report_id}}", "assign"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send message to citizen - admin success (UC-11)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.test('Message has id', () => pm.expect(json).to.have.property('id'));",
+                  "pm.test('Message has body', () => pm.expect(json).to.have.property('body'));",
+                  "pm.environment.set('message_id', json.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"body\": \"Please provide more details about the location.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reports/{{msg_report_id}}/messages",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "{{msg_report_id}}",
+                "messages"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send message - empty body rejected (FR-15)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 400', () => pm.response.to.have.status(400));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"body\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reports/{{msg_report_id}}/messages",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "{{msg_report_id}}",
+                "messages"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login citizen (to reply)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{citizen_email}}\",\n  \"password\": \"{{citizen_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reply to message - citizen success (UC-12)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.test('Reply has id', () => pm.expect(json).to.have.property('id'));",
+                  "pm.test('Reply body matches', () => pm.expect(json.body).to.eql('Here is a photo of the exact location.'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"body\": \"Here is a photo of the exact location.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reports/{{msg_report_id}}/messages",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "{{msg_report_id}}",
+                "messages"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get messages for report - citizen",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Messages is array', () => pm.expect(json).to.be.an('array'));",
+                  "pm.test('At least 2 messages (operator + citizen reply)', () => pm.expect(json.length).to.be.greaterThanOrEqual(2));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/{{msg_report_id}}/messages",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "{{msg_report_id}}",
+                "messages"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "07 - Notifications (FR-13)",
+      "item": [
+        {
+          "name": "Login citizen",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{citizen_email}}\",\n  \"password\": \"{{citizen_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List notifications - citizen",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Response is array', () => pm.expect(json).to.be.an('array'));",
+                  "pm.test('At least one notification from status change', () => {",
+                  "  const statusNotifs = json.filter(n => n.type === 'status_change');",
+                  "  pm.expect(statusNotifs.length).to.be.greaterThan(0);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/me/notifications",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "me",
+                "notifications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Notifications - unauthenticated forbidden",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.sendRequest({ url: pm.environment.get('base_url') + '/auth/logout', method: 'POST' }, () => {});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 401', () => pm.response.to.have.status(401));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/me/notifications",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "me",
+                "notifications"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "08 - Privacy: Anonymous Reports (NFR-04)",
+      "item": [
+        {
+          "name": "Login admin (to promote anon report)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Assign then resolve anonymous report",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/operator/reports/{{anon_report_id}}/assign",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "operator",
+                "reports",
+                "{{anon_report_id}}",
+                "assign"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Resolve anonymous report",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Resolved\",\n  \"note\": \"Issue resolved.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/operator/reports/{{anon_report_id}}/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "operator",
+                "reports",
+                "{{anon_report_id}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Anonymous report - public detail hides reporter (NFR-04)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('is_anonymous is true', () => pm.expect(json.is_anonymous).to.eql(true));",
+                  "pm.test('Reporter identity not exposed in public view', () => {",
+                  "  if (json.reporter !== null && json.reporter !== undefined) {",
+                  "    pm.expect(json.reporter).to.not.have.property('email');",
+                  "    pm.expect(json.reporter).to.not.have.property('username');",
+                  "  }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/{{anon_report_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "{{anon_report_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "CSV export - anonymous report does not expose identity (NFR-04, NFR-10)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.text();",
+                  "pm.test('CSV does not contain email addresses', () => {",
+                  "  pm.expect(body).to.not.match(/[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}/);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/export",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "export"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "09 - Private Statistics (UC-13, FR-17)",
+      "item": [
+        {
+          "name": "Login admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get private statistics - admin success (UC-13)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Response is object', () => pm.expect(json).to.be.an('object'));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/admin/stats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get private statistics - citizen forbidden (UC-13 min. guarantee)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.sendRequest({",
+                  "  url: pm.environment.get('base_url') + '/auth/login',",
+                  "  method: 'POST',",
+                  "  header: { 'Content-Type': 'application/json' },",
+                  "  body: { mode: 'raw', raw: JSON.stringify({ identifier: pm.environment.get('citizen_email'), password: pm.environment.get('citizen_password') }) }",
+                  "}, () => {});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 403', () => pm.response.to.have.status(403));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/admin/stats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "10 - User Profile (UC-15, FR-03)",
+      "item": [
+        {
+          "name": "Login citizen",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{citizen_email}}\",\n  \"password\": \"{{citizen_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get own profile (UC-15)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Profile has email', () => pm.expect(json).to.have.property('email'));",
+                  "pm.test('Profile has role', () => pm.expect(json).to.have.property('role'));",
+                  "pm.test('Profile has notification preference', () => {",
+                  "  pm.expect(json).to.have.property('email_notifications_enabled');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update email notification preference (UC-15, FR-03)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Preference updated to false', () => pm.expect(json.email_notifications_enabled).to.eql(false));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email_notifications_enabled\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Restore email notification preference",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Preference restored to true', () => pm.expect(json.email_notifications_enabled).to.eql(true));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email_notifications_enabled\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "11 - Admin User Management (UC-14)",
+      "item": [
+        {
+          "name": "Login admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List all users - admin success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Response is array', () => pm.expect(json).to.be.an('array'));",
+                  "pm.test('Users have roles', () => {",
+                  "  json.forEach(u => pm.expect(u).to.have.property('role'));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/admin/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List users - citizen forbidden",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.sendRequest({",
+                  "  url: pm.environment.get('base_url') + '/auth/login',",
+                  "  method: 'POST',",
+                  "  header: { 'Content-Type': 'application/json' },",
+                  "  body: { mode: 'raw', raw: JSON.stringify({ identifier: pm.environment.get('citizen_email'), password: pm.environment.get('citizen_password') }) }",
+                  "}, () => {});"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 403', () => pm.response.to.have.status(403));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/admin/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
