@@ -36,7 +36,18 @@ def clean_db(app):
     try:
         from participium.models.user import User
         from participium.models.token import EmailVerificationToken
+        from participium.models.category import Category
+        from participium.models.report import Report, ReportStatusHistory, ReportFollower, ReportPhoto
+        from participium.models.message import Message
+        from participium.models.notification import Notification
 
+        session.query(Message).delete()
+        session.query(Notification).delete()
+        session.query(ReportFollower).delete()
+        session.query(ReportStatusHistory).delete()
+        session.query(ReportPhoto).delete()
+        session.query(Report).delete()
+        session.query(Category).delete()
         session.query(EmailVerificationToken).delete()
         session.query(User).delete()
         session.commit()
