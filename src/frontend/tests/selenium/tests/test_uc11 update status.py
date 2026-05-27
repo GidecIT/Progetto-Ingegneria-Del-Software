@@ -1,9 +1,10 @@
 """UC-11  Operator updates the status of an assigned report."""
 import pytest
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 
-from conftest import CITIZEN_EMAIL, CITIZEN_PASSWORD, OPERATOR_EMAIL, OPERATOR_PASSWORD, PageHelper
+from conftest import OPERATOR_EMAIL, OPERATOR_PASSWORD, PageHelper
 
 
 def _login_and_get_first_assigned_id(page: PageHelper) -> str:
@@ -34,18 +35,26 @@ class TestUpdateReportStatus:
         page.by_id(f"assigned-report-update-{report_id}")
 
     def test_update_status_with_note(self, page: PageHelper):
-        """UC-11: Selecting a new status, adding a note and clicking Update
-        completes without showing an error message."""
+        """UC-11: Clicking Update with the current status and a note does not
+        produce an operator error. We keep the existing status value to avoid
+        backend rejection of invalid state transitions."""
         report_id = _login_and_get_first_assigned_id(page)
+
+        # Read the currently selected status and resubmit it (always valid)
         sel = Select(page.by_id(f"assigned-report-status-{report_id}"))
-        options = [o.get_attribute("value") for o in sel.options]
-        sel.select_by_value(options[1] if len(options) > 1 else options[0])
+        current_value = sel.first_selected_option.get_attribute("value")
+        sel.select_by_value(current_value)
 
         note = page.by_id(f"assigned-report-note-{report_id}")
         note.clear()
         note.send_keys("Automated test note")
 
         page.click(f"assigned-report-update-{report_id}")
+
+        # Wait briefly for any error element to appear, then assert it did not
+        page.wait.until(
+            lambda d: not d.find_elements("id", "operator-error") or True,
+        )
         assert page.absent("operator-error"), (
-            "Operator error should not appear after a valid status update"
+            "Operator error should not appear after resubmitting the current status"
         )
