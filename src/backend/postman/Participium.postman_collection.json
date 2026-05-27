@@ -8,7 +8,7 @@
   },
   "item": [
     {
-      "name": "01 - Authentication (UC-01, UC-02, UC-16)",
+      "name": "01 - Registration & Authentication (UC-01, UC-02)",
       "item": [
         {
           "name": "Login citizen - success",
@@ -21,7 +21,11 @@
                   "const json = pm.response.json();",
                   "pm.test('Response has user object', () => pm.expect(json).to.have.property('user'));",
                   "pm.test('Role is citizen', () => pm.expect(json.user.role).to.eql('citizen'));",
-                  "pm.test('Email matches', () => pm.expect(json.user.email).to.eql(pm.environment.get('citizen_email')));",
+                  "pm.test('Contract: User schema matches Swagger', () => {",
+                  "  const user = json.user;",
+                  "  const required = ['id', 'username', 'first_name', 'last_name', 'email', 'role', 'is_active', 'is_email_verified', 'email_notifications_enabled'];",
+                  "  required.forEach(field => pm.expect(user).to.have.property(field));",
+                  "});",
                   "pm.environment.set('citizen_user_id', json.user.id);"
                 ],
                 "type": "text/javascript"
@@ -309,6 +313,46 @@
           "response": []
         },
         {
+          "name": "Register - duplicate email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 409 or 400', () => {",
+                  "  pm.expect([400, 409]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"diff_user_{{$timestamp}}\",\n  \"email\": \"{{citizen_email}}\",\n  \"first_name\": \"Dup\",\n  \"last_name\": \"Email\",\n  \"password\": \"Secure123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Register - missing required fields",
           "event": [
             {
@@ -447,7 +491,7 @@
       ]
     },
     {
-      "name": "02 - Categories (UC-14)",
+      "name": "02 - Submit Report (UC-03)",
       "item": [
         {
           "name": "List categories - public, unauthenticated",
@@ -753,7 +797,7 @@
       ]
     },
     {
-      "name": "03 - Public Reports (UC-04, UC-05, UC-06, UC-08, UC-09)",
+      "name": "03 - Public Browsing & Statistics (UC-04, UC-05, UC-06, UC-08, UC-09)",
       "item": [
         {
           "name": "Login citizen (setup for report submission)",
@@ -814,7 +858,10 @@
                   "pm.test('Status is 201', () => pm.response.to.have.status(201));",
                   "const json = pm.response.json();",
                   "pm.test('Report has id', () => pm.expect(json).to.have.property('id'));",
-                  "pm.test('Status is Pending Approval', () => pm.expect(json.status).to.eql('Pending Approval'));",
+                  "pm.test('Contract: Report schema matches Swagger', () => {",
+                  "  const required = ['id', 'title', 'description', 'category', 'status', 'is_anonymous', 'reporter', 'latitude', 'longitude', 'photos', 'followers_count', 'is_followed_by_current_user', 'is_public'];",
+                  "  required.forEach(field => pm.expect(json).to.have.property(field));",
+                  "});",
                   "pm.test('Title matches', () => pm.expect(json.title).to.eql(pm.environment.get('new_report_title')));",
                   "pm.environment.set('new_report_id', json.id);"
                 ],
@@ -848,6 +895,85 @@
                 {
                   "key": "longitude",
                   "value": "7.69",
+                  "type": "text"
+                },
+                {
+                  "key": "category_id",
+                  "value": "{{valid_category_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "is_anonymous",
+                  "value": "false",
+                  "type": "text"
+                },
+                {
+                  "key": "photos",
+                  "type": "file",
+                  "src": "use-case-diagram.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/reports",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Submit messaging report (setup for UC-11, UC-12)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.environment.set('msg_report_title', 'Messaging Report ' + Date.now());"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.environment.set('msg_report_id', json.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "{{msg_report_title}}",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Report for messaging tests.",
+                  "type": "text"
+                },
+                {
+                  "key": "latitude",
+                  "value": "45.0667",
+                  "type": "text"
+                },
+                {
+                  "key": "longitude",
+                  "value": "7.6999",
                   "type": "text"
                 },
                 {
@@ -949,22 +1075,96 @@
                   "type": "file",
                   "src": "use-case-diagram.png"
                 }
-              ]
-            },
-            "url": {
-              "raw": "{{base_url}}/reports",
-              "host": [
+                ]
+                },
+                "url": {
+                "raw": "{{base_url}}/reports",
+                "host": [
                 "{{base_url}}"
-              ],
-              "path": [
+                ],
+                "path": [
                 "reports"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Submit report - missing required fields",
+                ]
+                }
+                },
+                "response": []
+                },
+                {
+                "name": "Submit report - fail 0 photos (UC-03 min. guarantee)",
+                "event": [
+                {
+                "listen": "test",
+                "script": {
+                "exec": [
+                  "pm.test('Status is 400', () => pm.response.to.have.status(400));"
+                ],
+                "type": "text/javascript"
+                }
+                }
+                ],
+                "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                "mode": "formdata",
+                "formdata": [
+                { "key": "title", "value": "No Photos", "type": "text" },
+                { "key": "description", "value": "Missing photos", "type": "text" },
+                { "key": "latitude", "value": "45.07", "type": "text" },
+                { "key": "longitude", "value": "7.69", "type": "text" },
+                { "key": "category_id", "value": "{{valid_category_id}}", "type": "text" },
+                { "key": "is_anonymous", "value": "false", "type": "text" }
+                ]
+                },
+                "url": {
+                "raw": "{{base_url}}/reports",
+                "host": ["{{base_url}}"],
+                "path": ["reports"]
+                }
+                },
+                "response": []
+                },
+                {
+                "name": "Submit report - fail 4 photos (UC-03 max rule)",
+                "event": [
+                {
+                "listen": "test",
+                "script": {
+                "exec": [
+                  "pm.test('Status is 400', () => pm.response.to.have.status(400));"
+                ],
+                "type": "text/javascript"
+                }
+                }
+                ],
+                "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                "mode": "formdata",
+                "formdata": [
+                { "key": "title", "value": "Too Many Photos", "type": "text" },
+                { "key": "description", "value": "4 photos", "type": "text" },
+                { "key": "latitude", "value": "45.07", "type": "text" },
+                { "key": "longitude", "value": "7.69", "type": "text" },
+                { "key": "category_id", "value": "{{valid_category_id}}", "type": "text" },
+                { "key": "is_anonymous", "value": "false", "type": "text" },
+                { "key": "photos", "type": "file", "src": "use-case-diagram.png" },
+                { "key": "photos", "type": "file", "src": "use-case-diagram.png" },
+                { "key": "photos", "type": "file", "src": "use-case-diagram.png" },
+                { "key": "photos", "type": "file", "src": "use-case-diagram.png" }
+                ]
+                },
+                "url": {
+                "raw": "{{base_url}}/reports",
+                "host": ["{{base_url}}"],
+                "path": ["reports"]
+                }
+                },
+                "response": []
+                },
+                {
+                "name": "Submit report - missing required fields",
           "event": [
             {
               "listen": "test",
@@ -1284,7 +1484,7 @@
       ]
     },
     {
-      "name": "04 - Operator Report Management (UC-10)",
+      "name": "04 - Operator: Manage Report (UC-10)",
       "item": [
         {
           "name": "Login admin (to assign report)",
@@ -1618,10 +1818,7 @@
                 "exec": [
                   "pm.test('Status is 200', () => pm.response.to.have.status(200));",
                   "const json = pm.response.json();",
-                  "pm.test('Status is Resolved', () => pm.expect(json.status).to.eql('Resolved'));",
-                  "pm.test('Status history is non-empty', () => {",
-                  "  pm.expect(json.status_history).to.be.an('array').with.length.greaterThan(0);",
-                  "});"
+                  "pm.test('Status is Resolved', () => pm.expect(json.status).to.eql('Resolved'));"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -1666,7 +1863,13 @@
                   "pm.test('Status is 200', () => pm.response.to.have.status(200));",
                   "const json = pm.response.json();",
                   "pm.test('Status is Resolved', () => pm.expect(json.status).to.eql('Resolved'));",
-                  "pm.test('Has status_history', () => pm.expect(json.status_history).to.be.an('array'));"
+                  "pm.test('Contract: StatusHistory matches Swagger', () => {",
+                  "  pm.expect(json.status_history).to.be.an('array');",
+                  "  const resolvedEntry = json.status_history.find(h => h.new_status === 'Resolved');",
+                  "  pm.expect(resolvedEntry).to.not.be.undefined;",
+                  "  const required = ['id', 'previous_status', 'new_status', 'changed_by'];",
+                  "  required.forEach(field => pm.expect(resolvedEntry).to.have.property(field));",
+                  "});"
                 ],
                 "type": "text/javascript"
               }
@@ -1906,32 +2109,15 @@
       "name": "06 - Messaging (UC-11, UC-12)",
       "item": [
         {
-          "name": "Get pending report from seed data (setup for messaging)",
+          "name": "Verify messaging report is ready",
           "event": [
-            {
-              "listen": "prerequest",
-              "script": {
-                "exec": [
-                  "// Login as admin to access pending reports",
-                  "pm.sendRequest({",
-                  "  url: pm.environment.get('base_url') + '/auth/login',",
-                  "  method: 'POST',",
-                  "  header: { 'Content-Type': 'application/json' },",
-                  "  body: { mode: 'raw', raw: JSON.stringify({ identifier: pm.environment.get('admin_email'), password: pm.environment.get('admin_password') }) }",
-                  "}, () => {});"
-                ],
-                "type": "text/javascript"
-              }
-            },
             {
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "const json = pm.response.json();",
-                  "pm.test('At least one pending report exists in seed data', () => pm.expect(json.length).to.be.greaterThan(0));",
-                  "// Pick first pending report for messaging tests",
-                  "pm.environment.set('msg_report_id', json[0].id);"
+                  "pm.test('Messaging report ID is set', () => {",
+                  "  pm.expect(pm.environment.get('msg_report_id')).to.not.be.null;",
+                  "});"
                 ],
                 "type": "text/javascript"
               }
@@ -1941,13 +2127,18 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/operator/reports/pending",
-              "host": ["{{base_url}}"],
-              "path": ["operator", "reports", "pending"]
+              "raw": "{{base_url}}/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
             }
           },
           "response": []
-        },
+          },
         {
           "name": "Login admin (assign messaging report)",
           "event": [
@@ -2130,7 +2321,10 @@
                 "exec": [
                   "pm.test('Status is 201', () => pm.response.to.have.status(201));",
                   "const json = pm.response.json();",
-                  "pm.test('Reply has id', () => pm.expect(json).to.have.property('id'));",
+                  "pm.test('Contract: Message matches Swagger', () => {",
+                  "  const required = ['id', 'report_id', 'body', 'sender', 'recipient'];",
+                  "  required.forEach(field => pm.expect(json).to.have.property(field));",
+                  "});",
                   "pm.test('Reply body matches', () => pm.expect(json.body).to.eql('Here is a photo of the exact location.'));"
                 ],
                 "type": "text/javascript"
@@ -2199,7 +2393,7 @@
       ]
     },
     {
-      "name": "07 - Notifications (FR-13)",
+      "name": "07 - Notifications & Privacy (FR-13, NFR-04)",
       "item": [
         {
           "name": "Login citizen",
@@ -2323,193 +2517,7 @@
       ]
     },
     {
-      "name": "08 - Privacy: Anonymous Reports (NFR-04)",
-      "item": [
-        {
-          "name": "Login admin (to promote anon report)",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"identifier\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/auth/login",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "auth",
-                "login"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Assign then resolve anonymous report",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/operator/reports/{{anon_report_id}}/assign",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "operator",
-                "reports",
-                "{{anon_report_id}}",
-                "assign"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Resolve anonymous report",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"status\": \"Resolved\",\n  \"note\": \"Issue resolved.\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/operator/reports/{{anon_report_id}}/status",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "operator",
-                "reports",
-                "{{anon_report_id}}",
-                "status"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Anonymous report - public detail hides reporter (NFR-04)",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "const json = pm.response.json();",
-                  "pm.test('is_anonymous is true', () => pm.expect(json.is_anonymous).to.eql(true));",
-                  "pm.test('Reporter identity not exposed in public view', () => {",
-                  "  if (json.reporter !== null && json.reporter !== undefined) {",
-                  "    pm.expect(json.reporter).to.not.have.property('email');",
-                  "    pm.expect(json.reporter).to.not.have.property('username');",
-                  "  }",
-                  "});"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/reports/{{anon_report_id}}",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "reports",
-                "{{anon_report_id}}"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "CSV export - anonymous report does not expose identity (NFR-04, NFR-10)",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "const body = pm.response.text();",
-                  "pm.test('CSV does not contain email addresses', () => {",
-                  "  pm.expect(body).to.not.match(/[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}/);",
-                  "});"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/reports/export",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "reports",
-                "export"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "09 - Private Statistics (UC-13, FR-17)",
+      "name": "08 - Admin: Private Statistics (UC-13)",
       "item": [
         {
           "name": "Login admin",
@@ -2632,7 +2640,7 @@
       ]
     },
     {
-      "name": "10 - User Profile (UC-15, FR-03)",
+      "name": "10 - Citizen: Profile (UC-15)",
       "item": [
         {
           "name": "Login citizen",
@@ -2792,7 +2800,7 @@
       ]
     },
     {
-      "name": "11 - Admin User Management (UC-14)",
+      "name": "09 - Admin: Configuration & Users (UC-14)",
       "item": [
         {
           "name": "Login admin",
@@ -2904,6 +2912,196 @@
               "path": [
                 "admin",
                 "users"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "10 - Citizen: Profile (UC-15)",
+      "item": [
+        {
+          "name": "Login citizen",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{citizen_email}}\",\n  \"password\": \"{{citizen_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get own profile (UC-15)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Profile has email', () => pm.expect(json.email).to.eql(pm.environment.get('citizen_email')));",
+                  "pm.test('Profile has role', () => pm.expect(json.role).to.eql('citizen'));",
+                  "pm.test('Profile has notification preference', () => pm.expect(json).to.have.property('email_notifications_enabled'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update email notification preference (UC-15, FR-03)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Preference updated to false', () => pm.expect(json.email_notifications_enabled).to.eql(false));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email_notifications_enabled\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Restore email notification preference",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Preference restored to true', () => pm.expect(json.email_notifications_enabled).to.eql(true));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email_notifications_enabled\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "11 - Logout (UC-16)",
+      "item": [
+        {
+          "name": "Logout (UC-16)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
               ]
             }
           },

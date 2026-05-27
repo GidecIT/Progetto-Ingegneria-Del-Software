@@ -57,7 +57,6 @@ def seed_verify_email_data() -> None:
     pass
 
 
-@pytest.mark.skip(reason="Disabled.")
 def test_verify_email_success(seed_verify_email_data: None) -> None:
     auth_service = AuthService()
     token_value = VALID_TOKEN
@@ -73,7 +72,6 @@ def test_verify_email_success(seed_verify_email_data: None) -> None:
     assert verified_user.is_email_verified is True
 
 
-@pytest.mark.skip(reason="Disabled.")
 def test_verify_email_invalid_token(seed_verify_email_data: None) -> None:
     auth_service = AuthService()
     token_value = INVALID_TOKEN
@@ -82,7 +80,6 @@ def test_verify_email_invalid_token(seed_verify_email_data: None) -> None:
         auth_service.verify_email(token_value)
 
 
-@pytest.mark.skip(reason="Disabled.")
 def test_verify_email_expired_token(seed_verify_email_data: None) -> None:
     auth_service = AuthService()
     token_value = EXPIRED_TOKEN
