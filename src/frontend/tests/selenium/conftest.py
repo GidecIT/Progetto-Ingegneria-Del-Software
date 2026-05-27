@@ -3,6 +3,7 @@ Shared fixtures and helpers for the Participium Selenium suite.
 """
 import os
 import tempfile
+import time
 import uuid
 
 import pytest
@@ -16,7 +17,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 # Configuration
 # ---------------------------------------------------------------------------
 BASE_URL = "http://localhost:5173"
-WAIT_TIMEOUT = 15  # seconds – increased to tolerate slower CI machines
+WAIT_TIMEOUT = 15  # seconds
 
 CITIZEN_EMAIL = "citizen@example.com"
 CITIZEN_PASSWORD = "Citizen123!"
@@ -41,7 +42,7 @@ def driver():
     opts.add_argument("--window-size=1400,900")
     opts.add_argument("--log-level=3")
     drv = webdriver.Chrome(options=opts)
-    drv.implicitly_wait(0)  # rely on explicit waits only
+    drv.implicitly_wait(0)
     yield drv
     drv.quit()
 
@@ -56,12 +57,8 @@ class PageHelper:
         self.driver = driver
         self.wait = WebDriverWait(driver, timeout)
 
-    # --- navigation ---------------------------------------------------------
-
     def go(self, path: str = "") -> None:
         self.driver.get(f"{BASE_URL}{path}")
-
-    # --- element locators ---------------------------------------------------
 
     def by_id(self, element_id: str):
         return self.wait.until(
@@ -99,8 +96,6 @@ class PageHelper:
         except Exception:
             return True
 
-    # --- interactions -------------------------------------------------------
-
     def fill(self, element_id: str, value: str) -> None:
         el = self.by_id_visible(element_id)
         el.clear()
@@ -113,32 +108,43 @@ class PageHelper:
         from selenium.webdriver.support.ui import Select
         Select(self.by_id(element_id)).select_by_value(value)
 
-    # --- navigation helpers -------------------------------------------------
-
     def wait_for_url(self, fragment: str) -> None:
         self.wait.until(
             lambda d: fragment in d.current_url,
             message=f"URL did not contain '{fragment}'",
         )
 
-    # --- auth shortcuts -----------------------------------------------------
-
-    def login(self, email: str, password: str) -> None:
-        self.go("/login")
-        # Clear any pre-filled demo values before typing
-        ident = self.by_id_visible("login-identifier")
-        ident.clear()
-        ident.send_keys(email)
-        pwd = self.by_id_visible("login-password")
-        pwd.clear()
-        pwd.send_keys(password)
-        self.by_id_clickable("login-submit").click()
-        # Wait until the logout button appears: this confirms the React auth
-        # context has fully established the session and the redirect is done.
+    def wait_redirect_away_from(self, path: str) -> None:
+        """Wait until the URL no longer contains *path*."""
         self.wait.until(
-            EC.presence_of_element_located((By.ID, "logout-button")),
-            message=f"Login failed or session not established for {email}",
+            lambda d: path not in d.current_url,
+            message=f"Expected redirect away from {path}",
         )
+
+    def login(self, email: str, password: str, retries: int = 3) -> None:
+        """Log in and wait for the logout button to confirm session is ready.
+        Retries up to *retries* times with a short pause between attempts to
+        handle backend rate-limiting on consecutive logins."""
+        for attempt in range(retries):
+            self.go("/login")
+            ident = self.by_id_visible("login-identifier")
+            ident.clear()
+            ident.send_keys(email)
+            pwd = self.by_id_visible("login-password")
+            pwd.clear()
+            pwd.send_keys(password)
+            self.by_id_clickable("login-submit").click()
+            try:
+                self.wait.until(
+                    EC.presence_of_element_located((By.ID, "logout-button")),
+                    message=f"Login failed for {email}",
+                )
+                return  # success
+            except Exception:
+                if attempt < retries - 1:
+                    time.sleep(2)  # brief pause before retry
+                else:
+                    raise
 
     def logout(self) -> None:
         self.by_id_clickable("logout-button").click()
@@ -151,17 +157,15 @@ def page(driver) -> PageHelper:
 
 
 # ---------------------------------------------------------------------------
-# Shared data helpers  (used by multiple test files)
+# Shared data helpers
 # ---------------------------------------------------------------------------
 
 def unique_suffix() -> str:
-    """Return a short random hex string to make test data unique across runs."""
     return uuid.uuid4().hex[:8]
 
 
 def wait_for_report_rows(page: PageHelper) -> None:
-    """Wait until at least one public-report-row-* element appears in the DOM.
-    The home page loads reports asynchronously."""
+    """Wait until at least one public-report-row-* element appears in the DOM."""
     page.wait.until(
         EC.presence_of_element_located(
             (By.XPATH, "//*[starts-with(@id,'public-report-row-')]")
@@ -171,8 +175,7 @@ def wait_for_report_rows(page: PageHelper) -> None:
 
 
 def get_first_public_report_id(page: PageHelper) -> int:
-    """Navigate to the home page, wait for report rows, and return the numeric
-    ID of the first listed public report."""
+    """Navigate to home, wait for report rows, return the first report's ID."""
     page.go("/")
     wait_for_report_rows(page)
     tbody = page.by_id("public-report-table-body")
@@ -183,8 +186,7 @@ def get_first_public_report_id(page: PageHelper) -> int:
 
 
 def write_temp_image() -> str:
-    """Write a minimal valid 1x1 PNG to a temp file and return its path.
-    The caller is responsible for deleting the file after use."""
+    """Write a minimal valid 1×1 PNG to a temp file and return its path."""
     png_bytes = (
         b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01'
         b'\x00\x00\x00\x01\x08\x02\x00\x00\x00\x90wS\xde\x00\x00'
@@ -198,7 +200,7 @@ def write_temp_image() -> str:
 
 
 def create_report_and_get_id(page: PageHelper) -> int:
-    """Log in as citizen, submit a new report, and return its numeric ID."""
+    """Log in as citizen, submit a new report, return its numeric ID."""
     img = write_temp_image()
     try:
         page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
@@ -207,7 +209,6 @@ def create_report_and_get_id(page: PageHelper) -> int:
         page.fill("report-description", "Created by Selenium test suite.")
         page.by_id("report-photos").send_keys(img)
         page.click("new-report-submit")
-        # Wait for redirect to /reports/<id>  (NOT /reports/new)
         page.wait.until(
             lambda d: "/reports/" in d.current_url and "/new" not in d.current_url,
             message="New report did not redirect to detail page",

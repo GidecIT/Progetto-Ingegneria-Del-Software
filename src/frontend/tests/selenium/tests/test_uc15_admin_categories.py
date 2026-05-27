@@ -1,8 +1,19 @@
 """UC-15  Admin manages report categories (create, edit, deactivate)."""
 import pytest
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 
 from conftest import ADMIN_EMAIL, ADMIN_PASSWORD, PageHelper, unique_suffix
+
+
+def _wait_for_category_rows(page: PageHelper):
+    """Wait until at least one admin-category-row-* element is in the DOM."""
+    page.wait.until(
+        EC.presence_of_element_located(
+            (By.XPATH, "//*[starts-with(@id,'admin-category-row-')]")
+        ),
+        message="No admin-category-row-* found; categories may not have loaded",
+    )
 
 
 class TestAdminCategories:
@@ -19,7 +30,6 @@ class TestAdminCategories:
         """UC-15: The create-category form is present on the admin page."""
         page.login(ADMIN_EMAIL, ADMIN_PASSWORD)
         page.wait_for_url("/admin")
-        # Form ID from AdminPage.tsx: admin-category-form
         page.by_id("admin-category-form")
         page.by_id("admin-new-category-name")
         page.by_id("admin-new-category-submit")
@@ -32,7 +42,6 @@ class TestAdminCategories:
         page.wait_for_url("/admin")
         page.fill("admin-new-category-name", cat_name)
         page.click("admin-new-category-submit")
-        # success message ID from AdminPage.tsx is 'admin-success'
         msg = page.by_id_visible("admin-success")
         assert msg.text, "Expected a non-empty success message"
         tbody = page.by_id("admin-categories-table-body")
@@ -43,6 +52,8 @@ class TestAdminCategories:
         """UC-15: Editing a category name and saving shows a success message."""
         page.login(ADMIN_EMAIL, ADMIN_PASSWORD)
         page.wait_for_url("/admin")
+        # Wait for categories to load asynchronously
+        _wait_for_category_rows(page)
         tbody = page.by_id("admin-categories-table-body")
         rows = tbody.find_elements(By.TAG_NAME, "tr")
         assert rows, "Expected at least one category row"
@@ -58,6 +69,7 @@ class TestAdminCategories:
         """UC-15: Toggling the Active flag on a category and saving updates it."""
         page.login(ADMIN_EMAIL, ADMIN_PASSWORD)
         page.wait_for_url("/admin")
+        _wait_for_category_rows(page)
         tbody = page.by_id("admin-categories-table-body")
         rows = tbody.find_elements(By.TAG_NAME, "tr")
         assert rows, "Expected at least one category row"

@@ -1,6 +1,7 @@
 """UC-10  Operator assigns a pending report."""
 import pytest
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 
 from conftest import CITIZEN_EMAIL, CITIZEN_PASSWORD, OPERATOR_EMAIL, OPERATOR_PASSWORD, PageHelper
 
@@ -53,15 +54,18 @@ class TestAssignReport:
         buttons = tbody.find_elements(
             By.XPATH, ".//*[contains(@id,'pending-report-assign-')]"
         )
-        btn_id = buttons[0].get_attribute("id")
-        report_id = btn_id.split("-")[-1]
         buttons[0].click()
-        page.by_id(f"assigned-report-row-{report_id}")
+        # After assign the page reloads; wait for any assigned-report-row to appear
+        page.wait.until(
+            EC.presence_of_element_located(
+                (By.XPATH, "//*[contains(@id,'assigned-report-row-')]")
+            ),
+            message="No assigned-report-row-* appeared after clicking Assign",
+        )
 
     def test_operator_page_not_accessible_as_citizen(self, page: PageHelper):
         """UC-10: Citizens are redirected away from /operator."""
         page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
         page.go("/operator")
-        assert "/operator" not in page.driver.current_url, (
-            "Citizen should be redirected away from the operator page"
-        )
+        # ProtectedRoute redirects asynchronously after session check
+        page.wait_redirect_away_from("/operator")

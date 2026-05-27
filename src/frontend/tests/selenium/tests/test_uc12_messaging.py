@@ -1,6 +1,7 @@
 """UC-12  In-report messaging between citizen and operator."""
 import pytest
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 
 from conftest import (
     OPERATOR_EMAIL, OPERATOR_PASSWORD,
@@ -22,10 +23,17 @@ class TestMessaging:
         report_id = create_report_and_get_id(page)
         page.go(f"/reports/{report_id}")
         if page.absent("report-message-form"):
-            pytest.skip("Message form not accessible for this report state (not yet assigned)")
+            pytest.skip("Message form not accessible (report not yet assigned)")
         msg_text = f"Hello operator {unique_suffix()}"
         page.fill("report-message-body", msg_text)
         page.click("report-message-submit")
+        # Wait until a message item containing our text appears in the list
+        page.wait.until(
+            EC.presence_of_element_located(
+                (By.XPATH, f"//*[contains(@id,'message-item-')]")
+            ),
+            message="No message-item-* appeared after sending a message",
+        )
         messages_list = page.by_id("messages-list")
         bodies = messages_list.find_elements(
             By.XPATH, ".//*[contains(@id,'-body')]"
@@ -45,6 +53,8 @@ class TestMessaging:
         detail_link = rows[0].find_element(
             By.XPATH, ".//*[contains(@id,'-open-detail')]"
         )
-        detail_link.click()
+        href = detail_link.get_attribute("href")
+        # Navigate directly to avoid stale element after table reload
+        page.driver.get(href)
         page.wait_for_url("/reports/")
         page.by_id("messages-card")
