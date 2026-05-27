@@ -10,38 +10,41 @@ from participium.core.auth import login_required, roles_required
 
 @pytest.mark.e2e
 def test_user_authentication_flow_e2e(client, app, clean_db):
-    try:
-        fake_web_bp = Blueprint("web", __name__)
+    from participium import create_app
+    test_app = create_app()
+    test_app.config["TESTING"] = True
+    
+    fake_web_bp = Blueprint("web", __name__)
 
-        @fake_web_bp.route("/login")
-        def login():
-            return "Fake Login Page"
+    @fake_web_bp.route("/login")
+    def login():
+        return "Fake Login Page"
 
-        app.register_blueprint(fake_web_bp)
-    except AssertionError:
-        pass
+    test_app.register_blueprint(fake_web_bp)
 
-    @app.route("/dashboard-web")
+    @test_app.route("/dashboard-web")
     @login_required
     def fake_web_route():
         return "Web Dashboard"
 
-    @app.route("/api/v1/test-roles-allowed")
+    @test_app.route("/api/v1/test-roles-allowed")
     @login_required
     @roles_required(Role.CITIZEN, Role.OPERATOR)
     def fake_roles_allowed_route():
         return jsonify({"status": "allowed"})
 
-    @app.route("/api/v1/test-roles-only")
+    @test_app.route("/api/v1/test-roles-only")
     @roles_required(Role.ADMIN)
     def fake_roles_only_route():
         return jsonify({"status": "admin_only"})
 
-    response_web_redirect = client.get("/dashboard-web")
+    test_client = test_app.test_client()
+
+    response_web_redirect = test_client.get("/dashboard-web")
     assert response_web_redirect.status_code == 302
     assert "next=/dashboard-web" in response_web_redirect.location
 
-    response_roles_no_user = client.get("/api/v1/test-roles-only")
+    response_roles_no_user = test_client.get("/api/v1/test-roles-only")
     assert response_roles_no_user.status_code == 401
 
     incomplete_payload = {
@@ -58,8 +61,12 @@ def test_user_authentication_flow_e2e(client, app, clean_db):
         "last_name": "Rossi",
         "password": "SecurePassword123!"
     }
+    
+    app.config["SETTINGS"].expose_verification_links = True
     response = client.post("/api/v1/auth/register", json=register_payload)
     assert response.status_code == 201
+    assert "verification_url" in response.json
+    app.config["SETTINGS"].expose_verification_links = False
     assert response.json["user"]["username"] == "cittadino_e2e"
 
     register_payload_custom_url = {
@@ -115,7 +122,9 @@ def test_user_authentication_flow_e2e(client, app, clean_db):
     assert response.status_code == 200
     assert response.json["user"]["username"] == "cittadino_e2e"
 
-    response_allowed = client.get("/api/v1/test-roles-allowed")
+    # Per testare i ruoli autenticati usiamo test_client ma dobbiamo loggarci lì
+    test_client.post("/api/v1/auth/login", json=login_payload)
+    response_allowed = test_client.get("/api/v1/test-roles-allowed")
     assert response_allowed.status_code == 200
     assert response_allowed.json["status"] == "allowed"
 
