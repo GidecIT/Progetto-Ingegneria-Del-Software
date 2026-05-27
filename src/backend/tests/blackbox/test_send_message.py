@@ -73,26 +73,28 @@ def test_send_message_unauthorized_sender(messaging_service: MessagingService) -
 
 
 def test_send_message_empty_body(messaging_service: MessagingService) -> None:
-    # MS03, MSB03
+    # MS03, MSB02
     
     with pytest.raises(ValidationError):
         messaging_service.send_message(REPORT1, AUTHORIZED_USER, EMPTY_BODY)
 
 
 def test_send_message_whitespace_body(messaging_service: MessagingService) -> None:
-    # MS04, MSB04
+    # MS04, MSB03
     
     with pytest.raises(ValidationError):
         messaging_service.send_message(REPORT1, AUTHORIZED_USER, WHITESPACE_BODY)
 
 
+@pytest.mark.xfail(
+    reason="Il codice non gestisce il None e solleva AttributeError anziché ValidationError", 
+    raises=AttributeError
+)
 def test_send_message_none_body(messaging_service: MessagingService) -> None:
     # MS05
-
-    pytest.xfail(reason=" body=None ")
     with pytest.raises(ValidationError):
         messaging_service.send_message(REPORT1, AUTHORIZED_USER, None) # type: ignore
-
+        
 def test_send_message_recipient_not_resolvable(messaging_service: MessagingService) -> None:
     # MS06
     
