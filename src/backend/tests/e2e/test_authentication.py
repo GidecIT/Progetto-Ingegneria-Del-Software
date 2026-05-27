@@ -8,7 +8,6 @@ from participium.models.enums import Role
 from participium.core.auth import login_required, roles_required
 
 
-@pytest.mark.e2e
 def test_user_authentication_flow_e2e(client, app, clean_db):
     from participium import create_app
     test_app = create_app()
