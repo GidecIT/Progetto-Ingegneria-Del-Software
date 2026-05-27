@@ -5,6 +5,18 @@ from selenium.webdriver.support import expected_conditions as EC
 from conftest import ADMIN_EMAIL, ADMIN_PASSWORD, OPERATOR_EMAIL, OPERATOR_PASSWORD, PageHelper
 
 
+def _wait_for_metric_lists(page: PageHelper):
+    """Wait until at least one admin-metric-list-* element is present.
+    These are the container divs for each metric column, distinct from
+    the *-title heading elements that share the same id prefix."""
+    page.wait.until(
+        EC.presence_of_element_located(
+            (By.XPATH, "//*[contains(@id,'admin-metric-list-')]")
+        ),
+        message="No admin-metric-list-* element found; statistics may not have loaded",
+    )
+
+
 class TestAdminStatistics:
     """UC-16 – Admin statistics panel."""
 
@@ -15,29 +27,28 @@ class TestAdminStatistics:
         page.by_id("admin-statistics-section")
         page.by_id("admin-stats-grid")
 
-    def test_reports_by_status_metric(self, page: PageHelper):
-        """UC-16: The 'Reports by status' metric column is present.
-        The ID is built by prefixedDomId(adminMetricItem, 'Reports by status')
-        which produces 'admin-metric-item-Reports-by-status' (spaces -> hyphens)."""
+    def test_metric_columns_present(self, page: PageHelper):
+        """UC-16: The statistics grid contains at least 3 metric columns."""
         page.login(ADMIN_EMAIL, ADMIN_PASSWORD)
         page.wait_for_url("/admin")
-        # Wait for statistics to load then find by partial ID match
         page.wait.until(
             EC.presence_of_element_located(
                 (By.XPATH, "//*[contains(@id,'admin-metric-item-')]")
             ),
-            message="No admin-metric-item-* element found; statistics may not have loaded",
+            message="No admin-metric-item-* element found",
         )
         grid = page.by_id("admin-stats-grid")
-        metric_cols = grid.find_elements(
-            By.XPATH, ".//*[contains(@id,'admin-metric-item-')]"
+        # Count only the top-level metric item containers, not nested children
+        metric_items = grid.find_elements(
+            By.XPATH,
+            "./div[contains(@id,'admin-metric-item-')]"
         )
-        assert len(metric_cols) >= 3, (
-            f"Expected at least 3 metric columns, found {len(metric_cols)}"
+        assert len(metric_items) >= 3, (
+            f"Expected at least 3 metric columns, found {len(metric_items)}"
         )
 
-    def test_each_metric_has_a_list(self, page: PageHelper):
-        """UC-16: Every metric column contains at least one list item."""
+    def test_each_metric_has_list_items(self, page: PageHelper):
+        """UC-16: Every metric column contains at least one entry."""
         page.login(ADMIN_EMAIL, ADMIN_PASSWORD)
         page.wait_for_url("/admin")
         page.wait.until(
@@ -46,17 +57,23 @@ class TestAdminStatistics:
             ),
         )
         grid = page.by_id("admin-stats-grid")
-        metric_cols = grid.find_elements(
-            By.XPATH, ".//*[contains(@id,'admin-metric-item-')]"
+        metric_items = grid.find_elements(
+            By.XPATH,
+            "./div[contains(@id,'admin-metric-item-')]"
         )
-        for col in metric_cols:
-            items = col.find_elements(By.TAG_NAME, "li")
-            assert items, f"Metric column '{col.get_attribute('id')}' has no list items"
+        for item in metric_items:
+            entries = item.find_elements(By.XPATH, ".//*[contains(@id,'-entry-')]")
+            if not entries:
+                # Fallback: accept any <li> child
+                entries = item.find_elements(By.TAG_NAME, "li")
+            assert entries, (
+                f"Metric '{item.get_attribute('id')}' has no entries; "
+                "statistics may not have loaded yet"
+            )
 
     def test_statistics_not_accessible_as_operator(self, page: PageHelper):
         """UC-16: An operator is redirected away from /admin."""
         page.login(OPERATOR_EMAIL, OPERATOR_PASSWORD)
         page.go("/admin")
-        assert "/admin" not in page.driver.current_url, (
-            "Operator should be redirected away from /admin"
-        )
+        # ProtectedRoute redirects asynchronously after session check
+        page.wait_redirect_away_from("/admin")

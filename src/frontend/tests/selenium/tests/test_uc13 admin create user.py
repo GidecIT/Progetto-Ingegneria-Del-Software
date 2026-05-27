@@ -28,7 +28,6 @@ class TestAdminCreateUser:
         page.fill("admin-new-user-password", "TestPass123!")
         page.select_by_value("admin-new-user-role", "operator")
         page.click("admin-new-user-submit")
-        # success message ID from AdminPage.tsx
         msg = page.by_id_visible("admin-success")
         assert msg.text, "Expected a non-empty success message"
         tbody = page.by_id("admin-users-table-body")
@@ -55,4 +54,5 @@ class TestAdminCreateUser:
         """UC-13: Citizens are redirected away from /admin."""
         page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
         page.go("/admin")
-        assert "/admin" not in page.driver.current_url
+        # ProtectedRoute redirects asynchronously after session check
+        page.wait_redirect_away_from("/admin")

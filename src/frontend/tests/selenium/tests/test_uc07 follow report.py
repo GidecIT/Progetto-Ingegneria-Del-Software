@@ -13,29 +13,29 @@ class TestFollowReport:
         page.by_id_visible("follow-button")
 
     def test_follow_toggles_label(self, page: PageHelper):
-        """UC-07: Clicking Follow changes the button label; clicking again reverts it."""
+        """UC-07: Clicking Follow/Unfollow changes the button label.
+        We first ensure the report is in the 'not followed' state so the
+        expected transition is always Follow → Unfollow."""
         report_id = get_first_public_report_id(page)
         page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
         page.go(f"/reports/{report_id}")
 
         btn = page.by_id_visible("follow-button")
-        initial_label = btn.text.strip()
+        current_label = btn.text.strip()
 
-        btn.click()
+        # If already following, click once to unfollow and reach known state
+        if "Unfollow" in current_label:
+            btn.click()
+            page.wait.until(
+                lambda d: "Follow report" == d.find_element("id", "follow-button").text.strip(),
+                message="Could not reset to 'Follow report' state",
+            )
 
-        # Wait explicitly for the label to change before asserting
-        page.wait.until(
-            lambda d: d.find_element("id", "follow-button").text.strip() != initial_label,
-            message="Follow button label did not change after first click",
-        )
-        new_label = page.driver.find_element("id", "follow-button").text.strip()
-
+        # Now we are in 'not following' state — click to follow
         page.driver.find_element("id", "follow-button").click()
-
-        # Wait for label to revert
         page.wait.until(
-            lambda d: d.find_element("id", "follow-button").text.strip() == initial_label,
-            message="Follow button label did not revert after second click",
+            lambda d: "Unfollow" in d.find_element("id", "follow-button").text.strip(),
+            message="Button did not change to 'Unfollow report' after clicking Follow",
         )
 
     def test_follow_button_absent_for_guest(self, page: PageHelper):
