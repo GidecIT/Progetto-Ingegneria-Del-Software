@@ -1,15 +1,9 @@
-"""
-UC-03  Self-registration of a new citizen account.
-"""
 import pytest
 from conftest import PageHelper, unique_suffix
 
 
 class TestRegistration:
-    """UC-03 – Citizen self-registration."""
-
     def test_uc03_register_page_renders(self, page: PageHelper):
-        """UC-03: /register renders the registration form."""
         page.go("/register")
         page.by_id_visible("register-page")
         page.by_id("register-form")
@@ -56,4 +50,6 @@ class TestRegistration:
         page.fill("register-password", "TestPass123!")
         page.click("register-submit")
 
-        page.by_id_visible("register-error")
+        error_box = page.by_id_visible("register-error")      
+        error_text = error_box.text.lower()
+        assert "email" in error_text, f"Expected an email error, but got: '{error_box.text}'"
