@@ -5,10 +5,8 @@ from conftest import PageHelper
 
 
 class TestFilterReports:
-    """UC-02 – Filter and sort the public report list."""
 
-    def test_filter_form_present(self, page: PageHelper):
-        """UC-02: The filter form is rendered with all expected fields."""
+    def test_filter_form(self, page: PageHelper):
         page.go("/")
         page.by_id("public-filter-form")
         page.by_id("public-filter-category")
@@ -17,8 +15,7 @@ class TestFilterReports:
         page.by_id("public-filter-date-to")
         page.by_id("public-filter-sort")
 
-    def test_apply_filters_keeps_table(self, page: PageHelper):
-        """UC-02: Submitting the filter form keeps the report table visible."""
+    def test_apply_filters(self, page: PageHelper):
         page.go("/")
         page.by_id_visible("public-filter-form")
         page.click("public-filter-submit")
@@ -29,7 +26,7 @@ class TestFilterReports:
         page.go("/")
         page.select_by_value("public-filter-sort", "asc")
         page.click("public-filter-submit")
-        page.by_id("public-report-table-body")
+        page.by_id_visible("public-report-table-body")
 
     def test_export_csv_link_present(self, page: PageHelper):
         """UC-02: The Export CSV link is present and has a valid href."""
