@@ -1,3 +1,9 @@
+from participium.controllers.user_controller import UserController
+from participium.controllers.admin_controller import AdminController
+from participium.controllers.auth_controller import AuthController
+from participium.controllers.operator_controller import OperatorController
+from participium.controllers.report_controller import ReportController
+from participium.controllers.statistics_controller import StatisticsController
 from participium.services.storage_service import LocalFileStorageService, StorageService
 from participium.services.notification_service import NotificationService
 from participium.services.category_service import CategoryService
@@ -6,12 +12,53 @@ from participium.services.statistics_service import StatisticsService
 from participium.services.user_service import UserService
 from participium.models.enums import NotificationType, ReportStatus, Role
 from participium.services.auth_service import AuthService
-from participium.models.token import EmailVerificationToken
 import pytest
 from unittest.mock import Mock
 
 from participium.services.report_service import ReportService
 
+@pytest.fixture
+def user_controller(user_service, notification_service):
+    return UserController(user_service=user_service, notification_service=notification_service)
+
+@pytest.fixture
+def statistics_controller(statistics_service):
+    """Istanza del controller inserendo il servizio mockato."""
+    return StatisticsController(statistics_service=statistics_service)
+
+@pytest.fixture
+def operator_controller():
+
+    return OperatorController(
+        report_service=Mock(spec=ReportService),
+        notification_service=Mock(spec=NotificationService),
+    )
+
+@pytest.fixture
+def report_controller():
+    """Fornisce l'istanza di ReportController con i servizi mockati."""
+    
+    return ReportController(
+        report_service=Mock(spec=ReportService),
+        messaging_service=Mock(spec=MessagingService),
+        notification_service=Mock(spec=NotificationService),
+    )
+
+@pytest.fixture
+def auth_controller():
+    
+    return AuthController(
+        auth_service=Mock(spec=AuthService)
+    )
+
+@pytest.fixture
+def admin_controller():
+    
+    return AdminController(
+        category_service=Mock(spec=CategoryService),
+        user_service=Mock(spec=UserService),
+        statistics_service=Mock(spec=StatisticsService),
+    )
 
 @pytest.fixture
 def report_service_with_active_category(report_service):
@@ -79,11 +126,8 @@ def mock_report():
 
 @pytest.fixture
 def mock_user():
-    """
-    Fornisce un Mock standard globale di uno User.
-    """
+    """Fornisce un Mock standard globale di uno User (Citizen)."""
     user = Mock()
-
     user.id = 1
     user.username = "test_user"
     user.first_name = "Mario"
@@ -96,31 +140,42 @@ def mock_user():
     user.is_email_verified = False
     user.email_notifications_enabled = True
     user.profile_picture_path = None
-
     user.category = Mock()
     user.reports = []
     user.notifications = []
     user.verification_tokens = []
-
     return user
 
 
 @pytest.fixture
-def mock_operator(mock_user):
-    """Prende l'utente base e lo trasforma in un Operatore"""
-    mock_user.id = 2
-    mock_user.role = Role.OPERATOR
-    mock_user.category_id = 6
-    return mock_user
+def mock_operator():
+    """Fornisce un Mock isolato e indipendente di un Operator."""
+    user = Mock()
+    user.id = 2
+    user.username = "test_operator"
+    user.first_name = "Luca"
+    user.last_name = "Verdi"
+    user.email = "luca.verdi@example.com"
+    user.role = Role.OPERATOR
+    user.category_id = 6
+    user.is_active = True
+    user.category = Mock()
+    return user
 
 
 @pytest.fixture
-def mock_admin(mock_user):
-    """Prende l'utente base e lo trasforma in un Admin"""
-    mock_user.id = 3
-    mock_user.role = Role.ADMIN
-    mock_user.category_id = None
-    return mock_user
+def mock_admin():
+    """Fornisce un Mock isolato e indipendente di un Admin."""
+    user = Mock()
+    user.id = 3
+    user.username = "test_admin"
+    user.first_name = "Anna"
+    user.last_name = "Bianchi"
+    user.email = "anna.bianchi@example.com"
+    user.role = Role.ADMIN
+    user.category_id = None
+    user.is_active = True
+    return user
 
 
 @pytest.fixture
