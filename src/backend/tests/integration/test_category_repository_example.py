@@ -7,10 +7,9 @@ from participium.models.category import Category
 from participium.repositories.category_repository import CategoryRepository
 from participium.services.category_service import CategoryService
 
-pytestmark = pytest.mark.skip(reason="Example test")
-
 
 @pytest.mark.integration
+@pytest.mark.skip(reason="This test is a crude example.")
 def test_list_categories_through_service_after_manual_database_setup(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setenv("DATABASE_URL", "sqlite+pysqlite:///:memory:")
 

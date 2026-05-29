@@ -7,10 +7,9 @@ from participium import create_app
 from participium.database import close_connection, get_session
 from participium.models.category import Category
 
-pytestmark = pytest.mark.skip(reason="Example test")
-
 
 @pytest.mark.e2e
+@pytest.mark.skip(reason="This test is a crude example.")
 def test_get_categories_after_inserting_category_with_flask_test_client(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setenv("DATABASE_URL", "sqlite+pysqlite:///:memory:")
 
