@@ -6,13 +6,6 @@ from participium.routes.api import api_bp
 from participium.models.enums import Role, ReportStatus
 from participium.core.exceptions import ValidationError
 
-@pytest.fixture
-def mock_user():
-    user = MagicMock()
-    user.role = Role.CITIZEN
-    user.is_active = True
-    user.id = 1
-    return user
 
 @pytest.fixture
 def app(mock_user):
