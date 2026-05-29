@@ -24,6 +24,32 @@ from unittest.mock import Mock
 from participium.services.report_service import ReportService
 
 @pytest.fixture
+def mock_settings(tmp_path):
+    settings = Mock()
+    settings.mail_backend = "console"
+    settings.mail_from = "noreply@participium.it"
+    settings.mail_outbox_dir = tmp_path / "outbox"
+    settings.smtp_host = "smtp.example.com"
+    settings.smtp_port = 587
+    settings.smtp_username = "user_smtp"
+    settings.smtp_password = "secure_password"
+    settings.smtp_use_tls = True
+    return settings
+
+
+@pytest.fixture
+def mock_smtp(monkeypatch):
+    #s ostituisce smtplib.SMTP con un mock gestibile 
+    mock_smtp_instance = Mock()
+    mock_smtp_class = Mock(return_value=mock_smtp_instance)
+    
+    mock_smtp_instance.__enter__ = Mock(return_value=mock_smtp_instance)
+    mock_smtp_instance.__exit__ = Mock(return_value=None)
+    
+    monkeypatch.setattr("smtplib.SMTP", mock_smtp_class)
+    return mock_smtp_instance
+
+@pytest.fixture
 def user_repository(mock_session):
     return UserRepository(session=mock_session)
 
