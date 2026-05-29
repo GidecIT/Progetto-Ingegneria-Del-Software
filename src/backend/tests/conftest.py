@@ -1,101 +1,126 @@
 import pytest
+from datetime import datetime, timedelta
+from unittest.mock import Mock
+from flask import Flask
+from sqlalchemy import update
+
 from participium.database import open_connection, create_all, get_session, close_connection
+from participium.core.security import hash_password
 from participium.models.category import Category
 from participium.models.report import Report
 from participium.models.user import User
+from participium.models.notification import Notification
+from participium.models.token import EmailVerificationToken
+from participium.models.enums import NotificationType, Role, ReportStatus
 from participium.repositories.category_repository import CategoryRepository
 from participium.repositories.message_repository import MessageRepository
 from participium.repositories.notification_repository import NotificationRepository
 from participium.repositories.report_repository import ReportRepository
 from participium.repositories.user_repository import UserRepository
 from participium.repositories.token_repository import TokenRepository
-from participium.models.enums import NotificationType, Role
-from participium.models.notification import Notification
-from participium.models.enums import ReportStatus
-from participium.models.token import EmailVerificationToken
-from datetime import datetime, timedelta
-from sqlalchemy import update
-from unittest.mock import Mock
-from flask import Flask
-
-
 
 @pytest.fixture(scope="function")
 def db_session(monkeypatch):
-
     monkeypatch.setenv("DATABASE_URL", "sqlite+pysqlite:///:memory:")
-
     open_connection()
     create_all()
     session = get_session()
     yield session
-
     session.close()
     close_connection()
 
 @pytest.fixture
 def session(db_session):
-    """Alias di db_session per i test legacy/blackbox che cercano 'session'."""
     return db_session
-
-# ENTITY FIXTURES 
 
 @pytest.fixture
 def test_user(db_session):
-    user = User(id= 1, username="tester", email="test@ex.com", first_name="T", last_name="T", password_hash="hash")
+    user = User(
+        username="tester",
+        email="test@ex.com",
+        first_name="Mario",
+        last_name="Rossi",
+        password_hash=hash_password("password_di_test"),
+        role=Role.CITIZEN,
+        is_active=True,
+        is_email_verified=True,
+    )
     db_session.add(user)
     db_session.commit()
     return user
 
 @pytest.fixture
 def test_operator(db_session, test_category):
-    user = User(username="operator", email="op@ex.com", first_name="O", last_name="P", password_hash="hash", role=Role.OPERATOR, category_id=test_category.id)
+    user = User(
+        username="operator_test",
+        email="operator@ex.com",
+        first_name="Franco",
+        last_name="Franchi",
+        password_hash=hash_password("password_di_test"),
+        role=Role.OPERATOR,
+        category_id=test_category.id, 
+        is_active=True,
+        is_email_verified=True,
+    )
     db_session.add(user)
     db_session.commit()
     return user
 
 @pytest.fixture
 def admin_user(db_session):
-    user = User(username="admin", email="admin@ex.com", first_name="A", last_name="A", password_hash="hash",role=Role.ADMIN  )
+    user = User(
+        username="admin", 
+        email="admin@ex.com", 
+        first_name="A", 
+        last_name="A", 
+        password_hash=hash_password("hash"),
+        role=Role.ADMIN  
+    )
     db_session.add(user)
     db_session.commit()
     return user
 
 @pytest.fixture
 def other_user(db_session):
-    user = User(username="other", email="other@ex.com", first_name="O", last_name="O", password_hash="hash")
+    user = User(
+        username="other", 
+        email="other@ex.com", 
+        first_name="O", 
+        last_name="O", 
+        password_hash=hash_password("hash")
+    )
     db_session.add(user)
     db_session.commit()
     return user
 
 @pytest.fixture
 def test_category(db_session):
-    cat = Category(name="Others", is_active=True)
-    db_session.add(cat)
+    category = Category(name="Verde Pubblico", is_active=True)
+    db_session.add(category)
     db_session.commit()
-    return cat
+    return category
 
 @pytest.fixture
 def other_category(db_session):
-    from participium.models.category import Category
-    cat = Category(name="Viabilità", is_active=True)
-    db_session.add(cat)
+    category = Category(name="Illuminazione", is_active=True)
+    db_session.add(category)
     db_session.commit()
-    return cat
+    return category
 
 @pytest.fixture
 def test_report(db_session, test_user, test_category):
     report = Report(
-        title="Buca profonda", description="Buca in Piazza Castello", 
-        latitude=45.4, longitude=7.41, 
-        reporter_id=test_user.id, category_id=test_category.id
+        title="Buca profonda", 
+        description="Buca in Piazza Castello", 
+        latitude=45.4, 
+        longitude=7.41, 
+        reporter_id=test_user.id, 
+        category_id=test_category.id,
+        status=ReportStatus.PENDING_APPROVAL
     )
     db_session.add(report)
     db_session.commit()
     return report
-
-
-# REPOSITORY FIXTURES
 
 @pytest.fixture
 def category_repository(db_session):
@@ -121,37 +146,42 @@ def token_repository(db_session):
 def report_repository(db_session):
     return ReportRepository(db_session)
 
-
 @pytest.fixture
-def make_notification():
+def make_notification(db_session):
     def _maker(user_id: int, **kwargs) -> Notification:
-        defaults = dict(
-            type=NotificationType.SYSTEM,
-            title="Titolo",
-            body="Body",
-            is_read=False
-        )
+        defaults = {
+            "title": "Notifica di Test",
+            "body": "Corpo della notifica",
+            "type": NotificationType.SYSTEM,
+            "is_read": False,
+        }
         defaults.update(kwargs)
-        return Notification(user_id=user_id, **defaults)
+        notification = Notification(user_id=user_id, **defaults)
+        db_session.add(notification)
+        db_session.flush()
+        return notification
     return _maker
 
 @pytest.fixture
-def make_report():
-    def _maker(user_id: int, category_id: int, **kwargs) -> Report:
-        defaults = dict(
-            title="Buca",
-            description="Buca profonda",
-            latitude=45.0,
-            longitude=7.0,
-            status=ReportStatus.PENDING_APPROVAL,
-        )
+def make_report(db_session):
+    def _maker(reporter_id: int, category_id: int, **kwargs) -> Report:
+        defaults = {
+            "title": "Segnalazione di Test",
+            "description": "Descrizione di test",
+            "latitude": 41.9028,
+            "longitude": 12.4964,
+            "status": ReportStatus.PENDING_APPROVAL,
+            "is_anonymous": False,
+        }
         defaults.update(kwargs)
-        return Report(reporter_id=user_id, category_id=category_id, **defaults)
+        report = Report(reporter_id=reporter_id, category_id=category_id, **defaults)
+        db_session.add(report)
+        db_session.flush()
+        return report
     return _maker
 
 @pytest.fixture
 def make_token():
-    """Fixture factory per generare token puliti con valori di default."""
     def _maker(
         user_id: int,
         *,

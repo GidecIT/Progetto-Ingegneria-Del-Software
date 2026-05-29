@@ -252,7 +252,6 @@ def test_update_category_api(client, mock_dependencies, mock_user):
     response = client.put("/api/v1/admin/categories/1", json={"is_active": True})
     assert response.status_code == 200
     
-    # test without is_active field
     response = client.put("/api/v1/admin/categories/1", json={"name": "test"})
     assert response.status_code == 200
 

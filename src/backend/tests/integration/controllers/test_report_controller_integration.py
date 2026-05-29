@@ -2,7 +2,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta
 import pytest
 
-from participium.models.enums import ReportStatus, Role
+from participium.models.enums import NotificationType, ReportStatus, Role
 from participium.controllers.report_controller import ReportController, ReportDetailContext
 from participium.config.constants import PUBLIC_VISIBLE_STATUSES
 
@@ -49,13 +49,11 @@ class TestReportControllerIntegration:
         user_reports = report_controller.list_user_reports(test_user)
         assert any(r.id == report.id for r in user_reports)
 
-    def test_build_detail_context_authenticated_with_notifications(
-        self, report_controller, test_user, test_category, make_report, make_notification, db_session
-    ):
+    def test_build_detail_context_authenticated_with_notifications(self, report_controller, test_user, test_category, make_report, make_notification, db_session):
         report = make_report(reporter_id=test_user.id, category_id=test_category.id, status=ReportStatus.ASSIGNED)
         db_session.commit()
 
-        notification = make_notification(user_id=test_user.id, report_id=report.id, is_read=False)
+        notification = make_notification(user_id=test_user.id, report_id=report.id, type=NotificationType.MESSAGE,  is_read=False)
         db_session.commit()
 
         context = report_controller.build_detail_context(report.id, test_user)
