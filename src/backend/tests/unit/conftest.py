@@ -1,3 +1,9 @@
+from participium.repositories.user_repository import UserRepository
+from participium.repositories.notification_repository import NotificationRepository
+from participium.repositories.token_repository import TokenRepository
+from participium.repositories.message_repository import MessageRepository
+from participium.repositories.category_repository import CategoryRepository
+from participium.repositories.report_repository import ReportRepository
 from participium.controllers.user_controller import UserController
 from participium.controllers.admin_controller import AdminController
 from participium.controllers.auth_controller import AuthController
@@ -16,6 +22,35 @@ import pytest
 from unittest.mock import Mock
 
 from participium.services.report_service import ReportService
+
+@pytest.fixture
+def user_repository(mock_session):
+    return UserRepository(session=mock_session)
+
+@pytest.fixture
+def token_repository(mock_session):
+    return TokenRepository(session=mock_session)
+
+@pytest.fixture
+def notification_repository(mock_session):
+    return NotificationRepository(session=mock_session)
+
+@pytest.fixture
+def message_repository(mock_session):
+    return MessageRepository(session=mock_session)
+
+@pytest.fixture
+def mock_session():
+    return Mock()
+
+
+@pytest.fixture
+def report_repository(mock_session):
+    return ReportRepository(session=mock_session)
+
+@pytest.fixture
+def category_repository(mock_session):
+    return CategoryRepository(session=mock_session)
 
 @pytest.fixture
 def user_controller(user_service, notification_service):
