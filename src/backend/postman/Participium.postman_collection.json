@@ -910,7 +910,7 @@
                 {
                   "key": "photos",
                   "type": "file",
-                  "src": "use-case-diagram.png"
+                  "src": "src/backend/participium/static/uploads/demo-report-photo.svg"
                 }
               ]
             },
@@ -989,7 +989,7 @@
                 {
                   "key": "photos",
                   "type": "file",
-                  "src": "use-case-diagram.png"
+                  "src": "src/backend/participium/static/uploads/demo-report-photo.svg"
                 }
               ]
             },
@@ -1073,7 +1073,7 @@
                 {
                   "key": "photos",
                   "type": "file",
-                  "src": "use-case-diagram.png"
+                  "src": "src/backend/participium/static/uploads/demo-report-photo.svg"
                 }
                 ]
                 },
@@ -1149,10 +1149,10 @@
                 { "key": "longitude", "value": "7.69", "type": "text" },
                 { "key": "category_id", "value": "{{valid_category_id}}", "type": "text" },
                 { "key": "is_anonymous", "value": "false", "type": "text" },
-                { "key": "photos", "type": "file", "src": "use-case-diagram.png" },
-                { "key": "photos", "type": "file", "src": "use-case-diagram.png" },
-                { "key": "photos", "type": "file", "src": "use-case-diagram.png" },
-                { "key": "photos", "type": "file", "src": "use-case-diagram.png" }
+                { "key": "photos", "type": "file", "src": "src/backend/participium/static/uploads/demo-report-photo.svg" },
+                { "key": "photos", "type": "file", "src": "src/backend/participium/static/uploads/demo-report-photo.svg" },
+                { "key": "photos", "type": "file", "src": "src/backend/participium/static/uploads/demo-report-photo.svg" },
+                { "key": "photos", "type": "file", "src": "src/backend/participium/static/uploads/demo-report-photo.svg" }
                 ]
                 },
                 "url": {
