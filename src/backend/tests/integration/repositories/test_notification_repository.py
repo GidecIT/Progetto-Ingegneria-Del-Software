@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 pytestmark = pytest.mark.integration
 
-# Test add()
+
 
 def test_add_notification_persists_successfully(db_session, notification_repository, test_user, make_notification):
     notification = make_notification(
@@ -42,9 +42,7 @@ def test_add_notification_sets_correct_fields(db_session, notification_repositor
     assert added.is_read is True
 
 
-# Test get_by_id():
-# - trovata
-# - non trovata
+
 
 def test_get_by_id_returns_correct_notification(db_session, notification_repository, test_user, make_notification):
     notification = make_notification(user_id=test_user.id, title="Notifica")
@@ -64,10 +62,7 @@ def test_get_by_id_returns_none_if_not_found(notification_repository):
     assert result is None
 
 
-# Test list_for_user():
-# - lista corretta
-# - lista in oridne di creazione desc
-# - lista vuota
+
 
 def test_list_for_user_returns_only_target_user_notifications(db_session, notification_repository, test_user, other_user, make_notification):
     notification_target = make_notification(user_id=test_user.id, title="a")
@@ -112,7 +107,7 @@ def test_list_for_user_returns_empty_list_if_none(notification_repository):
     assert results == []
 
 
-# Test list_unread_message_notifications()
+
 
 def test_list_unread_message_notifications_filters_type_and_read_status(db_session, notification_repository, test_user, make_notification):
     notification_read = make_notification(user_id=test_user.id, type=NotificationType.MESSAGE, is_read=True)
@@ -146,7 +141,7 @@ def test_list_unread_message_notifications_filters_by_report_id(db_session, noti
 
 
 
-# delete_for_user()
+
 
 
 def test_delete_for_user_removes_all_target_user_notifications(db_session, notification_repository, test_user, make_notification):
