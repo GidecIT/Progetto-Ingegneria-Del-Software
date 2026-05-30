@@ -24,7 +24,7 @@ class TestPublicStatistics:
         report2.category.name = "Strade"
    
         report3 = Mock()
-        report3.category.name = "Ambiente"  # stessa categoria di report1
+        report3.category.name = "Ambiente"
 
         reports_list = [report1, report2, report3]
         statistics_service.report_repository.list_reports.return_value = reports_list
@@ -76,9 +76,9 @@ class TestAdminStatistics:
 
         report3 = Mock()
         report3.status = Mock()
-        report3.status.value = "pending" #come report 1
+        report3.status.value = "pending"
         report3.category = Mock()
-        report3.category.name = "Ambiente" #come report 1
+        report3.category.name = "Ambiente"
 
         reports_list = [report1, report2, report3]
         statistics_service.report_repository.list_all.return_value = reports_list
@@ -134,9 +134,9 @@ class TestAggregateTrends:
         report1 = Mock()
         report1.created_at = datetime(2026, 5, 22) 
         report2 = Mock()
-        report2.created_at = datetime(2026, 5, 21) # Giorno prima
+        report2.created_at = datetime(2026, 5, 21)
         report3 = Mock()
-        report3.created_at = datetime(2026, 5, 21) # Stesso giorno di report2 per testare l'incremento (+1)
+        report3.created_at = datetime(2026, 5, 21)
 
         result = statistics_service._aggregate_trends([report1, report2, report3], granularity="day")
         

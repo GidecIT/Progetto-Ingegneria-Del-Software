@@ -36,7 +36,7 @@ class TestListAndCreateReports:
     def test_create_report_delegates_to_service(self, report_controller, mock_user, mock_report, mock_file):
         report_controller.report_service.create_report.return_value = mock_report
 
-        result = report_controller.create_report( #dati casuali
+        result = report_controller.create_report(
             reporter=mock_user,
             category_id=2,
             title="Semaforo rotto",

@@ -37,9 +37,9 @@ class TestCreateNotification:
 
     def test_create_notification_email_failure_does_not_crash(self, notification_service, mock_user):
         mock_user.email_notifications_enabled = True
-        notification_service.email_gateway.send.side_effect = Exception("Error") #eccezione
+        notification_service.email_gateway.send.side_effect = Exception("Error")
         
-        result = notification_service.create_notification(mock_user, NotificationType.MESSAGE, "T", "B") #deve comunque creare la notifica
+        result = notification_service.create_notification(mock_user, NotificationType.MESSAGE, "T", "B")
     
         assert result is not None
         notification_service.notification_repository.add.assert_called_once()

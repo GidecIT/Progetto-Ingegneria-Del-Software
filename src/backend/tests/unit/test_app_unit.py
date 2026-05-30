@@ -29,7 +29,7 @@ def test_create_app(mock_settings):
         assert app.config["MAX_CONTENT_LENGTH"] == 1024 * 1024
 
 def test_create_app_with_db_init_selective(mock_settings):
-    # Test case where bootstrap_reference_data is True but bootstrap_demo_data is False
+
     mock_settings.auto_init_db = True
     mock_settings.bootstrap_reference_data = True
     mock_settings.bootstrap_demo_data = False
@@ -48,7 +48,7 @@ def test_create_app_with_db_init_selective(mock_settings):
         assert not mock_seed_demo.called
 
 def test_create_app_with_db_init_demo_data(mock_settings):
-    # Test case where both bootstrap_reference_data and bootstrap_demo_data are True
+
     mock_settings.auto_init_db = True
     mock_settings.bootstrap_reference_data = False
     mock_settings.bootstrap_demo_data = True
@@ -65,7 +65,7 @@ def test_create_app_with_db_init_demo_data(mock_settings):
         assert mock_seed_demo.called
 
 def test_create_app_no_settings():
-    # Test create_app with None settings to trigger Settings.from_env()
+
     with patch("participium.app.Settings.from_env") as mock_from_env, \
          patch("participium.app.open_connection"), \
          patch("participium.app.create_all"), \
@@ -87,7 +87,7 @@ def test_load_current_user_hook_no_session(mock_settings):
     _register_request_hooks(app)
     
     with app.test_request_context():
-        # Simula il trigger del hook before_request
+
         app.preprocess_request()
         assert g.current_user is None
 
@@ -134,11 +134,11 @@ def test_teardown_hook():
     
     with patch("participium.app.remove_session") as mock_remove:
         with app.app_context():
-            # Il teardown viene chiamato alla fine del context dell'app o della richiesta
+
             pass
-        # Flask chiama teardown_appcontext alla fine del context dell'applicazione
-        # Ma di solito viene chiamato dopo che il context viene rimosso dalla stack
-        # In questo caso dobbiamo assicurarci che venga chiamato.
+
+
+
         app.do_teardown_appcontext()
         assert mock_remove.called
 
@@ -148,7 +148,7 @@ def test_error_handlers():
     
     client = app.test_client()
     
-    # Test DomainError via client request
+
     @app.route("/error")
     def trigger_error():
         raise DomainError("Test error", status_code=400)
@@ -157,7 +157,7 @@ def test_error_handlers():
     assert response.status_code == 400
     assert response.json == {"error": "Test error"}
     
-    # Test 404 via client request
+
     response = client.get("/non-existent")
     assert response.status_code == 404
     assert response.json == {"error": "Resource not found."}
