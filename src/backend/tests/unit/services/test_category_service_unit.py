@@ -59,7 +59,7 @@ class TestCreateCategory:
 class TestUpdateCategory:
     def test_update_category_name_already_exists(self, category_service, mock_category):
         category_service.category_repository.get_by_id.return_value = mock_category
-        duplicate_category = Mock(id=2) #altra categoria con stesso nome
+        duplicate_category = Mock(id=2)
         category_service.category_repository.get_by_name.return_value = duplicate_category
          
         with pytest.raises(ValidationError) as exc_info:
