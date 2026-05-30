@@ -46,7 +46,7 @@ class TestLocalStorageInitialization:
 class TestStorageServiceBase:
 
     def test_storage_service_simulation(self, capsys):
-        # Istanziamo la classe base
+
         storage = StorageService()
         file = FileStorage(stream=io.BytesIO(b"data"), filename="test.jpg")
         

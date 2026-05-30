@@ -18,7 +18,7 @@ def app(mock_user):
     def set_user():
         g.current_user = mock_user
 
-    # Register error handler for generic errors (if any in tests)
+
     @app.errorhandler(Exception)
     def handle_exception(e):
         return {"error": str(e)}, getattr(e, 'code', 500)
@@ -57,11 +57,11 @@ def test_reference_data_api(client):
 
 def test_register_user_api(client, app, mock_dependencies):
     mock_dependencies.auth.register.return_value = (MagicMock(), "http://verify")
-    # with expose_verification_links = True
+
     response = client.post("/api/v1/auth/register", json={"email": "test@test.com"})
     assert response.status_code == 201
     
-    # with expose_verification_links = False
+
     app.config["SETTINGS"].expose_verification_links = False
     response = client.post("/api/v1/auth/register", json={"email": "test@test.com"})
     assert response.status_code == 201
@@ -150,16 +150,16 @@ def test_me_api(client):
 def test_update_me_api(client, mock_dependencies):
     mock_dependencies.users.update_profile.return_value = MagicMock()
     
-    # json payload
+
     response = client.put("/api/v1/users/me", json={"email_notifications_enabled": True, "username": "test", "first_name": "A", "last_name": "B"})
     assert response.status_code == 200
     
-    # form data
+
     data = {"email_notifications_enabled": "true", "username": "test"}
     response = client.put("/api/v1/users/me", data=data, content_type="multipart/form-data")
     assert response.status_code == 200
     
-    # no email_notifications_enabled payload
+
     response = client.put("/api/v1/users/me", json={"username": "test"})
     assert response.status_code == 200
 
@@ -230,7 +230,7 @@ def test_update_admin_user_api(client, mock_dependencies, mock_user):
     response = client.put("/api/v1/admin/users/1", json={"is_active": True, "email_notifications_enabled": False})
     assert response.status_code == 200
     
-    # test without boolean fields
+
     response = client.put("/api/v1/admin/users/1", json={"username": "test"})
     assert response.status_code == 200
 

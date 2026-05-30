@@ -49,7 +49,7 @@ def test_get_methods_not_found(user_repository):
 
 
 
-# Test get_by_username_or_email()
+
 
 def test_get_by_username_or_email_match(db_session, user_repository):
     user = User(username="user1", email="user1@ex.com", first_name="A", last_name="A", password_hash="hash_user1")
@@ -92,7 +92,7 @@ def test_list_all_ordering(db_session, user_repository):
 
 
 
-# Test delete()
+
 
 def test_delete_user(db_session, user_repository):
     user = User(username="user2", email="user2@ex.com", first_name="user", last_name="2", password_hash="hash_user2")

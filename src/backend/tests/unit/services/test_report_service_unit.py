@@ -300,7 +300,7 @@ class TestUnfollowReport:
     def test_unfollow_report_not_following(self, report_service, mock_user, mock_report):
         """L'utente non segue il report, non fa modifiche e ritorna il report."""
         report_service.report_repository.get_by_id.return_value = mock_report
-        report_service.report_repository.get_follower.return_value = None  #false
+        report_service.report_repository.get_follower.return_value = None
 
 
         result = report_service.unfollow_report(report_id=mock_report.id, user=mock_user)
@@ -454,7 +454,7 @@ class TestUpdateStatus:
         
         rejection_note = "Foto non chiara"
         
-        with patch("participium.services.report_service.ensure_transition_allowed"):# Sostituiamo provvisoriamente per saltaree il controllo
+        with patch("participium.services.report_service.ensure_transition_allowed"):
             report_service.update_status(mock_report.id, mock_operator, ReportStatus.REJECTED, note=rejection_note)
             
         assert mock_report.status == ReportStatus.REJECTED
@@ -579,7 +579,7 @@ class TestEnsureOperatorCategoryAccess:
 
     def test_access_denied_for_operator_with_different_category(self, report_service, mock_operator, mock_report):
         """Un operator con categoria diversa """
-        mock_operator.category_id = 6  # category id del report invece 5 DEFAULT
+        mock_operator.category_id = 6
 
         with pytest.raises(AuthorizationError) as exc_info:
             report_service._ensure_operator_category_access(mock_operator, mock_report)

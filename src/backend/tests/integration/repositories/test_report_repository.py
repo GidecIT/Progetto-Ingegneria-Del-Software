@@ -12,7 +12,7 @@ from participium.repositories.report_repository import ReportRepository
 pytestmark = pytest.mark.integration
 
 
-# Test add()
+
 
 def test_add_report(db_session, report_repository, test_user, test_category, make_report):
     added = report_repository.add(make_report(test_user.id, test_category.id, title="Buca"))
@@ -22,9 +22,7 @@ def test_add_report(db_session, report_repository, test_user, test_category, mak
     assert added.title == "Buca"
     assert added.status == ReportStatus.PENDING_APPROVAL
 
-# Test get_by_id():
-# - trovato
-# - non trovato
+
 
 def test_get_by_id_found(db_session, report_repository, test_user, test_category, make_report):
     report = make_report(test_user.id, test_category.id, title="Palo caduto")
@@ -44,7 +42,7 @@ def test_get_by_id_not_found(report_repository):
     assert report_repository.get_by_id(999) is None
 
 
-# Test add_photo()
+
 
 def test_add_photo(db_session, report_repository, test_user, test_category, make_report):
     report = make_report(test_user.id, test_category.id)
@@ -66,7 +64,7 @@ def test_add_photo(db_session, report_repository, test_user, test_category, make
 
 
 
-# Test add_status_entry()
+
 
 
 def test_add_status_entry(db_session, report_repository, test_user, test_category, make_report):
@@ -90,7 +88,7 @@ def test_add_status_entry(db_session, report_repository, test_user, test_categor
 
 
 
-# Test add_follower() 
+
 
 def test_add_and_get_follower(db_session, report_repository, test_user, test_category, make_report):
     report = make_report(test_user.id, test_category.id)
@@ -107,7 +105,7 @@ def test_add_and_get_follower(db_session, report_repository, test_user, test_cat
     assert result.report_id == report.id
     assert result.user_id == test_user.id
 
-# Test get_follower():
+
 def test_get_follower_not_found(db_session, report_repository, test_user, test_category, make_report):
     report = make_report(test_user.id, test_category.id)
     db_session.add(report)
@@ -115,7 +113,7 @@ def test_get_follower_not_found(db_session, report_repository, test_user, test_c
 
     assert report_repository.get_follower(report.id, test_user.id) is None
 
-# Test remove_follower():
+
 def test_remove_follower(db_session, report_repository, test_user, test_category, make_report):
     report = make_report(test_user.id, test_category.id)
     db_session.add(report)
@@ -132,16 +130,7 @@ def test_remove_follower(db_session, report_repository, test_user, test_category
 
 
 
-# Test list_reports() / list_all()
-# - lista vuota
-# - lista solo public
-# - filtro categoria
-# - filtro status
-# - filtro date_from
-# - filtro date_to
-# - ordinamento asc
-# - ordinamento desc
-# - tutti i report
+
 
 def test_list_reports_empty(report_repository):
     assert report_repository.list_reports() == []
@@ -273,10 +262,7 @@ def test_list_all_reports(db_session, report_repository, test_user, test_categor
 
 
 
-# Test list_user_reports():
-# - lista vuota
-# - lista per utente
-# - lista per creazione crescente
+
 
 
 def test_list_user_reports_empty(report_repository, test_user):
@@ -312,12 +298,7 @@ def test_list_user_reports_ordering(db_session, report_repository, test_user, te
     assert results[1].title == "Primo"
 
 
-# Test list_pending()
-# - solo report PENDING_APPROVAL
-# - filtro category_id
-# - filtro date_from
-# - filtro date_to
-# - ordinamento crescente per created_at
+
 
 def test_list_pending_returns_only_pending(db_session, report_repository, test_user, test_category, make_report):
     db_session.add_all([
@@ -349,7 +330,7 @@ def test_list_pending_filter_by_date_from(db_session, report_repository, test_us
     old = make_report(test_user.id, test_category.id, title="Vecchio Pending", status=ReportStatus.PENDING_APPROVAL)
     db_session.add(old)
     db_session.commit()
-    backdate(db_session, Report, old.id, days=10) # Vecchio di 10 giorni
+    backdate(db_session, Report, old.id, days=10)
 
     recent = make_report(test_user.id, test_category.id, title="Recente Pending", status=ReportStatus.PENDING_APPROVAL)
     db_session.add(recent)
@@ -398,7 +379,7 @@ def test_list_pending_ordering(db_session, report_repository, test_user, test_ca
 
 
 
-# Test list_for_category():
+
 
 def test_list_for_category_excludes_pending(db_session, report_repository, test_user, test_category, make_report):
     db_session.add_all([
@@ -443,9 +424,7 @@ def test_list_for_category_none_returns_all_non_pending(db_session, report_repos
 
 
 
-# Test list_operator_reports():
-# - solo propria categoria
-# - tutti i report assegnati
+
 
 def test_list_operator_reports_operator_sees_only_own_category(db_session, report_repository, test_user, test_category, other_category, make_report):
     db_session.add_all([
@@ -475,9 +454,7 @@ def test_list_operator_reports_admin_sees_all(db_session, report_repository, tes
 
 
 
-# Test list_followers()_
-# - lista vuota
-# - lista con follower
+
 
 
 def test_list_followers_empty(db_session, report_repository, test_user, test_category, make_report):

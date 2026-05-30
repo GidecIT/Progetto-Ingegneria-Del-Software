@@ -11,7 +11,7 @@ def test_payload():
         assert _payload() == {"key": "value"}
     
     with app.test_request_context():
-        # Quando non c'è JSON, request.get_json() ritorna None
+
         assert _payload() == {}
 
 def test_as_bool():
@@ -26,9 +26,9 @@ def test_as_bool():
 
 def test_parse_report_status():
     assert _parse_report_status("Pending Approval") == ReportStatus.PENDING_APPROVAL
-    # Test case sensitivity: Il costruttore di Enum in Python è case-sensitive
-    # se non diversamente implementato. _parse_report_status chiama ReportStatus(status_value)
-    # quindi "PENDING APPROVAL" fallirà se il valore è "Pending Approval"
+
+
+
     with pytest.raises(ValidationError):
         _parse_report_status("PENDING APPROVAL")
     with pytest.raises(ValidationError):

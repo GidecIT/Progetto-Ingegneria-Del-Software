@@ -121,7 +121,7 @@ def test_user_authentication_flow_e2e(client, app, clean_db):
     assert response.status_code == 200
     assert response.json["user"]["username"] == "cittadino_e2e"
 
-    # Per testare i ruoli autenticati usiamo test_client ma dobbiamo loggarci lì
+
     test_client.post("/api/v1/auth/login", json=login_payload)
     response_allowed = test_client.get("/api/v1/test-roles-allowed")
     assert response_allowed.status_code == 200
