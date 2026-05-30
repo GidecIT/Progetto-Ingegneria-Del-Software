@@ -73,15 +73,15 @@ def test_reports_public(client, test_report):
     response = client.get("/api/v1/reports")
     assert response.status_code == 200
     
-    # filter
+
     response = client.get("/api/v1/reports?status=Pending Approval")
     assert response.status_code == 200
     
-    # invalid filter
+
     response = client.get("/api/v1/reports?status=Invalid")
     assert response.status_code == 400
     
-    # export
+
     response = client.get("/api/v1/reports/export")
     assert response.status_code == 200
 
@@ -92,7 +92,7 @@ def test_create_report(auth_client, test_category):
         "latitude": 10.0, "longitude": 20.0
     }
     response = client.post("/api/v1/reports", data=data, content_type='multipart/form-data')
-    assert response.status_code == 400 # no photo
+    assert response.status_code == 400
     
     data = {
         "title": "T", "description": "D", "category_id": test_category,
@@ -114,8 +114,8 @@ def test_report_follow_unfollow(auth_client, test_report, test_users):
     db.commit()
     db.close()
     
-    client = auth_client("admin") # Use a different user who doesn't follow yet. wait, admin can't follow, only citizen can.
-    # Let's create another citizen
+    client = auth_client("admin")
+
     db = get_session()
     cit2 = User(username="cit2", email="cit2@test.com", password_hash="hash", first_name="C", last_name="C", role=Role.CITIZEN.value, is_active=True)
     db.add(cit2)

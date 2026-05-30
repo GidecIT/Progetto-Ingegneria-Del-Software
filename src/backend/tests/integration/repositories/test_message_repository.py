@@ -4,11 +4,10 @@ from participium.models.report import Report
 
 pytestmark = pytest.mark.integration
 
-# Test add():
-# - aggiunta corretta di un messaggio
+
 
 def test_add_message(db_session, message_repository, test_report, test_user):
-    # Arrange
+
     new_message = Message(
         report_id=test_report.id,
         sender_id=test_user.id,
@@ -23,9 +22,7 @@ def test_add_message(db_session, message_repository, test_report, test_user):
     assert added.report_id == test_report.id
 
 
-# Test list_for_report():
-# - Messaggi restituiti in ordine di inserimento 
-# - Messaggi del report specificato
+
 
 def test_list_for_report_ordering_and_isolation(db_session, message_repository, test_report, test_user):
 

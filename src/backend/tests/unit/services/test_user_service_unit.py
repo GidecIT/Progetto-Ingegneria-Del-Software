@@ -31,8 +31,8 @@ class TestUpdateProfile:
         """Username presente, uguale a quello di user e per l'ultima condizione qualsisi cosa
         Inoltre tutti gli altri campi presenti ma senza file name"""
         mock_user.username = "luigi_verdi"
-        mock_file = Mock() #True
-        mock_file.filename = None #False
+        mock_file = Mock()
+        mock_file.filename = None
 
         user_service.user_repository.get_by_username.return_value = Mock()
         result = user_service.update_profile(user=mock_user, username=mock_user.username,first_name=mock_user.first_name,last_name=mock_user.last_name,email_notifications_enabled=mock_user.email_notifications_enabled, profile_picture=mock_file)
@@ -43,8 +43,8 @@ class TestUpdateProfile:
         """Username presente, diverso da a quello di user e non presente in repository
         Inoltre tutti gli altri campi presenti"""
         nuovo_username = "luigi_verdi"
-        mock_file = Mock() #True
-        mock_file.filename = "avatar.png" #True
+        mock_file = Mock()
+        mock_file.filename = "avatar.png"
 
         user_service.user_repository.get_by_username.return_value = None
         result = user_service.update_profile(user=mock_user, username=nuovo_username,first_name=mock_user.first_name,last_name=mock_user.last_name,email_notifications_enabled=mock_user.email_notifications_enabled, profile_picture=mock_file)
@@ -213,7 +213,7 @@ class TestCreateUser:
             "username": "mario_rossi",
             "first_name": "Mario",
             "last_name": "Rossi",
-            "email": "", #manca
+            "email": "",
             "password": "password123",
             "role": "CITIZEN",
         }
@@ -227,10 +227,10 @@ class TestCreateUser:
     def test_create_user_missing_fields_two_iterations(self, user_service):
         """Caso 2 campi mancanti nel ciclo: lancia ValidationError con elenco dei campi separati d virgola"""
         payload= {
-            "username": "",  # manca
+            "username": "",
             "first_name": "Mario",
             "last_name": "Rossi",
-            "email": "",  # Manca
+            "email": "",
             "password": "password123",
             "role": "CITIZEN",
         }
@@ -287,10 +287,10 @@ class TestCreateUser:
         verifica corretto parsing, lo stripping dei testi e l'assegnazione della categoria.
         """
         payload = {
-            "username": "  luigi_verdi  ",  #ßtrip
+            "username": "  luigi_verdi  ",
             "first_name": "Luigi",
             "last_name": "Verdi",
-            "email": "LUIGI.VERDI@EXAMPLE.COM ",  # strip e minuscolo
+            "email": "LUIGI.VERDI@EXAMPLE.COM ",
             "password": "secret_password",
             "role": "OPERATOR",
             "category_id": 5,

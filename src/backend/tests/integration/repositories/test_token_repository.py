@@ -14,10 +14,7 @@ from participium.controllers.auth_controller import AuthController
 pytestmark = pytest.mark.integration
 
 
-# Test add() / get_by_token()
-# - aggiunta corretta
-# - token trovato tramite stringa
-# - token non trovato tramite stringa
+
 
 def test_add_token(db_session, token_repository, test_user, make_token):
     added = token_repository.add(make_token(test_user.id, token="Nuovo-token"))
@@ -45,10 +42,7 @@ def test_get_by_token_not_found(token_repository):
 
 
 
-# Test list_for_user()
-# - lista vuota se l'utente non ha token
-# - restituisce tutti i token dell'utente
-# - token di altri utenti non restituiti
+
 
 
 def test_list_for_user_empty(token_repository, test_user, make_token):
