@@ -16,8 +16,8 @@ class TestViewPrivateStatistics:
         """UC-13: The private statistics section is rendered on the admin page."""
         page.login(ADMIN_EMAIL, ADMIN_PASSWORD)
         page.wait_for_url("/admin")
-        assert page.by_id("admin-statistics-section").is_displayed()
-        assert page.by_id("admin-stats-grid").is_displayed()
+        assert page.by_id_visible("admin-statistics-section").is_displayed()
+        assert page.by_id_visible("admin-stats-grid").is_displayed()
 
     def test_at_least_three_metric_columns_present(self, page: PageHelper):
         """UC-13: The statistics grid contains at least 3 metric columns
