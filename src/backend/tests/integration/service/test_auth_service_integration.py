@@ -27,7 +27,7 @@ class TestAuthServiceAdditionalExceptions:
             "first_name": "Mario",
             "last_name": "Rossi",
             "email": "mario@example.com"
-            # manca "password"
+
         }
         with pytest.raises(ValidationError, match="Missing required fields"):
             service.register_user(incomplete_payload)
@@ -123,7 +123,7 @@ class TestAuthMiddlewareIntegration:
         with test_app.app_context():
             if hasattr(g, "current_user"): delattr(g, "current_user")
             response = client.get("/web/dashboard")
-            # Verifica lo status code di Redirect
+
             assert response.status_code == 302
             assert "/login?next=/web/dashboard" in response.headers["Location"]
 

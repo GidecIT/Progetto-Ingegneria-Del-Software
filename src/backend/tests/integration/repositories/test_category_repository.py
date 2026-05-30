@@ -4,12 +4,7 @@ from participium.repositories.category_repository import CategoryRepository
 
 pytestmark = pytest.mark.integration
 
-# Test add():
-# - aggiunta di una categoria
-# - categoria trovata correttamente tramite id
-# - categoria non trovata tramite id
-# - categoria trovata correttamente tramite nome
-# - categoria non trovata tramite nome
+
 
 def test_add_category(db_session, category_repository):
     new_category = Category(name="Public Lighting", is_active=True)
@@ -26,9 +21,7 @@ def test_add_category(db_session, category_repository):
     assert db_category.name == "Public Lighting"
 
 
-# Test get_by_id():
-# - trovato
-# - non trovato
+
 
 def test_get_by_id_found(db_session, category_repository):
     category = Category(name="Sewerage", is_active=True)
@@ -48,9 +41,7 @@ def test_get_by_id_not_found(category_repository):
     assert result is None
 
 
-# Test get_by_name():
-# - trovato
-# - non trovato
+
 
 def test_get_by_name_found(db_session, category_repository):
    
@@ -72,10 +63,7 @@ def test_get_by_name_not_found(category_repository):
     assert result is None
 
 
-# Test list_all():
-# - lista vuota quando non ci sono categorie
-# - categorie in ordine alfabetico
-# - solo categorie attive in ordine alfabetico
+
 
 def test_list_all_returns_empty_when_no_categories(category_repository):
     
