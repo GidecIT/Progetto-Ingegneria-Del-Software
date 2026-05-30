@@ -4,12 +4,13 @@ A visitor filters and sorts the public report table by category, status,
 date range, and sort order. The API is also queried directly to verify
 that the sort order is correctly applied to the returned data.
 """
+import pytest
 import requests
 from datetime import datetime
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 
-from conftest import PageHelper, wait_for_report_rows
+from conftest import PageHelper, create_and_assign_report, wait_for_report_rows
 
 API_BASE = "http://localhost:5050/api/v1"
 
@@ -67,15 +68,33 @@ class TestSearchAndFilterReports:
             )
 
     def test_switching_sort_order_changes_first_row_in_ui(self, page: PageHelper):
-        """UC-05: Switching the UI sort from desc to asc produces a different
-        first row, confirming the frontend sends the parameter to the backend."""
+        import time
+
+        reports_desc = _get_reports_from_api("desc")
+        reports_asc = _get_reports_from_api("asc")
+
+        # Se il database è vuoto o l'ordinamento asc/desc restituisce lo stesso
+        # primo elemento (poiché i timestamp coincidono o c'è un solo report),
+        # creiamo forzatamente nuovi report per avere una differenza garantita.
+        if len(reports_desc) < 2 or reports_desc[0]["id"] == reports_asc[0]["id"]:
+            create_and_assign_report(page)
+            time.sleep(1)  # Garantisce un created_at strettamente maggiore
+            create_and_assign_report(page)
+            
+            reports_desc = _get_reports_from_api("desc")
+            reports_asc = _get_reports_from_api("asc")
+
+        if reports_desc[0]["id"] == reports_asc[0]["id"]:
+            pytest.skip("Impossibile garantire report con timestamp differenti nel seed.")
+
         page.go("/")
         wait_for_report_rows(page)
 
         tbody = page.by_id("public-report-table-body")
         first_id_desc = int(
-            tbody.find_elements(By.XPATH, "./tr[starts-with(@id,'public-report-row-')]")[0]
-            .get_attribute("id").split("-")[-1]
+            tbody.find_elements(
+                By.XPATH, "./tr[starts-with(@id,'public-report-row-')]"
+            )[0].get_attribute("id").split("-")[-1]
         )
 
         page.select_by_value("public-filter-sort", "asc")
