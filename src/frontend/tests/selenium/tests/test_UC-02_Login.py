@@ -59,10 +59,13 @@ class TestLogin:
         page.wait_for_url("/dashboard")
         page.go("/login")
 
-        page.wait.until(
-            lambda d: "/login" not in d.current_url,
-            message="Authenticated user should be redirected away from /login",
-        )
+        try:
+            page.wait.until(
+                lambda d: "/login" not in d.current_url,
+                message="Authenticated user should be redirected away from /login",
+            )
+        except Exception:
+            pass
 
         assert "/login" not in page.driver.current_url, (
             "Authenticated user should be redirected away from /login"
