@@ -11,8 +11,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.ui import Select, WebDriverWait
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -28,6 +27,8 @@ OPERATOR_PASSWORD = "Operator123!"
 
 ADMIN_EMAIL = "admin@example.com"
 ADMIN_PASSWORD = "Admin123!"
+
+OPERATOR_CATEGORY = "Roads and Urban Furniture"
 
 
 # ---------------------------------------------------------------------------
@@ -106,7 +107,7 @@ class PageHelper:
         self.by_id_clickable(element_id).click()
 
     def select_by_value(self, element_id: str, value: str) -> None:
-        from selenium.webdriver.support.ui import Select
+        # Select is already imported at module level
         Select(self.by_id(element_id)).select_by_value(value)
 
     def wait_for_url(self, fragment: str) -> None:
@@ -123,19 +124,16 @@ class PageHelper:
         )
 
     def login(self, email: str, password: str, retries: int = 3) -> None:
-        """Log in and wait for the logout button to confirm session is ready.
-        Retries up to *retries* times with a short pause between attempts to
-        handle backend rate-limiting on consecutive logins."""
         for attempt in range(retries):
-            self.go("/login")
-            ident = self.by_id_visible("login-identifier")
-            ident.clear()
-            ident.send_keys(email)
-            pwd = self.by_id_visible("login-password")
-            pwd.clear()
-            pwd.send_keys(password)
-            self.by_id_clickable("login-submit").click()
             try:
+                self.go("/login")
+                ident = self.by_id_visible("login-identifier")
+                ident.clear()
+                ident.send_keys(email)
+                pwd = self.by_id_visible("login-password")
+                pwd.clear()
+                pwd.send_keys(password)
+                self.by_id_clickable("login-submit").click()
                 self.wait.until(
                     EC.presence_of_element_located((By.ID, "logout-button")),
                     message=f"Login failed for {email}",
@@ -200,33 +198,27 @@ def write_temp_image() -> str:
     return path
 
 
+def select_operator_category(page: PageHelper) -> None:
+    """Select the seeded operator's category in the currently open report form."""
+    page.wait.until(
+        lambda d: any(
+            option.text.strip() == OPERATOR_CATEGORY
+            for option in Select(d.find_element(By.ID, "report-category")).options
+        ),
+        message=f"Category '{OPERATOR_CATEGORY}' not available in the report form",
+    )
+    Select(page.by_id("report-category")).select_by_visible_text(OPERATOR_CATEGORY)
+
+
 def create_report_and_get_id(page: PageHelper) -> int:
-    """Log in as citizen, submit a new report, return its numeric ID.
-    Session is left logged in as citizen after this call."""
+    """Log in as citizen, submit a new report, return its numeric ID."""
     img = write_temp_image()
     try:
         page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
         page.go("/reports/new")
         page.fill("report-title", f"Test report {unique_suffix()}")
         page.fill("report-description", "Created by Selenium test suite.")
-        
-        # Seleziona esplicitamente una categoria valida
-
-        try:
-            def categories_loaded(d):
-                try:
-                    return len(Select(d.find_element(By.ID, "report-category")).options) > 1
-                except Exception:
-                    return False
-            page.wait.until(categories_loaded)
-            sel = Select(page.driver.find_element(By.ID, "report-category"))
-            if not sel.options[0].get_attribute("value"):
-                sel.select_by_index(1)
-            else:
-                sel.select_by_index(0)
-        except Exception:
-            pass
-            
+        select_operator_category(page)
         page.by_id("report-photos").send_keys(img)
         page.click("new-report-submit")
         page.wait.until(
@@ -238,80 +230,76 @@ def create_report_and_get_id(page: PageHelper) -> int:
         os.unlink(img)
 
 
-def create_and_assign_report(page: PageHelper) -> int:
-    """Create a report as citizen, then assign it via the operator dashboard.
-
-    This helper is required by UC-11 and UC-12, which need an assigned report
-    so that the conversation thread is accessible (can_access_messages=true).
-
-    Flow:
-      1. Login as citizen → create report (status: Pending Approval)
-      2. Logout
-      3. Login as operator → assign the report (status changes, thread opens)
-      4. Logout
-      Returns the report ID. Session is logged out after this call.
-
-    Skips if the newly created report does not appear in the operator's
-    pending section (e.g. the operator is not assigned to that category).
-    """
-    # Step 1 — create report as citizen
-    report_id = create_report_and_get_id(page)
-    page.logout()
-
-    # Step 2 — assign as operator
+def _assign_report_as_operator(page: PageHelper, report_id: int, skip_message: str) -> None:
+    """Log in as operator, assign the given report, log out."""
     page.login(OPERATOR_EMAIL, OPERATOR_PASSWORD)
     page.wait_for_url("/operator")
 
     assign_btn_id = f"pending-report-assign-{report_id}"
-    try:
-        btn = page.by_id(assign_btn_id)
-        page.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn)
-        time.sleep(0.5)
-        page.driver.execute_script("arguments[0].click();", btn)
-    except Exception:
-        pytest.skip(
-            f"Report {report_id} is not visible in the operator pending section. "
-            "The operator seed account may not handle this report's category. "
-            "Verify that the operator is configured for the default report category."
-        )
+    assigned_row_id = f"assigned-report-row-{report_id}"
 
-    page.wait.until(
-        EC.presence_of_element_located(
-            (By.ID, f"assigned-report-row-{report_id}")
-        ),
-        message=f"Report {report_id} did not appear in the assigned section after Assign",
+    if page.absent(assign_btn_id) and page.absent(assigned_row_id):
+        pytest.skip(skip_message)
+
+    for _ in range(6):
+        # Already assigned (e.g. a previous attempt's click did take effect)?
+        try:
+            WebDriverWait(page.driver, 2).until(
+                EC.presence_of_element_located((By.ID, assigned_row_id))
+            )
+            page.logout()
+            return
+        except Exception:
+            pass
+        
+        try:
+            WebDriverWait(page.driver, 5).until(
+                EC.presence_of_element_located((By.ID, assign_btn_id))
+            )
+            page.driver.execute_script(
+                "var e=document.getElementById(arguments[0]);"
+                "if(e){e.scrollIntoView({block:'center'});e.click();}",
+                assign_btn_id,
+            )
+        except Exception:
+            pass
+    
+        try:
+            WebDriverWait(page.driver, 5).until(
+                EC.presence_of_element_located((By.ID, assigned_row_id))
+            )
+            page.logout()
+            return
+        except Exception:
+            page.go("/operator")
+
+    raise AssertionError(
+        f"Report {report_id} did not appear in the assigned section after Assign"
     )
+
+
+def create_and_assign_report(page: PageHelper) -> int:
+    """Create a report as citizen, then assign it via the operator dashboard."""
+    report_id = create_report_and_get_id(page)
     page.logout()
+    _assign_report_as_operator(
+        page,
+        report_id,
+        skip_message=(
+            f"Report {report_id} is not visible in the operator pending section. "
+            "The operator seed account may not handle this report's category."
+        ),
+    )
     return report_id
 
 
 def create_public_report_as_new_citizen(page: PageHelper) -> int:
     """Register a fresh citizen account, verify it, create a report, then have
-    the operator assign it so the report becomes publicly visible.
-
-    This helper is required by UC-07 (follow report), which needs a public
-    report NOT created by citizen@example.com. The seed data only contains
-    reports from that account, so we create a new one here.
-
-    Flow:
-      1. Register a new citizen with a unique email
-      2. Click the verification link exposed by the local dev environment
-      3. Login as the new citizen → create a report
-      4. Logout
-      5. Login as operator → assign the report (makes it public)
-      6. Logout
-      Returns the report ID. Session is logged out after this call.
-
-    Skips if:
-      - The verification link is not exposed (non-local environment)
-      - The report does not appear in the operator pending section
-      - The report does not become publicly visible after assignment
-    """
+    the operator assign it so the report becomes publicly visible."""
     sfx = unique_suffix()
     email = f"tmp_{sfx}@test.local"
     password = "TestPass123!"
 
-    # Step 1 — register
     page.go("/register")
     page.fill("register-username", f"tmp_{sfx}")
     page.fill("register-first-name", "Tmp")
@@ -320,44 +308,24 @@ def create_public_report_as_new_citizen(page: PageHelper) -> int:
     page.fill("register-password", password)
     page.click("register-submit")
 
-    # Step 2 — verify via the link exposed in local/demo environments
     if page.absent("verification-box"):
         pytest.skip(
             "Verification link not exposed; cannot create account for follow test. "
-            "Ensure the backend is running in local/demo mode."
         )
     verification_href = (
         page.by_id_visible("verification-box")
         .find_element(By.ID, "verification-link")
         .get_attribute("href")
     )
-    # Visit the verification URL (may return JSON — that is expected)
     page.driver.get(verification_href)
 
-    # Step 3 — login as new citizen and create a report
     img = write_temp_image()
     try:
         page.login(email, password)
         page.go("/reports/new")
         page.fill("report-title", f"Followable report {sfx}")
         page.fill("report-description", "Created by temp citizen for follow test.")
-        
-        from selenium.webdriver.support.ui import Select
-        try:
-            def categories_loaded(d):
-                try:
-                    return len(Select(d.find_element(By.ID, "report-category")).options) > 1
-                except Exception:
-                    return False
-            page.wait.until(categories_loaded)
-            sel = Select(page.driver.find_element(By.ID, "report-category"))
-            if not sel.options[0].get_attribute("value"):
-                sel.select_by_index(1)
-            else:
-                sel.select_by_index(0)
-        except Exception:
-            pass
-            
+        select_operator_category(page)
         page.by_id("report-photos").send_keys(img)
         page.click("new-report-submit")
         page.wait.until(
@@ -369,31 +337,14 @@ def create_public_report_as_new_citizen(page: PageHelper) -> int:
         os.unlink(img)
     page.logout()
 
-    # Step 4 — assign as operator (assignment makes the report public)
-    page.login(OPERATOR_EMAIL, OPERATOR_PASSWORD)
-    page.wait_for_url("/operator")
-
-    assign_btn_id = f"pending-report-assign-{report_id}"
-    try:
-        btn = page.by_id(assign_btn_id)
-        page.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn)
-        time.sleep(0.5)
-        page.driver.execute_script("arguments[0].click();", btn)
-    except Exception:
-        pytest.skip(
+    _assign_report_as_operator(
+        page,
+        report_id,
+        skip_message=(
             f"Report {report_id} not visible in operator pending section; "
-            "cannot make it public for the follow test."
-        )
-
-    page.wait.until(
-        EC.presence_of_element_located(
-            (By.ID, f"assigned-report-row-{report_id}")
         ),
-        message=f"Report {report_id} did not appear in assigned section",
     )
-    page.logout()
 
-    # Step 5 — confirm the report is now visible in the public table
     page.go("/")
     wait_for_report_rows(page)
     tbody = page.by_id("public-report-table-body")
@@ -406,7 +357,6 @@ def create_public_report_as_new_citizen(page: PageHelper) -> int:
     if report_id not in visible_ids:
         pytest.skip(
             f"Report {report_id} is not publicly visible after assignment. "
-            "The report may require a different status to become public."
         )
 
     return report_id
