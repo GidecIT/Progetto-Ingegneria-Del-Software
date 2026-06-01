@@ -21,10 +21,10 @@
 - C14: for photo (esistono ancora photo in valid_photos)
 
 ### Structural Lower Bound
-La funzione create_report produce 8 esiti mutualmente esclusivi, 7 corrispondenti ad eccezioni di tipo ValidationError e 1 return finale di successo. Ogni esecuzione del test restituisce uno di questi esiti, quindi lo structural lower bound è 8.
+La funzione create_report produce 8 esiti mutualmente esclusivi, 7 corrispondenti ad eccezioni di tipo ValidationError e un return finale di successo. Ogni esecuzione del test restituisce uno di questi esiti, quindi lo structural lower bound è 8.
 
 ### Node Coverage
-Nota: per p si intende una foto con fileName invece per p_no_fn una foto senza fileName
+Nota: con p si intende una foto con fileName, mentre con p_no_fn una foto senza fileName.
 | ID   | `reporter` |`category_id`| `title`| `description` | `latitude` | `longitude` | `photos`| `is_anonymous` | Outcome atteso |
 |------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|------------------------------|
 |CRN-01| reporter1(id=1) | "uno" | "Buca profonda" | "Si segnala una buca di ampie dimensioni" | 45.4642 | 9.1900 | [p,p] | True | ValidationError("A valid active category is required.") |
@@ -71,7 +71,7 @@ NOTE:
 - il secondo ciclo for non può mai essere eseguito con 0 iterazioni
 
 ### Path Coverage
-I cammini lineari della funzione (7 eccezioni + 1 return) sono già coperti dai test delle coverage precedenti. Poiché i due loop rendono il numero totale di cammini potenzialmente illimitato (dipende dalla lunghezza di photos), si adotta la loop coverage (0, 1, 2+ iterazioni) come approssimazione della path coverage:
+I cammini lineari della funzione (7 eccezioni + un return) sono già coperti dai test delle metriche di coverage precedenti. Poiché i due loop rendono il numero totale di cammini potenzialmente illimitato (dipende dalla lunghezza di photos), si adotta la loop coverage (0, 1, 2+ iterazioni) come approssimazione della path coverage:
 - 0 iterazioni (CRL-01): valid_photos è vuota e viene sollevata l'eccezione prima del secondo loop
 - 1 iterazione (CRL-02): entrambi i loop eseguono esattamente un'iterazione; verifica la prima transizione di stato (creazione report, salvataggio di una foto)
 - 2+ iterazioni (CRL-03): entrambi i loop eseguono più iterazioni; garantisce che lo stato non venga resettato erroneamente tra iterazioni consecutive
@@ -171,10 +171,10 @@ Coperto dai test sopra.
 
 ![Control flow graph notify_status_change](../../data/img/notify_status_change.png)
 
-## Atomic conditions
-* **C1:** `recipient in recipients` (loop guard)
-* **C2:** `recipient is None`
-* **C3:** `recipient.id in seen`
+### Atomic Conditions
+- **C1:** `recipient in recipients` (loop guard)
+- **C2:** `recipient is None`
+- **C3:** `recipient.id in seen`
 
 ### Structural Lower Bound
 
@@ -185,16 +185,16 @@ Il comportamento minimo significativo richiede di coprire tre casi distinti:
 - almeno una notifica creata 
 - corretta gestione dei duplicati 
 
-Lo Structural Lower Bound è quindi pari a 3 test
+Lo Structural Lower Bound è quindi pari a 3 test.
 
 
-## Node coverage
+### Node Coverage
 
 | Test | recipients | report | body| Output | Comportamento atteso |
 | :--- | :---  | :--- | :--- | :--- | :--- | 
 | N1 | [User1] | Report1 | "Test notifica" | None | 1 notifica creata per User1 |
 
-## Edge coverage
+### Edge Coverage
 
 | Test | recipients | report | body | Output | Comportamento atteso | Edges |
 |:-----|:-----------|:-------|:-------|:-------|:------------|:------|
@@ -202,7 +202,7 @@ Lo Structural Lower Bound è quindi pari a 3 test
 | E2 | [None] | Report1 | "Test notifica" | None | 0 notifiche create | C1 -> T, C2 -> T |
 | E3 | [User1] | Report1 | "Test notifica" | None | 1 notifica creata | C1 -> T, C2 -> F, C3 -> F |
 
-## Condition coverage
+### Condition Coverage
 | Test | recipients | report | body | Output | C1 | C2 | C3 | Comportamento atteso |
 |:-----|:-----------|:-------|:-----|:-------|:------|:-----|:-----| :------|
 | C1t | [] | Report1 | "Test notifica" | None | F | - | - | 0 notifiche create |
@@ -211,7 +211,7 @@ Lo Structural Lower Bound è quindi pari a 3 test
 | C4t | [User1, User1] | Report1 | "Test notifica" | None | T | F | T | 1 notifica creata |
 
 ### Loop Coverage
-Tre tests: 0, 1, 2+ iterazioni
+Tre test: 0, 1, 2+ iterazioni
 
 | Loop | recipients | report | body | iterations | Comportamento atteso |
 |:-----|:-----------|:-------|:-----|:-------|:------|
@@ -219,7 +219,7 @@ Tre tests: 0, 1, 2+ iterazioni
 | L1   | [User1] | Report1 | "Test notifica" | 1 | 1 notifica creata |
 | L2   | [User1, User1] | Report1 | "Test notifica" | 2 | 1 notifica creata |
 
-## Path coverage
+### Path Coverage
 Il numero di iterazioni dipende dalla lunghezza della lista recipients, che non ha un limite predefinito. In ogni iterazione il flusso può prendere due strade diverse (creazione notifica o continue). I percorsi completi sono quindi infiniti.
 
 **Approssimazione:** si seleziona un sottoinsieme rappresentativo basato sul principio di equivalenza comportamentale: due percorsi sono equivalenti se producono la stessa evoluzione dello stato rilevante per l’oracolo (qui: seen e le notifiche create). Testare il ciclo con 0, 1 e 2 o più iterazioni — e, nel caso di 2 o più iterazioni, combinando sia il ramo continue (utente None o già visto) sia il ramo che invoca create_notification(...) — cattura tutti i tipi qualitativamente distinti di transizione di stato che il ciclo può produrre.
@@ -254,7 +254,7 @@ I tre test di copertura del ciclo riportati di seguito sono considerati una vali
 
 
 ### Structural Lower Bound
-La funzione produce solo 1 return finale di successo. Pertanto il valore dello structural lower bound è 1.
+La funzione produce un solo return finale di successo. Pertanto il valore dello structural lower bound è 1.
 
 ***Lista mock aggiuntiva***
 - NOTIFICATION_REPOSITORY_LIST_UNREAD_SUCCESS: configura il metodo `list_unread_message_notifications` per restituire una lista di oggetti Notification: almeno uno con ID 10 e uno con ID None.
@@ -317,8 +317,7 @@ Coperta dagli stessi test della Node Coverage.
 - C11: payload.get("is_active") is not None
 - C12: payload.get("email_notifications_enabled") is not None
 ### Structural Lower Bound
-La funzione update_user produce tre esiti mutualmente esclusivi. Due di
-questi sono eccezioni di tipo ValidationError. Il terzo esito corrisponde al completamento con successo dell'aggiornamento. Ogni esecuzione del test restituisce uno di questi esiti, quindi lo structural lower bound è 3.
+La funzione update_user produce tre esiti mutualmente esclusivi. Due di questi sono eccezioni di tipo ValidationError. Il terzo esito corrisponde al completamento con successo dell'aggiornamento. Ogni esecuzione del test restituisce uno di questi esiti, quindi lo structural lower bound è 3.
 ### Node Coverage
 | ID | user_id | Stato iniziale utente | payload | Outcome atteso |
 | :--- | :--- | :--- | :--- | :--- |
@@ -357,7 +356,7 @@ Coperto dai test sopra.
 ### Minimal Suite Test
 1. **UU-01**: Verifica il percorso di successo con l'aggiornamento di più campi (es. first_name, is_active). Corrisponde al test UUN-03.
 2. **UU-02**: Testa la gestione di un conflitto di username e la conseguente ValidationError. Corrisponde al test UUN-01.
-UU-03: Testa la gestione di un conflitto di email e la conseguente ValidationError. Corrisponde al test UUN-02.
-UU-04: Verifica l'aggiornamento del ruolo a OPERATOR con assegnazione di category_id. Corrisponde al test UUC-09.
-UU-05: Testa il caso in cui il payload è vuoto, assicurando che non avvenga nessuna modifica. Corrisponde al test UUC-01.
+3. **UU-03**: Testa la gestione di un conflitto di email e la conseguente ValidationError. Corrisponde al test UUN-02.
+4. **UU-04**: Verifica l'aggiornamento del ruolo a OPERATOR con assegnazione di category_id. Corrisponde al test UUC-09.
+5. **UU-05**: Testa il caso in cui il payload è vuoto, assicurando che non avvenga nessuna modifica. Corrisponde al test UUC-01.
 
