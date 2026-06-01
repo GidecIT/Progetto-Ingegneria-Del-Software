@@ -34,25 +34,33 @@ class TestViewPrivateStatistics:
             f"Expected at least 3 metric columns, found {len(metric_items)}"
         )
 
-    def test_each_metric_column_contains_entries(self, page: PageHelper):
-        """UC-13: Every metric column contains at least one data entry."""
+    def test_each_metric_column_renders_even_when_empty(self, page: PageHelper):
+        """UC-13 ext 2a: A breakdown with no data shows an empty table and the
+        other breakdowns keep showing. So every metric column must render its
+        structure (title + list container) and be visible, but entries are
+        optional — requiring at least one entry would wrongly fail the very
+        empty-state scenario the use case declares valid."""
         page.login(ADMIN_EMAIL, ADMIN_PASSWORD)
         page.wait_for_url("/admin")
         page.wait.until(
             EC.presence_of_element_located(
                 (By.XPATH, "//*[contains(@id,'admin-metric-item-')]")
             ),
+            message="No admin-metric-item-* element found",
         )
         grid = page.by_id("admin-stats-grid")
         metric_items = grid.find_elements(
             By.XPATH, "./div[contains(@id,'admin-metric-item-')]"
         )
+        assert metric_items, "Statistics grid rendered no metric columns"
         for item in metric_items:
-            entries = item.find_elements(By.XPATH, ".//*[contains(@id,'-entry-')]")
-            if not entries:
-                entries = item.find_elements(By.TAG_NAME, "li")
-            assert entries, (
-                f"Metric '{item.get_attribute('id')}' has no entries"
+            item_id = item.get_attribute("id")
+            assert item.is_displayed(), f"Metric column '{item_id}' is not displayed"
+            assert item.find_elements(By.TAG_NAME, "h3"), (
+                f"Metric column '{item_id}' has no title"
+            )
+            assert item.find_elements(By.XPATH, ".//ul[contains(@id,'-list')]"), (
+                f"Metric column '{item_id}' has no list container"
             )
 
     def test_private_statistics_not_accessible_as_operator(self, page: PageHelper):
