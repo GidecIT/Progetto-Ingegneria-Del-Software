@@ -1,0 +1,5 @@
+FROM: noreply@participium.local
+TO: oper@test.com
+SUBJECT: New message on report #1
+
+C C: Hello

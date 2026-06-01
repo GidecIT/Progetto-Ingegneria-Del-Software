@@ -54,34 +54,34 @@ def auth_service() -> AuthService:
 @pytest.mark.parametrize(
     "identifier, password, expected_exception",
     [
-        ("mario_r", "pass123", None),                  # AU01
-        ("mario.r@polito.it", "pass123", None),          # AU02
-        ("mario_r", "wrong", AuthenticationError),      # AU03
-        ("mario.r@polito.it", "wrong", AuthenticationError),  # AU04
-        ("unknown_user", "pass123", AuthenticationError),# AU05
-        ("unknown@mail.it", "pass123", AuthenticationError),  # AU06
-        ("mario_rossi", "pass123", AuthenticationError), # AU07
-        ("mario_rossi@polito.it", "pass123", AuthenticationError),  # AU08
+        ("mario_r", "pass123", None),
+        ("mario.r@polito.it", "pass123", None),
+        ("mario_r", "wrong", AuthenticationError),
+        ("mario.r@polito.it", "wrong", AuthenticationError),
+        ("unknown_user", "pass123", AuthenticationError),
+        ("unknown@mail.it", "pass123", AuthenticationError),
+        ("mario_rossi", "pass123", AuthenticationError),
+        ("mario_rossi@polito.it", "pass123", AuthenticationError),
 
-        ("", "pass123", AuthenticationError),           # AUB02
-        (" ", "pass123", AuthenticationError),          # AUB03
+        ("", "pass123", AuthenticationError),
+        (" ", "pass123", AuthenticationError),
 
-        ("mario_r", "", AuthenticationError),           # AUB06
-        ("mario_r", " ", AuthenticationError),          # AUB07
+        ("mario_r", "", AuthenticationError),
+        ("mario_r", " ", AuthenticationError),
 
-        ("mario_inactive", "pass123", AuthenticationError),   # AUB08
-        ("mario_unverified", "pass123", AuthenticationError), # AUB09
+        ("mario_inactive", "pass123", AuthenticationError),
+        ("mario_unverified", "pass123", AuthenticationError),
 
         pytest.param(
-            None, "pass123", AuthenticationError,       # AUB01
+            None, "pass123", AuthenticationError,
             marks=pytest.mark.xfail(reason="Username nullo: crasha con AttributeError su .strip()", raises=AttributeError)
         ),
         pytest.param(
-            "mario_r", None, AuthenticationError,       # AUB04
+            "mario_r", None, AuthenticationError,
             marks=pytest.mark.xfail(reason="Password nulla: Werkzeug crasha con AttributeError su .encode()", raises=AttributeError)
         ),
         pytest.param(
-            "mario.r@polito.it", None, AuthenticationError,  # AUB05
+            "mario.r@polito.it", None, AuthenticationError,
             marks=pytest.mark.xfail(reason="Password nulla: Werkzeug crasha con AttributeError su .encode()", raises=AttributeError)
         ),
     ],

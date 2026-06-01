@@ -1,0 +1,5 @@
+FROM: noreply@participium.local
+TO: cit@test.com
+SUBJECT: Report #1 status updated
+
+Report #1 has been assigned for handling in category 'Test Cat'.

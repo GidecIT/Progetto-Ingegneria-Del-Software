@@ -1,0 +1,5 @@
+FROM: noreply@participium.local
+TO: custom_url@example.com
+SUBJECT: Verify your Participium account
+
+Open this link to verify your account: http://localhost/api/v1/auth/verify/vwLe8LI0wgJJbgrdQpt-_tisix7_2mW1Eak-zDJnESg
