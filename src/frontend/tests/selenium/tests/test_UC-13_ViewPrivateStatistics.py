@@ -1,8 +1,4 @@
-"""UC-13  View private statistics.
-
-An administrator consults detailed analytics about reports.
-Users without administrator privileges cannot access this section.
-"""
+"""UC-13  View private statistics"""
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 

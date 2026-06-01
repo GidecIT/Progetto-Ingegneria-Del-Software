@@ -1,7 +1,4 @@
-"""UC-04  Browse reports on map.
-
-A visitor explores published reports on the OpenStreetMap-based map.
-"""
+"""UC-04  Browse reports on map"""
 from selenium.webdriver.common.by import By
 
 from conftest import PageHelper, wait_for_report_rows

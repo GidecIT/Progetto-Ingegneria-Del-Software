@@ -1,8 +1,4 @@
-"""UC-03  Submit report.
-
-An authenticated citizen submits a geo-located urban issue report.
-The system creates the report with status Pending Approval.
-"""
+"""UC-03  Submit report"""
 import os
 
 from conftest import CITIZEN_EMAIL, CITIZEN_PASSWORD, PageHelper, unique_suffix, write_temp_image

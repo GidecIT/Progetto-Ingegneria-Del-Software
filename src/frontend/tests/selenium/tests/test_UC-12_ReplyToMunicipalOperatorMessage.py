@@ -1,8 +1,4 @@
-"""UC-12  Reply to Municipal Operator message.
-
-An authenticated citizen replies to a Municipal Operator message
-about one of their reports.
-"""
+"""UC-12  Reply to Municipal Operator message"""
 import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -46,7 +42,6 @@ class TestReplyToOperatorMessage:
         page.fill("report-message-body", msg_text)
         page.click("report-message-submit")
 
-        # Success: React clears the textarea after a successful send
         try:
             page.wait.until(
                 lambda d: d.find_element("id", "report-message-body")

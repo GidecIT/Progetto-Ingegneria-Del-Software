@@ -1,8 +1,4 @@
-"""UC-11  Send message to Citizen.
-
-A Municipal Operator sends a message to the citizen who submitted a report.
-The messaging area is accessible from the report detail page.
-"""
+"""UC-11  Send message to Citizen"""
 import pytest
 from selenium.webdriver.common.by import By
 

@@ -1,8 +1,4 @@
-"""UC-06  View report details.
-
-A visitor opens a report detail page and sees title, description,
-category, map location, photos, current status, and available updates.
-"""
+"""UC-06  View report details"""
 from conftest import PageHelper, get_first_public_report_id
 
 

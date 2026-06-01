@@ -1,9 +1,4 @@
-"""UC-10  Manage report.
-
-A Municipal Operator reviews pending reports, assigns them to their office,
-and the system updates the report status accordingly.
-Citizens cannot access the operator page.
-"""
+"""UC-10  Manage report"""
 import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC

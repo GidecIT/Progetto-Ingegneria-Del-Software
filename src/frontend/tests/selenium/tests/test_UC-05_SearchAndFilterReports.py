@@ -1,9 +1,4 @@
-"""UC-05  Search and filter reports.
-
-A visitor filters and sorts the public report table by category, status,
-date range, and sort order. The API is also queried directly to verify
-that the sort order is correctly applied to the returned data.
-"""
+"""UC-05  Search and filter reports"""
 import pytest
 import requests
 from datetime import datetime
