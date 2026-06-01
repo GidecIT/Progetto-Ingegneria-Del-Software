@@ -44,7 +44,7 @@ class TestRegisterAccount:
         )
 
     def test_duplicate_email_shows_error(self, page: PageHelper):
-        """UC-01 ext 4a: Registering with an already-used email shows an error
+        """UC-01 ext 4b: Registering with an already-used email shows an error
         and keeps the user on the registration page."""
         page.go("/register")
         page.fill("register-username", f"dup_{unique_suffix()}")
