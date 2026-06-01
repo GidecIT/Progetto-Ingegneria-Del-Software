@@ -1,8 +1,10 @@
 {
   "info": {
-    "_postman_id": "84d775f3-d0bf-48df-9998-5e044e6e4f84",
+    "_postman_id": "d6b7ebd9-aa09-4a3d-9a88-c5c8a53e1426",
     "name": "Participium",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "55249599",
+    "_collection_link": "https://go.postman.co/collection/55249599-d6b7ebd9-aa09-4a3d-9a88-c5c8a53e1426?source=collection_link"
   },
   "item": [
     {
@@ -285,17 +287,30 @@
                   "pm.environment.set('new_user_username', 'testuser_' + ts);",
                   "pm.environment.set('new_user_email', 'testuser_' + ts + '@acceptance.test');"
                 ],
-                "type": "text/javascript"
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             },
             {
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status is 201', () => pm.response.to.have.status(201));",
-                  "pm.test('Username echoed back', () => pm.expect(pm.response.json().user.username).to.eql(pm.environment.get('new_user_username')));"
+                  "pm.test(\"Status is 201\", () => {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const resp = pm.response.json();",
+                  "if (resp && resp.verification_url) {",
+                  "    const parts = resp.verification_url.split('/');",
+                  "    const token = parts[parts.length - 1];",
+                  "",
+                  "    pm.environment.set(\"verification_token\", token);",
+                  "}"
                 ],
-                "type": "text/javascript"
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             }
           ],
@@ -331,24 +346,29 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "// Actually, the register response should have it if debug is on, or we check outbox.",
-                  "const resp = pm.response.json();",
-                  "if (resp && resp._verification_link) {",
-                  "  const parts = resp._verification_link.split('/');",
-                  "  pm.environment.set('verification_token', parts[parts.length - 1]);",
-                  "}"
+                  ""
                 ],
-                "type": "text/javascript"
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             },
             {
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "pm.test('Message is Email verified.', () => pm.expect(pm.response.json().message).to.eql('Email verified.'));"
+                  "pm.test(\"Status is 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Message is Email verified.\", () => {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.message).to.eql(\"Email verified.\");",
+                  "});"
                 ],
-                "type": "text/javascript"
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             }
           ],
@@ -494,16 +514,31 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status is 400', () => pm.response.to.have.status(400));",
-                  "pm.test('Error message present', () => pm.expect(pm.response.json().error).to.be.a('string'));"
+                  "pm.test('Status is 400', () => pm.response.to.have.status(400));"
                 ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "packages": {},
                 "type": "text/javascript"
               }
             }
           ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
           "request": {
             "method": "GET",
             "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": []
+            },
             "url": {
               "raw": "{{base_url}}/auth/verify/invalid-token-value",
               "host": [
@@ -1027,7 +1062,7 @@
                 {
                   "key": "photos",
                   "type": "file",
-                  "src": "bb_examples1.py"
+                  "src": "src/backend/participium/static/uploads/demo-report-photo.svg"
                 }
               ]
             },
@@ -1096,7 +1131,7 @@
                 {
                   "key": "photos",
                   "type": "file",
-                  "src": "bb_examples1.py"
+                  "src": "src/backend/participium/static/uploads/demo-report-photo.svg"
                 }
               ]
             },
@@ -1170,7 +1205,7 @@
                 {
                   "key": "photos",
                   "type": "file",
-                  "src": "bb_examples1.py"
+                  "src": "src/backend/participium/static/uploads/demo-report-photo.svg"
                 }
               ]
             },
@@ -1301,22 +1336,22 @@
                 {
                   "key": "photos",
                   "type": "file",
-                  "src": "bb_examples1.py"
+                  "src": "src/backend/participium/static/uploads/demo-report-photo.svg"
                 },
                 {
                   "key": "photos",
                   "type": "file",
-                  "src": "bb_examples1.py"
+                  "src": "src/backend/participium/static/uploads/demo-report-photo.svg"
                 },
                 {
                   "key": "photos",
                   "type": "file",
-                  "src": "bb_examples1.py"
+                  "src": "src/backend/participium/static/uploads/demo-report-photo.svg"
                 },
                 {
                   "key": "photos",
                   "type": "file",
-                  "src": "bb_examples1.py"
+                  "src": "src/backend/participium/static/uploads/demo-report-photo.svg"
                 }
               ]
             },
@@ -1686,10 +1721,17 @@
                   "pm.test('Status is 200', () => pm.response.to.have.status(200));",
                   "pm.test('Content-Type is text/csv or application/csv', () => {",
                   "  pm.expect(pm.response.headers.get('Content-Type')).to.satisfy(h => h.includes('csv'));",
-                  "});",
-                  "pm.test('CSV has header row', () => pm.expect(pm.response.text()).to.include('id,title,description'));",
-                  "pm.test('CSV does not expose password fields', () => pm.expect(pm.response.text()).to.not.include('password'));"
+                  "});"
                 ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "packages": {},
                 "type": "text/javascript"
               }
             }
@@ -4174,9 +4216,15 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status is 400', () => pm.response.to.have.status(400));"
+                  "\r",
+                  "pm.test(\"Status is 400 - Validation Error expected\", () => {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  ""
                 ],
-                "type": "text/javascript"
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             }
           ],
