@@ -14,7 +14,7 @@
 **Criterio:** identifier
 
 **Predicati:**
-- identifier è None--> non valido
+- identifier è None --> non valido
 - identifier corrisponde a un username esistente --> valido
 - identifier corrisponde a un'email esistente --> valido
 - identifier non corrisponde ad un username o email esistente --> non valido
@@ -22,7 +22,7 @@
 **Criterio:** password
 
 **Predicati:**
-- password è None--> non valido
+- password è None --> non valido
 - password corretta --> valido
 - password non corretta --> non valido
 
@@ -240,8 +240,6 @@ Combinazioni possibili secondo i predicati:
 - **EC6 × EC7** --> transizione ammessa per Resolved
 - **EC6 × EC8** --> transizione non ammessa per Resolved
 
-### Combinations of Equivalence Classes 
-
 | TC-ID | current_status | next_status | Expected | Fixture |
 | :---- | :------------- | :---------- | :------- | :------ |
 |TR1 | Pending  Approval | Pending  Approval | True | - |
@@ -285,7 +283,7 @@ Il sistema deve permettere la creazione di un report da parte di un utente auten
 **Criterio:** category_id
 
 **Predicati:**
-- category_id è None--> non valido
+- category_id è None --> non valido
 - category_id è malformato --> non valido
 - category_id fa riferimento a una categoria sconosciuta --> non valido 
 - category_id fa riferimento a una categoria inattiva --> non valido
@@ -375,7 +373,7 @@ Test realizzati considerando le 9 categorie descritte nella specifica iniziale, 
 | CRB04 | 10          | Immediately above | ValidationError |
 
 
-**Boundary around "title e description":**
+**Boundary around "title" e "description":**
 
 | TC    | title | description | Boundary covered  | Expected |
 | :---- | :------------ | :----------------- |:------------------|:---------|
@@ -408,7 +406,7 @@ Prototype: `update_status(report_id: int, operator: User, next_status_value: str
 
 
 **Requisiti:** <br>
-Il sistema deve potere permettere l'aggiornamento di stato di un report.<br>
+Il sistema deve permettere l'aggiornamento di stato di un report.<br>
 
 - Se l'operatore non ha i permessi adatti alla modifica del report (User.Role != Role.OPERATOR AND User.Role != Role.ADMIN), il sistema restituisce un errore di autorizzazione (AuthorizationError).
 - Se l'operatore è None, il sistema restituisce un errore di autorizzazione (AuthorizationError).
@@ -448,7 +446,7 @@ Il sistema deve potere permettere l'aggiornamento di stato di un report.<br>
 - note è None o "" --> valido
 - note non è None o non è "" --> valido
 
-**NOTA:** Una nota vuota o `None` non è sempre valida, se lo stato diventa `REJECTED`, la nota è obbligatoria. Di conseguenza, in questo caso specifico, una nota vuota diventa **non valida** e deve lanciare un `ValidationError`.
+**NOTA:** Una nota vuota o `None` non è sempre valida: se lo stato diventa `REJECTED`, la nota è obbligatoria. Di conseguenza, in questo caso specifico, una nota vuota diventa **non valida** e deve lanciare un `ValidationError`.
 
 **Criterio**: operator.category_id
 
@@ -528,7 +526,7 @@ Prototype: `list_public_reports(category_id: int | None = None, status: ReportSt
 
 **Requisiti:**
 
-Il sistema deve restituire una lista di segnalazioni pubbliche basata su filtri opzionali<br>
+Il sistema deve restituire una lista di segnalazioni pubbliche basata su filtri opzionali.<br>
 
 - Se nessun filtro è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche
 - Se category_id è fornito, il sistema deve restituire una lista con tutte le segnalazioni pubbliche con categoria uguale a category_id
@@ -891,14 +889,14 @@ Il sistema deve permettere l'aggiornamento dei campi modificabili del profilo ut
 **Criterio**: first_name
 
 **Predicati**:
-- firstname è None --> valido
-- firstname è fornito --> valido
+- first_name è None --> valido
+- first_name è fornito --> valido
 
 **Criterio**: last_name
 
 **Predicati**:
-- lastname è None --> valido
-- lastname è fornito --> valido
+- last_name è None --> valido
+- last_name è fornito --> valido
 
 **Criterio**: email_notifications_enabled
 
