@@ -1,8 +1,4 @@
-"""UC-09  View public statistics.
-
-A visitor consults aggregated statistics about published reports,
-including reports by category and time trends by day, week, or month.
-"""
+"""UC-09  View public statistics"""
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select

@@ -1,8 +1,4 @@
-"""UC-15  Manage citizen profile.
-
-An authenticated citizen updates profile preferences including username,
-first/last name, email notification preference, and optional profile picture.
-"""
+"""UC-15  Manage citizen profile"""
 from conftest import CITIZEN_EMAIL, CITIZEN_PASSWORD, PageHelper, unique_suffix
 
 

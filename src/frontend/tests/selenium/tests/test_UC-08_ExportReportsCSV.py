@@ -1,8 +1,4 @@
-"""UC-08  Export reports (CSV).
-
-A visitor downloads the currently visible report list as a CSV file.
-The system generates a CSV with only public fields.
-"""
+"""UC-08  Export reports (CSV)"""
 import requests
 
 from conftest import PageHelper

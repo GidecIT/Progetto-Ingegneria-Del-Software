@@ -1,9 +1,4 @@
-"""UC-02  Login.
-
-A registered citizen authenticates with valid credentials and is redirected
-to the appropriate area based on their role.
-Invalid credentials do not create a session.
-"""
+"""UC-02  Login"""
 from conftest import (
     ADMIN_EMAIL, ADMIN_PASSWORD,
     CITIZEN_EMAIL, CITIZEN_PASSWORD,
@@ -13,7 +8,6 @@ from conftest import (
 
 
 class TestLogin:
-    """UC-02 – Registered citizen logs in."""
 
     def test_login_page_renders(self, page: PageHelper):
         """UC-02: The /login route shows the login form and demo-accounts hint."""

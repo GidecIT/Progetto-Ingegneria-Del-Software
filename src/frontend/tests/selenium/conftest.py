@@ -13,9 +13,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select, WebDriverWait
 
-# ---------------------------------------------------------------------------
 # Configuration
-# ---------------------------------------------------------------------------
+
 BASE_URL = "http://localhost:5173"
 WAIT_TIMEOUT = 15  # seconds
 
@@ -31,9 +30,9 @@ ADMIN_PASSWORD = "Admin123!"
 OPERATOR_CATEGORY = "Roads and Urban Furniture"
 
 
-# ---------------------------------------------------------------------------
+
 # Driver fixture
-# ---------------------------------------------------------------------------
+
 @pytest.fixture
 def driver():
     """Headless Chrome driver, one instance per test."""
@@ -49,9 +48,9 @@ def driver():
     drv.quit()
 
 
-# ---------------------------------------------------------------------------
+
 # PageHelper
-# ---------------------------------------------------------------------------
+
 class PageHelper:
     """Thin wrapper that keeps the driver and WebDriverWait together."""
 
@@ -154,10 +153,7 @@ class PageHelper:
 def page(driver) -> PageHelper:
     return PageHelper(driver)
 
-
-# ---------------------------------------------------------------------------
 # Shared data helpers
-# ---------------------------------------------------------------------------
 
 def unique_suffix() -> str:
     return uuid.uuid4().hex[:8]

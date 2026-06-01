@@ -1,8 +1,4 @@
-"""UC-07  Follow report.
-
-An authenticated citizen follows a report submitted by another citizen
-in order to receive status update notifications.
-"""
+"""UC-07  Follow report"""
 import pytest
 from selenium.webdriver.common.by import By
 

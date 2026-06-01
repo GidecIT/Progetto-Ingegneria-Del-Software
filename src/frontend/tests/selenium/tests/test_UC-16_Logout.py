@@ -1,9 +1,4 @@
-"""UC-16  Logout.
-
-A Registered Citizen wants to end the current session before leaving the portal
-or handing the device to someone else.
-The authenticated session is terminated and restricted functions require a new login.
-"""
+"""UC-16  Logout"""
 from conftest import (
     CITIZEN_EMAIL, 
     CITIZEN_PASSWORD, 
@@ -20,15 +15,12 @@ class TestLogout:
         page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
         page.wait_for_url("/dashboard")
 
-        # Perform logout manually via UI click
         page.click("logout-button")
 
-        # Check that user is presented with the login nav option
         assert page.by_id_visible("nav-login").is_displayed(), (
             "Login link should be visible after logout"
         )
 
-        # Check that logout button is gone
         assert page.absent("logout-button"), (
             "Logout button should not be visible after logout"
         )
@@ -38,10 +30,8 @@ class TestLogout:
         (like /reports/new or /dashboard) redirects to /login."""
         page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
 
-        # Perform logout using the helper method
         page.logout()
 
-        # Attempt to access a restricted creation page
         page.go("/reports/new")
         page.wait_for_url("/login")
         assert "/login" in page.driver.current_url, (
@@ -54,11 +44,9 @@ class TestLogout:
         page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
         page.wait_for_url("/dashboard")
 
-        # Simulate expired session by clearing browser cookies and storage
         page.driver.delete_all_cookies()
         page.driver.execute_script("window.localStorage.clear(); window.sessionStorage.clear();")
 
-        # Refresh to trigger authentication check
         page.driver.refresh()
         page.wait_for_url("/login")
 

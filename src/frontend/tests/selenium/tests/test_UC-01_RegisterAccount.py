@@ -1,13 +1,8 @@
-"""UC-01  Register account.
-
-A visitor creates a citizen account, receives a verification link,
-and the system rejects duplicate emails.
-"""
+"""UC-01  Register account"""
 from conftest import PageHelper, unique_suffix
 
 
 class TestRegisterAccount:
-    """UC-01 – Visitor registers a new citizen account."""
 
     def test_register_page_renders(self, page: PageHelper):
         """UC-01: The /register route renders the registration form."""
@@ -55,7 +50,7 @@ class TestRegisterAccount:
         page.fill("register-username", f"dup_{unique_suffix()}")
         page.fill("register-first-name", "Dup")
         page.fill("register-last-name", "User")
-        page.fill("register-email", "citizen@example.com")  # seeded account
+        page.fill("register-email", "citizen@example.com") 
         page.fill("register-password", "TestPass123!")
         page.click("register-submit")
 
