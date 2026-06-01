@@ -25,6 +25,15 @@ def _get_first_non_admin_user_id(page: PageHelper) -> str:
     """Return the numeric ID of the first non-admin user in the admin table."""
     page.login(ADMIN_EMAIL, ADMIN_PASSWORD)
     page.wait_for_url("/admin")
+    # Wait for the users table to be populated from the API before iterating,
+    # otherwise the rows may not be present yet and the lookup wrongly concludes
+    # there is no non-admin user.
+    page.wait.until(
+        EC.presence_of_element_located(
+            (By.XPATH, "//*[starts-with(@id,'admin-user-row-')]")
+        ),
+        message="No admin-user-row-* found; admin users may not have loaded",
+    )
     tbody = page.by_id("admin-users-table-body")
     for row in tbody.find_elements(By.TAG_NAME, "tr"):
         row_id = row.get_attribute("id")
