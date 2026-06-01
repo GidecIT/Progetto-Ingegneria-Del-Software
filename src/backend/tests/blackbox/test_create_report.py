@@ -24,8 +24,7 @@ def mock_dependencies():
     storage_service = Mock()
     session = Mock()
 
-    # Configura il comportamento di category_repository.get_by_id
-    # Categorie 1-9 esistenti. 5 è inattiva, le altre attive.
+
     def mock_get_category(cat_id):
         if cat_id is None or not isinstance(cat_id, int):
             return None
@@ -38,7 +37,6 @@ def mock_dependencies():
 
     category_repo.get_by_id.side_effect = mock_get_category
     
-    # Configura lo storage service per simulare il salvataggio delle foto
     storage_service.save.return_value = "uploads/foto_buca_saved.jpg"
 
     return {
@@ -59,8 +57,7 @@ def report_service(mock_dependencies) -> ReportService:
         storage_service=mock_dependencies["storage_service"]
     )
     
-    # Mockiamo l'ultimo metodo interno del servizio (get_report) chiamato prima del return
-    # in modo da fargli restituire un oggetto Report finale finto senza crashare
+
     def mock_get_report(report_id):
         return Report(id=report_id, title="Mocked", description="Mocked", latitude=0.0, longitude=0.0)
         
@@ -71,37 +68,33 @@ def report_service(mock_dependencies) -> ReportService:
 @pytest.mark.parametrize(
     "reporter, category_id, title, description, latitude, longitude, photos, is_anonymous, expected_exception",
     [
-        (VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, None),  # CR1
-        (VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], True, None),   # CR2
-        (VALID_REPORTER, 5, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], True, ValidationError),   # CR3 
-        (VALID_REPORTER, None, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], True, ValidationError),   # CR4 
-        (VALID_REPORTER, "", "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, ValidationError),   # CR5 
-        (VALID_REPORTER, "df", "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], True, ValidationError),   # CR6 
-        (VALID_REPORTER, 4, "", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, ValidationError),   # CR7 
-        (VALID_REPORTER, 4, "Buca profonda", None , 45.0710, 7.6856, [VALID_PHOTO], False, ValidationError),   # CR8 
-        (VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 45.0710 , None, [VALID_PHOTO], True , ValidationError),   # CR9 
-        (VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", "Quarantacinque" , 7.6856, [VALID_PHOTO], False , ValidationError),   # CR10
-        (VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 45.0710 , 7.6856, [], False , ValidationError),   # CR11 
+        (VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, None),
+        (VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], True, None),
+        (VALID_REPORTER, 5, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], True, ValidationError),
+        (VALID_REPORTER, None, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], True, ValidationError),
+        (VALID_REPORTER, "", "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, ValidationError),
+        (VALID_REPORTER, "df", "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], True, ValidationError),
+        (VALID_REPORTER, 4, "", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, ValidationError),
+        (VALID_REPORTER, 4, "Buca profonda", None , 45.0710, 7.6856, [VALID_PHOTO], False, ValidationError),
+        (VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 45.0710 , None, [VALID_PHOTO], True , ValidationError),
+        (VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", "Quarantacinque" , 7.6856, [VALID_PHOTO], False , ValidationError),
+        (VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 45.0710 , 7.6856, [], False , ValidationError),
 
-        # Boundary cases per category_id
-        (VALID_REPORTER, 1, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, None),  # CRB01 
-        (VALID_REPORTER, 9, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, None),  # CRB02 
-        (VALID_REPORTER, 0, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, ValidationError),  # CRB03 
-        (VALID_REPORTER, 10, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, ValidationError),  # CRB04 
+        (VALID_REPORTER, 1, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, None),
+        (VALID_REPORTER, 9, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, None),
+        (VALID_REPORTER, 0, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, ValidationError),
+        (VALID_REPORTER, 10, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO], False, ValidationError),
 
-        # Boundary cases per title e description
-        (VALID_REPORTER, 4, "a", "a", 45.0710, 7.6856, [VALID_PHOTO], False, None),  # CRB05 
-        (VALID_REPORTER, 4, "", "a", 45.0710, 7.6856, [VALID_PHOTO], False, ValidationError),  # CRB06
-        (VALID_REPORTER, 4, "a", "", 45.0710, 7.6856, [VALID_PHOTO], False, ValidationError),  # CRB07
+        (VALID_REPORTER, 4, "a", "a", 45.0710, 7.6856, [VALID_PHOTO], False, None),
+        (VALID_REPORTER, 4, "", "a", 45.0710, 7.6856, [VALID_PHOTO], False, ValidationError),
+        (VALID_REPORTER, 4, "a", "", 45.0710, 7.6856, [VALID_PHOTO], False, ValidationError),
 
-        # Boundary cases per latitude/longitude
-        (VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 0.0, 0.0, [VALID_PHOTO], False, None),  # CRB08
-        (VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", "", 0.0, [VALID_PHOTO], False, ValidationError),  # CRB09
-        (VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, "", [VALID_PHOTO], False, ValidationError),  # CRB10
+        (VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 0.0, 0.0, [VALID_PHOTO], False, None),
+        (VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", "", 0.0, [VALID_PHOTO], False, ValidationError),
+        (VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, "", [VALID_PHOTO], False, ValidationError),
 
-        # Boundary cases per photos
-        (VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO, VALID_PHOTO2, VALID_PHOTO3], False, None),  # CRB11 
-        (VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO, VALID_PHOTO2, VALID_PHOTO3, VALID_PHOTO4], False, ValidationError),  # CRB12 
+        (VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO, VALID_PHOTO2, VALID_PHOTO3], False, None),
+        (VALID_REPORTER, 4, "Buca profonda", "Buca profonda in piazza Castello", 45.0710, 7.6856, [VALID_PHOTO, VALID_PHOTO2, VALID_PHOTO3, VALID_PHOTO4], False, ValidationError),
     ],
 )
 def test_create_report(report_service, mock_dependencies, reporter, category_id, title, description, latitude, longitude, photos, is_anonymous, expected_exception):
@@ -109,7 +102,6 @@ def test_create_report(report_service, mock_dependencies, reporter, category_id,
     
     if expected_exception:
         with pytest.raises(expected_exception):
-            # Questa chiamata ora attraversa TUTTA la logica reale del tuo file sorgente
             report_service.create_report(
                 reporter=reporter,
                 category_id=category_id,
@@ -132,7 +124,7 @@ def test_create_report(report_service, mock_dependencies, reporter, category_id,
             is_anonymous=is_anonymous
         )
         
-        # Verifichiamo che l'interazione con l'infrastruttura sottostante sia avvenuta correttamente
+
         assert mock_dependencies["report_repository"].add.called
         assert mock_dependencies["session"].flush.called
         assert mock_dependencies["session"].commit.called

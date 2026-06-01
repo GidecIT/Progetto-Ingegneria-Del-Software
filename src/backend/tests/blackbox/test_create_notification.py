@@ -28,7 +28,7 @@ def test_cn01_create_with_user_and_report(notification_service_bundle):
     repo = notification_service_bundle["repo"]
     email_gw = notification_service_bundle["email"]
 
-    user = User(id=1, email="user1@example.com", email_notifications_enabled=True) #notifica mail abilitata
+    user = User(id=1, email="user1@example.com", email_notifications_enabled=True)
     report = Report(id=101)
 
     result = svc.create_notification(user, NotificationType.MESSAGE, "Aggiornamento", "Messaggio", report=report)
