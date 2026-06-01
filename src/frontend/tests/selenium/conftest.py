@@ -127,27 +127,40 @@ class PageHelper:
         for attempt in range(retries):
             try:
                 self.go("/login")
+                time.sleep(0.2)
                 ident = self.by_id_visible("login-identifier")
                 ident.clear()
                 ident.send_keys(email)
                 pwd = self.by_id_visible("login-password")
                 pwd.clear()
                 pwd.send_keys(password)
+                
+                time.sleep(0.2)
                 self.by_id_clickable("login-submit").click()
+                
                 self.wait.until(
                     EC.presence_of_element_located((By.ID, "logout-button")),
                     message=f"Login failed for {email}",
                 )
                 return  # success
-            except Exception:
+            except Exception as e:
                 if attempt < retries - 1:
                     time.sleep(2)
                 else:
+                    print("\n--- BROWSER LOGS ---")
+                    for log in self.driver.get_log("browser"):
+                        print(log)
+                    print("--------------------")
                     raise
 
     def logout(self) -> None:
-        self.by_id_clickable("logout-button").click()
-        self.by_id("nav-login")
+        try:
+            self.wait.until(EC.presence_of_element_located((By.ID, "logout-button")))
+            self.driver.execute_script("document.getElementById('logout-button').click();")
+            self.by_id("nav-login")
+        except Exception as e:
+            print(f"\n--- LOGOUT FAILED: {e} ---")
+            raise
 
 
 @pytest.fixture
@@ -242,28 +255,22 @@ def _assign_report_as_operator(page: PageHelper, report_id: int, skip_message: s
         pytest.skip(skip_message)
 
     for _ in range(6):
-        # Already assigned (e.g. a previous attempt's click did take effect)?
-        try:
-            WebDriverWait(page.driver, 2).until(
-                EC.presence_of_element_located((By.ID, assigned_row_id))
-            )
+        # Already assigned?
+        if page.present(assigned_row_id):
             page.logout()
             return
-        except Exception:
-            pass
-        
+
         try:
-            WebDriverWait(page.driver, 5).until(
+            btn = WebDriverWait(page.driver, 5).until(
                 EC.presence_of_element_located((By.ID, assign_btn_id))
             )
             page.driver.execute_script(
-                "var e=document.getElementById(arguments[0]);"
-                "if(e){e.scrollIntoView({block:'center'});e.click();}",
-                assign_btn_id,
+                "arguments[0].scrollIntoView({block:'center'});arguments[0].click();",
+                btn,
             )
         except Exception:
             pass
-    
+
         try:
             WebDriverWait(page.driver, 5).until(
                 EC.presence_of_element_located((By.ID, assigned_row_id))
