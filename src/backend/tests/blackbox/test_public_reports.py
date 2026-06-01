@@ -10,7 +10,7 @@ from participium.services.report_service import ReportService
 DATE_FEB = datetime(2024, 2, 1)
 DATE_MAR = datetime(2024, 3, 1)
 
-DATE_REPORT_2 = datetime(2024, 2, 15) #per verificare i boundary su date
+DATE_REPORT_2 = datetime(2024, 2, 15)
 
 
 @pytest.fixture
@@ -48,23 +48,23 @@ def report_service(mock_report_repository) -> ReportService:
 @pytest.mark.parametrize(
     "category_id,status,date_from,date_to,sort,expected_ids",
     [
-        (None, None, None, None, "desc", [3, 2, 1, 4]), # PR01
-        (1, None, None, None, "asc", [1, 2]),            # PR02
-        (None, ReportStatus.ASSIGNED, None, None, "desc", [2]), # PR03
-        (None, None, DATE_FEB, None, "desc", [3, 2]),    # PR04
-        (None, None, None, DATE_FEB, "desc", [1, 4]),    # PR05
-        (None, None, DATE_FEB, DATE_MAR, "desc", [2]),   # PR06
-        (1, ReportStatus.SUSPENDED, None, None, "asc", []), # PR07
-        (1, ReportStatus.SUSPENDED, DATE_FEB, DATE_MAR, "asc", []), # PR08
-        (9999, None, None, None, "desc", []),            # PR10 / PRB02
-        (1, None, None, None, "desc", [2, 1]),           # PRB01
-        (-1, None, None, None, "desc", []),              # PRB03
-        (None, None, None, DATE_REPORT_2, "desc", [2, 1, 4]), #PRB04
-        (None, None, None, DATE_REPORT_2 - timedelta(seconds=1), "desc", [1, 4]), #PRB05
-        (None, None, None, DATE_REPORT_2 + timedelta(seconds=1), "desc", [2, 1, 4]), #PRB06
-        (None, None, DATE_REPORT_2, None, "desc", [3, 2]),  #PRB07
-        (None, None, DATE_REPORT_2 - timedelta(seconds=1), None, "desc", [3, 2]),  #PRB08
-        (None, None, DATE_REPORT_2 + timedelta(seconds=1), None, "desc", [3]), #PRB09
+        (None, None, None, None, "desc", [3, 2, 1, 4]),
+        (1, None, None, None, "asc", [1, 2]),
+        (None, ReportStatus.ASSIGNED, None, None, "desc", [2]),
+        (None, None, DATE_FEB, None, "desc", [3, 2]),
+        (None, None, None, DATE_FEB, "desc", [1, 4]),
+        (None, None, DATE_FEB, DATE_MAR, "desc", [2]),
+        (1, ReportStatus.SUSPENDED, None, None, "asc", []),
+        (1, ReportStatus.SUSPENDED, DATE_FEB, DATE_MAR, "asc", []),
+        (9999, None, None, None, "desc", []),
+        (1, None, None, None, "desc", [2, 1]),
+        (-1, None, None, None, "desc", []),
+        (None, None, None, DATE_REPORT_2, "desc", [2, 1, 4]),
+        (None, None, None, DATE_REPORT_2 - timedelta(seconds=1), "desc", [1, 4]),
+        (None, None, None, DATE_REPORT_2 + timedelta(seconds=1), "desc", [2, 1, 4]),
+        (None, None, DATE_REPORT_2, None, "desc", [3, 2]),
+        (None, None, DATE_REPORT_2 - timedelta(seconds=1), None, "desc", [3, 2]),
+        (None, None, DATE_REPORT_2 + timedelta(seconds=1), None, "desc", [3]),
     ],
 )
 def test_list_public_reports(report_service, mock_report_repository, test_reports, category_id, status, date_from, date_to, sort, expected_ids):
@@ -103,8 +103,8 @@ def test_list_public_reports(report_service, mock_report_repository, test_report
     mock_report_repository.list_reports.assert_called_once_with(public_only=True,category_id=category_id,status=status,date_from=date_from,date_to=date_to,sort=sort)
 
 
-def test_list_public_reports_empty_db(report_service, mock_report_repository): # PR09
-    mock_report_repository.list_reports.return_value = [] #per lista vuolta
+def test_list_public_reports_empty_db(report_service, mock_report_repository):
+    mock_report_repository.list_reports.return_value = []
     
     result = report_service.list_public_reports(
         category_id=None,

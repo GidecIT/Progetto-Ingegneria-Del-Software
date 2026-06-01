@@ -46,7 +46,7 @@ def messaging_service() -> MessagingService:
     )
 
 def test_send_message_success(messaging_service: MessagingService) -> None:
-    # MS01
+
     
     message = messaging_service.send_message(REPORT1, AUTHORIZED_USER, VALID_BODY)
     
@@ -57,7 +57,7 @@ def test_send_message_success(messaging_service: MessagingService) -> None:
 
 
 def test_send_message_single_char_body(messaging_service: MessagingService) -> None:
-    # MSB01
+
     
     message = messaging_service.send_message(REPORT1, AUTHORIZED_USER, SINGLE_CHAR_BODY)
     
@@ -66,21 +66,21 @@ def test_send_message_single_char_body(messaging_service: MessagingService) -> N
 
 
 def test_send_message_unauthorized_sender(messaging_service: MessagingService) -> None:
-    # MS02
+
     
     with pytest.raises(AuthorizationError):
         messaging_service.send_message(REPORT1, UNAUTHORIZED_USER, VALID_BODY)
 
 
 def test_send_message_empty_body(messaging_service: MessagingService) -> None:
-    # MS03, MSB02
+
     
     with pytest.raises(ValidationError):
         messaging_service.send_message(REPORT1, AUTHORIZED_USER, EMPTY_BODY)
 
 
 def test_send_message_whitespace_body(messaging_service: MessagingService) -> None:
-    # MS04, MSB03
+
     
     with pytest.raises(ValidationError):
         messaging_service.send_message(REPORT1, AUTHORIZED_USER, WHITESPACE_BODY)
@@ -91,12 +91,12 @@ def test_send_message_whitespace_body(messaging_service: MessagingService) -> No
     raises=AttributeError
 )
 def test_send_message_none_body(messaging_service: MessagingService) -> None:
-    # MS05
+
     with pytest.raises(ValidationError):
         messaging_service.send_message(REPORT1, AUTHORIZED_USER, None) # type: ignore
         
 def test_send_message_recipient_not_resolvable(messaging_service: MessagingService) -> None:
-    # MS06
+
     
     with pytest.raises(ValidationError):
         messaging_service.send_message(REPORT_NO_RECIPIENT, AUTHORIZED_USER, VALID_BODY)
