@@ -13,8 +13,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select, WebDriverWait
 
+# ---------------------------------------------------------------------------
 # Configuration
-
+# ---------------------------------------------------------------------------
 BASE_URL = "http://localhost:5173"
 WAIT_TIMEOUT = 15  # seconds
 
@@ -30,9 +31,9 @@ ADMIN_PASSWORD = "Admin123!"
 OPERATOR_CATEGORY = "Roads and Urban Furniture"
 
 
-
+# ---------------------------------------------------------------------------
 # Driver fixture
-
+# ---------------------------------------------------------------------------
 @pytest.fixture
 def driver():
     """Headless Chrome driver, one instance per test."""
@@ -48,9 +49,9 @@ def driver():
     drv.quit()
 
 
-
+# ---------------------------------------------------------------------------
 # PageHelper
-
+# ---------------------------------------------------------------------------
 class PageHelper:
     """Thin wrapper that keeps the driver and WebDriverWait together."""
 
@@ -103,7 +104,12 @@ class PageHelper:
         el.send_keys(value)
 
     def click(self, element_id: str) -> None:
-        self.by_id_clickable(element_id).click()
+        self.by_id_clickable(element_id)
+        self.driver.execute_script(
+            "var e=document.getElementById(arguments[0]);"
+            "if(e){e.scrollIntoView({block:'center'});e.click();}",
+            element_id,
+        )
 
     def select_by_value(self, element_id: str, value: str) -> None:
         # Select is already imported at module level
@@ -126,47 +132,55 @@ class PageHelper:
         for attempt in range(retries):
             try:
                 self.go("/login")
-                time.sleep(0.2)
                 ident = self.by_id_visible("login-identifier")
                 ident.clear()
                 ident.send_keys(email)
                 pwd = self.by_id_visible("login-password")
                 pwd.clear()
                 pwd.send_keys(password)
-                
-                time.sleep(0.2)
                 self.by_id_clickable("login-submit").click()
-                
                 self.wait.until(
                     EC.presence_of_element_located((By.ID, "logout-button")),
                     message=f"Login failed for {email}",
                 )
                 return  # success
-            except Exception as e:
+            except Exception:
                 if attempt < retries - 1:
                     time.sleep(2)
                 else:
-                    print("\n--- BROWSER LOGS ---")
-                    for log in self.driver.get_log("browser"):
-                        print(log)
-                    print("--------------------")
                     raise
 
     def logout(self) -> None:
-        try:
-            self.wait.until(EC.presence_of_element_located((By.ID, "logout-button")))
-            self.driver.execute_script("document.getElementById('logout-button').click();")
-            self.by_id("nav-login")
-        except Exception as e:
-            print(f"\n--- LOGOUT FAILED: {e} ---")
-            raise
+        for _ in range(3):
+            try:
+                WebDriverWait(self.driver, 2).until(
+                    EC.presence_of_element_located((By.ID, "nav-login"))
+                )
+                return
+            except Exception:
+                pass
+            self.driver.execute_script(
+                "var e=document.getElementById('logout-button');"
+                "if(e){e.scrollIntoView({block:'center'});e.click();}"
+            )
+            try:
+                WebDriverWait(self.driver, WAIT_TIMEOUT).until(
+                    EC.presence_of_element_located((By.ID, "nav-login"))
+                )
+                return
+            except Exception:
+                continue
+        raise AssertionError("Logout did not surface #nav-login (still logged in?)")
 
 
 @pytest.fixture
 def page(driver) -> PageHelper:
     return PageHelper(driver)
 
+
+# ---------------------------------------------------------------------------
 # Shared data helpers
+# ---------------------------------------------------------------------------
 
 def unique_suffix() -> str:
     return uuid.uuid4().hex[:8]
@@ -250,25 +264,21 @@ def _assign_report_as_operator(page: PageHelper, report_id: int, skip_message: s
     if page.absent(assign_btn_id) and page.absent(assigned_row_id):
         pytest.skip(skip_message)
 
-    for _ in range(6):
-        # Already assigned?
-        if page.present(assigned_row_id):
+    for _ in range(3):
+        if not page.absent(assigned_row_id):
             page.logout()
             return
 
-        try:
-            btn = WebDriverWait(page.driver, 5).until(
-                EC.presence_of_element_located((By.ID, assign_btn_id))
-            )
+        if not page.absent(assign_btn_id):
             page.driver.execute_script(
-                "arguments[0].scrollIntoView({block:'center'});arguments[0].click();",
-                btn,
+                "var e=document.getElementById(arguments[0]);"
+                "if(e){e.scrollIntoView({block:'center'});e.click();}",
+                assign_btn_id,
             )
-        except Exception:
-            pass
 
+        # Wait generously (WAIT_TIMEOUT, as elsewhere) for the assigned row.
         try:
-            WebDriverWait(page.driver, 5).until(
+            WebDriverWait(page.driver, WAIT_TIMEOUT).until(
                 EC.presence_of_element_located((By.ID, assigned_row_id))
             )
             page.logout()
@@ -276,8 +286,14 @@ def _assign_report_as_operator(page: PageHelper, report_id: int, skip_message: s
         except Exception:
             page.go("/operator")
 
+    operator_error = ""
+    try:
+        operator_error = page.driver.find_element(By.ID, "operator-error").text
+    except Exception:
+        pass
     raise AssertionError(
         f"Report {report_id} did not appear in the assigned section after Assign"
+        + (f" (operator-error: {operator_error!r})" if operator_error else "")
     )
 
 
