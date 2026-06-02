@@ -62,36 +62,22 @@ def create_mocks(sender_role, msg_senders_roles, status_changers_roles):
 @pytest.mark.parametrize(
     "sender_role, msg_senders_roles, status_changers_roles, expected_key, expected_idx",
     [
-        # RR-01
         (Role.ADMIN, [], [], "reporter", None),
-        # RR-C2
         (Role.OPERATOR, [], [], "reporter", None),
-        # RR-02 
         (Role.CITIZEN, [Role.ADMIN], [], "msg", 0),
-        # RR-C4
         (Role.CITIZEN, [Role.OPERATOR], [], "msg", 0),
-        # RR-03
         (Role.CITIZEN, [Role.CITIZEN], [Role.ADMIN], "status", 0),
-        # RR-C6
         (Role.CITIZEN, [Role.CITIZEN], [Role.OPERATOR], "status", 0),
-        # RR-04
         (Role.CITIZEN, [], [], None, None),
         (Role.CITIZEN, [Role.CITIZEN], [Role.CITIZEN], None, None),
-        # RR-05
         (Role.CITIZEN, [Role.ADMIN, None], [], "msg", 0),
         (Role.CITIZEN, [Role.CITIZEN], [Role.OPERATOR, None], "status", 0),
 
-        # RR-L1
         (Role.CITIZEN, [], [Role.ADMIN], "status", 0),
-        # RR-L2
         (Role.CITIZEN, [Role.ADMIN], [], "msg", 0),
-        # RR-L3
         (Role.CITIZEN, [Role.ADMIN, Role.CITIZEN], [], "msg", 0),
-        # RR-L4
         (Role.CITIZEN, [Role.CITIZEN], [], None, None),
-        # RR-L5
         (Role.CITIZEN, [Role.CITIZEN], [Role.OPERATOR], "status", 0),
-        # RR-L6
         (Role.CITIZEN, [Role.CITIZEN], [Role.OPERATOR, Role.CITIZEN], "status", 0),
     ],
 )
