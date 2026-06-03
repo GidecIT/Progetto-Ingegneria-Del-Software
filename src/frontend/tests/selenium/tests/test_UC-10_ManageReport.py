@@ -1,41 +1,49 @@
 import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from conftest import CITIZEN_EMAIL, CITIZEN_PASSWORD, OPERATOR_EMAIL, OPERATOR_PASSWORD, PageHelper
+from conftest import CITIZEN_EMAIL, CITIZEN_PASSWORD, OPERATOR_EMAIL, OPERATOR_PASSWORD, PageHelper, create_report_and_get_id
 
 class TestManageReport:
 
     def test_operator_dashboard_accessible_after_login(self, operator_page: PageHelper):
         operator_page.go('/operator')
-        assert operator_page.by_id('operator-page').is_displayed()
+        assert operator_page.by_id_visible('operator-page').is_displayed()
 
     def test_assigned_reports_section_always_present(self, operator_page: PageHelper):
         operator_page.go('/operator')
-        assert operator_page.by_id('assigned-reports-section').is_displayed()
+        assert operator_page.by_id_visible('assigned-reports-section').is_displayed()
 
     def test_pending_reports_table_shown_when_data_available(self, operator_page: PageHelper):
         operator_page.go('/operator')
-        if operator_page.absent('pending-reports-section'):
-            pytest.skip('No pending reports in current data')
-        table = operator_page.by_id('pending-reports-table')
+        # If no pending reports, try to create one to make the test deterministic
+        if operator_page.absent('pending-reports-section', timeout=3):
+            create_report_and_get_id(operator_page)
+            operator_page.go('/operator')
+        
+        table = operator_page.by_id_visible('pending-reports-table')
         rows = table.find_elements(By.TAG_NAME, 'tr')
         assert len(rows) >= 2, 'Expected header + at least one data row'
 
     def test_assign_button_present_for_each_pending_report(self, operator_page: PageHelper):
         operator_page.go('/operator')
-        if operator_page.absent('pending-reports-section'):
-            pytest.skip('No pending reports available')
-        tbody = operator_page.by_id('pending-reports-table-body')
+        if operator_page.absent('pending-reports-section', timeout=3):
+            create_report_and_get_id(operator_page)
+            operator_page.go('/operator')
+            
+        tbody = operator_page.by_id_visible('pending-reports-table-body')
         buttons = tbody.find_elements(By.XPATH, ".//*[contains(@id,'pending-report-assign-')]")
         assert buttons, 'Expected at least one Assign button in pending reports table'
 
     def test_assigning_report_moves_it_to_assigned_list(self, operator_page: PageHelper):
         operator_page.go('/operator')
-        if operator_page.absent('pending-reports-section'):
-            pytest.skip('No pending reports available')
-        tbody = operator_page.by_id('pending-reports-table-body')
+        if operator_page.absent('pending-reports-section', timeout=3):
+            create_report_and_get_id(operator_page)
+            operator_page.go('/operator')
+            
+        tbody = operator_page.by_id_visible('pending-reports-table-body')
         buttons = tbody.find_elements(By.XPATH, ".//*[contains(@id,'pending-report-assign-')]")
-        buttons[0].click()
+        btn_id = buttons[0].get_attribute('id')
+        operator_page.click(btn_id)
         operator_page.wait.until(EC.presence_of_element_located((By.XPATH, "//*[contains(@id,'assigned-report-row-')]")), message='No assigned-report-row-* appeared after clicking Assign')
 
     def test_operator_page_not_accessible_as_citizen(self, page: PageHelper):
