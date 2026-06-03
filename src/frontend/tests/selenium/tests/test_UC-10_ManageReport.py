@@ -27,6 +27,7 @@ class TestManageReport:
         # If no pending reports, try to create one to make the test deterministic
         if operator_page.absent('pending-reports-section', timeout=3):
             create_report_and_get_id(operator_page)
+            operator_page.login(OPERATOR_EMAIL, OPERATOR_PASSWORD)
             operator_page.go('/operator')
         
         table = operator_page.by_id_visible('pending-reports-table')
@@ -37,6 +38,7 @@ class TestManageReport:
         operator_page.go('/operator')
         if operator_page.absent('pending-reports-section', timeout=3):
             create_report_and_get_id(operator_page)
+            operator_page.login(OPERATOR_EMAIL, OPERATOR_PASSWORD)
             operator_page.go('/operator')
             
         tbody = operator_page.by_id_visible('pending-reports-table-body')
@@ -47,6 +49,7 @@ class TestManageReport:
         operator_page.go('/operator')
         if operator_page.absent('pending-reports-section', timeout=3):
             create_report_and_get_id(operator_page)
+            operator_page.login(OPERATOR_EMAIL, OPERATOR_PASSWORD)
             operator_page.go('/operator')
             
         tbody = operator_page.by_id_visible('pending-reports-table-body')
