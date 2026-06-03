@@ -22,11 +22,19 @@ OPERATOR_CATEGORY = "Roads and Urban Furniture"
 @pytest.fixture(scope="session")
 def driver():
     opts = Options()
-    opts.add_argument("--headless=new")
+    #opts.add_argument("--headless=new")
     opts.add_argument("--no-sandbox")
     opts.add_argument("--disable-dev-shm-usage")
     opts.add_argument("--window-size=1400,900")
     opts.add_argument("--log-level=3")
+    # Stop Chrome's "password found in a data breach" / save-password prompts
+    # that block tests (the demo creds appear in public breach lists).
+    opts.add_argument("--disable-features=PasswordLeakDetection,AutofillServerCommunication")
+    opts.add_experimental_option("prefs", {
+        "credentials_enable_service": False,
+        "profile.password_manager_enabled": False,
+        "profile.password_manager_leak_detection": False,
+    })
     drv = webdriver.Chrome(options=opts)
     drv.implicitly_wait(0)
     yield drv

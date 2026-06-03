@@ -42,9 +42,16 @@ class TestManageCategoriesAndConfiguration:
         admin_page.click('admin-new-category-submit')
         msg = admin_page.by_id_visible('admin-success')
         assert msg.text.strip(), 'Expected a non-empty success message'
-        tbody = admin_page.by_id('admin-categories-table-body')
-        name_inputs = tbody.find_elements(By.XPATH, f".//input[@value='{cat_name}']")
-        assert name_inputs, f"Newly created category '{cat_name}' not found in table"
+        # The success message is shown before the table is refetched/re-rendered
+        # (AdminPage sets the message, then awaits loadAdminData), so poll and
+        # re-locate the inputs instead of reading the table once.
+        admin_page.wait.until(
+            lambda d: any(
+                el.get_property('value') == cat_name
+                for el in d.find_elements(By.XPATH, "//*[@id='admin-categories-table-body']//input[@type='text']")
+            ),
+            message=f"Newly created category '{cat_name}' not found in table",
+        )
 
     def test_edit_category_name_saves_successfully(self, admin_page: PageHelper):
         admin_page.go('/admin')
