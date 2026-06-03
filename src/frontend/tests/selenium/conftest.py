@@ -24,10 +24,11 @@ OPERATOR_CATEGORY = "Roads and Urban Furniture"
 # Usiamo il setter nativo e un evento "input", così React si accorge davvero del cambiamento.
 # Funziona uguale su Windows e Mac perché non dipende da scorciatoie da tastiera.
 _CLEAR_REACT_INPUT = (
-    "const setter = Object.getOwnPropertyDescriptor("
-    "window.HTMLInputElement.prototype, 'value').set;"
-    "setter.call(arguments[0], '');"
-    "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));"
+    "const el = arguments[0];"
+    "const proto = el instanceof HTMLTextAreaElement ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype;"
+    "const setter = Object.getOwnPropertyDescriptor(proto, 'value').set;"
+    "setter.call(el, '');"
+    "el.dispatchEvent(new Event('input', { bubbles: true }));"
 )
 
 @pytest.fixture(scope="session")
@@ -76,8 +77,8 @@ class PageHelper:
         except Exception:
             return False
 
-    def absent(self, element_id: str) -> bool:
-        return not self.present(element_id, timeout=1)
+    def absent(self, element_id: str, timeout: int=1) -> bool:
+        return not self.present(element_id, timeout=timeout)
 
     def _set_value(self, el, value: str) -> None:
         # Selenium's clear() is unreliable on React-controlled inputs (the
@@ -113,9 +114,9 @@ class PageHelper:
             try:
                 self.go("/")
                 if self.present("logout-button", timeout=1):
-                    self.go("/users/me")
+                    self.go("/dashboard")
                     try:
-                        profile_email = self.by_id_visible("profile-email").text.strip()
+                        profile_email = self.by_id_visible("profile-email").get_attribute("value")
                         if profile_email.lower() == email.lower():
                             return
                     except Exception:

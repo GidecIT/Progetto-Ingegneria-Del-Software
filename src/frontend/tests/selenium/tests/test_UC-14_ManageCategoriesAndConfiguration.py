@@ -7,10 +7,12 @@ from conftest import ADMIN_EMAIL, ADMIN_PASSWORD, CITIZEN_EMAIL, CITIZEN_PASSWOR
 def _wait_for_category_rows(page: PageHelper) -> None:
     page.wait.until(EC.presence_of_element_located((By.XPATH, "//*[starts-with(@id,'admin-category-row-')]")), message='No admin-category-row-* found; categories may not have loaded')
 
-def _get_first_non_admin_user_id(page: PageHelper) -> str:
-    page.login(ADMIN_EMAIL, ADMIN_PASSWORD)
-    page.wait_for_url('/admin')
+def _wait_for_user_rows(page: PageHelper) -> None:
     page.wait.until(EC.presence_of_element_located((By.XPATH, "//*[starts-with(@id,'admin-user-row-')]")), message='No admin-user-row-* found; admin users may not have loaded')
+
+def _get_first_non_admin_user_id(page: PageHelper) -> str:
+    page.go('/admin')
+    _wait_for_user_rows(page)
     tbody = page.by_id('admin-users-table-body')
     for row in tbody.find_elements(By.TAG_NAME, 'tr'):
         row_id = row.get_attribute('id')
@@ -26,14 +28,14 @@ class TestManageCategoriesAndConfiguration:
 
     def test_categories_table_rendered(self, admin_page: PageHelper):
         admin_page.go('/admin')
-        assert admin_page.by_id('admin-categories-section').is_displayed()
-        assert admin_page.by_id('admin-categories-table').is_displayed()
+        assert admin_page.by_id_visible('admin-categories-section').is_displayed()
+        assert admin_page.by_id_visible('admin-categories-table').is_displayed()
 
     def test_create_category_form_present(self, admin_page: PageHelper):
         admin_page.go('/admin')
-        assert admin_page.by_id('admin-category-form').is_displayed()
-        assert admin_page.by_id('admin-new-category-name').is_displayed()
-        assert admin_page.by_id('admin-new-category-submit').is_displayed()
+        assert admin_page.by_id_visible('admin-category-form').is_displayed()
+        assert admin_page.by_id_visible('admin-new-category-name').is_displayed()
+        assert admin_page.by_id_visible('admin-new-category-submit').is_displayed()
 
     def test_create_new_category_shows_success_and_appears_in_table(self, admin_page: PageHelper):
         cat_name = f'Cat{unique_suffix()}'
@@ -42,9 +44,8 @@ class TestManageCategoriesAndConfiguration:
         admin_page.click('admin-new-category-submit')
         msg = admin_page.by_id_visible('admin-success')
         assert msg.text.strip(), 'Expected a non-empty success message'
-        # The success message is shown before the table is refetched/re-rendered
-        # (AdminPage sets the message, then awaits loadAdminData), so poll and
-        # re-locate the inputs instead of reading the table once.
+        _wait_for_category_rows(admin_page)
+        # Search the whole document to avoid stale tbody reference
         admin_page.wait.until(
             lambda d: any(
                 el.get_property('value') == cat_name
@@ -54,27 +55,38 @@ class TestManageCategoriesAndConfiguration:
         )
 
     def test_edit_category_name_saves_successfully(self, admin_page: PageHelper):
+        # Create a category specifically for editing to avoid breaking other tests
+        cat_name = f'ToEdit{unique_suffix()}'
         admin_page.go('/admin')
+        admin_page.fill('admin-new-category-name', cat_name)
+        admin_page.click('admin-new-category-submit')
+        admin_page.by_id_visible('admin-success')
+        
         _wait_for_category_rows(admin_page)
-        tbody = admin_page.by_id('admin-categories-table-body')
-        rows = tbody.find_elements(By.TAG_NAME, 'tr')
-        assert rows, 'Expected at least one category row'
-        cat_id = rows[0].get_attribute('id').split('-')[-1]
-        name_input = admin_page.by_id(f'admin-category-name-{cat_id}')
-        name_input.clear()
-        name_input.send_keys(f'Edited{unique_suffix()}')
+        # Find the ID of the category we just created
+        inputs = admin_page.driver.find_elements(By.XPATH, f"//*[@id='admin-categories-table-body']//input[@value='{cat_name}']")
+        assert inputs, f"Category '{cat_name}' not found for editing"
+        cat_id = inputs[0].get_attribute('id').split('-')[-1]
+        
+        new_name = f'Edited{unique_suffix()}'
+        admin_page.fill(f'admin-category-name-{cat_id}', new_name)
         admin_page.click(f'admin-category-save-{cat_id}')
         msg = admin_page.by_id_visible('admin-success')
         assert msg.text.strip(), 'Expected a non-empty success message after edit'
 
     def test_toggle_category_active_flag_saves(self, admin_page: PageHelper):
+        # Create a category specifically for toggling
+        cat_name = f'ToToggle{unique_suffix()}'
         admin_page.go('/admin')
+        admin_page.fill('admin-new-category-name', cat_name)
+        admin_page.click('admin-new-category-submit')
+        admin_page.by_id_visible('admin-success')
+
         _wait_for_category_rows(admin_page)
-        tbody = admin_page.by_id('admin-categories-table-body')
-        rows = tbody.find_elements(By.TAG_NAME, 'tr')
-        assert rows, 'Expected at least one category row'
-        cat_id = rows[0].get_attribute('id').split('-')[-1]
-        admin_page.by_id(f'admin-category-active-{cat_id}').click()
+        inputs = admin_page.driver.find_elements(By.XPATH, f"//*[@id='admin-categories-table-body']//input[@value='{cat_name}']")
+        cat_id = inputs[0].get_attribute('id').split('-')[-1]
+        
+        admin_page.click(f'admin-category-active-{cat_id}')
         admin_page.click(f'admin-category-save-{cat_id}')
         msg = admin_page.by_id_visible('admin-success')
         assert msg.text.strip()
@@ -92,15 +104,21 @@ class TestManageCategoriesAndConfiguration:
         admin_page.click('admin-new-user-submit')
         msg = admin_page.by_id_visible('admin-success')
         assert msg.text.strip()
-        tbody = admin_page.by_id('admin-users-table-body')
-        admin_page.wait.until(lambda d: any((el.get_property('value') == email for el in tbody.find_elements(By.XPATH, ".//input[@type='email']"))), message=f'Created user {email} not found in users table')
+        _wait_for_user_rows(admin_page)
+        admin_page.wait.until(
+            lambda d: any(
+                el.get_property('value') == email 
+                for el in d.find_elements(By.XPATH, "//*[@id='admin-users-table-body']//input[@type='email']")
+            ), 
+            message=f'Created user {email} not found in users table'
+        )
 
     def test_admin_edits_user_first_name(self, admin_page: PageHelper):
         uid = _get_first_non_admin_user_id(admin_page)
         admin_page.go('/admin')
-        fn = admin_page.by_id(f'admin-user-first-name-{uid}')
-        fn.clear()
-        fn.send_keys(f'Edited{unique_suffix()}')
+        _wait_for_user_rows(admin_page)
+        new_fn = f'Edited{unique_suffix()}'
+        admin_page.fill(f'admin-user-first-name-{uid}', new_fn)
         admin_page.click(f'admin-user-save-{uid}')
         msg = admin_page.by_id_visible('admin-success')
         assert msg.text.strip(), 'Expected a non-empty success message after edit'
