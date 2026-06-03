@@ -55,10 +55,10 @@ class TestSearchAndFilterReports:
         page.go('/')
         wait_for_report_rows(page)
         tbody = page.by_id('public-report-table-body')
-        first_id_desc = int(tbody.find_elements(By.XPATH, "./tr[starts-with(@id,'public-report-row-')]")[0].get_attribute('id').split('-')[-1])
+        first_id_desc = int(tbody.find_elements(By.XPATH, "./tr[starts-with(attribute::id,'public-report-row-')]")[0].get_attribute('id').split('-')[-1])
         page.select_by_value('public-filter-sort', 'asc')
         page.click('public-filter-submit')
-        page.wait.until(lambda d: int(d.find_elements(By.XPATH, "//tbody[@id='public-report-table-body']/tr[starts-with(@id,'public-report-row-')]")[0].get_attribute('id').split('-')[-1]) != first_id_desc, message="First row did not change after switching to 'Oldest first'")
+        page.wait.until(lambda d: int(d.find_elements(By.XPATH, "//tbody[attribute::id='public-report-table-body']/tr[starts-with(attribute::id,'public-report-row-')]")[0].get_attribute('id').split('-')[-1]) != first_id_desc, message="First row did not change after switching to 'Oldest first'")
 
     def test_granularity_selector_has_three_options(self, page: PageHelper):
         page.go('/')

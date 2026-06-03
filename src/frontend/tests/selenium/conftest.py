@@ -183,7 +183,7 @@ def unique_suffix() -> str:
     return uuid.uuid4().hex[:8]
 
 def wait_for_report_rows(page: PageHelper) -> None:
-    page.wait.until(EC.presence_of_element_located((By.XPATH, "//*[starts-with(@id,'public-report-row-')]")), message="No public-report-row-* found; check seed data and backend")
+    page.wait.until(EC.presence_of_element_located((By.XPATH, "//*[starts-with(attribute::id,'public-report-row-')]")), message="No public-report-row-* found; check seed data and backend")
 
 def get_first_public_report_id(page: PageHelper) -> int:
     page.go("/")
@@ -285,7 +285,7 @@ def create_public_report_as_new_citizen(page: PageHelper) -> int:
     page.go("/")
     wait_for_report_rows(page)
     tbody = page.by_id("public-report-table-body")
-    visible_ids = [int(r.get_attribute("id").split("-")[-1]) for r in tbody.find_elements(By.XPATH, "./tr[starts-with(@id,'public-report-row-')]")]
+    visible_ids = [int(r.get_attribute("id").split("-")[-1]) for r in tbody.find_elements(By.XPATH, "./tr[starts-with(attribute::id,'public-report-row-')]")]
     if report_id not in visible_ids:
         pytest.skip(f"Report {report_id} is not publicly visible after assignment. ")
     return report_id

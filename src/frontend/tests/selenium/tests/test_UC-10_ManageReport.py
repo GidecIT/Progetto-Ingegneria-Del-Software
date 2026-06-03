@@ -31,7 +31,7 @@ class TestManageReport:
             operator_page.go('/operator')
             
         tbody = operator_page.by_id_visible('pending-reports-table-body')
-        buttons = tbody.find_elements(By.XPATH, ".//*[contains(@id,'pending-report-assign-')]")
+        buttons = tbody.find_elements(By.XPATH, ".//*[contains(attribute::id,'pending-report-assign-')]")
         assert buttons, 'Expected at least one Assign button in pending reports table'
 
     def test_assigning_report_moves_it_to_assigned_list(self, operator_page: PageHelper):
@@ -41,10 +41,10 @@ class TestManageReport:
             operator_page.go('/operator')
             
         tbody = operator_page.by_id_visible('pending-reports-table-body')
-        buttons = tbody.find_elements(By.XPATH, ".//*[contains(@id,'pending-report-assign-')]")
+        buttons = tbody.find_elements(By.XPATH, ".//*[contains(attribute::id,'pending-report-assign-')]")
         btn_id = buttons[0].get_attribute('id')
         operator_page.click(btn_id)
-        operator_page.wait.until(EC.presence_of_element_located((By.XPATH, "//*[contains(@id,'assigned-report-row-')]")), message='No assigned-report-row-* appeared after clicking Assign')
+        operator_page.wait.until(EC.presence_of_element_located((By.XPATH, "//*[contains(attribute::id,'assigned-report-row-')]")), message='No assigned-report-row-* appeared after clicking Assign')
 
     def test_operator_page_not_accessible_as_citizen(self, page: PageHelper):
         page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
