@@ -1,7 +1,7 @@
-# Local IDE/editor state
 .idea/
+.vscode/
+.DS_STORE
 
-# Python virtual environments and caches
 .venv/
 src/.venv/
 **/.venv/
@@ -13,12 +13,10 @@ src/.venv/
 htmlcov/
 src/backend/reports/
 
-# JavaScript dependencies and build outputs
 **/node_modules/
 src/frontend/dist/
 **/dist/
 
-# Local runtime state
 .env
 src/.env
 src/backend/.env
@@ -30,6 +28,3 @@ src/backend/participium/static/uploads/
 *.db
 
 priv/
-
-# Preserved local fork ignore rules
-.DS_STORE
