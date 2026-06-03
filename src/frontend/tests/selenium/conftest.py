@@ -31,6 +31,21 @@ _CLEAR_REACT_INPUT = (
     "el.dispatchEvent(new Event('input', { bubbles: true }));"
 )
 
+def pytest_collection_modifyitems(config, items):
+    """Turn @pytest.mark.implementation_bug into an xfail.
+
+    A test marked this way documents a known implementation defect: it is expected
+    to fail until the bug is fixed, so it shows up as XFAIL and keeps the suite
+    green. The xfail is non-strict, so once the bug is resolved the test simply
+    passes (XPASS) without turning the suite red.
+    """
+    for item in items:
+        marker = item.get_closest_marker("implementation_bug")
+        if marker is None:
+            continue
+        reason = marker.args[0] if marker.args else marker.kwargs.get("reason", "Known implementation bug")
+        item.add_marker(pytest.mark.xfail(reason=reason, strict=False))
+
 @pytest.fixture(scope="session")
 def driver():
     opts = Options()
@@ -187,6 +202,37 @@ def admin_page(driver):
 
 def unique_suffix() -> str:
     return uuid.uuid4().hex[:8]
+
+def register_account(page: PageHelper, **overrides) -> dict:
+    """Fill and submit the registration form, returning the credentials used."""
+    sfx = unique_suffix()
+    data = {
+        "username": f"user_{sfx}",
+        "first_name": "Test",
+        "last_name": "Citizen",
+        "email": f"user_{sfx}@test.local",
+        "password": "TestPass123!",
+    }
+    data.update(overrides)
+    page.go("/register")
+    page.fill("register-username", data["username"])
+    page.fill("register-first-name", data["first_name"])
+    page.fill("register-last-name", data["last_name"])
+    page.fill("register-email", data["email"])
+    page.fill("register-password", data["password"])
+    page.click("register-submit")
+    return data
+
+def submit_login(page: PageHelper, identifier: str, password: str) -> None:
+    """Submit the login form without expecting success.
+
+    Unlike PageHelper.login (which retries and waits for an authenticated session),
+    this is for negative cases where login is expected to be rejected.
+    """
+    page.go("/login")
+    page.fill("login-identifier", identifier)
+    page.fill("login-password", password)
+    page.click("login-submit")
 
 def wait_for_report_rows(page: PageHelper) -> None:
     page.wait.until(EC.presence_of_element_located((By.XPATH, "//*[starts-with(attribute::id,'public-report-row-')]")), message="No public-report-row-* found; check seed data and backend")
