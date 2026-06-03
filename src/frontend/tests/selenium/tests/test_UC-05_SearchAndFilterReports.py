@@ -63,8 +63,6 @@ class TestSearchAndFilterReports:
             )
 
     def test_switching_sort_order_changes_first_row_in_ui(self, page: PageHelper):
-        import time
-
         reports_desc = _get_reports_from_api("desc")
         reports_asc = _get_reports_from_api("asc")
 
@@ -73,7 +71,7 @@ class TestSearchAndFilterReports:
         # creiamo forzatamente nuovi report per avere una differenza garantita.
         if len(reports_desc) < 2 or reports_desc[0]["id"] == reports_asc[0]["id"]:
             create_and_assign_report(page)
-            time.sleep(1)  # Garantisce un created_at strettamente maggiore
+            # Create another one. The creation time will be different naturally.
             create_and_assign_report(page)
             
             reports_desc = _get_reports_from_api("desc")
