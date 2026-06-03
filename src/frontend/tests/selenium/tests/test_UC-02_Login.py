@@ -1,4 +1,4 @@
-from conftest import ADMIN_EMAIL, ADMIN_PASSWORD, CITIZEN_EMAIL, CITIZEN_PASSWORD, OPERATOR_EMAIL, OPERATOR_PASSWORD, PageHelper
+from conftest import ADMIN_EMAIL, ADMIN_PASSWORD, CITIZEN_EMAIL, CITIZEN_PASSWORD, OPERATOR_EMAIL, OPERATOR_PASSWORD, PageHelper, register_account, submit_login
 
 class TestLogin:
 
@@ -27,14 +27,20 @@ class TestLogin:
         assert '/admin' in page.driver.current_url
 
     def test_invalid_credentials_do_not_authenticate(self, page: PageHelper):
-        page.go('/login')
-        page.fill('login-identifier', CITIZEN_EMAIL)
-        page.fill('login-password', 'WrongPassword!')
-        page.click('login-submit')
+        submit_login(page, CITIZEN_EMAIL, 'WrongPassword!')
         error = page.by_id_visible('login-error')
         assert error.is_displayed(), 'Error element should be visible'
         assert error.text.strip(), 'Error message should not be empty'
         assert '/login' in page.driver.current_url, 'User should remain on /login after a failed attempt'
+
+    def test_unverified_account_cannot_login(self, page: PageHelper):
+        creds = register_account(page)
+        page.by_id_visible('register-success')  # account created but not verified
+        submit_login(page, creds['email'], creds['password'])
+        error = page.by_id_visible('login-error')
+        assert 'verif' in error.text.lower(), f"Expected a verification-required error, got: '{error.text}'"
+        assert '/login' in page.driver.current_url, 'Unverified user should remain on /login'
+        assert page.absent('logout-button'), 'Unverified account must not be authenticated'
 
     def test_already_authenticated_user_skips_login_page(self, page: PageHelper):
         page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
