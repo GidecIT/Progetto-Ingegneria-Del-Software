@@ -1,0 +1,65 @@
+
+
+x-database-env: &database-env
+  MYSQL_ROOT_PASSWORD: root_password
+  MYSQL_DATABASE: participium
+  MYSQL_USER: participium
+  MYSQL_PASSWORD: participium_password
+
+services:
+  database:
+    image: mysql:8
+    container_name: participium-database
+    environment:
+      <<: *database-env
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysql", "-h", "127.0.0.1", "-uparticipium", "-pparticipium_password", "participium", "-e", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/backend.Dockerfile
+    container_name: participium-backend
+    ports:
+      - "5050:5050"
+    environment:
+      - DATABASE_URL=mysql+pymysql://participium:participium_password@database:3306/participium?autocommit=true
+      - AUTO_INIT_DB=true
+      - BOOTSTRAP_REFERENCE_DATA=true
+      - BOOTSTRAP_DEMO_DATA=true
+      - FRONTEND_ORIGIN=http://localhost:5173
+      - PORT=5050
+    volumes:
+      - ../src/backend:/usr/src/app
+      - backend_instance:/usr/src/app/instance
+      - backend_media:/usr/src/app/participium/static/uploads
+    depends_on:
+      database:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: docker/frontend.Dockerfile
+    container_name: participium-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:5050/api/v1
+      - VITE_BACKEND_BASE_URL=http://localhost:5050
+    volumes:
+      - ../src/frontend:/usr/src/app
+      - /usr/src/app/node_modules
+
+volumes:
+  mysql_data:
+  backend_instance:
+  backend_media:
