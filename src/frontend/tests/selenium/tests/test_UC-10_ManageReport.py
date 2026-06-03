@@ -1,7 +1,16 @@
 import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from conftest import CITIZEN_EMAIL, CITIZEN_PASSWORD, OPERATOR_EMAIL, OPERATOR_PASSWORD, PageHelper, create_report_and_get_id
+from conftest import (
+    CITIZEN_EMAIL,
+    CITIZEN_PASSWORD,
+    OPERATOR_EMAIL,
+    OPERATOR_PASSWORD,
+    PageHelper,
+    create_and_assign_report,
+    create_report_and_get_id,
+    update_report_status_as_operator,
+)
 
 class TestManageReport:
 
@@ -50,3 +59,38 @@ class TestManageReport:
         page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
         page.go('/operator')
         page.wait_redirect_away_from('/operator')
+
+    def test_operator_updates_status_from_assigned_to_in_progress(self, page: PageHelper):
+        report_id = create_and_assign_report(page)
+        update_report_status_as_operator(page, report_id, 'In Progress')
+        page.go(f'/reports/{report_id}')
+        page.wait.until(
+            lambda d: 'In Progress' in d.find_element(By.ID, 'report-detail-status').text,
+            message='Report status should become In Progress after the operator update',
+        )
+
+    def test_rejecting_without_motivation_is_blocked(self, page: PageHelper):
+        report_id = create_and_assign_report(page)
+        page.login(OPERATOR_EMAIL, OPERATOR_PASSWORD)
+        page.go('/operator')
+        page.by_id_visible(f'assigned-report-row-{report_id}')
+        page.select_by_value(f'assigned-report-status-{report_id}', 'Rejected')  # note left empty
+        page.click(f'assigned-report-update-{report_id}')
+        error = page.by_id_visible('operator-error')
+        assert 'reason' in error.text.lower() or 'motiv' in error.text.lower(), f"Expected a rejection-reason error, got: '{error.text}'"
+        page.go(f'/reports/{report_id}')
+        assert 'Rejected' not in page.by_id_visible('report-detail-status').text, 'Report must not be rejected without a motivation'
+
+    def test_status_change_notifies_reporter(self, page: PageHelper):
+        report_id = create_and_assign_report(page)
+        update_report_status_as_operator(page, report_id, 'In Progress')
+        page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
+        page.go('/dashboard')
+        page.by_id_visible('notifications-card')
+        page.wait.until(
+            lambda d: any(
+                f'#{report_id}' in el.text
+                for el in d.find_elements(By.XPATH, "//*[contains(attribute::id,'notification-item-') and contains(attribute::id,'-body')]")
+            ),
+            message=f'Reporter should receive a status-change notification for report #{report_id}',
+        )

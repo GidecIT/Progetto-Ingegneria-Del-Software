@@ -37,6 +37,22 @@ class TestViewPublicStatistics:
         assert 'week' in values, 'Week option must be available'
         assert 'month' in values, 'Month option must be available'
 
+    def test_changing_granularity_updates_trend_buckets(self, page: PageHelper):
+        page.go('/')
+
+        def _trend_bucket_ids() -> set[str]:
+            return {
+                el.get_attribute('id')
+                for el in page.driver.find_elements(By.XPATH, "//li[starts-with(attribute::id,'public-trend-stat-')]")
+            }
+
+        page.select_by_value('public-stat-granularity', 'day')
+        page.wait.until(lambda d: _trend_bucket_ids(), message='Trend should render at least one day bucket')
+        day_buckets = _trend_bucket_ids()
+        page.select_by_value('public-stat-granularity', 'month')
+        page.wait.until(lambda d: _trend_bucket_ids() != day_buckets, message='Trend buckets should change after switching to month granularity')
+        assert _trend_bucket_ids() != day_buckets
+
     def test_statistics_accessible_without_login(self, page: PageHelper):
         page.go('/')
         assert page.absent('login-page'), 'Statistics should be visible without login'

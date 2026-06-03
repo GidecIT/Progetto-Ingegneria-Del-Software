@@ -1,6 +1,6 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from conftest import ADMIN_EMAIL, ADMIN_PASSWORD, OPERATOR_EMAIL, OPERATOR_PASSWORD, PageHelper
+from conftest import ADMIN_EMAIL, ADMIN_PASSWORD, CITIZEN_EMAIL, CITIZEN_PASSWORD, OPERATOR_EMAIL, OPERATOR_PASSWORD, PageHelper
 
 class TestViewPrivateStatistics:
 
@@ -35,3 +35,21 @@ class TestViewPrivateStatistics:
         page.login(OPERATOR_EMAIL, OPERATOR_PASSWORD)
         page.go('/admin')
         page.wait_redirect_away_from('/admin')
+
+    def test_private_statistics_not_accessible_as_citizen(self, page: PageHelper):
+        page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
+        page.go('/admin')
+        page.wait_redirect_away_from('/admin')
+
+    def test_all_breakdown_columns_render_including_reporters(self, page: PageHelper):
+        page.login(ADMIN_EMAIL, ADMIN_PASSWORD)
+        page.wait_for_url('/admin')
+        expected_columns = [
+            'admin-metric-item-reports-by-status',
+            'admin-metric-item-reports-by-type',
+            'admin-metric-item-reports-by-reporter',
+            'admin-metric-item-top-1-percent-by-type',
+            'admin-metric-item-top-5-percent-by-type',
+        ]
+        for column_id in expected_columns:
+            assert page.by_id_visible(column_id).is_displayed(), f'Breakdown column {column_id} should render'

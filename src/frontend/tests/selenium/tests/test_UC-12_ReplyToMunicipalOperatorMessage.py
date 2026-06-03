@@ -1,47 +1,56 @@
-import pytest
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from conftest import CITIZEN_EMAIL, CITIZEN_PASSWORD, OPERATOR_EMAIL, OPERATOR_PASSWORD, PageHelper, unique_suffix, create_report_and_get_id, create_and_assign_report
+from conftest import (
+    CITIZEN_EMAIL,
+    CITIZEN_PASSWORD,
+    OPERATOR_EMAIL,
+    OPERATOR_PASSWORD,
+    PageHelper,
+    create_and_assign_report,
+    send_report_message,
+    unique_suffix,
+)
+
+def _messages_list_bodies_xpath() -> str:
+    return "//ul[attribute::id='messages-list']//*[contains(attribute::id,'-body')]"
 
 class TestReplyToOperatorMessage:
 
-    def test_messages_card_rendered_on_report_detail(self, page: PageHelper):
-        report_id = create_report_and_get_id(page)
-        page.go(f'/reports/{report_id}')
-        assert page.by_id_visible('messages-card').is_displayed()
-
-    def test_citizen_can_send_reply_when_report_is_assigned(self, page: PageHelper):
+    def test_thread_with_operator_message_is_available_to_citizen(self, page: PageHelper):
         report_id = create_and_assign_report(page)
+        operator_message = f'Please clarify {unique_suffix()}'
+        page.login(OPERATOR_EMAIL, OPERATOR_PASSWORD)
+        send_report_message(page, report_id, operator_message)
         page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
         page.go(f'/reports/{report_id}')
-        
-        # Robust wait for the form
+        assert page.by_id_visible('messages-list').is_displayed()
+        assert page.by_id_visible('report-message-form').is_displayed(), 'Citizen must have a reply form'
         page.wait.until(
-            lambda d: d.find_elements(By.ID, 'report-message-form') or d.find_elements(By.ID, 'messages-list'),
-            message='Report message section did not load'
+            lambda d: any(operator_message in el.text for el in d.find_elements(By.XPATH, _messages_list_bodies_xpath())),
+            message='Citizen should see the operator message in the thread',
         )
-        
-        if page.absent('report-message-form'):
-            pytest.skip('Message form not accessible: report not yet assigned.')
-            
-        assert page.absent('messages-unavailable'), 'messages-unavailable must not appear when the form is present'
-        msg_text = f'Hello operator {unique_suffix()}'
-        page.fill('report-message-body', msg_text)
-        page.click('report-message-submit')
-        
-        # Wait for clear or list update
-        page.wait.until(
-            lambda d: d.find_element(By.ID, 'report-message-body').get_attribute('value') == '' 
-                      or d.find_elements(By.XPATH, "//*[contains(attribute::id,'message-item-')]"),
-            message='Message send did not reflect in UI'
-        )
-        
-        page.wait.until(EC.presence_of_element_located((By.XPATH, "//*[contains(attribute::id,'message-item-')]")), message='No message-item-* appeared after a successful send')
-        bodies = page.by_id('messages-list').find_elements(By.XPATH, ".//*[contains(attribute::id,'-body')]")
-        assert any((msg_text in el.text for el in bodies)), f"Sent message '{msg_text}' not found in the messages list"
 
-    def test_operator_can_view_message_thread(self, page: PageHelper):
+    def test_citizen_reply_reaches_operator(self, page: PageHelper):
         report_id = create_and_assign_report(page)
         page.login(OPERATOR_EMAIL, OPERATOR_PASSWORD)
+        send_report_message(page, report_id, f'Operator question {unique_suffix()}')
+        reply = f'Citizen reply {unique_suffix()}'
+        page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
+        send_report_message(page, report_id, reply)
+        page.login(OPERATOR_EMAIL, OPERATOR_PASSWORD)
         page.go(f'/reports/{report_id}')
-        assert page.by_id_visible('messages-card').is_displayed()
+        page.by_id_visible('messages-list')
+        page.wait.until(
+            lambda d: any(reply in el.text for el in d.find_elements(By.XPATH, _messages_list_bodies_xpath())),
+            message='Operator should see the reply sent by the citizen',
+        )
+
+    def test_citizen_cannot_send_empty_reply(self, page: PageHelper):
+        report_id = create_and_assign_report(page)
+        page.login(OPERATOR_EMAIL, OPERATOR_PASSWORD)
+        send_report_message(page, report_id, f'Operator note {unique_suffix()}')
+        page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
+        page.go(f'/reports/{report_id}')
+        body = page.by_id_visible('report-message-body')
+        page.click('report-message-submit')  # body left empty
+        is_valid = page.driver.execute_script("return arguments[0].checkValidity();", body)
+        assert is_valid is False, 'Empty required reply body should block submission'
