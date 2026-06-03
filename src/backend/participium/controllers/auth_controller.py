@@ -5,7 +5,6 @@ from typing import Any
 from participium.models.user import User
 from participium.services.auth_service import AuthService
 
-
 class AuthController:
     def __init__(self, auth_service: AuthService):
         self.auth_service = auth_service
