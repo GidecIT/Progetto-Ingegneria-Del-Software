@@ -4,7 +4,7 @@ from selenium.webdriver.support.ui import Select
 from conftest import PageHelper
 
 def _wait_for_statistics_data(page: PageHelper) -> None:
-    page.wait.until(EC.presence_of_element_located((By.XPATH, "//*[starts-with(@id,'public-category-stat-')]")), message='No public-category-stat-* element found; statistics API response may not have arrived yet')
+    page.wait.until(EC.presence_of_element_located((By.XPATH, "//*[starts-with(attribute::id,'public-category-stat-')]")), message='No public-category-stat-* element found; statistics API response may not have arrived yet')
 
 class TestViewPublicStatistics:
 

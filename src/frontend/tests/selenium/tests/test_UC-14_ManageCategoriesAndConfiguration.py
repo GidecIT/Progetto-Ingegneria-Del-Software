@@ -5,10 +5,10 @@ from selenium.webdriver.support.ui import Select
 from conftest import ADMIN_EMAIL, ADMIN_PASSWORD, CITIZEN_EMAIL, CITIZEN_PASSWORD, PageHelper, unique_suffix
 
 def _wait_for_category_rows(page: PageHelper) -> None:
-    page.wait.until(EC.presence_of_element_located((By.XPATH, "//*[starts-with(@id,'admin-category-row-')]")), message='No admin-category-row-* found; categories may not have loaded')
+    page.wait.until(EC.presence_of_element_located((By.XPATH, "//*[starts-with(attribute::id,'admin-category-row-')]")), message='No admin-category-row-* found; categories may not have loaded')
 
 def _wait_for_user_rows(page: PageHelper) -> None:
-    page.wait.until(EC.presence_of_element_located((By.XPATH, "//*[starts-with(@id,'admin-user-row-')]")), message='No admin-user-row-* found; admin users may not have loaded')
+    page.wait.until(EC.presence_of_element_located((By.XPATH, "//*[starts-with(attribute::id,'admin-user-row-')]")), message='No admin-user-row-* found; admin users may not have loaded')
 
 def _get_first_non_admin_user_id(page: PageHelper) -> str:
     page.go('/admin')
@@ -49,7 +49,7 @@ class TestManageCategoriesAndConfiguration:
         admin_page.wait.until(
             lambda d: any(
                 el.get_property('value') == cat_name
-                for el in d.find_elements(By.XPATH, "//*[@id='admin-categories-table-body']//input[@type='text']")
+                for el in d.find_elements(By.XPATH, "//*[attribute::id='admin-categories-table-body']//input[@type='text']")
             ),
             message=f"Newly created category '{cat_name}' not found in table",
         )
@@ -64,7 +64,7 @@ class TestManageCategoriesAndConfiguration:
         
         _wait_for_category_rows(admin_page)
         # Find the ID of the category we just created
-        inputs = admin_page.driver.find_elements(By.XPATH, f"//*[@id='admin-categories-table-body']//input[@value='{cat_name}']")
+        inputs = admin_page.driver.find_elements(By.XPATH, f"//*[attribute::id='admin-categories-table-body']//input[@value='{cat_name}']")
         assert inputs, f"Category '{cat_name}' not found for editing"
         cat_id = inputs[0].get_attribute('id').split('-')[-1]
         
@@ -83,7 +83,7 @@ class TestManageCategoriesAndConfiguration:
         admin_page.by_id_visible('admin-success')
 
         _wait_for_category_rows(admin_page)
-        inputs = admin_page.driver.find_elements(By.XPATH, f"//*[@id='admin-categories-table-body']//input[@value='{cat_name}']")
+        inputs = admin_page.driver.find_elements(By.XPATH, f"//*[attribute::id='admin-categories-table-body']//input[@value='{cat_name}']")
         cat_id = inputs[0].get_attribute('id').split('-')[-1]
         
         admin_page.click(f'admin-category-active-{cat_id}')
@@ -108,7 +108,7 @@ class TestManageCategoriesAndConfiguration:
         admin_page.wait.until(
             lambda d: any(
                 el.get_property('value') == email 
-                for el in d.find_elements(By.XPATH, "//*[@id='admin-users-table-body']//input[@type='email']")
+                for el in d.find_elements(By.XPATH, "//*[attribute::id='admin-users-table-body']//input[@type='email']")
             ), 
             message=f'Created user {email} not found in users table'
         )

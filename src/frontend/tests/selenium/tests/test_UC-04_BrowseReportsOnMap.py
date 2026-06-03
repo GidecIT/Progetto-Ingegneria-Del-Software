@@ -17,7 +17,7 @@ class TestBrowseReportsOnMap:
     def test_report_markers_appear_after_data_loads(self, page: PageHelper):
         page.go('/')
         wait_for_report_rows(page)
-        markers = page.driver.find_elements(By.XPATH, "//*[contains(@id,'-map-marker')]")
+        markers = page.driver.find_elements(By.XPATH, "//*[contains(attribute::id,'-map-marker')]")
         assert len(markers) > 0, 'Expected at least one map marker after report data loads'
 
     def test_map_accessible_without_authentication(self, page: PageHelper):

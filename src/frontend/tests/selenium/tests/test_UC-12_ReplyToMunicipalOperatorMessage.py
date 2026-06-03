@@ -32,12 +32,12 @@ class TestReplyToOperatorMessage:
         # Wait for clear or list update
         page.wait.until(
             lambda d: d.find_element(By.ID, 'report-message-body').get_attribute('value') == '' 
-                      or d.find_elements(By.XPATH, "//*[contains(@id,'message-item-')]"),
+                      or d.find_elements(By.XPATH, "//*[contains(attribute::id,'message-item-')]"),
             message='Message send did not reflect in UI'
         )
         
-        page.wait.until(EC.presence_of_element_located((By.XPATH, "//*[contains(@id,'message-item-')]")), message='No message-item-* appeared after a successful send')
-        bodies = page.by_id('messages-list').find_elements(By.XPATH, ".//*[contains(@id,'-body')]")
+        page.wait.until(EC.presence_of_element_located((By.XPATH, "//*[contains(attribute::id,'message-item-')]")), message='No message-item-* appeared after a successful send')
+        bodies = page.by_id('messages-list').find_elements(By.XPATH, ".//*[contains(attribute::id,'-body')]")
         assert any((msg_text in el.text for el in bodies)), f"Sent message '{msg_text}' not found in the messages list"
 
     def test_operator_can_view_message_thread(self, page: PageHelper):
