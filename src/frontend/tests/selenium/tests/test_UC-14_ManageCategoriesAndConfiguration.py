@@ -54,6 +54,41 @@ class TestManageCategoriesAndConfiguration:
             message=f"Newly created category '{cat_name}' not found in table",
         )
 
+    def test_duplicate_category_name_shows_error(self, admin_page: PageHelper):
+        cat_name = f'Dup{unique_suffix()}'
+        admin_page.go('/admin')
+        admin_page.fill('admin-new-category-name', cat_name)
+        admin_page.click('admin-new-category-submit')
+        admin_page.by_id_visible('admin-success')
+        admin_page.fill('admin-new-category-name', cat_name)  # same name again
+        admin_page.click('admin-new-category-submit')
+        error = admin_page.by_id_visible('admin-error')
+        assert 'exist' in error.text.lower(), f"Expected a duplicate-name error, got: '{error.text}'"
+
+    def test_edit_category_name_persists(self, admin_page: PageHelper):
+        cat_name = f'ToEdit{unique_suffix()}'
+        admin_page.go('/admin')
+        admin_page.fill('admin-new-category-name', cat_name)
+        admin_page.click('admin-new-category-submit')
+        admin_page.by_id_visible('admin-success')
+        _wait_for_category_rows(admin_page)
+        inputs = admin_page.driver.find_elements(By.XPATH, f"//*[attribute::id='admin-categories-table-body']//input[@value='{cat_name}']")
+        assert inputs, f"Category '{cat_name}' not found for editing"
+        cat_id = inputs[0].get_attribute('id').split('-')[-1]
+        new_name = f'Edited{unique_suffix()}'
+        admin_page.fill(f'admin-category-name-{cat_id}', new_name)
+        admin_page.click(f'admin-category-save-{cat_id}')
+        admin_page.by_id_visible('admin-success')
+        admin_page.go('/admin')  # reload to confirm persistence
+        _wait_for_category_rows(admin_page)
+        admin_page.wait.until(
+            lambda d: any(
+                el.get_property('value') == new_name
+                for el in d.find_elements(By.XPATH, "//*[attribute::id='admin-categories-table-body']//input[@type='text']")
+            ),
+            message=f"Edited category name '{new_name}' did not persist after reload",
+        )
+
     def test_edit_category_name_saves_successfully(self, admin_page: PageHelper):
         # Create a category specifically for editing to avoid breaking other tests
         cat_name = f'ToEdit{unique_suffix()}'

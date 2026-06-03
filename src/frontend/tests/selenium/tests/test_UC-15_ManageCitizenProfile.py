@@ -1,3 +1,4 @@
+from selenium.webdriver.common.by import By
 from conftest import CITIZEN_EMAIL, CITIZEN_PASSWORD, PageHelper, unique_suffix
 
 class TestManageCitizenProfile:
@@ -45,6 +46,34 @@ class TestManageCitizenProfile:
         page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
         page.wait_for_url('/dashboard')
         assert page.by_id('notifications-card').is_displayed()
+
+    def test_toggling_email_notifications_persists(self, page: PageHelper):
+        page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
+        page.wait_for_url('/dashboard')
+        checkbox = page.by_id('profile-email-notifications')
+        initial = checkbox.is_selected()
+        checkbox.click()
+        page.click('profile-save')
+        page.by_id_visible('profile-success')
+        page.go('/dashboard')
+        page.wait_for_url('/dashboard')
+        page.wait.until(
+            lambda d: d.find_element(By.ID, 'profile-email-notifications').is_selected() == (not initial),
+            message='Email-notification preference should persist after toggling',
+        )
+
+    def test_canceling_changes_without_saving_keeps_profile(self, page: PageHelper):
+        page.login(CITIZEN_EMAIL, CITIZEN_PASSWORD)
+        page.wait_for_url('/dashboard')
+        original = page.by_id('profile-first-name').get_attribute('value')
+        page.fill('profile-first-name', f'Discarded{unique_suffix()}')  # do NOT save
+        page.go('/')  # navigate away without saving
+        page.go('/dashboard')
+        page.wait_for_url('/dashboard')
+        page.wait.until(
+            lambda d: d.find_element(By.ID, 'profile-first-name').get_attribute('value') == original,
+            message='Unsaved profile change must be discarded',
+        )
 
     def test_dashboard_not_accessible_as_guest(self, page: PageHelper):
         page.go('/dashboard')

@@ -246,6 +246,40 @@ def get_first_public_report_id(page: PageHelper) -> int:
     href = open_link.get_attribute("href")
     return int(href.rstrip("/").split("/")[-1])
 
+def open_first_public_report(page: PageHelper) -> int:
+    """Open the detail page of the first public report and return its id."""
+    report_id = get_first_public_report_id(page)
+    page.go(f"/reports/{report_id}")
+    return report_id
+
+def send_report_message(page: PageHelper, report_id: int, body: str) -> None:
+    """Post a message on a report (caller must already be authenticated).
+
+    Navigates to the report detail, fills the compose form, submits, and waits
+    until the message appears in the thread.
+    """
+    page.go(f"/reports/{report_id}")
+    page.by_id_visible("report-message-form")
+    page.fill("report-message-body", body)
+    page.click("report-message-submit")
+    page.wait.until(
+        lambda d: any(
+            body in el.text
+            for el in d.find_elements(By.XPATH, "//ul[attribute::id='messages-list']//*[contains(attribute::id,'-body')]")
+        ),
+        message=f"Message {body!r} did not appear in the thread after sending",
+    )
+
+def update_report_status_as_operator(page: PageHelper, report_id: int, status: str, note: str = "") -> None:
+    """Log in as operator and set the status (and optional note) of an assigned report."""
+    page.login(OPERATOR_EMAIL, OPERATOR_PASSWORD)
+    page.go("/operator")
+    page.by_id_visible(f"assigned-report-row-{report_id}")
+    if note:
+        page.fill(f"assigned-report-note-{report_id}", note)
+    page.select_by_value(f"assigned-report-status-{report_id}", status)
+    page.click(f"assigned-report-update-{report_id}")
+
 def write_temp_image() -> str:
     png_bytes = (
         b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01'

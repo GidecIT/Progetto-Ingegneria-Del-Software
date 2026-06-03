@@ -1,6 +1,17 @@
+import csv
+import io
+import pytest
 import requests
 from conftest import PageHelper
 API_BASE = 'http://localhost:5050/api/v1'
+
+PUBLIC_CSV_FIELDS = ['id', 'title', 'category', 'status', 'created_at', 'latitude', 'longitude']
+PRIVATE_CSV_FIELDS = {'email', 'reporter', 'description', 'username', 'first_name', 'last_name', 'password', 'is_anonymous'}
+
+def _export_csv(**params) -> list[dict]:
+    response = requests.get(f'{API_BASE}/reports/export', params=params, timeout=10)
+    response.raise_for_status()
+    return list(csv.DictReader(io.StringIO(response.text)))
 
 class TestExportReportsCSV:
 
@@ -18,11 +29,39 @@ class TestExportReportsCSV:
         assert 'csv' in content_type.lower() or 'text' in content_type.lower(), f"Expected CSV content type, got: '{content_type}'"
         assert response.text.strip(), 'CSV export body should not be empty'
 
-    def test_csv_contains_only_public_fields(self, page: PageHelper):
+    def test_csv_header_is_exactly_the_public_field_set(self, page: PageHelper):
         response = requests.get(f'{API_BASE}/reports/export', timeout=10)
         assert response.status_code == 200
-        header_line = response.text.splitlines()[0].lower()
-        assert 'email' not in header_line, "CSV export header must not contain 'email' (private field)"
+        header = [h.strip().lower() for h in next(csv.reader(io.StringIO(response.text)))]
+        assert header == PUBLIC_CSV_FIELDS, f'Unexpected CSV header: {header}'
+        leaked = set(header) & PRIVATE_CSV_FIELDS
+        assert not leaked, f'CSV header must not expose private fields, found: {leaked}'
+
+    def test_export_respects_active_category_filter(self, page: PageHelper):
+        all_reports = requests.get(f'{API_BASE}/reports', timeout=10).json()
+        if not all_reports:
+            pytest.skip('No public reports available to derive a category filter')
+        category = all_reports[0]['category']
+        category_id, category_name = category['id'], category['name']
+        filtered_list = requests.get(f'{API_BASE}/reports', params={'category_id': category_id}, timeout=10).json()
+        expected_ids = {str(r['id']) for r in filtered_list}
+        rows = _export_csv(category_id=category_id)
+        exported_ids = {row['id'] for row in rows}
+        assert exported_ids == expected_ids, f'Filtered export ids {exported_ids} should match filtered list ids {expected_ids}'
+        assert all(row['category'] == category_name for row in rows), 'Every exported row should belong to the filtered category'
+
+    def test_export_with_no_matches_returns_header_only(self, page: PageHelper):
+        response = requests.get(f'{API_BASE}/reports/export', params={'date_from': '2999-01-01'}, timeout=10)
+        assert response.status_code == 200
+        lines = response.text.splitlines()
+        assert lines and [h.strip().lower() for h in lines[0].split(',')] == PUBLIC_CSV_FIELDS, 'Header should still be present'
+        assert list(csv.DictReader(io.StringIO(response.text))) == [], 'Export should contain no data rows when nothing matches'
+
+    def test_export_sets_content_disposition_attachment(self, page: PageHelper):
+        response = requests.get(f'{API_BASE}/reports/export', timeout=10)
+        disposition = response.headers.get('Content-Disposition', '')
+        assert 'attachment' in disposition.lower(), f'Expected an attachment download, got: {disposition!r}'
+        assert 'participium_reports.csv' in disposition, f'Expected the CSV filename, got: {disposition!r}'
 
     def test_export_link_accessible_without_login(self, page: PageHelper):
         page.go('/')
