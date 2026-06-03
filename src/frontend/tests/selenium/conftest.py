@@ -6,7 +6,6 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select, WebDriverWait
 BASE_URL = "http://localhost:5173"
@@ -18,6 +17,18 @@ OPERATOR_PASSWORD = "Operator123!"
 ADMIN_EMAIL = "admin@example.com"
 ADMIN_PASSWORD = "Admin123!"
 OPERATOR_CATEGORY = "Roads and Urban Furniture"
+
+# Script per svuotare un input controllato da React.
+# Non basta fare `value = ''` perchè React al primo send_keys rimette il valore vecchio
+# (campi concatenati -> "Invalid credentials").
+# Usiamo il setter nativo e un evento "input", così React si accorge davvero del cambiamento.
+# Funziona uguale su Windows e Mac perché non dipende da scorciatoie da tastiera.
+_CLEAR_REACT_INPUT = (
+    "const setter = Object.getOwnPropertyDescriptor("
+    "window.HTMLInputElement.prototype, 'value').set;"
+    "setter.call(arguments[0], '');"
+    "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));"
+)
 
 @pytest.fixture(scope="session")
 def driver():
@@ -68,13 +79,13 @@ class PageHelper:
     def absent(self, element_id: str) -> bool:
         return not self.present(element_id, timeout=1)
 
-    @staticmethod
-    def _set_value(el, value: str) -> None:
+    def _set_value(self, el, value: str) -> None:
         # Selenium's clear() is unreliable on React-controlled inputs (the
         # component re-applies its state value, so send_keys appends to any
-        # default and produces doubled text). Select-all then type reliably
-        # replaces the current content for both empty and pre-filled fields.
-        el.send_keys(Keys.CONTROL, "a")
+        # default and produces doubled text). We blank the field via the native
+        # value setter + an "input" event so React syncs its state, then type.
+        # This is keyboard-independent and behaves identically on Windows/Mac.
+        self.driver.execute_script(_CLEAR_REACT_INPUT, el)
         el.send_keys(value)
 
     def fill(self, element_id: str, value: str) -> None:
