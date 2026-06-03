@@ -39,6 +39,12 @@ def driver():
     opts.add_argument("--disable-dev-shm-usage")
     opts.add_argument("--window-size=1400,900")
     opts.add_argument("--log-level=3")
+    # Force Chrome to resolve `localhost` to IPv4. On macOS `localhost` resolves
+    # to ::1 (IPv6) first, but the backend binds to 0.0.0.0 (IPv4 only), so the
+    # frontend's fetch() calls to http://localhost:5050 are refused and pages
+    # never receive their data (tests time out waiting for elements). On Windows
+    # localhost already resolves to 127.0.0.1, so this is a no-op there.
+    opts.add_argument("--host-resolver-rules=MAP localhost 127.0.0.1")
     # Stop Chrome's "password found in a data breach" / save-password prompts
     # that block tests (the demo creds appear in public breach lists).
     opts.add_argument("--disable-features=PasswordLeakDetection,AutofillServerCommunication")
