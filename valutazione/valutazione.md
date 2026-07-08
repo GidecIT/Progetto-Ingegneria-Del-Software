@@ -38,8 +38,3 @@ Nota: `voto progetto` e' il progetto individuale dopo il coefficiente questionar
 | 311378 | DE CESARE | GIACOMO | 8,5 | 1 | 22,34 | 31 |  |  |
 | 353334 | LEMERLE | STEFANO THOMAS | 8,5 | 1 | 21,64 | 30 |  |  |
 | 361796 | MOMO | GIACOMO | 8,07 | 1 | 9,06 | 17 |  |  |
-
-## Fonti
-
-- Valutazione progetto: `/Users/hardo/git/ingegneriadelsoftware/gitlab-tools/2026/ita_05bid/final_grade_pipeline/inputs/voti_gruppi_deliverable.xlsx`
-- Valutazioni individuali: `/Users/hardo/git/ingegneriadelsoftware/gitlab-tools/2026/ita_05bid/final_grade_pipeline/outputs/valutazioni_finali_studenti_ita_2026_con_esame_arrotondato_bonus_esperimento.xlsx`
